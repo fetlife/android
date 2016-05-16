@@ -19,24 +19,18 @@ Welcome to FetLife's open-source Android app!
 
 ### Installing the App on your Android Device
 
-0. Uninstall any previous version of FetLife (previously FetChat) App
-1. Open the "Settings" App of your device
-2. Find and open "Security Settings"
-3. Find and turn on setting with description: Unknown sources
-4. Copy the [fetlife-debug.apk](https://github.com/fetlife/fetlife-android/raw/master/FetLifeApp/fetlife-debug.apk) file to your device
-5. Find and open the apk file with a file browser on your device
-6. Accept the installation of the App
-7. Turn off the setting for Unknown sources as you tuned it on during step 1-3.
-
-
-### Getting files on your Android device
-
-- Mac: https://www.android.com/filetransfer/
+0. Uninstall any previous version of FetLife (previously FetChat) App.
+1. Open the "Settings" App of your device.
+2. Find and open "Security Settings".
+3. Find and turn on setting with description: Unknown sources.
+4. Download the [fetlife-debug.apk](https://github.com/fetlife/fetlife-android/raw/master/FetLifeApp/fetlife-debug.apk) file through your web browser on your Android device.
+5. Find and open the apk file with a file browser on your device.
+6. Accept the installation of the FetLife app.
+7. Turn off the setting for Unknown sources as you turned it on during step 1-3.
 
 ### Kinksters Helping Kinksters
 
-Want to install the app on your phone but are not technically savvy? Ask your local kinky geek! Technically savvy and want to give back to the community... bring your laptop with you the next time you attend an event and install / update the app for anyone who's interested in having it install on their phone. *#KinkstersHelpingKinksters*
-
+Want to install the app on your phone but are not technically savvy? Ask your local kinky geek! Technically savvy and want to give back to the community... next time you attend an event help download and update the app for anyone who's interested in having it on their phone. *#KinkstersHelpingKinksters*
 
 ### Got Bugs?
 
