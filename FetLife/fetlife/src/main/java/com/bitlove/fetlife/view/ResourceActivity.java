@@ -1,5 +1,7 @@
 package com.bitlove.fetlife.view;
 
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -8,6 +10,9 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +41,8 @@ public class ResourceActivity extends AppCompatActivity
     protected NavigationView navigationView;
     protected View navigationHeaderView;
     protected ListView recyclerList;
+    protected RecyclerView recyclerView;
+    protected LinearLayoutManager recyclerLayoutManager;
     protected View inputLayout;
     protected View inputIcon;
     protected EditText textInput;
@@ -65,6 +72,10 @@ public class ResourceActivity extends AppCompatActivity
         textInput = (EditText) findViewById(R.id.text_input);
 
         recyclerList = (ListView) findViewById(R.id.list_view);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(recyclerLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         progressIndicator = (ProgressBar) findViewById(R.id.toolbar_progress_indicator);
 
@@ -72,6 +83,14 @@ public class ResourceActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         navigationHeaderView = navigationView.getHeaderView(0);
+
+        try {
+            String versionPrefixText = getString(R.string.version_prefix);
+            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            TextView headerSubTextView = (TextView) navigationHeaderView.findViewById(R.id.nav_header_subtext);
+            headerSubTextView.setText(versionPrefixText + pInfo.versionName);
+        } catch (PackageManager.NameNotFoundException e) {
+        }
 
         Member me = getFetLifeApplication().getMe();
         if (me != null) {
@@ -133,12 +152,12 @@ public class ResourceActivity extends AppCompatActivity
 
             try {
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put(FetLifeApplication.CONSTANT_ONESIGNAL_TAG_VERSION,1);
-                jsonObject.put(FetLifeApplication.CONSTANT_ONESIGNAL_TAG_NICKNAME,getFetLifeApplication().getMe().getNickname());
-                jsonObject.put(FetLifeApplication.CONSTANT_ONESIGNAL_TAG_MEMBER_TOKEN,"");
+                jsonObject.put(FetLifeApplication.CONSTANT_ONESIGNAL_TAG_VERSION, 1);
+                jsonObject.put(FetLifeApplication.CONSTANT_ONESIGNAL_TAG_NICKNAME, getFetLifeApplication().getMe().getNickname());
+                jsonObject.put(FetLifeApplication.CONSTANT_ONESIGNAL_TAG_MEMBER_TOKEN, "");
                 OneSignal.sendTags(jsonObject);
 
-                String[] tags = new String[] {
+                String[] tags = new String[]{
                         FetLifeApplication.CONSTANT_ONESIGNAL_TAG_VERSION,
                         FetLifeApplication.CONSTANT_ONESIGNAL_TAG_NICKNAME,
                         FetLifeApplication.CONSTANT_ONESIGNAL_TAG_MEMBER_TOKEN
@@ -155,7 +174,7 @@ public class ResourceActivity extends AppCompatActivity
 
             LoginActivity.startLogout(this);
         } else if (id == R.id.nav_conversations) {
-            ConversationsActivity.startActivity(this, false);
+            ConversationsActivity.startActivity(this);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -189,10 +208,8 @@ public class ResourceActivity extends AppCompatActivity
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(ResourceActivity.this, text, Toast.LENGTH_LONG).show();
+                Toast.makeText(ResourceActivity.this, text, Toast.LENGTH_SHORT).show();
             }
         });
     }
-
-
 }

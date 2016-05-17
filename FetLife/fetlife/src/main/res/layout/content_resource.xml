@@ -54,9 +54,17 @@
 
     <ListView
         android:id="@+id/list_view"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/text_input_layout">
     </ListView>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:layout_above="@+id/text_input_layout"/>
 
 </RelativeLayout>

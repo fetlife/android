@@ -26,6 +26,10 @@ public class Conversation extends BaseModel {
     private String createdAt;
 
     @Column
+    @JsonProperty("updated_at")
+    private String updatedAt;
+
+    @Column
     @JsonIgnore
     private long date;
 
@@ -66,9 +70,17 @@ public class Conversation extends BaseModel {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
-        if (createdAt != null) {
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+        if (updatedAt != null) {
             try {
-                setDate(DateUtil.parseDate(createdAt));
+                setDate(DateUtil.parseDate(updatedAt));
             } catch (Exception e) {
             }
         }

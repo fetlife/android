@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -36,7 +35,9 @@ public class LoginActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_login);
+
         // Set up the login form.
         mUserNameView = (EditText) findViewById(R.id.username);
 
@@ -135,7 +136,8 @@ public class LoginActivity extends Activity {
     public static void startLogout(Context context) {
         //TODO: add toast
         Intent intent = new Intent(context, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK
+        );
         context.startActivity(intent);
     }
 
@@ -147,7 +149,8 @@ public class LoginActivity extends Activity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onLoginFinished(LoginFinishedEvent loginFinishedEvent) {
         //dismissProgress();
-        ConversationsActivity.startActivity(this, false);
+        ConversationsActivity.startActivity(this);
+        finish();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -8,9 +8,9 @@ android {
     defaultConfig {
         applicationId "com.bitlove.fetlife"
         minSdkVersion 15
-        targetSdkVersion 23
-        versionCode 1
-        versionName "0.1"
+        targetSdkVersion 22
+        versionCode 51
+        versionName "0.5.1"
         manifestPlaceholders = [manifestApplicationId: "${applicationId}",
                                 onesignal_app_id: "f439ffb1-98ef-4548-9769-cca2998ebcb8",
                                 onesignal_google_project_number: "875783571094"]
@@ -54,5 +54,4 @@ dependencies {
     apt 'com.raizlabs.android:DBFlow-Compiler:2.2.1'
 
     testCompile 'junit:junit:4.12'
-
 }

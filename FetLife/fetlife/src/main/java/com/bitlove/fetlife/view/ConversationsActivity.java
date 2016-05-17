@@ -3,10 +3,10 @@ package com.bitlove.fetlife.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
-import android.widget.AdapterView;
+import android.support.design.widget.Snackbar;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.event.NewMessageEvent;
@@ -25,19 +25,20 @@ import org.greenrobot.eventbus.ThreadMode;
 public class ConversationsActivity extends ResourceActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private FlowContentObserver conversationsModelObserver;
-    private ConversationsAdapter conversationsAdapter;
+    private static final int CONVERSATIONS_PAGE_COUNT = 10;
 
-    public static void startActivity(Context context, boolean newTask) {
-        context.startActivity(createIntent(context, newTask));
+    private FlowContentObserver conversationsModelObserver;
+    private ConversationsRecyclerAdapter conversationsAdapter;
+
+    private int requestedPage = 1;
+
+    public static void startActivity(Context context) {
+        context.startActivity(createIntent(context));
     }
 
-    public static Intent createIntent(Context context, boolean newTask) {
+    public static Intent createIntent(Context context) {
         Intent intent = new Intent(context, ConversationsActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        if (newTask) {
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
-        }
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
         return intent;
     }
 
@@ -53,16 +54,31 @@ public class ConversationsActivity extends ResourceActivity
             }
         });
 
-        recyclerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        conversationsAdapter = new ConversationsRecyclerAdapter();
+        conversationsAdapter.setOnItemClickListener(new ConversationsRecyclerAdapter.OnConversationClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Conversation conversation = conversationsAdapter.getItem(position);
+            public void onClick(Conversation conversation) {
                 MessagesActivity.startActivity(ConversationsActivity.this, conversation.getId(), conversation.getNickname(), false);
             }
         });
+        recyclerView.setAdapter(conversationsAdapter);
 
-        conversationsAdapter = new ConversationsAdapter();
-        recyclerList.setAdapter(conversationsAdapter);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) {
+                    int visibleItemCount = recyclerLayoutManager.getChildCount();
+                    int pastVisiblesItems = recyclerLayoutManager.findFirstVisibleItemPosition();
+                    int lastVisiblePosition = visibleItemCount + pastVisiblesItems;
+
+                    if (lastVisiblePosition >= (requestedPage * CONVERSATIONS_PAGE_COUNT)) {
+                        FetLifeApiIntentService.startApiCall(ConversationsActivity.this, FetLifeApiIntentService.ACTION_APICALL_CONVERSATIONS, Integer.toString(CONVERSATIONS_PAGE_COUNT), Integer.toString(++requestedPage));
+                    }
+
+                }
+            }
+        });
+
     }
 
     @Override
@@ -88,8 +104,10 @@ public class ConversationsActivity extends ResourceActivity
         getFetLifeApplication().getEventBus().register(this);
 
         if (!FetLifeApiIntentService.isActionInProgress(FetLifeApiIntentService.ACTION_APICALL_CONVERSATIONS)) {
-            FetLifeApiIntentService.startApiCall(this, FetLifeApiIntentService.ACTION_APICALL_CONVERSATIONS);
+            FetLifeApiIntentService.startApiCall(this, FetLifeApiIntentService.ACTION_APICALL_CONVERSATIONS, Integer.toString(CONVERSATIONS_PAGE_COUNT));
         }
+
+        requestedPage = 1;
     }
 
     @Override

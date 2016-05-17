@@ -29,13 +29,13 @@ public class OnNotificationOpenedHandler implements OneSignal.NotificationOpened
         } else {
             //TODO: if the messages are from the same conversation, open the conversation
             if (additionalData.has("stacked_notifications")) {
-                ConversationsActivity.startActivity(application, true);
+                ConversationsActivity.startActivity(application);
             } else {
                 try {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                        TaskStackBuilder.create(application).addNextIntent(ConversationsActivity.createIntent(application, true)).addNextIntent(MessagesActivity.createIntent(application, additionalData.getString("conversation_id"), additionalData.getString("nickname"), true)).startActivities();
+                        TaskStackBuilder.create(application).addNextIntent(ConversationsActivity.createIntent(application)).addNextIntent(MessagesActivity.createIntent(application, additionalData.getString("conversation_id"), additionalData.getString("nickname"), true)).startActivities();
                     } else {
-                        ConversationsActivity.startActivity(application, true);
+                        ConversationsActivity.startActivity(application);
                         MessagesActivity.startActivity(application, additionalData.getString("conversation_id"), additionalData.getString("nickname"), true);
                     }
                 } catch (JSONException e) {

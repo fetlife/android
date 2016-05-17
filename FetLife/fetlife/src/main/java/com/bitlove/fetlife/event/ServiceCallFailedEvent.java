@@ -21,4 +21,5 @@ public class ServiceCallFailedEvent {
     public boolean isServerConnectionFailed() {
         return serverConnectionFailed;
     }
+
 }

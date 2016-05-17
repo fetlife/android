@@ -1,11 +1,6 @@
 package com.bitlove.fetlife.util;
 
 import android.text.Html;
-import android.text.SpannableStringBuilder;
-import android.text.style.ClickableSpan;
-import android.text.style.URLSpan;
-import android.view.View;
-import android.widget.TextView;
 
 public class StringUtil {
 

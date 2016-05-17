@@ -32,10 +32,10 @@ public interface FetLifeApi {
     Call<Member> getMe(@Header("Authorization") String authHeader);
 
     @GET("/api/v2/me/conversations")
-    Call<List<Conversation>> getConversations(@Header("Authorization") String authHeader, @Query("order_by") String orderBy);
+    Call<List<Conversation>> getConversations(@Header("Authorization") String authHeader, @Query("order_by") String orderBy, @Query("limit") int limit, @Query("page") int page);
 
     @GET("/api/v2/me/conversations/{conversationId}/messages")
-    Call<List<Message>> getMessages(@Header("Authorization") String authHeader, @Path("conversationId") String conversationId);
+    Call<List<Message>> getMessages(@Header("Authorization") String authHeader, @Path("conversationId") String conversationId, @Query("since_id") String sinceMessageId, @Query("until_id") String untilMessageId, @Query("limit") int limit);
 
     @POST("/api/v2/me/conversations/{conversationId}/messages")
     Call<Message> postMessage(@Header("Authorization") String authHeader, @Path("conversationId") String conversationId, @Query("body") String body);

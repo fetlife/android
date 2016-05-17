@@ -30,6 +30,9 @@
     <string name="progress_logging_in">Beaming you up...</string>
     <string name="error_connection_failed">Server could not be reached. Please check your internet connection</string>
     <string name="error_apicall_failed">Connection failed. Please try again later</string>
+    <string name="authentication_failed">Please login again</string>
 
     <string name="new_message_indication">NEW</string>
+    <string name="version_prefix">"App version: "</string>
+    <string name="error_saved_message">Log saved into file fetlife.log, Please send us the log file via our github project.</string>
 </resources>
