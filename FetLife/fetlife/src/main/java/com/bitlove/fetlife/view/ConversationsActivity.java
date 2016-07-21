@@ -6,10 +6,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -22,16 +19,13 @@ import com.bitlove.fetlife.model.pojos.Conversation;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.onesignal.OneSignal;
 import com.raizlabs.android.dbflow.runtime.FlowContentObserver;
-import com.raizlabs.android.dbflow.sql.language.SQLCondition;
-import com.raizlabs.android.dbflow.structure.BaseModel;
-import com.raizlabs.android.dbflow.structure.Model;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ConversationsActivity extends ResourceActivity
+public class ConversationsActivity extends ResourceListActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final int CONVERSATIONS_PAGE_COUNT = 10;

@@ -103,4 +103,10 @@
         ]]>
     </string>
     <string name="snackbar_version_notification">Check out what\'s new in v%1$s at \'About\' screen</string>
+
+    <string name="text_notificationhistoryitem_toremove">Delete</string>
+    <string name="text_notificationhistoryitem_removed">Deleted</string>
+    <string name="notificationhistory_activity_hint">Swipe left to delete notification</string>
+    <string name="title_activity_notificationhistory">Notifications</string>
+    <string name="menu_notifications">Notifications</string>
 </resources>

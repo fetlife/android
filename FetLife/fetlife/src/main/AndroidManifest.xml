@@ -45,10 +45,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".view.MessagesActivity"
-            android:label="@string/title_activity_messages"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden" />
+            android:name=".view.NotificationHistoryActivity"
+            android:label="@string/title_activity_notificationhistory"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".view.FriendsActivity"
             android:label="@string/title_activity_friends"
@@ -66,6 +65,14 @@
         <service
             android:name=".model.service.FetLifeApiIntentService"
             android:exported="false" />
+
+        <service
+            android:name=".inbound.OneSignalNotificationExtenderService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.onesignal.NotificationExtender" />
+            </intent-filter>
+        </service>
 
         <activity
             android:name=".inbound.NfcFriendActivity"

@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class MessagesActivity extends ResourceActivity
+public class MessagesActivity extends ResourceListActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String EXTRA_CONVERSATION_ID = "com.bitlove.fetlife.extra.conversation_id";

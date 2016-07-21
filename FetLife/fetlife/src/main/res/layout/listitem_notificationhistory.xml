@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minHeight="@dimen/listitem_height"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:id="@+id/notificationhistory_remove_layout"
+        style="@style/FriendRequestRejectLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/notificationhistoryitem_remove_text"
+            style="@style/FriendRequestDecisionText"
+            android:text="@string/text_notificationhistoryitem_toremove"
+            android:gravity="center_vertical|right"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/listPreferredItemHeight" />
+
+    </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/swipeable_layout"
+        style="@style/FriendRequestItem"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <TextView
+            android:id="@+id/notificationhistoryitem_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            style="@style/FriendRequestHeader"
+
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+
+            android:layout_alignWithParentIfMissing="true"
+
+            android:singleLine="true"
+            android:ellipsize="marquee"/>
+
+        <TextView
+            android:id="@+id/notificationhistoryitem_message"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            style="@style/FriendRequestUpperText"
+
+            android:layout_below="@id/notificationhistoryitem_title"
+            android:layout_alignParentLeft="true"
+
+            android:layout_alignWithParentIfMissing="true"
+
+            android:singleLine="true"
+            android:ellipsize="marquee"/>
+
+
+    </RelativeLayout>
+</FrameLayout>

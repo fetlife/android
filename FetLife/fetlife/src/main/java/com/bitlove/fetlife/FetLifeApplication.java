@@ -1,9 +1,11 @@
 package com.bitlove.fetlife;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 
 import com.bitlove.fetlife.inbound.OnNotificationOpenedHandler;
@@ -11,6 +13,7 @@ import com.bitlove.fetlife.model.api.FetLifeService;
 import com.bitlove.fetlife.model.db.FetLifeDatabase;
 import com.bitlove.fetlife.model.pojos.Member;
 import com.bitlove.fetlife.model.resource.ImageLoader;
+import com.bitlove.fetlife.notification.NotificationParser;
 import com.crashlytics.android.Crashlytics;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onesignal.OneSignal;
@@ -35,6 +38,8 @@ public class FetLifeApplication extends Application {
 
     private static FetLifeApplication instance;
     private ImageLoader imageLoader;
+    private NotificationParser notificationParser;
+
     private String versionText;
     private int versionNumber;
 
@@ -49,6 +54,8 @@ public class FetLifeApplication extends Application {
 
     private EventBus eventBus;
 
+    private boolean appInForeground = false;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -58,6 +65,8 @@ public class FetLifeApplication extends Application {
         Fabric.with(this, new Crashlytics());
 
         instance = this;
+
+        registerActivityLifecycleCallbacks(new ForegroundActivityObserver());
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         //TODO: move me to database and check also for structure update
@@ -77,7 +86,7 @@ public class FetLifeApplication extends Application {
         FlowManager.init(new FlowConfig.Builder(this).build());
 
         OneSignal.startInit(this).setNotificationOpenedHandler(new OnNotificationOpenedHandler()).init();
-        OneSignal.enableNotificationsWhenActive(false);
+        OneSignal.enableNotificationsWhenActive(true);
 
         imageLoader = new ImageLoader(this);
 
@@ -86,6 +95,8 @@ public class FetLifeApplication extends Application {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        notificationParser = new NotificationParser();
 
         eventBus = EventBus.getDefault();
 
@@ -99,12 +110,20 @@ public class FetLifeApplication extends Application {
 
     }
 
+    public boolean isAppInForeground() {
+        return appInForeground;
+    }
+
     public FetLifeService getFetLifeService() {
         return fetLifeService;
     }
 
     public ImageLoader getImageLoader() {
         return imageLoader;
+    }
+
+    public NotificationParser getNotificationParser() {
+        return notificationParser;
     }
 
     public void setAccessToken(String accessToken) {
@@ -144,4 +163,37 @@ public class FetLifeApplication extends Application {
     public int getVersionNumber() {
         return versionNumber;
     }
+
+    private class ForegroundActivityObserver implements ActivityLifecycleCallbacks {
+        @Override
+        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+        }
+
+        @Override
+        public void onActivityStarted(Activity activity) {
+            appInForeground = true;
+        }
+
+        @Override
+        public void onActivityResumed(Activity activity) {
+        }
+
+        @Override
+        public void onActivityPaused(Activity activity) {
+        }
+
+        @Override
+        public void onActivityStopped(Activity activity) {
+            appInForeground = false;
+        }
+
+        @Override
+        public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+        }
+
+        @Override
+        public void onActivityDestroyed(Activity activity) {
+        }
+    }
 }
+

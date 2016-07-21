@@ -27,8 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import retrofit.http.HEAD;
-
 public class FriendRequestsRecyclerAdapter extends RecyclerView.Adapter<FriendRequestViewHolder> {
 
     private static final int FRIENDREQUEST_UNDO_DURATION = 5000;
@@ -203,8 +201,8 @@ public class FriendRequestsRecyclerAdapter extends RecyclerView.Adapter<FriendRe
                             recyclerView.scrollToPosition(adapterPosition);
                         } else {
                             Context context = recyclerView.getContext();
-                            if (context instanceof ResourceActivity) {
-                                ((ResourceActivity)context).showToast(context.getString(R.string.undo_no_longer_possible));
+                            if (context instanceof ResourceListActivity) {
+                                ((ResourceListActivity)context).showToast(context.getString(R.string.undo_no_longer_possible));
                             }
                         }
                     }
@@ -254,8 +252,8 @@ public class FriendRequestsRecyclerAdapter extends RecyclerView.Adapter<FriendRe
                             recyclerView.scrollToPosition(adapterPosition);
                         } else {
                             Context context = recyclerView.getContext();
-                            if (context instanceof ResourceActivity) {
-                                ((ResourceActivity)context).showToast(context.getString(R.string.undo_no_longer_possible));
+                            if (context instanceof ResourceListActivity) {
+                                ((ResourceListActivity)context).showToast(context.getString(R.string.undo_no_longer_possible));
                             }
                         }
                     }
