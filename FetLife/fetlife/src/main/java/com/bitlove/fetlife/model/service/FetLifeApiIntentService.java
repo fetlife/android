@@ -36,6 +36,7 @@ import com.bitlove.fetlife.model.pojos.Member;
 import com.bitlove.fetlife.model.pojos.Message;
 import com.bitlove.fetlife.model.pojos.Message_Table;
 import com.bitlove.fetlife.model.pojos.Token;
+import com.bitlove.fetlife.util.EmojiUtil;
 import com.bitlove.fetlife.util.NetworkUtil;
 import com.onesignal.OneSignal;
 import com.raizlabs.android.dbflow.config.FlowManager;
@@ -332,7 +333,7 @@ public class FetLifeApiIntentService extends IntentService {
     }
 
     private boolean sendPendingMessage(Message pendingMessage) throws IOException {
-        Call<Message> postMessagesCall = getFetLifeApi().postMessage(FetLifeService.AUTH_HEADER_PREFIX + getFetLifeApplication().getAccessToken(), pendingMessage.getConversationId(), pendingMessage.getBody());
+        Call<Message> postMessagesCall = getFetLifeApi().postMessage(FetLifeService.AUTH_HEADER_PREFIX + getFetLifeApplication().getAccessToken(), pendingMessage.getConversationId(), EmojiUtil.escapeEmojis(pendingMessage.getBody()));
         Response<Message> postMessageResponse = postMessagesCall.execute();
         String conversationId = pendingMessage.getConversationId();
         if (postMessageResponse.isSuccess()) {
@@ -340,6 +341,7 @@ public class FetLifeApiIntentService extends IntentService {
             message.setClientId(pendingMessage.getClientId());
             message.setPending(false);
             message.setConversationId(conversationId);
+            message.setBody(EmojiUtil.deEscapeEmojis(message.getBody()));
             message.update();
             getFetLifeApplication().getEventBus().post(new MessageSendSucceededEvent(conversationId));
             return true;
@@ -444,7 +446,7 @@ public class FetLifeApiIntentService extends IntentService {
     private boolean retrieveMessages(String... params) throws IOException {
         final String conversationId = params[0];
 
-        final boolean loadNewMessages = getBoolFromParams(params,1,true);
+        final boolean loadNewMessages = getBoolFromParams(params, 1, true);
 
         Call<List<Message>> getMessagesCall = null;
         if (loadNewMessages) {
@@ -471,6 +473,7 @@ public class FetLifeApiIntentService extends IntentService {
                         } else {
                             message.setClientId(UUID.randomUUID().toString());
                         }
+                        message.setBody(EmojiUtil.deEscapeEmojis(message.getBody()));
                         message.setConversationId(conversationId);
                         message.setPending(false);
                         message.save();
