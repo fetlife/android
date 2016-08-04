@@ -28,7 +28,7 @@ import org.json.JSONObject;
 public class ConversationsActivity extends ResourceListActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final int CONVERSATIONS_PAGE_COUNT = 10;
+    private static final int CONVERSATIONS_PAGE_COUNT = 25;
 
     private FlowContentObserver conversationsModelObserver;
     private ConversationsRecyclerAdapter conversationsAdapter;
@@ -108,7 +108,6 @@ public class ConversationsActivity extends ResourceListActivity
                     if (lastVisiblePosition >= (requestedPage * CONVERSATIONS_PAGE_COUNT)) {
                         FetLifeApiIntentService.startApiCall(ConversationsActivity.this, FetLifeApiIntentService.ACTION_APICALL_CONVERSATIONS, Integer.toString(CONVERSATIONS_PAGE_COUNT), Integer.toString(++requestedPage));
                     }
-
                 }
             }
         });

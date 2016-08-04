@@ -9,9 +9,16 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 @Table(database = FetLifeDatabase.class)
 public class NotificationHistoryItem extends BaseModel {
 
+    public NotificationHistoryItem() {
+        setTimeStamp(System.currentTimeMillis());
+    }
+
     @Column
     @PrimaryKey(autoincrement = true)
     private int dbId;
+
+    @Column
+    private long timeStamp;
 
     @Column
     private String displayHeader;
@@ -40,6 +47,14 @@ public class NotificationHistoryItem extends BaseModel {
 
     public void setDbId(int dbId) {
         this.dbId = dbId;
+    }
+
+    public long getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
     }
 
     public int getDisplayId() {

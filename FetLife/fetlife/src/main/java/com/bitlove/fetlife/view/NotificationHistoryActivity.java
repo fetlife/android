@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.bitlove.fetlife.R;
@@ -21,6 +23,7 @@ import com.bitlove.fetlife.model.pojos.FriendSuggestion;
 import com.bitlove.fetlife.model.pojos.NotificationHistoryItem;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.raizlabs.android.dbflow.runtime.FlowContentObserver;
+import com.raizlabs.android.dbflow.sql.language.Delete;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -83,4 +86,24 @@ public class NotificationHistoryActivity extends ResourceListActivity
         notificationHistoryAdapter.refresh();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.activity_notificationhistory, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_clear_notification_history:
+                //TODO: think of moving it to a db thread
+                new Delete().from(NotificationHistoryItem.class).query();
+                notificationHistoryAdapter.refresh();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

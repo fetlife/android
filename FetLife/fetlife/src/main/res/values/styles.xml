@@ -9,6 +9,7 @@
         <item name="android:textColorSecondary">@color/text_color_secondary</item>
         <item name="android:listDivider">@color/color_primary_dark</item>
         <item name="android:windowBackground">@color/window_background</item>
+        <item name="android:itemBackground">@color/window_background</item>
     </style>
 
     <style name="AppTheme.Transparent" parent="android:Theme">

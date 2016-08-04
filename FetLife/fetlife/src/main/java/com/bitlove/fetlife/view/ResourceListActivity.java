@@ -2,9 +2,11 @@ package com.bitlove.fetlife.view;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -29,7 +31,11 @@ import android.widget.Toast;
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.event.AuthenticationFailedEvent;
+import com.bitlove.fetlife.event.ServiceCallFailedEvent;
+import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
+import com.bitlove.fetlife.event.ServiceCallStartedEvent;
 import com.bitlove.fetlife.model.pojos.Member;
+import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -138,6 +144,7 @@ public class ResourceListActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.activity_resource, menu);
         return true;
@@ -174,11 +181,17 @@ public class ResourceListActivity extends AppCompatActivity
             AboutActivity.startActivity(this);
         } else if (id == R.id.nav_notifications) {
             NotificationHistoryActivity.startActivity(this);
+        } else if (id == R.id.nav_upload_pic) {
+            MediaUploadSelectionDialog.show(this);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return false;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -217,8 +230,25 @@ public class ResourceListActivity extends AppCompatActivity
         LoginActivity.logout(getFetLifeApplication());
     }
 
-    protected FetLifeApplication getFetLifeApplication() {
-        return (FetLifeApplication) getApplication();
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onServiceCallFailed(ServiceCallFailedEvent serviceCallFailedEvent) {
+        if (serviceCallFailedEvent.getServiceCallAction().equals(FetLifeApiIntentService.ACTION_APICALL_UPLOAD_PICTURE)) {
+            showToast(getString(R.string.message_image_upload_failed));
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onServiceCallFinished(ServiceCallFinishedEvent serviceCallFinishedEvent) {
+        if (serviceCallFinishedEvent.getServiceCallAction().equals(FetLifeApiIntentService.ACTION_APICALL_UPLOAD_PICTURE)) {
+            showToast(getString(R.string.message_image_upload_finished));
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onServiceCallStarted(ServiceCallStartedEvent serviceCallStartedEvent) {
+        if (serviceCallStartedEvent.getServiceCallAction().equals(FetLifeApiIntentService.ACTION_APICALL_UPLOAD_PICTURE)) {
+            showToast(getString(R.string.message_image_upload_started));
+        }
     }
 
     protected void showToast(final String text) {
@@ -229,4 +259,9 @@ public class ResourceListActivity extends AppCompatActivity
             }
         });
     }
+
+    protected FetLifeApplication getFetLifeApplication() {
+        return (FetLifeApplication) getApplication();
+    }
+
 }

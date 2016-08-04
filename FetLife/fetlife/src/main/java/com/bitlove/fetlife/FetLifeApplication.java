@@ -7,6 +7,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 import com.bitlove.fetlife.inbound.OnNotificationOpenedHandler;
 import com.bitlove.fetlife.model.api.FetLifeService;
@@ -52,6 +53,21 @@ public class FetLifeApplication extends Application {
 
     public static FetLifeApplication getInstance() {
         return instance;
+    }
+
+    public void showToast(final int resourceId) {
+        showToast(getResources().getString(resourceId));
+    }
+
+    public void showToast(final String text) {
+        if (foregroundActivty != null && !foregroundActivty.isFinishing()) {
+            foregroundActivty.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(foregroundActivty, text, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     @Override

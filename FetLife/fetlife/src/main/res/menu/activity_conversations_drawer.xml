@@ -17,16 +17,32 @@
             android:icon="@android:drawable/ic_menu_my_calendar"
             android:title="@string/menu_friendrequests" />
 
+    </group>
+
+    <group android:id="@+id/interaction" android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_upload_pic"
+            android:icon="@android:drawable/ic_menu_gallery"
+            android:title="@string/menu_upload_media" />
+
         <item
             android:id="@+id/nav_introduce"
             android:icon="@android:drawable/ic_menu_share"
             android:title="@string/menu_introduce" />
 
+    </group>
+
+
+    <group android:id="@+id/about" android:checkableBehavior="single">
         <item
             android:id="@+id/nav_notifications"
-            android:icon="@android:drawable/ic_menu_info_details"
+            android:icon="@android:drawable/ic_dialog_alert"
             android:title="@string/menu_notifications" />
 
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@android:drawable/ic_menu_info_details"
+            android:title="@string/menu_about" />
     </group>
 
     <group android:id="@+id/logout" android:checkableBehavior="single">
@@ -36,11 +52,5 @@
             android:title="@string/menu_logout" />
     </group>
 
-    <group android:id="@+id/about" android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_about"
-            android:icon="@android:drawable/ic_menu_info_details"
-            android:title="@string/menu_about" />
-    </group>
 
 </menu>

@@ -30,7 +30,7 @@ Thank you for your understandings.
 
 1. Enable installing application from unknwon sources.
 For more information about how to do it please read the following [guideline](https://developer.android.com/distribute/tools/open-distribution.html#unknown-sources)
-2. Download and install the [fetlife-1.2.1.apk](https://github.com/fetlife/fetlife-android/releases/download/v1.2.1/fetlife-1.2.1.apk) to your device
+2. Download and install the [fetlife-1.3.0.apk](https://github.com/fetlife/fetlife-android/releases/download/v1.3.0/fetlife-1.3.0.apk) to your device
 3. (Optional) disable application install from unknown sources.
 
 ### Kinksters Helping Kinksters

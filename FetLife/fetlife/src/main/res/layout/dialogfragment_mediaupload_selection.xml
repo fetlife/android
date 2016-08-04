@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    style="@style/MediaUploadSelectionView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        style="@style/MediaUploadSelectionIcon"
+        android:id="@+id/mediaUploadCameraSelectionView"
+        android:src="@android:drawable/ic_menu_camera"/>
+
+    <ImageView
+        style="@style/MediaUploadSelectionIcon"
+        android:id="@+id/mediaUploadGallerySelectionView"
+        android:src="@android:drawable/ic_menu_gallery"/>
+
+</LinearLayout>

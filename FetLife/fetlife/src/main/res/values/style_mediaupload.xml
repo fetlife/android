@@ -1,0 +1,15 @@
+<resources>
+
+    <style name="MediaUploadSelectionView">
+        <item name="android:background">@color/color_accent</item>
+    </style>
+
+    <style name="MediaUploadSelectionIcon">
+        <item name="android:layout_width">@dimen/media_upload_selection_image_size</item>
+        <item name="android:layout_height">@dimen/media_upload_selection_image_size</item>
+        <item name="android:layout_margin">@dimen/media_upload_selection_image_margin</item>
+        <item name="android:background">@color/color_accent</item>
+        <item name="android:scaleType">fitXY</item>
+    </style>
+
+</resources>

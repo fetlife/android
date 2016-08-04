@@ -39,4 +39,7 @@
     <dimen name="listitem_background_margin_vertical">16dp</dimen>
     <dimen name="listitem_background_margin_horizontal">14dp</dimen>
 
+    <dimen name="media_upload_selection_image_size">100dp</dimen>
+    <dimen name="media_upload_selection_image_margin">2dp</dimen>
+
 </resources>

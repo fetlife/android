@@ -16,7 +16,9 @@ import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.model.pojos.NotificationHistoryItem;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -150,6 +152,7 @@ public class NotificationHistoryRecyclerAdapter extends RecyclerView.Adapter<Not
 
         notificationHistoryItemViewHolder.titleText.setText(notificationHistoryItem.getDisplayHeader());
         notificationHistoryItemViewHolder.messageText.setText(notificationHistoryItem.getDisplayMessage());
+        notificationHistoryItemViewHolder.timeText.setText(SimpleDateFormat.getDateTimeInstance().format(new Date(notificationHistoryItem.getTimeStamp())));
 
         notificationHistoryItemViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,7 +183,7 @@ public class NotificationHistoryRecyclerAdapter extends RecyclerView.Adapter<Not
 
 class NotificationHistoryItemViewHolder extends RecyclerView.ViewHolder {
 
-    TextView titleText, messageText;
+    TextView titleText, messageText, timeText;
     View swipableLayout, removeBackgroundLayout;
 
     public NotificationHistoryItemViewHolder(View itemView) {
@@ -188,6 +191,7 @@ class NotificationHistoryItemViewHolder extends RecyclerView.ViewHolder {
 
         titleText = (TextView) itemView.findViewById(R.id.notificationhistoryitem_title);
         messageText = (TextView) itemView.findViewById(R.id.notificationhistoryitem_message);
+        timeText = (TextView) itemView.findViewById(R.id.notificationhistoryitem_time);
 
         swipableLayout = itemView.findViewById(R.id.swipeable_layout);
         removeBackgroundLayout = itemView.findViewById(R.id.notificationhistory_remove_layout);

@@ -1,14 +1,17 @@
 package com.bitlove.fetlife.model.service;
 
 import android.app.IntentService;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
 import com.bitlove.fetlife.BuildConfig;
 import com.bitlove.fetlife.FetLifeApplication;
+import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.event.AuthenticationFailedEvent;
 import com.bitlove.fetlife.event.FriendRequestSendFailedEvent;
 import com.bitlove.fetlife.event.FriendRequestSendSucceededEvent;
@@ -37,17 +40,21 @@ import com.bitlove.fetlife.model.pojos.Message;
 import com.bitlove.fetlife.model.pojos.Message_Table;
 import com.bitlove.fetlife.model.pojos.Token;
 import com.bitlove.fetlife.util.EmojiUtil;
+import com.bitlove.fetlife.util.BytesUtil;
 import com.bitlove.fetlife.util.NetworkUtil;
 import com.onesignal.OneSignal;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 import com.raizlabs.android.dbflow.structure.database.transaction.ITransaction;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.ResponseBody;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -66,6 +73,7 @@ public class FetLifeApiIntentService extends IntentService {
     public static final String ACTION_APICALL_LOGON_USER = "com.bitlove.fetlife.action.apicall.logon_user";
     public static final String ACTION_APICALL_FRIENDREQUESTS = "com.bitlove.fetlife.action.apicall.friendrequests";
     public static final String ACTION_APICALL_SEND_FRIENDREQUESTS = "com.bitlove.fetlife.action.apicall.send_friendrequests";
+    public static final String ACTION_APICALL_UPLOAD_PICTURE = "com.bitlove.fetlife.action.apicall.upload_picture";
 
     private static final String CONSTANT_PREF_KEY_REFRESH_TOKEN = "com.bitlove.fetlife.key.pref.token.refresh";
     private static final String EXTRA_PARAMS = "com.bitlove.fetlife.extra.params";
@@ -159,6 +167,9 @@ public class FetLifeApiIntentService extends IntentService {
                     break;
                 case ACTION_APICALL_SEND_FRIENDREQUESTS:
                     result = sendPendingFriendRequests();
+                    break;
+                case ACTION_APICALL_UPLOAD_PICTURE:
+                    result = uploadPiture(params);
                     break;
             }
 
@@ -494,8 +505,25 @@ public class FetLifeApiIntentService extends IntentService {
         return response.isSuccess();
     }
 
+    private boolean uploadPiture(String[] params) throws IOException {
+
+        Uri uri = Uri.parse(params[0]);
+        ContentResolver contentResolver = getFetLifeApplication().getContentResolver();
+
+        RequestBody pictureBody = RequestBody.create(MediaType.parse(contentResolver.getType(uri)), BytesUtil.getBytes(contentResolver.openInputStream(uri)));
+        RequestBody isAvatarPart = RequestBody.create(MediaType.parse("text/plain"), Boolean.toString(false));
+        RequestBody friendsOnlyPart = RequestBody.create(MediaType.parse("text/plain"), Boolean.toString(false));
+        RequestBody captionPart = RequestBody.create(MediaType.parse("text/plain"), "");
+        RequestBody isFromUserPart = RequestBody.create(MediaType.parse("text/plain"), Boolean.toString(true));
+
+        Call<ResponseBody> uploadPictureCall = getFetLifeApi().uploadPicture(FetLifeService.AUTH_HEADER_PREFIX + getFetLifeApplication().getAccessToken(), pictureBody, isAvatarPart, friendsOnlyPart, captionPart, isFromUserPart);
+        Response<ResponseBody> response = uploadPictureCall.execute();
+
+        return response.isSuccess();
+    }
+
     private boolean retriveConversations(String[] params) throws IOException {
-        final int limit = getIntFromParams(params, 0, 10);
+        final int limit = getIntFromParams(params, 0, 25);
         final int page = getIntFromParams(params, 1, 1);
 
         Call<List<Conversation>> getConversationsCall = getFetLifeApi().getConversations(FetLifeService.AUTH_HEADER_PREFIX + getFetLifeApplication().getAccessToken(), PARAM_SORT_ORDER_UPDATED_DESC, limit, page);
