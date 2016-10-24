@@ -3,9 +3,11 @@ package com.bitlove.fetlife;
 import android.app.Activity;
 import android.os.Bundle;
 
-import com.bitlove.fetlife.view.activity.ConversationsActivity;
-import com.bitlove.fetlife.view.activity.LoginActivity;
+import com.bitlove.fetlife.view.activity.resource.ConversationsActivity;
 
+/**
+ * Default Start Activity to make Activity title and App name independent
+ */
 public class StartActivity extends Activity {
 
     @Override

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
 
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".view.activity.ConversationsActivity"
+    tools:context=".view.activity.resource.ConversationsActivity"
     tools:showIn="@layout/app_bar_resource">
 
         <ImageView

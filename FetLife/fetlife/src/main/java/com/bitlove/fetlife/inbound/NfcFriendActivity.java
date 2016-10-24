@@ -1,7 +1,6 @@
 package com.bitlove.fetlife.inbound;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.nfc.NdefMessage;
@@ -12,9 +11,12 @@ import android.widget.Toast;
 
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.event.FriendSuggestionAddedEvent;
-import com.bitlove.fetlife.model.pojos.FriendSuggestion;
+import com.bitlove.fetlife.model.pojos.SharedProfile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * UI less Activity invoked by Profile Sharing Action from another device
+ */
 public class NfcFriendActivity extends Activity {
 
     @Override
@@ -31,9 +33,11 @@ public class NfcFriendActivity extends Activity {
         NdefMessage msg = (NdefMessage) rawMsgs[0];
 
         try {
-            FriendSuggestion friendSuggestion = new ObjectMapper().readValue(new String(msg.getRecords()[0].getPayload()), FriendSuggestion.class);
-            friendSuggestion.save();
+            //Save the received Profile
+            SharedProfile sharedProfile = new ObjectMapper().readValue(new String(msg.getRecords()[0].getPayload()), SharedProfile.class);
+            sharedProfile.save();
 
+            //Notify about new Shared Profile thise who are interested
             getFetLifeApplication().getEventBus().post(new FriendSuggestionAddedEvent());
 
             //TODO replace with Android notification

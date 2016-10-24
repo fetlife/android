@@ -20,25 +20,31 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FriendsRecyclerAdapter extends RecyclerView.Adapter<FriendViewHolder> {
+public class FriendsRecyclerAdapter extends ResourceListRecyclerAdapter<Friend, FriendViewHolder> {
 
     private final ImageLoader imageLoader;
 
-    public interface OnFriendClickListener {
-        public void onItemClick(Friend friend);
-        public void onAvatarClick(Friend friend);
-    }
-
     private List<Friend> itemList;
-    OnFriendClickListener onFriendClickListener;
+    ResourceListRecyclerAdapter.OnResourceClickListener<Friend> onFriendClickListener;
 
     public FriendsRecyclerAdapter(ImageLoader imageLoader) {
         this.imageLoader = imageLoader;
         loadItems();
     }
 
-    public void setOnItemClickListener(OnFriendClickListener onFriendClickListener) {
+    public void setOnItemClickListener(ResourceListRecyclerAdapter.OnResourceClickListener<Friend> onFriendClickListener) {
         this.onFriendClickListener = onFriendClickListener;
+    }
+
+    public void refresh() {
+        loadItems();
+        //TODO: think of possibility of update only specific items instead of the whole list
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+            }
+        });
     }
 
     private void loadItems() {
@@ -48,6 +54,15 @@ public class FriendsRecyclerAdapter extends RecyclerView.Adapter<FriendViewHolde
         } catch (Throwable t) {
             itemList = new ArrayList<>();
         }
+    }
+
+    @Override
+    public int getItemCount() {
+        return itemList.size();
+    }
+
+    public Friend getItem(int position) {
+        return itemList.get(position);
     }
 
     @Override
@@ -89,28 +104,13 @@ public class FriendsRecyclerAdapter extends RecyclerView.Adapter<FriendViewHolde
         imageLoader.loadImage(friendViewHolder.itemView.getContext(), avatarUrl, friendViewHolder.avatarImage, R.drawable.dummy_avatar);
     }
 
-    public void refresh() {
-        loadItems();
-        //TODO: think of possibility of update only specific items instead of the whole list
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                notifyDataSetChanged();
-            }
-        });
-    }
-
     @Override
-    public int getItemCount() {
-        return itemList.size();
-    }
+    protected void onItemRemove(FriendViewHolder viewHolder, RecyclerView recyclerView, boolean swipedRight) {
 
-    public Friend getItem(int position) {
-        return itemList.get(position);
     }
 }
 
-class FriendViewHolder extends RecyclerView.ViewHolder {
+class FriendViewHolder extends SwipeableViewHolder {
 
     ImageView avatarImage;
     TextView headerText, upperText, dateText;
@@ -122,5 +122,20 @@ class FriendViewHolder extends RecyclerView.ViewHolder {
         upperText = (TextView) itemView.findViewById(R.id.friend_upper);
         dateText = (TextView) itemView.findViewById(R.id.friend_right);
         avatarImage = (ImageView) itemView.findViewById(R.id.friend_icon);
+    }
+
+    @Override
+    public View getSwipeableLayout() {
+        return null;
+    }
+
+    @Override
+    public View getSwipeRightBackground() {
+        return null;
+    }
+
+    @Override
+    public View getSwipeLeftBackground() {
+        return null;
     }
 }

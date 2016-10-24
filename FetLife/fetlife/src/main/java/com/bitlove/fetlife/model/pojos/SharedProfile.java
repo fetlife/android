@@ -7,7 +7,7 @@ import com.raizlabs.android.dbflow.annotation.Table;
 
 @Table(database = FetLifeDatabase.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FriendSuggestion extends Member {
+public class SharedProfile extends Member {
 
     @Column
     private boolean pending;

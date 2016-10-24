@@ -27,8 +27,11 @@ import com.raizlabs.android.dbflow.sql.migration.AlterTableMigration;
 public class FetLifeDatabase {
 
     public static final String NAME = "fetlife";
-    public static final int VERSION = 24;
 
+    //Simple increase the version number in case of new tables
+    public static final int VERSION = 25;
+
+    //Add new Migration classes in case of table structure change
     @Migration(version = 24, database = FetLifeDatabase.class)
     public static class Migration24 extends AlterTableMigration<User> {
 

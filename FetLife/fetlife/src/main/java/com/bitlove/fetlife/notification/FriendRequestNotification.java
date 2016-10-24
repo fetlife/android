@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
-import com.bitlove.fetlife.view.activity.FriendRequestsActivity;
+import com.bitlove.fetlife.view.activity.resource.FriendRequestsActivity;
 
 import org.json.JSONObject;
 

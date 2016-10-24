@@ -1,4 +1,4 @@
-package com.bitlove.fetlife.view.activity;
+package com.bitlove.fetlife.view.activity.resource;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,13 +12,15 @@ import android.view.View;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.event.NotificationReceivedEvent;
 import com.bitlove.fetlife.model.pojos.NotificationHistoryItem;
+import com.bitlove.fetlife.view.activity.component.MenuActivityComponent;
 import com.bitlove.fetlife.view.adapter.NotificationHistoryRecyclerAdapter;
+import com.bitlove.fetlife.view.adapter.ResourceListRecyclerAdapter;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-public class NotificationHistoryActivity extends ResourceListActivity
+public class NotificationHistoryActivity extends ResourceListActivity<NotificationHistoryItem>
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private NotificationHistoryRecyclerAdapter notificationHistoryAdapter;
@@ -37,48 +39,39 @@ public class NotificationHistoryActivity extends ResourceListActivity
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreateActivityComponents() {
+        addActivityComponent(new MenuActivityComponent());
+    }
 
-        if (isFinishing()) {
-            return;
-        }
-
-        floatingActionButton.setVisibility(View.GONE);
-
-        notificationHistoryAdapter = new NotificationHistoryRecyclerAdapter();
-        notificationHistoryAdapter.setOnNotificationHistoryItemClickListener(new NotificationHistoryRecyclerAdapter.OnNotificationHistoryItemClickListener() {
-            @Override
-            public void onItemClick(NotificationHistoryItem notificationHistoryItem) {
-                String launchUrl = notificationHistoryItem.getLaunchUrl();
-                if (launchUrl != null && launchUrl.trim().length() != 0) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.setData(Uri.parse(launchUrl));
-                    startActivity(intent);
-                }
-            }
-        });
-        recyclerView.setAdapter(notificationHistoryAdapter);
-
+    @Override
+    protected void onResourceCreate(Bundle savedInstanceState) {
+        super.onResourceCreate(savedInstanceState);
         showToast(getResources().getString(R.string.notificationhistory_activity_hint));
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
-        if (isFinishing()) {
-            return;
-        }
-
-        getFetLifeApplication().getEventBus().register(this);
+    protected String getApiCallAction() {
+        return null;
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        getFetLifeApplication().getEventBus().unregister(this);
+    protected ResourceListRecyclerAdapter createRecyclerAdapter(Bundle savedInstanceState) {
+        return new NotificationHistoryRecyclerAdapter();
+    }
+
+    @Override
+    public void onItemClick(NotificationHistoryItem notificationHistoryItem) {
+        String launchUrl = notificationHistoryItem.getLaunchUrl();
+        if (launchUrl != null && launchUrl.trim().length() != 0) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setData(Uri.parse(launchUrl));
+            startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onAvatarClick(NotificationHistoryItem notificationHistoryItem) {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

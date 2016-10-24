@@ -1,4 +1,4 @@
-package com.bitlove.fetlife.view.activity;
+package com.bitlove.fetlife.view.activity.standalone;
 
 import android.annotation.TargetApi;
 import android.app.Activity;

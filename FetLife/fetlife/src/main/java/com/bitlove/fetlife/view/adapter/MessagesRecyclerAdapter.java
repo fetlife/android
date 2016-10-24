@@ -55,6 +55,15 @@ public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessageViewHol
     }
 
     @Override
+    public int getItemCount() {
+        return itemList.size();
+    }
+
+    public Message getItem(int position) {
+        return itemList.get(position);
+    }
+
+    @Override
     public MessageViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.listitem_message, parent, false);
         return new MessageViewHolder(itemView);
@@ -92,19 +101,11 @@ public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessageViewHol
         }
     }
 
-    @Override
-    public int getItemCount() {
-        return itemList.size();
-    }
-
-    public Message getItem(int position) {
-        return itemList.get(position);
-    }
 }
 
 class MessageViewHolder extends RecyclerView.ViewHolder {
 
-    private static final int EXTEND_PADDING_MULTIPLYER = 10;
+    private static final int EXTEND_PADDING_MULTIPLIER = 10;
 
     LinearLayout messageContainer;
     TextView messageText, subText;
@@ -122,7 +123,7 @@ class MessageViewHolder extends RecyclerView.ViewHolder {
 
         hPadding = (int) context.getResources().getDimension(R.dimen.listitem_horizontal_margin);
         vPadding = (int) context.getResources().getDimension(R.dimen.listitem_vertical_margin);
-        extendedHPadding = EXTEND_PADDING_MULTIPLYER * hPadding;
+        extendedHPadding = EXTEND_PADDING_MULTIPLIER * hPadding;
 
         primaryTextColor = ColorUtil.retrieverColor(context, R.color.text_color_primary);
         errorTextColor = ColorUtil.retrieverColor(context, R.color.text_color_error);

@@ -20,31 +20,40 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class ConversationsRecyclerAdapter extends RecyclerView.Adapter<ConversationViewHolder> {
+public class ConversationsRecyclerAdapter extends ResourceListRecyclerAdapter<Conversation, ConversationViewHolder> {
 
     private final ImageLoader imageLoader;
 
-    public interface OnConversationClickListener {
-        public void onItemClick(Conversation conversation);
-
-        public void onAvatarClick(Conversation conversation);
-    }
-
     private List<Conversation> itemList;
-    OnConversationClickListener onConversationClickListener;
 
     public ConversationsRecyclerAdapter(ImageLoader imageLoader) {
         this.imageLoader = imageLoader;
         loadItems();
     }
 
-    public void setOnItemClickListener(OnConversationClickListener onConversationClickListener) {
-        this.onConversationClickListener = onConversationClickListener;
+    public void refresh() {
+        loadItems();
+        //TODO: think of possibility of update only specific items instead of the whole list
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+            }
+        });
     }
 
     private void loadItems() {
         //TODO: think of moving to separate thread with specific DB executor
         itemList = new Select().from(Conversation.class).orderBy(Conversation_Table.date,false).queryList();
+    }
+
+    @Override
+    public int getItemCount() {
+        return itemList.size();
+    }
+
+    public Conversation getItem(int position) {
+        return itemList.get(position);
     }
 
     @Override
@@ -71,8 +80,8 @@ public class ConversationsRecyclerAdapter extends RecyclerView.Adapter<Conversat
         conversationViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (onConversationClickListener != null) {
-                    onConversationClickListener.onItemClick(conversation);
+                if (getOnItemClickListener() != null) {
+                    getOnItemClickListener().onItemClick(conversation);
                 }
             }
         });
@@ -80,8 +89,8 @@ public class ConversationsRecyclerAdapter extends RecyclerView.Adapter<Conversat
         conversationViewHolder.avatarImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (onConversationClickListener != null) {
-                    onConversationClickListener.onAvatarClick(conversation);
+                if (getOnItemClickListener() != null) {
+                    getOnItemClickListener().onAvatarClick(conversation);
                 }
             }
         });
@@ -91,28 +100,12 @@ public class ConversationsRecyclerAdapter extends RecyclerView.Adapter<Conversat
         imageLoader.loadImage(conversationViewHolder.itemView.getContext(), avatarUrl, conversationViewHolder.avatarImage, R.drawable.dummy_avatar);
     }
 
-    public void refresh() {
-        loadItems();
-        //TODO: think of possibility of update only specific items instead of the whole list
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                notifyDataSetChanged();
-            }
-        });
-    }
-
     @Override
-    public int getItemCount() {
-        return itemList.size();
-    }
-
-    public Conversation getItem(int position) {
-        return itemList.get(position);
+    protected void onItemRemove(ConversationViewHolder viewHolder, RecyclerView recyclerView, boolean swipedRight) {
     }
 }
 
-class ConversationViewHolder extends RecyclerView.ViewHolder {
+class ConversationViewHolder extends SwipeableViewHolder {
 
     ImageView avatarImage;
     TextView headerText, messageText, dateText, newMessageIndicator;
@@ -125,5 +118,20 @@ class ConversationViewHolder extends RecyclerView.ViewHolder {
         messageText = (TextView) itemView.findViewById(R.id.conversation_message_text);
         dateText = (TextView) itemView.findViewById(R.id.conversation_date);
         avatarImage = (ImageView) itemView.findViewById(R.id.conversation_icon);
+    }
+
+    @Override
+    public View getSwipeableLayout() {
+        return null;
+    }
+
+    @Override
+    public View getSwipeRightBackground() {
+        return null;
+    }
+
+    @Override
+    public View getSwipeLeftBackground() {
+        return null;
     }
 }

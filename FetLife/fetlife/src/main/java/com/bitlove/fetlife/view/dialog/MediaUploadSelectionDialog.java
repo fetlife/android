@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bitlove.fetlife.R;
-import com.bitlove.fetlife.view.activity.ResourceListActivity;
+import com.bitlove.fetlife.view.activity.resource.ResourceListActivity;
 
 import java.io.File;
 import java.io.IOException;

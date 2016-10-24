@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".view.activity.AboutActivity"
+    tools:context=".view.activity.standalone.AboutActivity"
     tools:showIn="@layout/activity_about">
 
     <TextView

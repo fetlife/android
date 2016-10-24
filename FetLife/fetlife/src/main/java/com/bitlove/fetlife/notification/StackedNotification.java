@@ -5,9 +5,9 @@ import android.content.Context;
 import android.os.Build;
 
 import com.bitlove.fetlife.FetLifeApplication;
-import com.bitlove.fetlife.view.activity.ConversationsActivity;
-import com.bitlove.fetlife.view.activity.MessagesActivity;
-import com.bitlove.fetlife.view.activity.NotificationHistoryActivity;
+import com.bitlove.fetlife.view.activity.resource.ConversationsActivity;
+import com.bitlove.fetlife.view.activity.resource.MessagesActivity;
+import com.bitlove.fetlife.view.activity.resource.NotificationHistoryActivity;
 
 import org.json.JSONObject;
 

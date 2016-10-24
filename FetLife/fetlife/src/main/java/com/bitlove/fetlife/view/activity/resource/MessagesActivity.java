@@ -1,11 +1,14 @@
-package com.bitlove.fetlife.view.activity;
+package com.bitlove.fetlife.view.activity.resource;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.EditText;
 
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.event.MessageSendFailedEvent;
@@ -18,13 +21,12 @@ import com.bitlove.fetlife.event.ServiceCallStartedEvent;
 import com.bitlove.fetlife.model.pojos.Conversation;
 
 import com.bitlove.fetlife.model.pojos.Conversation_Table;
-import com.bitlove.fetlife.model.pojos.Member;
 import com.bitlove.fetlife.model.pojos.Message;
 
 import com.bitlove.fetlife.model.pojos.User;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
+import com.bitlove.fetlife.view.activity.component.MenuActivityComponent;
 import com.bitlove.fetlife.view.adapter.MessagesRecyclerAdapter;
-import com.raizlabs.android.dbflow.runtime.FlowContentObserver;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -34,8 +36,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class MessagesActivity extends ResourceListActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MessagesActivity extends ResourceActivity
+        implements MenuActivityComponent.MenuActivityCallBack {
 
     private static final String EXTRA_CONVERSATION_ID = "com.bitlove.fetlife.extra.conversation_id";
     private static final String EXTRA_CONVERSATION_TITLE = "com.bitlove.fetlife.extra.conversation_title";
@@ -44,6 +46,12 @@ public class MessagesActivity extends ResourceListActivity
 
     private String conversationId;
     private boolean oldMessageloadingInProgress;
+
+    protected RecyclerView recyclerView;
+    protected LinearLayoutManager recyclerLayoutManager;
+    protected View inputLayout;
+    protected View inputIcon;
+    protected EditText textInput;
 
     public static void startActivity(Context context, String conversationId, String title, boolean newTask) {
         context.startActivity(createIntent(context, conversationId, title, newTask));
@@ -61,14 +69,31 @@ public class MessagesActivity extends ResourceListActivity
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreateActivityComponents() {
+        addActivityComponent(new MenuActivityComponent());
+    }
 
-        if (isFinishing()) {
-            return;
-        }
+    @Override
+    protected void onSetContentView() {
+        setContentView(R.layout.activity_resource_list);
+    }
 
-        floatingActionButton.setVisibility(View.GONE);
+    @Override
+    protected void onResourceCreate(Bundle savedInstanceState) {
+
+        inputLayout = findViewById(R.id.text_input_layout);
+        inputIcon = findViewById(R.id.text_send_icon);
+        textInput = (EditText) findViewById(R.id.text_input);
+//        textInput.setFilters(new InputFilter[]{new InputFilter() {
+//            @Override
+//            public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+//                  //Custom Emoji Support will go here
+//        }});
+
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(recyclerLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         inputLayout.setVisibility(View.VISIBLE);
         inputIcon.setVisibility(View.VISIBLE);
@@ -97,14 +122,7 @@ public class MessagesActivity extends ResourceListActivity
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
-        if (isFinishing()) {
-            return;
-        }
-
-        getFetLifeApplication().getEventBus().register(this);
+    protected void onResourceStart() {
 
         messagesAdapter.refresh();
 
@@ -135,13 +153,6 @@ public class MessagesActivity extends ResourceListActivity
             FetLifeApiIntentService.startApiCall(this, FetLifeApiIntentService.ACTION_APICALL_SEND_MESSAGES, conversationId);
         }
 
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-        getFetLifeApplication().getEventBus().unregister(this);
     }
 
     @Override
@@ -195,11 +206,6 @@ public class MessagesActivity extends ResourceListActivity
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessagesCallFailed(ServiceCallFailedEvent serviceCallFailedEvent) {
         if (serviceCallFailedEvent.getServiceCallAction() == FetLifeApiIntentService.ACTION_APICALL_MESSAGES) {
-            if (serviceCallFailedEvent.isServerConnectionFailed()) {
-                showToast(getResources().getString(R.string.error_connection_failed));
-            } else {
-                showToast(getResources().getString(R.string.error_apicall_failed));
-            }
             //TODO: solve setting this value false only if appropriate message call is failed (otherwise same call can be triggered twice)
             oldMessageloadingInProgress = false;
             messagesAdapter.refresh();
@@ -278,4 +284,8 @@ public class MessagesActivity extends ResourceListActivity
 
     }
 
+    @Override
+    public boolean finishAtMenuNavigation() {
+        return true;
+    }
 }

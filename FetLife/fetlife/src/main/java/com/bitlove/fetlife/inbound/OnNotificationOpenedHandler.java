@@ -7,6 +7,9 @@ import com.onesignal.OneSignal;
 
 import org.json.JSONObject;
 
+/**
+ * Inbound and extension point for OneSignal notification library to react on user interaction when user clciked on a notification
+ */
 public class OnNotificationOpenedHandler implements OneSignal.NotificationOpenedHandler {
     @Override
     public void notificationOpened(String message, JSONObject additionalData, boolean isActive) {

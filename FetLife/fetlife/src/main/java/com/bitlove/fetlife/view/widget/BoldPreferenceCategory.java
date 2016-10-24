@@ -7,6 +7,9 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
+/**
+ * UI widget to make a preference in a Prefence Screen displayed as bold
+ */
 public class BoldPreferenceCategory extends PreferenceCategory {
     public BoldPreferenceCategory(Context context) {
         super(context);

@@ -13,41 +13,20 @@ import com.bitlove.fetlife.notification.OneSignalNotification;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+//One of the inbound and extension points for OneSignal solution
+//As of now other extension point is used but it is kept for logging purpuses and for future extensions
 public class OneSignalBackgroundDataReceiver extends WakefulBroadcastReceiver {
 
     public void onReceive(Context context, Intent intent) {
         //keep this class empty for now for have the full call back mechanism for now
         //moving the processing code to the notification opener service seems to be sufficient now
         //but we will see after having more coverage of notifications
-
-//        try {
-
-            Bundle dataBundle = intent.getBundleExtra("data");
-            if (BuildConfig.DEBUG) {
-                for (String key: dataBundle.keySet())
-                {
-                    Log.d (getClass().getSimpleName(), key + " is a key in the bundle");
-                }
+        Bundle dataBundle = intent.getBundleExtra("data");
+        if (BuildConfig.DEBUG) {
+            for (String key: dataBundle.keySet())
+            {
+                Log.d (getClass().getSimpleName(), key + " is a key in the bundle");
             }
-
-//            String message = dataBundle.getString("message");
-//            JSONObject customJSON = new JSONObject(dataBundle.getString("custom"));
-//
-//            FetLifeApplication fetLifeApplication = getFetLifeApplication(context);
-//
-//            OneSignalNotification oneSignalNotification = fetLifeApplication.getNotificationParser().parseNotification(message, customJSON);
-//            //oneSignalNotification.handle(fetLifeApplication);
-//
-//        } catch (JSONException e) {
-//            //no valid custom information; nothing to handle
-//            if (BuildConfig.DEBUG) {
-//                Log.w(getClass().getSimpleName(), e);
-//            }
-//        }
-
+        }
     }
-
-//    private FetLifeApplication getFetLifeApplication(Context context) {
-//        return (FetLifeApplication) context.getApplicationContext();
-//    }
 }

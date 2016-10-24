@@ -1,18 +1,16 @@
 package com.bitlove.fetlife.notification;
 
 import android.app.Activity;
-import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Build;
 
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.event.NewMessageEvent;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
-import com.bitlove.fetlife.view.activity.ConversationsActivity;
-import com.bitlove.fetlife.view.activity.MessagesActivity;
+import com.bitlove.fetlife.view.activity.resource.ConversationsActivity;
+import com.bitlove.fetlife.view.activity.resource.MessagesActivity;
 
 import org.json.JSONObject;
 
