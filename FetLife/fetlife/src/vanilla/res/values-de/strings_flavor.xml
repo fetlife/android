@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="logon_title">Log mich bei FL ein</string>
+    <string name="action_log_on">Log mich ein!</string>
+    <string name="progress_logging_in">Einloggen...</string>
+</resources>

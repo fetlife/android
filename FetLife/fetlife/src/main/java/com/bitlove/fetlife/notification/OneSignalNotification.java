@@ -1,5 +1,9 @@
 package com.bitlove.fetlife.notification;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import com.bitlove.fetlife.FetLifeApplication;
 
 import org.json.JSONObject;
@@ -27,5 +31,12 @@ public abstract class OneSignalNotification {
     public void onNotificationDisplayed(FetLifeApplication fetLifeApplication, int notificationId) {}
 
     public abstract void onClick(FetLifeApplication fetLifeApplication);
+
+    public abstract String getAssociatedPreferenceKey(Context context);
+
+    public boolean isEnabled(FetLifeApplication fetLifeApplication) {
+        SharedPreferences sharedPreferences = fetLifeApplication.getUserSessionManager().getActiveUserPreferences();
+        return sharedPreferences.getBoolean(getAssociatedPreferenceKey(fetLifeApplication), true);
+    }
 
 }

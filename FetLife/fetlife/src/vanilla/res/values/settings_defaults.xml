@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_default_notification_anonymtext">true</string>
+    <string name="settings_default_notification_messages_enabled">true</string>
+    <string name="settings_default_notification_friendrequests_enabled">true</string>
+    <string name="settings_default_notification_others_enabled">true</string>
+    <string name="settings_default_notification_info_enabled">true</string>
+</resources>

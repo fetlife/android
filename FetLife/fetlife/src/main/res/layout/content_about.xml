@@ -5,13 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.bitlove.fetlife.view.AboutActivity"
+    tools:context=".view.activity.AboutActivity"
     tools:showIn="@layout/activity_about">
 
     <TextView
         android:id="@+id/text_about"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:autoLink="web"
+        android:textColorLink="@color/text_color_link"
         android:layout_margin="@dimen/text_margin"/>
 
 </android.support.v4.widget.NestedScrollView>

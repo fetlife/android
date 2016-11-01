@@ -43,6 +43,11 @@
             android:id="@+id/nav_about"
             android:icon="@android:drawable/ic_menu_info_details"
             android:title="@string/menu_about" />
+
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@android:drawable/ic_menu_preferences"
+            android:title="@string/menu_settings" />
     </group>
 
     <group android:id="@+id/logout" android:checkableBehavior="single">

@@ -23,6 +23,7 @@ Thumbs.db
 
 # OSX files
 .DS_Store
+**/.DS_Store
 
 # Eclipse project files
 .classpath
@@ -30,8 +31,7 @@ Thumbs.db
 
 # Android Studio
 *.iml
-/.idea/workspace.xml
-/.idea/libraries
+/.idea/
 .gradle
 build/
 /captures

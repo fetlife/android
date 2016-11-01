@@ -2,117 +2,58 @@ package com.bitlove.fetlife;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.bitlove.fetlife.inbound.OnNotificationOpenedHandler;
 import com.bitlove.fetlife.model.api.FetLifeService;
 import com.bitlove.fetlife.model.db.FetLifeDatabase;
-import com.bitlove.fetlife.model.pojos.Member;
 import com.bitlove.fetlife.model.resource.ImageLoader;
 import com.bitlove.fetlife.notification.NotificationParser;
+import com.bitlove.fetlife.session.UserSessionManager;
+import com.bitlove.fetlife.view.activity.ResourceListActivity;
 import com.crashlytics.android.Crashlytics;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.onesignal.OneSignal;
-import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
-import com.squareup.picasso.OkHttpDownloader;
-import com.squareup.picasso.Picasso;
 
 import io.fabric.sdk.android.Fabric;
 import org.greenrobot.eventbus.EventBus;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class FetLifeApplication extends Application {
 
-    public static final String CONSTANT_PREF_KEY_ME_JSON = "com.bitlove.fetlife.bundle.json";
-    private static final String CONSTANT_PREF_KEY_DB_VERSION = "com.bitlove.fetlife.pref.db_version";
-
-    public static final String CONSTANT_ONESIGNAL_TAG_VERSION = "version";
-    public static final String CONSTANT_ONESIGNAL_TAG_NICKNAME = "nickname";
-    public static final String CONSTANT_ONESIGNAL_TAG_MEMBER_TOKEN = "member_token";
+    private static final String APP_PREF_KEY_INT_VERSION_UPGRADE_EXECUTED = "APP_PREF_KEY_INT_VERSION_UPGRADE_EXECUTED";
+    private static final long WAITING_FOR_RESULT_LOGOUT_DELAY_MILLIS = 60 * 1000;
 
     private static FetLifeApplication instance;
+
     private ImageLoader imageLoader;
     private NotificationParser notificationParser;
     private FetLifeService fetLifeService;
 
     private String versionText;
     private int versionNumber;
-    private Activity foregroundActivty;
-
-    private String accessToken;
-    private Member me;
+    private Activity foregroundActivity;
 
     private EventBus eventBus;
+    private UserSessionManager userSessionManager;
 
     public static FetLifeApplication getInstance() {
         return instance;
-    }
-
-    public void showToast(final int resourceId) {
-        showToast(getResources().getString(resourceId));
-    }
-
-    public void showToast(final String text) {
-        if (foregroundActivty != null && !foregroundActivty.isFinishing()) {
-            foregroundActivty.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(foregroundActivty, text, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-//        Thread.currentThread().setUncaughtExceptionHandler(new FetlifeExceptionHandler(this, Thread.currentThread().getDefaultUncaughtExceptionHandler()));
-
-        Fabric.with(this, new Crashlytics());
-
+        //Setup default instance and callbacks
         instance = this;
-
-        registerActivityLifecycleCallbacks(new ForegroundActivityObserver());
-
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        //TODO: move me to database and check also for structure update
-        String meAsJson = preferences.getString(FetLifeApplication.CONSTANT_PREF_KEY_ME_JSON, null);
-        try {
-            Member me = new ObjectMapper().readValue(meAsJson, Member.class);
-            this.me = me;
-        } catch (Exception e) {
-            preferences.edit().remove(CONSTANT_PREF_KEY_ME_JSON);
-        }
-
-        int databaseVersion = preferences.getInt(CONSTANT_PREF_KEY_DB_VERSION, 0);
-        if (databaseVersion < FetLifeDatabase.MIN_SUPPORTED_VERSION) {
-            deleteDatabase();
-        }
-        preferences.edit().putInt(CONSTANT_PREF_KEY_DB_VERSION, FetLifeDatabase.VERSION).apply();
-        FlowManager.init(new FlowConfig.Builder(this).build());
-
-        OneSignal.startInit(this).setNotificationOpenedHandler(new OnNotificationOpenedHandler()).init();
-        OneSignal.enableNotificationsWhenActive(true);
-
-        imageLoader = new ImageLoader(this);
-
-        try {
-            fetLifeService = new FetLifeService(this);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        notificationParser = new NotificationParser();
-
-        eventBus = EventBus.getDefault();
 
         try {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -122,14 +63,81 @@ public class FetLifeApplication extends Application {
             versionText = getString(R.string.text_unknown);
         }
 
+        registerActivityLifecycleCallbacks(new ForegroundActivityObserver());
+
+        //Init crash logging
+        Fabric.with(this, new Crashlytics());
+
+        //Init push notifications
+        OneSignal.startInit(this).setNotificationOpenedHandler(new OnNotificationOpenedHandler()).init();
+        OneSignal.enableNotificationsWhenActive(true);
+
+        //Init user session manager
+        userSessionManager = new UserSessionManager(this);
+
+        applyVersionUpgradeIfNeeded();
+
+        userSessionManager.init();
+
+        //Init members
+        try {
+            fetLifeService = new FetLifeService(this);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        imageLoader = new ImageLoader(this);
+        notificationParser = new NotificationParser();
+        eventBus = EventBus.getDefault();
+
+    }
+
+    public UserSessionManager getUserSessionManager() {
+        return userSessionManager;
+    }
+
+    public void showToast(final int resourceId) {
+        showToast(getResources().getString(resourceId));
+    }
+
+    public void showToast(final String text) {
+//        if (foregroundActivity != null && !foregroundActivity.isFinishing()) {
+//            foregroundActivity.runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    Toast.makeText(foregroundActivity, text, Toast.LENGTH_SHORT).show();
+//                }
+//            });
+//        }
+        showToast(text, Toast.LENGTH_SHORT);
+    }
+
+    public void showLongToast(final int resourceId) {
+        showLongToast(getResources().getString(resourceId));
+    }
+
+    public void showLongToast(final String text) {
+        showToast(text, Toast.LENGTH_LONG);
+    }
+
+    private void showToast(final String text, int length) {
+        Toast.makeText(FetLifeApplication.this, text, length).show();
+    }
+
+    public synchronized void setForegroundActivity(Activity foregroundActivity) {
+        synchronized (userSessionManager) {
+            this.foregroundActivity = foregroundActivity;
+        }
     }
 
     public boolean isAppInForeground() {
-        return foregroundActivty != null;
+        synchronized (userSessionManager) {
+            return foregroundActivity != null;
+        }
     }
 
-    public Activity getForegroundActivty() {
-        return foregroundActivty;
+    public Activity getForegroundActivity() {
+        return foregroundActivity;
     }
 
     public FetLifeService getFetLifeService() {
@@ -144,34 +152,8 @@ public class FetLifeApplication extends Application {
         return notificationParser;
     }
 
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
-    }
-
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public void setMe(Member me) {
-        this.me = me;
-    }
-
-    public void removeMe() {
-        me = null;
-    }
-
-    public Member getMe() {
-        return me;
-    }
-
     public EventBus getEventBus() {
         return eventBus;
-    }
-
-    public void deleteDatabase() {
-        deleteDatabase(FetLifeDatabase.NAME + ".db");
-        //DBFlow library uses .db suffix, but they mentioned they might going to change this in the future
-        deleteDatabase(FetLifeDatabase.NAME);
     }
 
     public String getVersionText() {
@@ -180,6 +162,21 @@ public class FetLifeApplication extends Application {
 
     public int getVersionNumber() {
         return versionNumber;
+    }
+
+    private void applyVersionUpgradeIfNeeded() {
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        int lastVersionUpgrade = sharedPreferences.getInt(APP_PREF_KEY_INT_VERSION_UPGRADE_EXECUTED, 0);
+        if (lastVersionUpgrade < 10510) {
+            sharedPreferences.edit().clear().apply();
+
+            FlowManager.destroy();
+            deleteDatabase(FetLifeDatabase.NAME + ".db");
+            openOrCreateDatabase(FetLifeDatabase.NAME + ".db", Context.MODE_PRIVATE, null);
+
+            sharedPreferences.edit().putInt(APP_PREF_KEY_INT_VERSION_UPGRADE_EXECUTED, versionNumber).apply();
+        }
     }
 
     private class ForegroundActivityObserver implements ActivityLifecycleCallbacks {
@@ -193,16 +190,40 @@ public class FetLifeApplication extends Application {
 
         @Override
         public void onActivityResumed(Activity activity) {
-            foregroundActivty = activity;
+            setForegroundActivity(activity);
         }
 
         @Override
         public void onActivityPaused(Activity activity) {
-            foregroundActivty = null;
+            setForegroundActivity(null);
         }
 
         @Override
         public void onActivityStopped(Activity activity) {
+            boolean isWaitingForResult = isWaitingForResult(activity);
+            if (!isAppInForeground() && !activity.isChangingConfigurations() && !isWaitingForResult) {
+                if (userSessionManager.getActivePasswordAlwaysPreference()) {
+                    userSessionManager.onUserLogOut();
+                }
+            } else if(isWaitingForResult) {
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        synchronized (userSessionManager) {
+                            if (!isAppInForeground() && userSessionManager.getCurrentUser() != null && userSessionManager.getActivePasswordAlwaysPreference()) {
+                                userSessionManager.onUserLogOut();
+                            }
+                        }
+                    }
+                }, WAITING_FOR_RESULT_LOGOUT_DELAY_MILLIS);
+            }
+        }
+
+        private boolean isWaitingForResult(Activity activity) {
+            if (activity instanceof ResourceListActivity) {
+                return ((ResourceListActivity)activity).isWaitingForResult();
+            }
+            return false;
         }
 
         @Override
@@ -213,5 +234,6 @@ public class FetLifeApplication extends Application {
         public void onActivityDestroyed(Activity activity) {
         }
     }
+
 }
 

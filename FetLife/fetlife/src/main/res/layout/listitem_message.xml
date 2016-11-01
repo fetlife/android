@@ -18,7 +18,7 @@
         android:orientation="vertical"
         style="@style/MessageItem">
 
-        <TextView
+        <com.bitlove.fetlife.view.widget.WorkaroundTextView
             android:id="@+id/message_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

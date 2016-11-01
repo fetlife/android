@@ -4,6 +4,7 @@ import com.bitlove.fetlife.FetLifeApplication;
 
 import org.json.JSONObject;
 
+@Deprecated
 public class VersionNotification extends InfoNotification {
 
     private String version;

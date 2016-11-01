@@ -9,7 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".view.LoginActivity">
+    tools:context=".view.activity.LoginActivity">
 
     <ScrollView
         android:id="@+id/login_form"
@@ -58,6 +58,8 @@
                         android:maxLines="1"
                         android:singleLine="true" />
 
+                    <requestFocus/>
+
                 </android.support.design.widget.TextInputLayout>
 
                 <android.support.design.widget.TextInputLayout
@@ -80,12 +82,22 @@
 
                 </android.support.design.widget.TextInputLayout>
 
+                <android.support.v7.widget.AppCompatCheckBox
+                    android:id="@+id/logon_password_preference"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:theme="@style/AppTheme.Light_Accent"
+                    android:textColor="@color/text_color_secondary"
+                    android:checked="true"
+                    android:text="@string/logon_check_ask_for_password"/>
+
                 <Button
                     android:id="@+id/log_on_button"
                     style="@style/LogonButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="4dp"
                     android:text="@string/action_log_on"
                     android:textStyle="bold" />
 
@@ -94,7 +106,7 @@
                     style="@style/LoggingProgressButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="4dp"
                     android:enabled="false"
                     android:text="@string/progress_logging_in"
                     android:visibility="gone"
@@ -103,6 +115,7 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/link_text_forgot_password"
                 style="@style/LogonText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -114,6 +127,7 @@
                 android:text="@string/forgot_login" />
 
             <TextView
+                android:id="@+id/link_text_sign_up"
                 style="@style/LogonText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

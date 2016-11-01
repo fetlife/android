@@ -41,7 +41,7 @@ public class FetLifeService {
 
     private int lastResponseCode = -1;
 
-    public FetLifeService(FetLifeApplication fetLifeApplication) throws Exception {
+    public FetLifeService(final FetLifeApplication fetLifeApplication) throws Exception {
 
 //        String keyStoreType = KeyStore.getDefaultType();
 //        KeyStore keyStore = KeyStore.getInstance(keyStoreType);

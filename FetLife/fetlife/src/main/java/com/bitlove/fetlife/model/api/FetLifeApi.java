@@ -7,6 +7,7 @@ import com.bitlove.fetlife.model.pojos.FriendRequest;
 import com.bitlove.fetlife.model.pojos.Member;
 import com.bitlove.fetlife.model.pojos.Message;
 import com.bitlove.fetlife.model.pojos.Token;
+import com.bitlove.fetlife.model.pojos.User;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.ResponseBody;
 
@@ -36,7 +37,7 @@ public interface FetLifeApi {
     Call<Token> refreshToken(@Query("client_id") String clientId, @Field("client_secret") String clientSecret, @Field("redirect_uri") String redirectUrl, @Field("grant_type") String grantType, @Field("refresh_token") String refreshToken);
 
     @GET("/api/v2/me")
-    Call<Member> getMe(@Header("Authorization") String authHeader);
+    Call<User> getMe(@Header("Authorization") String authHeader);
 
     @GET("/api/v2/me/conversations")
     Call<List<Conversation>> getConversations(@Header("Authorization") String authHeader, @Query("order_by") String orderBy, @Query("limit") int limit, @Query("page") int page);
@@ -46,6 +47,9 @@ public interface FetLifeApi {
 
     @GET("/api/v2/me/conversations/{conversationId}/messages")
     Call<List<Message>> getMessages(@Header("Authorization") String authHeader, @Path("conversationId") String conversationId, @Query("since_id") String sinceMessageId, @Query("until_id") String untilMessageId, @Query("limit") int limit);
+
+    @GET("/api/v2/members/{memberId}")
+    Call<Member> getMember(@Header("Authorization") String authHeader, @Path("memberId") String conversationId);
 
     @FormUrlEncoded
     @POST("/api/v2/me/conversations/{conversationId}/messages")

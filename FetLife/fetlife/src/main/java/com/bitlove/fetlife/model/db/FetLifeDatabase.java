@@ -17,13 +17,29 @@
 
 package com.bitlove.fetlife.model.db;
 
+import com.bitlove.fetlife.model.pojos.User;
 import com.raizlabs.android.dbflow.annotation.Database;
+import com.raizlabs.android.dbflow.annotation.Migration;
+import com.raizlabs.android.dbflow.sql.SQLiteType;
+import com.raizlabs.android.dbflow.sql.migration.AlterTableMigration;
 
 @Database(name = FetLifeDatabase.NAME, version = FetLifeDatabase.VERSION)
 public class FetLifeDatabase {
 
     public static final String NAME = "fetlife";
-    public static final int VERSION = 20;
-    public static final int MIN_SUPPORTED_VERSION = 20;
+    public static final int VERSION = 24;
+
+    @Migration(version = 24, database = FetLifeDatabase.class)
+    public static class Migration24 extends AlterTableMigration<User> {
+
+        public Migration24(Class<User> table) {
+            super(table);
+        }
+
+        @Override
+        public void onPreMigrate() {
+            addColumn(SQLiteType.TEXT, "accessToken");
+        }
+    }
 
 }

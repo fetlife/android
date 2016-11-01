@@ -1,34 +1,29 @@
 <resources>
-    <string name="app_name">FetLife</string>
-
     <string name="google_app_id" translatable="false">latex-fetish-123456</string>
 
     <!-- Strings related to login -->
     <string name="prompt_username">Username</string>
     <string name="prompt_password">Password</string>
     <string name="prompt_new_message">Your message here</string>
-    <string name="action_log_on">Log me in, scotty!</string>
     <string name="action_sign_in_short">Log in</string>
     <string name="error_invalid_username">This username is invalid</string>
     <string name="error_invalid_password">This password is invalid</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="title_activity_conversations">Conversations</string>
-    <string name="title_activity_messages" translatable="false">FetLife</string>
+    <string name="title_activity_messages">Messages</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
     <string name="snakckbar_loading">Refreshing...</string>
-    <string name="logon_title">Log in to FetLife</string>
     <string name="sign_up">Sign up Now!</string>
     <string name="forgot_login">Forgot your login info?</string>
 
     <string name="menu_conversations">Conversations</string>
     <string name="message_sub_separator" translatable="false">" \@ "</string>
 
-    <string name="progress_logging_in">Beaming you up...</string>
     <string name="error_connection_failed">Server could not be reached. Please check your internet connection</string>
     <string name="error_apicall_failed">Connection failed. Please try again later</string>
     <string name="authentication_failed">Please login again</string>
@@ -37,7 +32,6 @@
     <string name="version_prefix">"App version: "</string>
     <string name="title_activity_friends">Friends</string>
     <string name="menu_friends">Friends</string>
-    <string name="menu_logout">Log out</string>
     <string name="title_activity_friends_new_conversation">New Conversation</string>
     <string name="menu_about">About</string>
     <string name="text_unknown">unknown</string>
@@ -61,6 +55,22 @@
     <string name="nfc_tap_your_device">Tap your device to another Android device to activate the beam</string>
     <string name="message_nfc_turned_off">Please turn on NFC to enable this feature</string>
     <string name="title_activity_about">About This App</string>
+    <string name="snackbar_version_notification">Check out what\'s new in v%1$s at \'About\' screen</string>
+    <string name="text_notificationhistoryitem_toremove">Delete</string>
+    <string name="text_notificationhistoryitem_removed">Deleted</string>
+    <string name="notificationhistory_activity_hint">Swipe left to delete notification</string>
+    <string name="title_activity_notificationhistory">Notifications</string>
+    <string name="menu_notifications">Notifications</string>
+    <string name="menu_upload_media">Upload Photo</string>
+    <string name="title_intent_choose_media_upload">Select Media App</string>
+    <string name="message_image_upload_started">Beaming up your photo ...</string>
+    <string name="message_image_upload_finished">Your photo has been uploaded</string>
+    <string name="message_image_upload_failed">Photo upload has failed. Try again later</string>
+    <string name="action_clear_notification_history">Clear all</string>
+    <string name="message_media_picture_upload_confirmation">I certify this picture is of me, or that I have explicit permission to post it on FetLife.\nI tell no lie</string>
+    <string name="button_media_picture_upload_confirmation">Certify</string>
+    <string name="button_media_picture_upload_cancel">Cancel</string>
+    <string name="title_media_picture_upload_confirmation">Add your picture</string>
 
     <!--TODO: consider improving about layout -->
     <string name="text_about">
@@ -68,7 +78,41 @@
 
             <h1>Official FetLife App v%1$s</h1>
 
-            <p>Version History</p>
+            <p><b><br/>Got Bugs?</b></p>
+
+            If you find a bug please start by reading through the our current list of open issues and if you can\'t find anything about your bug please submit a new bug at our GitHub page:
+            <br/>https://github.com/fetlife/android/issues
+
+            <p><b><br/>Version History</b></p>
+
+            <p/>v1.7.18<br/>
+                    <ul>
+                        <li>Fix for periodical connection issues</li>
+                    </ul>
+
+            <p/>v1.7<br/>
+                    <ul>
+                        <li>Caption for picture upload</li>
+                    </ul>
+
+            <p/>v1.6<br/>
+                    <ul>
+                        <li>Default Emoji Support</li>
+                    </ul>
+
+            <p/>v1.5<br/>
+                    <ul>
+                        <li>Notification Settings</li>
+                        <li>Auto password protection</li>
+                        <li>Kinky and Vanilla version (separate Apps)</li>
+                    </ul>
+
+            <p/>v1.4<br/>
+                    <ul>
+                        <li>Picture upload</li>
+                        <li>Timestamp field for Notification History Items</li>
+                        <li>Clear All menu option for Notification History</li>
+                    </ul>
 
             <p/>v1.3<br/>
                     <ul>
@@ -102,17 +146,39 @@
             <p/>
         ]]>
     </string>
-    <string name="snackbar_version_notification">Check out what\'s new in v%1$s at \'About\' screen</string>
-
-    <string name="text_notificationhistoryitem_toremove">Delete</string>
-    <string name="text_notificationhistoryitem_removed">Deleted</string>
-    <string name="notificationhistory_activity_hint">Swipe left to delete notification</string>
-    <string name="title_activity_notificationhistory">Notifications</string>
-    <string name="menu_notifications">Notifications</string>
-    <string name="menu_upload_media">Upload Photo</string>
-    <string name="title_intent_choose_media_upload">Select Media App</string>
-    <string name="message_image_upload_started">Beaming up your photo ...</string>
-    <string name="message_image_upload_finished">Your photo has been uploaded</string>
-    <string name="message_image_upload_failed">Photo upload has failed. Try again later</string>
-    <string name="action_clear_notification_history">Clear all</string>
+    <string name="settings_title_notifications">Notification Settings</string>
+    <string name="settings_summary_notifications">Manage when and how to receive notifications</string>
+    <string name="settings_category_notification_text">Notification Text</string>
+    <string name="settings_title_notification_anonymtext">Anonymous Notifications</string>
+    <string name="settings_summary_notification_anonymtext">Hide any details in incoming notifications and use a single general notification instead</string>
+    <string name="settings_category_notification_enablement">Enable Notifications</string>
+    <string name="settings_title_notification_messages_enabled">Message Notifications</string>
+    <string name="settings_summary_notification_messages_enabled">Enable Notifications for incoming Messages</string>
+    <string name="settings_title_notification_friendrequests_enabled">Friend Request Notifications</string>
+    <string name="settings_summary_notification_friendrequests_enabled">Enable Notifications for incoming Friend Requests</string>
+    <string name="settings_title_notification_others_enabled">Other Notifications</string>
+    <string name="settings_summary_notification_others_enabled">Enable Notifications for any other event</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="settings_title_notification_info_enabled">Info Notifications</string>
+    <string name="settings_summary_notification_info_enabled">Enable Notifications for information messages</string>
+    <string name="noification_title_new_one_or_more_notification">New Notification</string>
+    <string name="noification_text_new_one_or_more_notification">You have one or more notifications waiting</string>
+    <string name="logon_check_ask_for_password">Always ask for password</string>
+    <string name="menu_logout">Logout</string>
+    <string name="settings_title_profile">Profile Settings</string>
+    <string name="settings_summary_profile">Manage settings relevant to your FetLife App Profile</string>
+    <string name="settings_category_profile_login">Login Settings</string>
+    <string name="settings_title_profile_password_always">Always ask for password</string>
+    <string name="settings_summary_profile_password_always">Make the app to ask password each time after the App was sent to the background</string>
+    <string name="settings_category_profile_data">User Data Settings</string>
+    <string name="settings_title_profile_clear_data">Clear local User Data</string>
+    <string name="settings_summary_profile_clear_data">Clear all data related to current FetLife profile stored on this device. Also logs out you out and disable any further notifications sent to this user</string>
+    <string name="title_delete_user_data_confirmation">Delete local User Data</string>
+    <string name="message_delete_user_data_confirmation">Do you really want to delete all App local user data and logout?\nYou won\'t receive App notifications until you log in again</string>
+    <string name="button_delete_user_data_confirmation">Yes</string>
+    <string name="button_delete_user_data_cancel">Cancel</string>
+    <string name="button_media_picture_upload_hint_caption">Caption</string>
+    <string name="button_media_picture_upload_check_friends_only">Only visible to friends</string>
+    <string name="message_friend_decision_failed">FetLife App: Your decision about friendship could not be sent as you had ogged out before it could have been processed</string>
 </resources>

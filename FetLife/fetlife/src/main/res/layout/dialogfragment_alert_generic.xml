@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/DialogContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/dialogTitle"
+        style="@style/DialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:singleLine="true"
+        android:textAlignment="viewStart" />
+
+    <TextView
+        android:id="@+id/dialogMessage"
+        style="@style/DialogMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/dialogTitle"
+        android:layout_marginTop="10dp"
+        android:gravity="start"
+        android:textAlignment="viewStart" />
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/dialogInputLayout"
+        style="@style/DialogInputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/dialogMessage"
+        android:layout_marginTop="10dp"
+        android:visibility="gone">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/dialogEditText"
+            style="@style/DialogEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:maxLines="2"
+            android:singleLine="false" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/dialogCheckBox"
+        style="@style/DialogCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/dialogInputLayout"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/text_color_secondary"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/dialogPositiveButton"
+        style="@style/DialogButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/dialogCheckBox"
+        android:minHeight="1dp"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/dialogNegativeButton"
+        style="@style/DialogButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dialogCheckBox"
+        android:layout_toLeftOf="@+id/dialogPositiveButton"
+        android:minHeight="1dp"
+        android:visibility="gone" />
+
+</RelativeLayout>

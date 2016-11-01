@@ -8,6 +8,7 @@
     <color name="color_secondary_dark">#000000</color>
 
     <color name="color_accent">#ff880000</color>
+    <color name="color_accent_light">#fffaffbd</color>
     <color name="color_accent_gradient_dark">#ff700000</color>
     <color name="color_accent_gradient_light">#ffa00000</color>
     <color name="text_color_link">#fffaffbd</color>

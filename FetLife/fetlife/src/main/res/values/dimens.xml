@@ -19,7 +19,7 @@
     <dimen name="icon_margin">12dp</dimen>
     <dimen name="icon_border">1dp</dimen>
 
-    <dimen name="logon_header_margin">32dp</dimen>
+    <dimen name="logon_header_margin">24dp</dimen>
     <dimen name="area_margin">32dp</dimen>
 
     <dimen name="listitem_background_margin">16dp</dimen>
@@ -36,7 +36,8 @@
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="text_margin">16dp</dimen>
 
-    <dimen name="listitem_background_margin_vertical">16dp</dimen>
+    <dimen name="listitem_background_margin_vertical_top">12dp</dimen>
+    <dimen name="listitem_background_margin_vertical_bottom">12dp</dimen>
     <dimen name="listitem_background_margin_horizontal">14dp</dimen>
 
     <dimen name="media_upload_selection_image_size">100dp</dimen>

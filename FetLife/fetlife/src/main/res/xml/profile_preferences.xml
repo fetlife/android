@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.bitlove.fetlife.view.widget.BoldPreferenceCategory
+        android:title="@string/settings_category_profile_login">
+
+        <CheckBoxPreference
+            android:key="@string/settings_key_profile_password_always"
+            android:defaultValue="@string/settings_default_profile_password_always"
+            android:title="@string/settings_title_profile_password_always"
+            android:summary="@string/settings_summary_profile_password_always"/>
+
+    </com.bitlove.fetlife.view.widget.BoldPreferenceCategory>
+
+    <com.bitlove.fetlife.view.widget.BoldPreferenceCategory
+        android:title="@string/settings_category_profile_data">
+
+        <Preference
+            android:key="@string/settings_key_profile_clear_data"
+            android:title="@string/settings_title_profile_clear_data"
+            android:summary="@string/settings_summary_profile_clear_data" />
+
+    </com.bitlove.fetlife.view.widget.BoldPreferenceCategory>
+
+</PreferenceScreen>

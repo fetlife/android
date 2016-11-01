@@ -41,5 +41,23 @@
         <item name="android:backgroundDimEnabled">true</item>
     </style>
 
+    <style name="AppTheme.AlertDialog" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="colorAccent">@color/text_color_primary</item>
+        <item name="android:textColor">@color/text_color_primary</item>
+        <item name="android:textColorPrimary">@color/text_color_primary</item>
+        <item name="android:background">@color/window_background</item>
+    </style>
+
+    <style name="AppTheme.Light_Accent" parent="AppTheme">
+        <item name="colorAccent">@color/color_accent_light</item>
+    </style>
+
+    <style name="AppTheme.Secondary_Accent" parent="AppTheme">
+        <item name="colorAccent">@color/text_color_secondary</item>
+    </style>
+
+    <style name="AppTheme.No_Accent" parent="AppTheme">
+        <item name="colorAccent">@color/text_color_primary</item>
+    </style>
 
 </resources>

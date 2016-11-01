@@ -1,12 +1,13 @@
 package com.bitlove.fetlife.notification;
 
 import android.app.TaskStackBuilder;
+import android.content.Context;
 import android.os.Build;
 
 import com.bitlove.fetlife.FetLifeApplication;
-import com.bitlove.fetlife.view.ConversationsActivity;
-import com.bitlove.fetlife.view.MessagesActivity;
-import com.bitlove.fetlife.view.NotificationHistoryActivity;
+import com.bitlove.fetlife.view.activity.ConversationsActivity;
+import com.bitlove.fetlife.view.activity.MessagesActivity;
+import com.bitlove.fetlife.view.activity.NotificationHistoryActivity;
 
 import org.json.JSONObject;
 
@@ -55,6 +56,11 @@ public class StackedNotification extends OneSignalNotification {
             default:
                 NotificationHistoryActivity.startActivity(fetLifeApplication, true);
         }
+    }
+
+    @Override
+    public String getAssociatedPreferenceKey(Context context) {
+        return null;
     }
 
     private void missingGroupFallBack(FetLifeApplication fetLifeApplication) {

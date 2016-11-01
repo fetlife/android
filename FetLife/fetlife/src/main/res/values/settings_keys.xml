@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_key_notification_anonymtext">notification_text_anonym</string>
+    <string name="settings_key_notification_messages_enabled">notification_messages_enabled</string>
+    <string name="settings_key_notification_friendrequests_enabled">notification_friendrequests_enabled</string>
+    <string name="settings_key_notification_others_enabled">notification_others_enabled</string>
+    <string name="settings_key_notification_info_enabled">notification_info_enabled</string>
+    <string name="settings_key_profile_password_always">preference_password_always</string>
+    <string name="settings_key_profile_clear_data">profile_clear_user_data</string>
+</resources>

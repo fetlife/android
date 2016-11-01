@@ -16,6 +16,33 @@
 #   public *;
 #}
 
+-dontwarn org.w3c.dom.bootstrap.DOMImplementationRegistry
+-dontwarn sun.misc.**
+-dontwarn okio.**
+-dontwarn retrofit.Platform$Java8
+-dontwarn org.joda.convert.**
+-dontwarn org.joda.time.**
+
+-keep class org.joda.time.** { *; }
+-keep interface org.joda.time.** { *;}
+
+-keep class org.codehaus.** { *; }
+
+-keepattributes Annotation,EnclosingMethod
+
 -keepclassmembers class * implements android.os.Parcelable {
     static ** CREATOR;
+}
+
+-keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {
+   long producerIndex;
+   long consumerIndex;
+}
+
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueProducerNodeRef {
+    rx.internal.util.atomic.LinkedQueueNode producerNode;
+}
+
+-keepclassmembers class rx.internal.util.unsafe.BaseLinkedQueueConsumerNodeRef {
+    rx.internal.util.atomic.LinkedQueueNode consumerNode;
 }

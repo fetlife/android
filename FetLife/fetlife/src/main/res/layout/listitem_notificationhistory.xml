@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:minHeight="@dimen/listitem_height"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -28,31 +27,14 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/notificationhistoryitem_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            style="@style/NotificationHistoryHeader"
-
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-
-            android:layout_alignWithParentIfMissing="true"
-
-            android:singleLine="true"
-            android:ellipsize="marquee"/>
-
-        <TextView
             android:id="@+id/notificationhistoryitem_time"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
             style="@style/NotificationHistoryTime"
 
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            android:layout_alignBottom="@+id/notificationhistoryitem_title"
-            android:layout_toLeftOf="@+id/notificationhistoryitem_title"
 
             android:layout_alignWithParentIfMissing="true"
 
@@ -60,11 +42,27 @@
             android:ellipsize="marquee"/>
 
         <TextView
+            android:id="@+id/notificationhistoryitem_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            style="@style/NotificationHistoryHeader"
+
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/notificationhistoryitem_time"
+
+            android:layout_alignWithParentIfMissing="true"
+
+            android:singleLine="true"
+            android:ellipsize="marquee"/>
+
+
+        <TextView
             android:id="@+id/notificationhistoryitem_message"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
-            style="@style/NotificationHistoryUpperText"
+            style="@style/NotificationHistoryText"
 
             android:layout_below="@id/notificationhistoryitem_title"
             android:layout_alignParentLeft="true"

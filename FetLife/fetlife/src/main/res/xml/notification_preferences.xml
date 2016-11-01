@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.bitlove.fetlife.view.widget.BoldPreferenceCategory
+        android:title="@string/settings_category_notification_text">
+
+        <CheckBoxPreference
+            android:key="@string/settings_key_notification_anonymtext"
+            android:defaultValue="@string/settings_default_notification_anonymtext"
+            android:title="@string/settings_title_notification_anonymtext"
+            android:summary="@string/settings_summary_notification_anonymtext" />
+
+    </com.bitlove.fetlife.view.widget.BoldPreferenceCategory>
+
+    <com.bitlove.fetlife.view.widget.BoldPreferenceCategory
+        android:title="@string/settings_category_notification_enablement">
+
+        <CheckBoxPreference
+            android:key="@string/settings_key_notification_info_enabled"
+            android:defaultValue="@string/settings_default_notification_info_enabled"
+            android:title="@string/settings_title_notification_info_enabled"
+            android:summary="@string/settings_summary_notification_info_enabled"/>
+
+        <CheckBoxPreference
+            android:key="@string/settings_key_notification_messages_enabled"
+            android:defaultValue="@string/settings_default_notification_messages_enabled"
+            android:title="@string/settings_title_notification_messages_enabled"
+            android:summary="@string/settings_summary_notification_messages_enabled"/>
+
+        <CheckBoxPreference
+            android:key="@string/settings_key_notification_friendrequests_enabled"
+            android:defaultValue="@string/settings_default_notification_friendrequests_enabled"
+            android:title="@string/settings_title_notification_friendrequests_enabled"
+            android:summary="@string/settings_summary_notification_friendrequests_enabled"/>
+
+        <CheckBoxPreference
+            android:key="@string/settings_key_notification_others_enabled"
+            android:defaultValue="@string/settings_default_notification_others_enabled"
+            android:title="@string/settings_title_notification_others_enabled"
+            android:summary="@string/settings_summary_notification_others_enabled"/>
+
+    </com.bitlove.fetlife.view.widget.BoldPreferenceCategory>
+
+</PreferenceScreen>
