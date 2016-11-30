@@ -10,6 +10,6 @@
         android:summary="@string/settings_summary_profile" />
     <header
         android:fragment="com.bitlove.fetlife.view.activity.standalone.SettingsActivity$FeedSettings"
-        android:title="@string/settings_title_feede"
+        android:title="@string/settings_title_feed"
         android:summary="@string/settings_summary_feed" />
 </preference-headers>
