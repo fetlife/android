@@ -22,4 +22,17 @@
 
     </com.bitlove.fetlife.view.widget.BoldPreferenceCategory>
 
+    <com.bitlove.fetlife.view.widget.BoldPreferenceCategory
+        android:title="Signature Settings">
+
+        <EditTextPreference
+            android:title="@string/settings_title_signature"
+            android:summary="@string/settings_summary_signature"
+            android:singleLine="true"
+            android:key="settings_key_profile_signature"
+            android:hint="@string/settings_hint_signature"
+            android:textColor="@color/area_background_dark" />
+            <!--android:background="@color/area_background_dark" />-->
+
+    </com.bitlove.fetlife.view.widget.BoldPreferenceCategory>
 </PreferenceScreen>
