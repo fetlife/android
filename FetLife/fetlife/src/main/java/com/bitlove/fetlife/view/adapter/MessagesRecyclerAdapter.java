@@ -22,6 +22,7 @@ import com.bitlove.fetlife.model.pojos.Message_Table;
 import com.bitlove.fetlife.model.pojos.User;
 import com.bitlove.fetlife.util.ColorUtil;
 import com.bitlove.fetlife.util.StringUtil;
+import com.bitlove.fetlife.util.TextFormattingUtil;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
 import java.text.SimpleDateFormat;
@@ -81,6 +82,8 @@ public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessageViewHol
     public void onBindViewHolder(MessageViewHolder messageViewHolder, int position) {
         Message message = itemList.get(position);
         String messageBody = message.getBody().trim();
+
+        messageBody = new TextFormattingUtil().getFormatted(messageBody);
 
         messageViewHolder.messageText.setText(StringUtil.parseHtml(messageBody));
         messageViewHolder.subText.setText(message.getSenderNickname() + messageViewHolder.subMessageSeparator + SimpleDateFormat.getDateTimeInstance().format(new Date(message.getDate())));
