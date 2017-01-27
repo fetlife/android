@@ -199,6 +199,10 @@
     <string name="button_media_picture_upload_check_friends_only">Only visible to friends</string>
     <string name="message_friend_decision_failed">FetLife App: Your decision about friendship could not be sent as you had logged out before it could have been processed</string>
 
+    <string name="settings_title_signature">Signature</string>
+    <string name="settings_summary_signature">Enter Signature</string>
+    <string name="settings_hint_signature">Enter your pervy signature here!</string>
+
     <!-- *** Feed texts *** -->
 
     <string name="title_activity_feed">Feed</string>

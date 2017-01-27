@@ -2,6 +2,7 @@ package com.bitlove.fetlife.view.activity.resource;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -42,7 +43,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class MessagesActivity extends ResourceActivity
-        implements NavigationView.OnNavigationItemSelectedListener, MenuActivityComponent.MenuActivityCallBack{
+        implements NavigationView.OnNavigationItemSelectedListener, MenuActivityComponent.MenuActivityCallBack {
 
     private static final String EXTRA_CONVERSATION_ID = "com.bitlove.fetlife.extra.conversation_id";
     private static final String EXTRA_CONVERSATION_TITLE = "com.bitlove.fetlife.extra.conversation_title";
@@ -156,16 +157,14 @@ public class MessagesActivity extends ResourceActivity
 
         if (!Conversation.isLocal(conversationId)) {
 
-            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener()
-            {
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
                 @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy)
-                {
-                    if(!oldMessageLoadingInProgress && dy < 0) {
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    if (!oldMessageLoadingInProgress && dy < 0) {
                         int lastVisibleItem = recyclerLayoutManager.findLastVisibleItemPosition();
                         int totalItemCount = recyclerLayoutManager.getItemCount();
 
-                        if (lastVisibleItem == (totalItemCount-1)) {
+                        if (lastVisibleItem == (totalItemCount - 1)) {
                             oldMessageLoadingInProgress = true;
                             //TODO: not trigger call if the old messages were already triggered and there was no older message
                             FetLifeApiIntentService.startApiCall(MessagesActivity.this, FetLifeApiIntentService.ACTION_APICALL_MESSAGES, conversationId, Boolean.toString(false));
@@ -297,12 +296,13 @@ public class MessagesActivity extends ResourceActivity
     }
 
     public void onSend(View v) {
-        final String text = textInput.getText().toString();
+        String text = textInput.getText().toString();
 
         if (text == null || text.trim().length() == 0) {
             return;
         }
 
+        text = text + getMessageSignature();
         textInput.setText("");
 
         User currentUser = getFetLifeApplication().getUserSessionManager().getCurrentUser();
@@ -334,5 +334,14 @@ public class MessagesActivity extends ResourceActivity
     @Override
     public boolean finishAtMenuNavigation() {
         return true;
+    }
+
+
+    public String getMessageSignature() {
+        // Optional 'Signature' to append to message sent
+        SharedPreferences sharedPreferences = getFetLifeApplication().getUserSessionManager().getActiveUserPreferences();
+        String signature = sharedPreferences.getString("settings_key_profile_signature", "default_text");
+
+        return "\n\n" + signature;
     }
 }
