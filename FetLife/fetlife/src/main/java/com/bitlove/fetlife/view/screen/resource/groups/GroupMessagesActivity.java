@@ -291,14 +291,17 @@ public class GroupMessagesActivity extends ResourceActivity
 
         recyclerView.setAdapter(messagesAdapter);
 
+        setInputFields();
 
+        invalidateOptionsMenu();
+    }
+
+    private void setInputFields() {
         int visibility = group != null && group.isMemberOfGroup() ? View.VISIBLE : View.GONE;
 
         inputLayout.setVisibility(visibility);
         inputIcon.setVisibility(visibility);
         shareIcon.setVisibility(visibility);
-
-        invalidateOptionsMenu();
     }
 
     @Override
@@ -367,6 +370,7 @@ public class GroupMessagesActivity extends ResourceActivity
     }
 
     private void startResourceCall(int pageCount, int requestedPage) {
+        FetLifeApiIntentService.startApiCall(GroupMessagesActivity.this, FetLifeApiIntentService.ACTION_APICALL_GROUP, groupId);
         FetLifeApiIntentService.startApiCall(GroupMessagesActivity.this, FetLifeApiIntentService.ACTION_APICALL_GROUP_MESSAGES, groupId, groupDiscussionId, Integer.toString(pageCount), Integer.toString(requestedPage));
     }
 
@@ -432,6 +436,9 @@ public class GroupMessagesActivity extends ResourceActivity
                 messagesAdapter.refresh();
                 dismissProgress();
             }
+        } else if (serviceCallFinishedEvent.getServiceCallAction() == FetLifeApiIntentService.ACTION_APICALL_GROUP) {
+            group = Group.loadGroup(groupId);
+            setInputFields();
         }
     }
 
@@ -502,6 +509,11 @@ public class GroupMessagesActivity extends ResourceActivity
     private static final long SEND_BUTTON_CLICK_THRESHOLD = 700l;
 
     public void onSend(View v) {
+        if (!group.isMemberOfGroup()) {
+            showToast(getString(R.string.message_sending_not_members));
+            return;
+        }
+
         final String text = textInput.getText().toString();
 
         if (text == null || text.trim().length() == 0) {

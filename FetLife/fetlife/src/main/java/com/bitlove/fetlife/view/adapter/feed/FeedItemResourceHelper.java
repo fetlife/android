@@ -31,7 +31,7 @@ public class FeedItemResourceHelper {
     private final Story feedStory;
     private FetLifeApplication fetLifeApplication;
 
-    FeedItemResourceHelper(FetLifeApplication fetLifeApplication, Story feedstory) {
+    public FeedItemResourceHelper(FetLifeApplication fetLifeApplication, Story feedstory) {
         this.fetLifeApplication = fetLifeApplication;
         this.feedStoryType = feedstory.getType();
         this.feedStory = feedstory;
@@ -222,6 +222,7 @@ public class FeedItemResourceHelper {
             switch (feedStoryType) {
                 case COMMENT_CREATED:
                 case LIKE_CREATED:
+                case POST_CREATED:
                     Writing writing = feedEvent.getTarget() != null ? feedEvent.getTarget().getWriting() : null;
                     if (writing == null) {
                         writing = feedEvent.getSecondaryTarget() != null ? feedEvent.getSecondaryTarget().getWriting() : null;
@@ -308,56 +309,49 @@ public class FeedItemResourceHelper {
         }
     }
 
-    public String getCreatedAt(FeedEvent feedEvent) {
+    public String getServerTimeStamp(FeedEvent feedEvent) {
         try {
             String createdAt;
             switch (feedStoryType) {
                 case PEOPLE_INTO_CREATED:
-                    createdAt = feedEvent.getTarget().getPeopleInto().getCreatedAt();
-                    break;
+                    return createdAt = feedEvent.getTarget().getPeopleInto().getCreatedAt();
                 case VIDEO_COMMENT_CREATED:
                 case GROUP_COMMENT_CREATED:
                 case STATUS_COMMENT_CREATED:
                 case POST_COMMENT_CREATED:
-                    createdAt = feedEvent.getTarget().getComment().getCreatedAt();
-                    break;
+                    return createdAt = feedEvent.getTarget().getComment().getCreatedAt();
                 case GROUP_MEMBERSHIP_CREATED:
-                    createdAt = feedEvent.getTarget().getGroupMembership().getCreatedAt();
-                    break;
+                    return createdAt = feedEvent.getTarget().getGroupMembership().getCreatedAt();
                 case STATUS_CREATED:
-                    createdAt = feedEvent.getTarget().getStatus().getCreatedAt();
-                    break;
+                    return createdAt = feedEvent.getTarget().getStatus().getCreatedAt();
                 case GROUP_POST_CREATED:
-                    createdAt = feedEvent.getTarget().getGroupPost().getCreatedAt();
-                    break;
+                    return createdAt = feedEvent.getTarget().getGroupPost().getCreatedAt();
                 case WALL_POST_CREATED:
-                    createdAt = feedEvent.getTarget().getWallPost().getCreatedAt();
-                    break;
+                    return createdAt = feedEvent.getTarget().getWallPost().getCreatedAt();
                 case POST_CREATED:
-                    createdAt = feedEvent.getTarget().getWriting().getCreatedAt();
-                    break;
+                    return createdAt = feedEvent.getTarget().getWriting().getCreatedAt();
                 case PICTURE_CREATED:
-                    createdAt = feedEvent.getTarget().getPicture().getCreatedAt();
-                    break;
+                    return createdAt = feedEvent.getTarget().getPicture().getCreatedAt();
                 case LIKE_CREATED:
-                    createdAt = feedEvent.getTarget().getLove().getCreatedAt();
-                    break;
+                    return createdAt = feedEvent.getTarget().getLove().getCreatedAt();
                 case COMMENT_CREATED:
-                    createdAt = feedEvent.getTarget().getComment().getCreatedAt();
-                    break;
+                    return createdAt = feedEvent.getTarget().getComment().getCreatedAt();
                 case FRIEND_CREATED:
                 case FOLLOW_CREATED:
-                    createdAt = feedEvent.getTarget().getRelation().getCreatedAt();
-                    break;
+                    return createdAt = feedEvent.getTarget().getRelation().getCreatedAt();
                 default:
                     return null;
             }
-            if (createdAt !=  null) {
-                return SimpleDateFormat.getDateTimeInstance().format(DateUtil.parseDate(createdAt));
-            } else {
-                return null;
-            }
         } catch (NullPointerException npe) {
+            return null;
+        }
+    }
+
+    public String getCreatedAt(FeedEvent feedEvent) {
+        String createdAt = getServerTimeStamp(feedEvent);
+        if (createdAt !=  null) {
+            return SimpleDateFormat.getDateTimeInstance().format(DateUtil.parseDate(createdAt));
+        } else {
             return null;
         }
     }

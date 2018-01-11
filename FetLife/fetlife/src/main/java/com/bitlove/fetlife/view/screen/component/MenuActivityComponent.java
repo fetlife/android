@@ -218,8 +218,8 @@ public class MenuActivityComponent extends ActivityComponent {
             FeedActivity.startActivity(menuActivity);
         } else if (id == R.id.nav_stuff_you_love) {
             ExploreActivity.startActivity(menuActivity, ExploreActivity.Explore.STUFF_YOU_LOVE);
-//        } else if (id == R.id.nav_fresh_and_pervy) {
-//            ExploreActivity.startActivity(menuActivity, ExploreActivity.Explore.FRESH_AND_PERVY);
+        } else if (id == R.id.nav_fresh_and_pervy) {
+            ExploreActivity.startActivity(menuActivity, ExploreActivity.Explore.FRESH_AND_PERVY);
         } else if (id == R.id.nav_kinky_and_popular) {
             ExploreActivity.startActivity(menuActivity, ExploreActivity.Explore.KINKY_AND_POPULAR);
         } else if (id == R.id.nav_support) {

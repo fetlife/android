@@ -103,6 +103,7 @@ import com.bitlove.fetlife.util.MapUtil;
 import com.bitlove.fetlife.util.MessageDuplicationDebugUtil;
 import com.bitlove.fetlife.util.NetworkUtil;
 import com.bitlove.fetlife.util.VersionUtil;
+import com.bitlove.fetlife.view.adapter.feed.FeedItemResourceHelper;
 import com.bitlove.fetlife.view.screen.resource.ExploreActivity;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.maps.model.LatLng;
@@ -1520,18 +1521,30 @@ public class FetLifeApiIntentService extends IntentService {
         Call<List<Story>> getFeedCall;
         List<Story> currentStories = getFetLifeApplication().getInMemoryStorage().getExploreFeed(exploreType);
         int lastStoryPos = (page-1)*limit-1;
-        Story lastStory = lastStoryPos >= 0 && currentStories.size() > lastStoryPos ? currentStories.get(lastStoryPos) : null;
+        if (lastStoryPos >= currentStories.size()) {
+            lastStoryPos = currentStories.size()-1;
+        }
         String marker = null;
+        do {
+            Story lastStory = lastStoryPos >= 0 ? currentStories.get(lastStoryPos) : null;
+            if (lastStory == null) break;
+            FeedItemResourceHelper feedItemResourceHelper = new FeedItemResourceHelper(getFetLifeApplication(),lastStory);
+            marker = feedItemResourceHelper.getServerTimeStamp(lastStory.getEvents().get(0));
+            lastStoryPos--;
+        } while (marker == null);
+        if (marker != null) {
+            marker = Long.toString(DateUtil.parseDate(marker)*1000l);
+        }
         switch (exploreType) {
             case STUFF_YOU_LOVE:
-                getFeedCall = getFetLifeApi().getStuffYouLove(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), marker, limit, page);
+                getFeedCall = getFetLifeApi().getStuffYouLove(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), marker, limit, marker == null ? page : 1);
                 break;
             case KINKY_AND_POPULAR:
-                getFeedCall = getFetLifeApi().getKinkyAndPopular(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), marker, limit, page);
+                getFeedCall = getFetLifeApi().getKinkyAndPopular(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), marker, limit, marker == null ? page : 1);
                 break;
             default:
             case FRESH_AND_PERVY:
-                getFeedCall = getFetLifeApi().getFreshAndPervy(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), marker, limit, page);
+                getFeedCall = getFetLifeApi().getFreshAndPervy(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), marker, limit, marker == null ? page : 1);
                 break;
         }
         Response<List<Story>> feedResponse = getFeedCall.execute();

@@ -86,7 +86,7 @@ public class FeedActivity extends ResourceListActivity<Story> implements MenuAct
                 ProfileActivity.startActivity(this, targetMember.getId());
                 return;
             }
-        } else if (feedStoryType == Story.FeedStoryType.LIKE_CREATED || feedStoryType == Story.FeedStoryType.COMMENT_CREATED) {
+        } else if (feedStoryType == Story.FeedStoryType.POST_CREATED || feedStoryType == Story.FeedStoryType.LIKE_CREATED || feedStoryType == Story.FeedStoryType.COMMENT_CREATED) {
             Writing targetWriting = feedItemResourceHelper.getWriting(feedEvent);
             if (targetWriting != null) {
                 targetWriting.save();

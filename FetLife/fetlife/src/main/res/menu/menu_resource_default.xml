@@ -24,10 +24,10 @@
             android:icon="@drawable/ic_list_black_24dp"
             android:title="@string/nav_kinky_and_popular" />
 
-        <!--<item-->
-            <!--android:id="@+id/nav_fresh_and_pervy"-->
-            <!--android:icon="@drawable/ic_list_black_24dp"-->
-            <!--android:title="@string/nav_fresh_and_pervy" />-->
+        <item
+            android:id="@+id/nav_fresh_and_pervy"
+            android:icon="@drawable/ic_list_black_24dp"
+            android:title="@string/nav_fresh_and_pervy" />
 
     </group>
     <group android:id="@+id/navigation" android:checkableBehavior="single">

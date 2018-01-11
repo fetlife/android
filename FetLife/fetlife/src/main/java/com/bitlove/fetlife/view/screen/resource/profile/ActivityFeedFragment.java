@@ -77,7 +77,7 @@ public class ActivityFeedFragment extends LoadFragment implements FeedRecyclerAd
                 ProfileActivity.startActivity((BaseActivity) getActivity(), targetMember.getId());
                 return;
             }
-        } else if (feedStoryType == Story.FeedStoryType.LIKE_CREATED || feedStoryType == Story.FeedStoryType.COMMENT_CREATED) {
+        } else if (feedStoryType == Story.FeedStoryType.POST_CREATED || feedStoryType == Story.FeedStoryType.LIKE_CREATED || feedStoryType == Story.FeedStoryType.COMMENT_CREATED) {
             Writing targetWriting = feedItemResourceHelper.getWriting(feedEvent);
             if (targetWriting != null) {
                 targetWriting.save();

@@ -187,7 +187,7 @@ public interface FetLifeApi {
     Call<List<Story>> getStuffYouLove(@Header("Authorization") String authHeader, @Query("marker") String timeStamp, @Query("limit") int limit, @Query("page") int page);
 
     @GET("/api/v2/explore/fresh-and-pervy")
-    Call<List<Story>> getFreshAndPervy(@Header("Authorization") String authHeader, @Query("marker") String timeStamp, @Query("limit") int limit, @Query("page") int page);
+    Call<List<Story>> getFreshAndPervy(@Header("Authorization") String authHeader, @Query("until") String timeStamp, @Query("limit") int limit, @Query("page") Integer page);
 
     @GET("/api/v2/explore/kinky-and-popular")
     Call<List<Story>> getKinkyAndPopular(@Header("Authorization") String authHeader, @Query("marker") String timeStamp, @Query("limit") int limit, @Query("page") int page);

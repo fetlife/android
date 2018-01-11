@@ -1,0 +1,73 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion build_versions.target_sdk
+    buildToolsVersion build_versions.build_tools
+    defaultConfig {
+        applicationId "com.bitlove.fetlife"
+        minSdkVersion build_versions.min_sdk
+        targetSdkVersion build_versions.target_sdk
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        debug {
+            applicationIdSuffix ".debug"
+            debuggable true
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    flavorDimensions "default"
+    productFlavors {
+        online {}
+        offline {
+            applicationIdSuffix ".offline"
+            versionNameSuffix "-offline"
+        }
+    }
+}
+
+dependencies {
+    kapt deps.room.compiler
+
+    implementation deps.constraint_layout
+    implementation deps.support.app_compat
+    implementation deps.support.recyclerview
+    implementation deps.support.cardview
+    implementation deps.support.design
+    implementation deps.room.runtime
+    implementation deps.lifecycle.runtime
+    implementation deps.lifecycle.extensions
+    implementation deps.paging
+    implementation deps.kotlin.stdlib
+    implementation deps.retrofit.runtime
+    implementation deps.retrofit.gson
+    implementation deps.okhttp_logging_interceptor
+    implementation deps.glide
+
+    // Android Testing Support Library's runner and rules
+    androidTestImplementation deps.atsl.runner
+    androidTestImplementation deps.atsl.rules
+    androidTestImplementation deps.arch_core.testing
+
+    androidTestImplementation deps.junit
+    androidTestImplementation deps.retrofit.mock
+    androidTestImplementation deps.arch_core.testing
+    androidTestImplementation deps.dexmaker
+    androidTestImplementation deps.mockito.core, { exclude group: 'net.bytebuddy' }
+
+    testImplementation deps.junit
+    testImplementation deps.retrofit.mock
+    testImplementation deps.arch_core.testing
+    testImplementation deps.mockito.core
+}

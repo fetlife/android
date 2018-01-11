@@ -475,7 +475,7 @@
 
     <string name="action_log_on">Log me in</string>
     <string name="progress_logging_in">Logging you in...</string>
-    <string name="prompt_username">Username</string>
+    <string name="prompt_username">Nickname or Email</string>
     <string name="prompt_password">Password</string>
     <string name="prompt_new_message">Your message here</string>
     <string name="action_sign_in_short">Log in</string>
@@ -839,5 +839,6 @@
     <string name="nav_kinky_and_popular"><![CDATA[Kinky & Popular]]></string>
     <string name="title_activity_kinky_and_popular"><![CDATA[Kinky & Popular]]></string>
     <string name="title_activity_fresh_and_pervy"><![CDATA[Fresh & Pervy]]></string>
+    <string name="message_sending_not_members">Only group members can send message to a Group Conversation</string>
 
 </resources>

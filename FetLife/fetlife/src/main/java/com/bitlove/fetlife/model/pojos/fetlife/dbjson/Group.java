@@ -197,6 +197,9 @@ public class Group extends BaseModel {
             if (currentGroup.isDetailLoaded()) {
                 setDetailLoaded(true);
             }
+            if (!isDetailLoaded() && currentGroup.isMemberOfGroup()) {
+                setMemberOfGroup(true);
+            }
         }
         return super.save();
     }
