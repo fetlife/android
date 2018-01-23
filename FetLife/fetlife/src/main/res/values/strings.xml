@@ -29,14 +29,25 @@
 
             <p><b><br/>Version History</b></p>
 
+            <p/>v2.14.5<br/>
+                    <ul>
+                        <li>Added new video events to Explore section feeds</li>
+                        <li>Bugfixes</li>
+                    </ul>
+
+            <p/>v2.14.3<br/>
+                    <ul>
+                        <li>Fresh &amp; Pervy</li>
+                    </ul>
+
             <p/>v2.13.5<br/>
                     <ul>
-                        <li>Kinky &amp; Popular [Design work in progress]</li>
+                        <li>Kinky &amp; Popular</li>
                     </ul>
 
             <p/>v2.13.2<br/>
                     <ul>
-                        <li>Stuff you Love [Design work in progress]</li>
+                        <li>Stuff you Love</li>
                     </ul>
 
             <p/>v2.13.0<br/>
@@ -396,6 +407,7 @@
     <string name="feed_title_group_joins">joined to %1$d groups</string>
     <string name="feed_title_new_picture">uploaded a new picture</string>
     <string name="feed_title_new_pictures">uploaded %1$d new pictures</string>
+    <string name="feed_title_new_videos">uploaded %1$d new videos</string>
     <string name="feed_title_like_writing">loved a writing</string>
     <string name="feed_title_like_writings">loved %1$d writings</string>
     <string name="feed_title_like_video">loved a video</string>
@@ -840,5 +852,6 @@
     <string name="title_activity_kinky_and_popular"><![CDATA[Kinky & Popular]]></string>
     <string name="title_activity_fresh_and_pervy"><![CDATA[Fresh & Pervy]]></string>
     <string name="message_sending_not_members">Only group members can send message to a Group Conversation</string>
+    <string name="feed_title_new_video">Uploaded a new Video</string>
 
 </resources>

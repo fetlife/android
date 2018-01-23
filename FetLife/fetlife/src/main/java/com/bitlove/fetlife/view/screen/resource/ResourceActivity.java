@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.view.View;
 import android.widget.TextView;
 
 import com.bitlove.fetlife.FetLifeApplication;
@@ -19,7 +20,9 @@ import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
 import com.bitlove.fetlife.event.ServiceCallStartedEvent;
 import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.component.EventDisplayHandler;
+import com.bitlove.fetlife.view.screen.standalone.AboutActivity;
 import com.bitlove.fetlife.view.screen.standalone.LoginActivity;
+import com.bitlove.fetlife.view.screen.standalone.ReleaseNotesActivity;
 import com.crashlytics.android.Crashlytics;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -76,6 +79,12 @@ public abstract class ResourceActivity extends BaseActivity {
         if (lastVersionNotification < versionNumber) {
             Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), getString(R.string.snackbar_version_notification, getFetLifeApplication().getVersionText()), Snackbar.LENGTH_LONG);
             snackbar.getView().setBackgroundColor(getResources().getColor(R.color.color_accent_light));
+            snackbar.getView().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ReleaseNotesActivity.startActivity(v.getContext());
+                }
+            });
             TextView snackText = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
             snackText.setTextColor(getResources().getColor(R.color.color_accent));
             snackText.setTypeface(null, Typeface.BOLD);

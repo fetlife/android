@@ -18,6 +18,7 @@ public class Story {
         FOLLOW_CREATED, // 15933
         GROUP_COMMENT_CREATED, // 9340
         PICTURE_CREATED, // 7063
+        VIDEO_CREATED, //139
         PEOPLE_INTO_CREATED, // 6195
         GROUP_MEMBERSHIP_CREATED, // 5102
         POST_COMMENT_CREATED, // 2111
@@ -39,7 +40,6 @@ public class Story {
 //        RELATIONSHIP_CREATED, // 215
 //        RSVP_UPDATED, //204
 //        NICKNAME_UPDATED, //146
-//        VIDEO_CREATED, //139
 //        SEXUAL_ORIENTATION_UPDATED, //118
 //        UPDATED_WEBSITES, //107
 //        RELATIONSHIP_UPDATED, //80

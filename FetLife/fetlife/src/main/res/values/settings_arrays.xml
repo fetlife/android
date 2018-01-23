@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="settings_value_notification_color_none">none</string>
+   <string name="settings_value_notification_color_none">none</string>
     <string name="settings_value_notification_color_white">white</string>
     <string name="settings_value_notification_color_red">red</string>
     <string name="settings_value_notification_color_yellow">yellow</string>

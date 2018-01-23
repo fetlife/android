@@ -17,6 +17,7 @@ import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.resource.NotificationHistoryActivity;
 import com.crashlytics.android.Crashlytics;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Method;
@@ -142,6 +143,13 @@ public abstract class OneSignalNotification {
 
     protected NotificationHistoryItem createNotificationItem(int notificationId, String collapseId) {
         NotificationHistoryItem notificationItem = new NotificationHistoryItem();
+        try {
+            double serverTimeDouble = additionalData.getDouble("sent_at");
+            long serverTime = (long)(serverTimeDouble*1000);
+            notificationItem.setTimeStamp(serverTime);
+        } catch (JSONException t) {
+            //skip, server change
+        }
         notificationItem.setDisplayId(notificationId);
         notificationItem.setDisplayHeader(title);
         notificationItem.setDisplayMessage(message);

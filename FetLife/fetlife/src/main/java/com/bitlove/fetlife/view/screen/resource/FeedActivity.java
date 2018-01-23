@@ -134,8 +134,19 @@ public class FeedActivity extends ResourceListActivity<Story> implements MenuAct
                 return;
             }
         }
-        if (feedStoryType == Story.FeedStoryType.LIKE_CREATED && feedEvent.getSecondaryTarget().getVideo() != null) {
+        if ((feedStoryType == Story.FeedStoryType.LIKE_CREATED || feedStoryType == Story.FeedStoryType.VIDEO_COMMENT_CREATED) && feedEvent.getSecondaryTarget().getVideo() != null) {
             String videoUrl = feedEvent.getSecondaryTarget().getVideo().getVideoUrl();
+            if (videoUrl == null || videoUrl.endsWith("null")) {
+                return;
+            }
+            Uri uri = Uri.parse(videoUrl);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            intent.setDataAndType(uri, "video/*");
+            startActivity(intent);
+            return;
+        }
+        if (feedStoryType == Story.FeedStoryType.VIDEO_CREATED) {
+            String videoUrl = feedEvent.getTarget().getVideo().getVideoUrl();
             if (videoUrl == null || videoUrl.endsWith("null")) {
                 return;
             }

@@ -65,6 +65,8 @@ public class FeedItemResourceHelper {
                 return eventCount == 1 ? fetLifeApplication.getString(R.string.feed_title_new_grouppost) : fetLifeApplication.getString(R.string.feed_title_new_groupposts, eventCount);
             case WALL_POST_CREATED:
                 return eventCount == 1 ? fetLifeApplication.getString(R.string.feed_title_new_wallpost) : fetLifeApplication.getString(R.string.feed_title_new_wallposts, eventCount);
+            case VIDEO_CREATED:
+                return eventCount == 1 ? fetLifeApplication.getString(R.string.feed_title_new_video) : fetLifeApplication.getString(R.string.feed_title_new_pictures, eventCount);
             case PICTURE_CREATED:
                 return eventCount == 1 ? fetLifeApplication.getString(R.string.feed_title_new_picture) : fetLifeApplication.getString(R.string.feed_title_new_pictures, eventCount);
             case LIKE_CREATED:
@@ -104,7 +106,7 @@ public class FeedItemResourceHelper {
         int preferenceResource = -1;
         switch (feedStoryType) {
             case PICTURE_CREATED:
-//            case VIDEO_CREATED:
+            case VIDEO_CREATED:
                 preferenceResource = R.string.settings_key_feed_auto_expand_media;
                 break;
             case POST_COMMENT_CREATED:
@@ -171,6 +173,8 @@ public class FeedItemResourceHelper {
                     return event.getTarget().getGroupPost().getMember();
                 case POST_CREATED:
                     return event.getTarget().getWriting().getMember();
+                case VIDEO_CREATED:
+                    return event.getTarget().getVideo().getMember();
                 case PICTURE_CREATED:
                     return event.getTarget().getPicture().getMember();
                 case LIKE_CREATED:
@@ -292,6 +296,8 @@ public class FeedItemResourceHelper {
                     } else {
                         return null;
                     }
+                case VIDEO_CREATED:
+                    return feedEvent.getTarget().getVideo().getThumbnail().getAsPicture(feedEvent.getTarget().getVideo().getMember());
                 case FRIEND_CREATED:
                 case FOLLOW_CREATED:
                     return feedEvent.getSecondaryTarget().getMember().getAvatarPicture();
@@ -330,6 +336,8 @@ public class FeedItemResourceHelper {
                     return createdAt = feedEvent.getTarget().getWallPost().getCreatedAt();
                 case POST_CREATED:
                     return createdAt = feedEvent.getTarget().getWriting().getCreatedAt();
+                case VIDEO_CREATED:
+                    return createdAt = feedEvent.getTarget().getVideo().getCreatedAt();
                 case PICTURE_CREATED:
                     return createdAt = feedEvent.getTarget().getPicture().getCreatedAt();
                 case LIKE_CREATED:
@@ -379,6 +387,8 @@ public class FeedItemResourceHelper {
                     return feedEvent.getTarget().getWallPost().getUrl();
                 case POST_CREATED:
                     return feedEvent.getTarget().getWriting().getUrl();
+                case VIDEO_CREATED:
+                    return feedEvent.getTarget().getVideo().getUrl();
                 case PICTURE_CREATED:
                     return feedEvent.getTarget().getPicture().getUrl();
                 case LIKE_CREATED:
@@ -417,8 +427,6 @@ public class FeedItemResourceHelper {
                     } else {
                         return null;
                     }
-                case VIDEO_COMMENT_CREATED:
-                    return null;
                 case GROUP_COMMENT_CREATED:
                     return feedEvent.getSecondaryTarget().getGroupPost().getTitle();
                 case POST_COMMENT_CREATED:
@@ -539,6 +547,7 @@ public class FeedItemResourceHelper {
     public boolean imageOnlyListItems() {
         switch (feedStoryType) {
             case PICTURE_CREATED:
+            case VIDEO_CREATED:
                 return true;
             case LIKE_CREATED:
                 return (feedStory.getEvents().get(0).getSecondaryTarget().getWriting() == null && feedStory.getEvents().get(0).getSecondaryTarget().getStatus() == null);

@@ -1537,10 +1537,10 @@ public class FetLifeApiIntentService extends IntentService {
         }
         switch (exploreType) {
             case STUFF_YOU_LOVE:
-                getFeedCall = getFetLifeApi().getStuffYouLove(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), marker, limit, marker == null ? page : 1);
+                getFeedCall = getFetLifeApi().getStuffYouLove(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), null, limit, page);
                 break;
             case KINKY_AND_POPULAR:
-                getFeedCall = getFetLifeApi().getKinkyAndPopular(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), marker, limit, marker == null ? page : 1);
+                getFeedCall = getFetLifeApi().getKinkyAndPopular(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), null, limit, page);
                 break;
             default:
             case FRESH_AND_PERVY:

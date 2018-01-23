@@ -106,6 +106,7 @@ public class FeedRecyclerAdapter extends ResourceListRecyclerAdapter<Story, Feed
                 case RSVP_CREATED:
                 case COMMENT_CREATED:
                 case POST_CREATED:
+                case VIDEO_CREATED:
                 case PICTURE_CREATED:
                 case GROUP_COMMENT_CREATED:
                 case POST_COMMENT_CREATED:
