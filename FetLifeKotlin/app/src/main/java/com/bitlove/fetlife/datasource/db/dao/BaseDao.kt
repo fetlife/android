@@ -16,10 +16,12 @@ package com.bitlove.fetlife.datasource.db.dao
  * limitations under the License.
  */
 
+import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Delete
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.Update
 
+@Dao
 interface BaseDao<T> {
 
     /**

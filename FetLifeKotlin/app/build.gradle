@@ -35,10 +35,15 @@ android {
             versionNameSuffix "-offline"
         }
     }
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     kapt deps.room.compiler
+    kapt deps.databinding.compiler
 
     implementation deps.constraint_layout
     implementation deps.support.app_compat
@@ -46,14 +51,18 @@ dependencies {
     implementation deps.support.cardview
     implementation deps.support.design
     implementation deps.room.runtime
+    implementation deps.room.rxjava2
     implementation deps.lifecycle.runtime
     implementation deps.lifecycle.extensions
     implementation deps.paging
     implementation deps.kotlin.stdlib
+    implementation deps.kotlin.reflect
     implementation deps.retrofit.runtime
     implementation deps.retrofit.gson
     implementation deps.okhttp_logging_interceptor
     implementation deps.glide
+    implementation deps.rxjava2
+    implementation deps.rx_android
 
     // Android Testing Support Library's runner and rules
     androidTestImplementation deps.atsl.runner
