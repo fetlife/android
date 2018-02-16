@@ -40,7 +40,7 @@ public class FetLifeDatabase {
     public static final String NAME = "fetlife";
 
     //Simple increase the version number in case of new tables
-    public static final int VERSION = 51;
+    public static final int VERSION = 52;
 
     //Add new Migration classes in case of table structure change
     @Migration(version = 26, database = FetLifeDatabase.class)
@@ -237,6 +237,19 @@ public class FetLifeDatabase {
         @Override
         public void onPreMigrate() {
             addColumn(SQLiteType.INTEGER, "followed");
+        }
+    }
+
+    @Migration(version = 52, database = FetLifeDatabase.class)
+    public static class Migration52 extends AlterTableMigration<Member> {
+
+        public Migration52(Class<Member> table) {
+            super(table);
+        }
+
+        @Override
+        public void onPreMigrate() {
+            addColumn(SQLiteType.TEXT, "serverId");
         }
     }
 

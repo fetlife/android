@@ -4,12 +4,14 @@ import android.content.Context;
 
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
+import com.crashlytics.android.Crashlytics;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+import com.squareup.okhttp.ResponseBody;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,6 +25,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManagerFactory;
 
+import okio.Buffer;
+import okio.BufferedSource;
 import retrofit.JacksonConverterFactory;
 import retrofit.Retrofit;
 
@@ -68,6 +72,12 @@ public class FetLifeService {
                 Response response = chain.proceed(request);
                 //response.body().string();
                 lastResponseCode = response.code();
+                if (lastResponseCode > 299) {
+                    BufferedSource source = response.body().source();
+                    Buffer bufferedCopy = source.buffer().clone();
+                    Crashlytics.log("EXTRA LOG Failed request response" + "\n" + response.body().string());
+                    return new Response.Builder().body(ResponseBody.create(response.body().contentType(), response.body().contentLength(), bufferedCopy)).build();
+                }
                 return response;
             }
         });

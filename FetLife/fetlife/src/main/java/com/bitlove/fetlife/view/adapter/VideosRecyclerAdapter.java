@@ -14,6 +14,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.db.VideoReference;
 import com.bitlove.fetlife.model.pojos.fetlife.db.VideoReference_Table;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Video;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Video_Table;
+import com.bitlove.fetlife.util.ServerIdUtil;
 import com.bitlove.fetlife.util.UrlUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.raizlabs.android.dbflow.sql.language.OrderBy;
@@ -24,7 +25,7 @@ import java.util.List;
 
 public class VideosRecyclerAdapter extends RecyclerView.Adapter<VideoViewHolder> {
 
-    private final String memberId;
+    private String memberId;
     private List<Video> itemList;
 
     public VideosRecyclerAdapter(String memberId) {
@@ -46,6 +47,13 @@ public class VideosRecyclerAdapter extends RecyclerView.Adapter<VideoViewHolder>
     private void loadItems() {
         //TODO: think of moving to separate thread with specific DB executor
         try {
+            if (ServerIdUtil.isServerId(memberId)) {
+                if (ServerIdUtil.containsServerId(memberId)) {
+                    memberId = ServerIdUtil.getLocalId(memberId);
+                } else {
+                    return;
+                }
+            }
             List<VideoReference> videoReferences = new Select().from(VideoReference.class).where(VideoReference_Table.userId.is(memberId)).orderBy(OrderBy.fromProperty(VideoReference_Table.date).descending()).queryList();
             List<String> videoIds = new ArrayList<>();
             for (VideoReference videoReference : videoReferences) {

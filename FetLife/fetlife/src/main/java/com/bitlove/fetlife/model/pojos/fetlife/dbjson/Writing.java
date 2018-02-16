@@ -7,6 +7,7 @@ import com.bitlove.fetlife.model.db.FetLifeDatabase;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.util.DateUtil;
+import com.bitlove.fetlife.util.ServerIdUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -18,6 +19,9 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Table(database = FetLifeDatabase.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -68,6 +72,9 @@ public class Writing extends BaseModel{
 
     public static Writing loadWriting(String writingId) {
         try {
+            if (ServerIdUtil.containsServerId(writingId)) {
+                writingId = ServerIdUtil.getLocalId(writingId);
+            }
             Writing writing = new Select().from(Writing.class).where(Writing_Table.id.is(writingId)).querySingle();
             return writing;
         } catch (Throwable t) {

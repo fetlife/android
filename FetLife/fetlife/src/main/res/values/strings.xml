@@ -31,6 +31,12 @@
 
             <p/>v2.14.5<br/>
                     <ul>
+                        <li>Fix for Video upload description issue</li>
+                        <li>Improvement in opening Stacked group comment notifications</li>
+                    </ul>
+
+            <p/>v2.14.5<br/>
+                    <ul>
                         <li>Added new video events to Explore section feeds</li>
                         <li>Bugfixes</li>
                     </ul>
@@ -767,8 +773,8 @@
     <string name="noification_title_new_group_messages">%1$d new group comments</string>
     <string name="noification_text_new_message">New message from %1$s</string>
     <string name="noification_text_new_messages">%1$d messages from %2$s</string>
-    <string name="noification_text_new_group_message">New comment from %1$s</string>
-    <string name="noification_text_new_group_messages">%1$d comments from %2$s</string>
+    <string name="noification_text_new_group_message">New comment in %1$s</string>
+    <string name="noification_text_new_group_messages">%1$d comments in %2$s</string>
     <string name="noification_title_new_friendrequest">New Friend Request</string>
     <string name="noification_title_new_friendrequests">%1$d new Friend Requests</string>
     <string name="noification_text_new_love">%1$s loved your stuff</string>
@@ -814,6 +820,7 @@
     <string name="menu_glossary">Kinktionary</string>
     <string name="menu_ads">Advertise on FetLife</string>
     <string name="title_activity_webview">FetLife</string>
+    <string name="title_activity_search">Search</string>
     <string name="title_activity_support">Support FetLife</string>
     <string name="title_activity_ads">Advertise on FetLife</string>
     <string name="title_activity_glossary">Kinktionary</string>
@@ -853,5 +860,6 @@
     <string name="title_activity_fresh_and_pervy"><![CDATA[Fresh & Pervy]]></string>
     <string name="message_sending_not_members">Only group members can send message to a Group Conversation</string>
     <string name="feed_title_new_video">Uploaded a new Video</string>
+    <string name="menu_search">Search</string>
 
 </resources>

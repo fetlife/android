@@ -5,6 +5,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.db.RelationReference;
 import com.bitlove.fetlife.model.pojos.fetlife.db.RelationReference_Table;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member_Table;
+import com.bitlove.fetlife.util.ServerIdUtil;
 import com.raizlabs.android.dbflow.annotation.Collate;
 import com.raizlabs.android.dbflow.sql.language.OrderBy;
 import com.raizlabs.android.dbflow.sql.language.Select;
@@ -17,7 +18,7 @@ import java.util.List;
 
 public class RelationsRecyclerAdapter extends MembersRecyclerAdapter {
 
-    private final String memberId;
+    private String memberId;
     private final int relationType;
 
     public RelationsRecyclerAdapter(String memberId, int relationType, FetLifeApplication fetLifeApplication) {
@@ -30,6 +31,13 @@ public class RelationsRecyclerAdapter extends MembersRecyclerAdapter {
     protected void loadItems() {
         //TODO: think of moving to separate thread with specific DB executor
         try {
+            if (ServerIdUtil.isServerId(memberId)) {
+                if (ServerIdUtil.containsServerId(memberId)) {
+                    memberId = ServerIdUtil.getLocalId(memberId);
+                } else {
+                    return;
+                }
+            }
             List<RelationReference> relationReferences = new Select().from(RelationReference.class).where(RelationReference_Table.userId.is(memberId)).and(RelationReference_Table.relationType.is(relationType)).orderBy(OrderBy.fromProperty(RelationReference_Table.nickname).ascending().collate(Collate.UNICODE)).queryList();
             List<String> relationIds = new ArrayList<>();
             for (RelationReference relationReference : relationReferences) {

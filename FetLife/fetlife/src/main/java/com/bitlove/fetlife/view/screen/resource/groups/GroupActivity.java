@@ -36,6 +36,7 @@ public class GroupActivity extends ResourceActivity implements AppBarLayout.OnOf
 
     private static final String EXTRA_GROUPID = "EXTRA_GROUPID";
     private static final String EXTRA_GROUP_TITLE = "EXTRA_GROUP_TITLE";
+    private String groupId;
 
     private TextView groupSubTitle;
     private TextView groupTitle;
@@ -72,12 +73,12 @@ public class GroupActivity extends ResourceActivity implements AppBarLayout.OnOf
         membershipIcon = (ImageView) findViewById(R.id.group_menu_icon_member);
         membershipIconText = (TextView) findViewById(R.id.group_menu_icon_text_member);
 
-        final String groupId = getIntent().getStringExtra(EXTRA_GROUPID);
+        groupId = getIntent().getStringExtra(EXTRA_GROUPID);
         group = Group.loadGroup(groupId);
+        String groupTitle = getIntent().getStringExtra(EXTRA_GROUP_TITLE);
         if (group != null) {
             setGroupDetails(group);
-        } else {
-            String groupTitle = getIntent().getStringExtra(EXTRA_GROUP_TITLE);
+        } else if (groupTitle != null){
             setGroupDetails(groupTitle,-1);
         }
         findViewById(R.id.group_menu_icon_view_container).setOnClickListener(new View.OnClickListener() {
@@ -193,7 +194,6 @@ public class GroupActivity extends ResourceActivity implements AppBarLayout.OnOf
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void callFinished(ServiceCallFinishedEvent serviceCallFinishedGroup) {
         if (isRelatedCall(serviceCallFinishedGroup.getServiceCallAction(), serviceCallFinishedGroup.getParams())) {
-            final String groupId = getIntent().getStringExtra(EXTRA_GROUPID);
             Group group = Group.loadGroup(groupId);
             setGroupDetails(group);
             if (!isRelatedCall(FetLifeApiIntentService.getActionInProgress(), FetLifeApiIntentService.getInProgressActionParams())) {

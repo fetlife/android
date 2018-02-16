@@ -10,6 +10,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Relationship;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Status;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Video;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Writing;
+import com.bitlove.fetlife.model.pojos.fetlife.json.AppId;
 import com.bitlove.fetlife.model.pojos.fetlife.json.AuthBody;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Event;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Comment;
@@ -190,7 +191,7 @@ public interface FetLifeApi {
     Call<List<Story>> getFreshAndPervy(@Header("Authorization") String authHeader, @Query("until") String timeStamp, @Query("limit") int limit, @Query("page") Integer page);
 
     @GET("/api/v2/explore/kinky-and-popular")
-    Call<List<Story>> getKinkyAndPopular(@Header("Authorization") String authHeader, @Query("marker") String timeStamp, @Query("limit") int limit, @Query("page") int page);
+    Call<List<Story>> getKinkyAndPopular(@Header("Authorization") String authHeader, @Query("until") String timeStamp, @Query("limit") int limit, @Query("page") int page);
 
     @PUT("/api/v2/me/loves/{content_type}/{content_id}")
     Call<ResponseBody> putLove(@Header("Authorization") String authHeader, @Path("content_id") String contentId, @Path("content_type") String contentType);
@@ -213,5 +214,9 @@ public interface FetLifeApi {
 
     @GET("/api/v2/search/events")
     Call<List<Event>> searchEvents(@Header("Authorization") String authHeader, @Query("query") String query, @Query("limit") int limit, @Query("page") int page);
+
+    @GET("/api/v2/ids")
+    Call<AppId> getAppId(@Header("Authorization") String authHeader, @Query("id_to_obfuscate") String serverUrl);
+
 
 }

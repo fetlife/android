@@ -1,5 +1,6 @@
 package com.bitlove.fetlife.model.pojos.fetlife.dbjson;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
@@ -8,6 +9,7 @@ import com.bitlove.fetlife.BuildConfig;
 import com.bitlove.fetlife.model.db.FetLifeDatabase;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Avatar;
 import com.bitlove.fetlife.model.pojos.fetlife.json.AvatarVariants;
+import com.bitlove.fetlife.util.ServerIdUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -25,7 +27,9 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 //TODO: clean up the POJOs and define relations
 @Table(database = FetLifeDatabase.class)
@@ -46,6 +50,10 @@ public class Member extends BaseModel {
     @Column
     @PrimaryKey(autoincrement = false)
     private String id;
+
+    @JsonIgnore
+    @Column
+    private String serverId;
 
     @JsonProperty("about")
     @Column
@@ -123,20 +131,20 @@ public class Member extends BaseModel {
     private List<Relationship> relationships = new ArrayList<>();
 
 
-    public static Member loadMember(String memberId) {
-        Member member = new Select().from(Member.class).where(Member_Table.id.is(memberId)).querySingle();
-        if (member == null) {
-            return null;
-        }
-        return member;
-    }
-
     public String getAbout() {
         return about;
     }
 
     public void setAbout(String about) {
         this.about = about;
+    }
+
+    public String getServerId() {
+        return serverId;
+    }
+
+    public void setServerId(String serverId) {
+        this.serverId = serverId;
     }
 
     public String getAccessToken() {
@@ -378,4 +386,16 @@ public class Member extends BaseModel {
             }
         }).writeValueAsString(this);
     }
+
+    public static Member loadMember(String memberId) {
+        if (ServerIdUtil.containsServerId(memberId)) {
+            memberId = ServerIdUtil.getLocalId(memberId);
+        }
+        Member member = new Select().from(Member.class).where(Member_Table.id.is(memberId)).querySingle();
+        if (member == null) {
+            return null;
+        }
+        return member;
+    }
+
 }

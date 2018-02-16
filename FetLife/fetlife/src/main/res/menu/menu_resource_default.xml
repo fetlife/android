@@ -32,6 +32,11 @@
     </group>
     <group android:id="@+id/navigation" android:checkableBehavior="single">
 
+        <!--<item-->
+            <!--android:id="@+id/nav_search"-->
+            <!--android:icon="@android:drawable/ic_menu_search"-->
+            <!--android:title="@string/menu_search" />-->
+
         <item
             android:id="@+id/nav_events"
             android:icon="@drawable/ic_menu_map"

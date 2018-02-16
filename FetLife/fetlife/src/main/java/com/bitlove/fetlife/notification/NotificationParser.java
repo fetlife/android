@@ -263,6 +263,11 @@ public class NotificationParser {
             case JSON_VALUE_TYPE_COMMENT_WRITING:
                 CommentNotification.clearNotifications();
                 break;
+            case JSON_VALUE_TYPE_MENTION_GROUP_DISCUSSION:
+            case JSON_VALUE_TYPE_MENTION_GROUP_DISCUSSION_COMMENT:
+            case JSON_VALUE_TYPE_MENTION_GROUP_DESCRIPTION:
+                GroupMessageNotification.clearNotifications();
+                break;
             case JSON_VALUE_TYPE_MENTION:
             case JSON_VALUE_TYPE_MENTION_PICTURE_CAPTION:
             case JSON_VALUE_TYPE_MENTION_PICTURE_COMMENT:
@@ -270,9 +275,6 @@ public class NotificationParser {
             case JSON_VALUE_TYPE_MENTION_VIDEO_COMMENT:
             case JSON_VALUE_TYPE_MENTION_WRITING:
             case JSON_VALUE_TYPE_MENTION_WRITING_COMMENT:
-            case JSON_VALUE_TYPE_MENTION_GROUP_DISCUSSION:
-            case JSON_VALUE_TYPE_MENTION_GROUP_DISCUSSION_COMMENT:
-            case JSON_VALUE_TYPE_MENTION_GROUP_DESCRIPTION:
             case JSON_VALUE_TYPE_MENTION_STATUS_UPDATE:
             case JSON_VALUE_TYPE_MENTION_STATUS_UPDATE_COMMENT:
             case JSON_VALUE_TYPE_MENTION_FETISH:

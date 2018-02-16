@@ -85,6 +85,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Relationship_Table;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Status;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Video;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Writing;
+import com.bitlove.fetlife.model.pojos.fetlife.json.AppId;
 import com.bitlove.fetlife.model.pojos.fetlife.json.AuthBody;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Event;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Feed;
@@ -102,6 +103,8 @@ import com.bitlove.fetlife.util.FileUtil;
 import com.bitlove.fetlife.util.MapUtil;
 import com.bitlove.fetlife.util.MessageDuplicationDebugUtil;
 import com.bitlove.fetlife.util.NetworkUtil;
+import com.bitlove.fetlife.util.ServerIdUtil;
+import com.bitlove.fetlife.util.UrlUtil;
 import com.bitlove.fetlife.util.VersionUtil;
 import com.bitlove.fetlife.view.adapter.feed.FeedItemResourceHelper;
 import com.bitlove.fetlife.view.screen.resource.ExploreActivity;
@@ -357,7 +360,7 @@ public class FetLifeApiIntentService extends IntentService {
 
         //Check for network state
         if (NetworkUtil.getConnectivityStatus(this) == NetworkUtil.NETWORK_STATUS_NOT_CONNECTED) {
-            Crashlytics.logException(new Exception("Connection failed due to no network connection"));
+            Crashlytics.logException(new Exception("EXTRA LOG Connection failed due to no network connection"));
             sendConnectionFailedNotification(action, params);
             return;
         }
@@ -539,7 +542,7 @@ public class FetLifeApiIntentService extends IntentService {
 
             if (result == Integer.MIN_VALUE) {
                 //If the call failed notify all subscribers about
-                Crashlytics.logException(new Exception("Load failed with response code: " + action + ";" + lastResponseCode));
+                Crashlytics.logException(new Exception("EXTRA LOG Load failed with response code: " + action + ";" + lastResponseCode));
                 sendLoadFailedNotification(action, params);
             } else if (action != ACTION_APICALL_LOGON_USER && (lastResponseCode == 401)) {
                 //If the result is failed due to Authentication or Authorization issue, let's try to refreshUi the token as it is most probably expired
@@ -558,7 +561,7 @@ public class FetLifeApiIntentService extends IntentService {
             }
         } catch (IOException ioe) {
             //If the call failed notify all subscribers about
-            Crashlytics.logException(new Exception("Connection failed with exception",ioe));
+            Crashlytics.logException(new Exception("EXTRA LOG Connection failed with exception",ioe));
             sendConnectionFailedNotification(action, params);
         } catch (SQLiteDiskIOException | InvalidDBConfiguration | SQLiteReadOnlyDatabaseException | IllegalStateException idb) {
             //db might have been closed due probably to user logout, check it and let
@@ -997,7 +1000,10 @@ public class FetLifeApiIntentService extends IntentService {
     }
 
     private int setRsvp(String[] params) throws IOException {
-        String eventId = params[0];
+        String eventId = getLocalId(params[0]);
+        if (eventId == null) {
+            return Integer.MIN_VALUE;
+        }
         String rsvp = params[1];
         Call<ResponseBody> setRsvpStatus = getFetLifeApi().putRsvp(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), eventId, rsvp);
         Response<ResponseBody> response = setRsvpStatus.execute();
@@ -1540,11 +1546,11 @@ public class FetLifeApiIntentService extends IntentService {
                 getFeedCall = getFetLifeApi().getStuffYouLove(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), null, limit, page);
                 break;
             case KINKY_AND_POPULAR:
-                getFeedCall = getFetLifeApi().getKinkyAndPopular(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), null, limit, page);
+                getFeedCall = getFetLifeApi().getKinkyAndPopular(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), marker, limit, page);
                 break;
             default:
             case FRESH_AND_PERVY:
-                getFeedCall = getFetLifeApi().getFreshAndPervy(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), marker, limit, marker == null ? page : 1);
+                getFeedCall = getFetLifeApi().getFreshAndPervy(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), marker, limit, page);
                 break;
         }
         Response<List<Story>> feedResponse = getFeedCall.execute();
@@ -1569,7 +1575,10 @@ public class FetLifeApiIntentService extends IntentService {
     }
 
     private int retrieveMemberFeed(String[] params) throws IOException {
-        final String memberId = params[0];
+        String memberId = getLocalId(params[0]);
+        if (memberId == null) {
+            return Integer.MIN_VALUE;
+        }
         final int limit = getIntFromParams(params, 1, 25);
         final int page = getIntFromParams(params, 2, 1);
 
@@ -1650,7 +1659,11 @@ public class FetLifeApiIntentService extends IntentService {
     }
 
     private int getMember(String... params) throws IOException {
-        String memberId = params[0];
+        String memberId = getLocalId(params[0]);
+        if (memberId == null) {
+            return Integer.MIN_VALUE;
+        }
+
         Call<Member> getMemberCall = getFetLifeApi().getMember(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), memberId);
         Response<Member> getMemberResponse = getMemberCall.execute();
         if (getMemberResponse.isSuccess()) {
@@ -1677,8 +1690,11 @@ public class FetLifeApiIntentService extends IntentService {
     }
 
     private int getWriting(String... params) throws IOException {
-        String writingId = params[0];
-        String memberId = params[1];
+        String writingId = getLocalId(params[0]);
+        String memberId = getLocalId(params[1]);
+        if (memberId == null || writingId == null) {
+            return Integer.MIN_VALUE;
+        }
         Call<Writing> getWritingCall = getFetLifeApi().getWriting(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), memberId, writingId);
         Response<Writing> getWritingResponse = getWritingCall.execute();
         if (getWritingResponse.isSuccess()) {
@@ -1692,7 +1708,10 @@ public class FetLifeApiIntentService extends IntentService {
     }
 
     private int getEvent(String... params) throws IOException {
-        String eventId = params[0];
+        String eventId = getLocalId(params[0]);
+        if (eventId == null) {
+            return Integer.MIN_VALUE;
+        }
         Call<Event> getEventCall = getFetLifeApi().getEvent(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), eventId);
         Response<Event> getEventResponse = getEventCall.execute();
         if (getEventResponse.isSuccess()) {
@@ -1800,7 +1819,9 @@ public class FetLifeApiIntentService extends IntentService {
         if (relationsResponse.isSuccess()) {
             final List<Event> foundEvents = relationsResponse.body();
             getFetLifeApplication().getEventBus().post(new EventsByLocationRetrievedEvent(searchBounds,page,foundEvents));
+            Crashlytics.logException(new Exception("EXTRA LOG event search request succeeded"));
         } else {
+            Crashlytics.logException(new Exception("EXTRA LOG event search request failed:" + getFetLifeApplication().getFetLifeService().getLastResponseCode()));
             getFetLifeApplication().getEventBus().post(new EventsByLocationRetrieveFailedEvent(searchBounds,page));
         }
         return Integer.MAX_VALUE;
@@ -1815,13 +1836,16 @@ public class FetLifeApiIntentService extends IntentService {
     }
 
     private int retrieveMemberRelations(String[] params) throws IOException {
-        String userId = params[0];
+        String memberId = getLocalId(params[0]);
+        if (memberId == null) {
+            return Integer.MIN_VALUE;
+        }
         int relationType = getIntFromParams(params, 1, RelationReference.VALUE_RELATIONTYPE_FRIEND);
         String newParams[] = new String[params.length-2];
 
         System.arraycopy(params, 2, newParams, 0, params.length-2);
 
-        return retrieveRelations(false, userId, relationType, newParams);
+        return retrieveRelations(false, memberId, relationType, newParams);
     }
 
     private int retrieveRelations(boolean myRelations, String userId, int relationType, String[] params) throws IOException {
@@ -2050,12 +2074,15 @@ public class FetLifeApiIntentService extends IntentService {
     }
 
     private int retrieveMemberPictures(String[] params) throws IOException {
-        String userId = params[0];
+        String memberId = getLocalId(params[0]);
+        if (memberId == null) {
+            return Integer.MIN_VALUE;
+        }
         String newParams[] = new String[params.length-1];
 
         System.arraycopy(params, 1, newParams, 0, params.length-1);
 
-        return retrievePictures(false, userId, newParams);
+        return retrievePictures(false, memberId, newParams);
     }
 
     private int retrievePictures(boolean myPictures, String userId, String[] params) throws IOException {
@@ -2122,12 +2149,15 @@ public class FetLifeApiIntentService extends IntentService {
     }
 
     private int retrieveMemberVideos(String[] params) throws IOException {
-        String userId = params[0];
+        String memberId = getLocalId(params[0]);
+        if (memberId == null) {
+            return Integer.MIN_VALUE;
+        }
         String newParams[] = new String[params.length-1];
 
         System.arraycopy(params, 1, newParams, 0, params.length-1);
 
-        return retrieveVideos(false, userId, newParams);
+        return retrieveVideos(false, memberId, newParams);
     }
 
     private int retrieveVideos(boolean myVideos, String userId, String[] params) throws IOException {
@@ -2194,12 +2224,15 @@ public class FetLifeApiIntentService extends IntentService {
     }
 
     private int retrieveMemberStatuses(String[] params) throws IOException {
-        String userId = params[0];
+        String memberId = getLocalId(params[0]);
+        if (memberId == null) {
+            return Integer.MIN_VALUE;
+        }
         String newParams[] = new String[params.length-1];
 
         System.arraycopy(params, 1, newParams, 0, params.length-1);
 
-        return retrieveStatuses(false, userId, newParams);
+        return retrieveStatuses(false, memberId, newParams);
     }
 
     private int retrieveStatuses(boolean myStatus, String userId, String[] params) throws IOException {
@@ -2320,24 +2353,27 @@ public class FetLifeApiIntentService extends IntentService {
 
 
     private int retrieveMemberGroups(String[] params) throws IOException {
-        String userId = params[0];
+        String memberId = getLocalId(params[0]);
+        if (memberId == null) {
+            return Integer.MIN_VALUE;
+        }
         final int limit = getIntFromParams(params, 1, 10);
         final int page = getIntFromParams(params, 2, 1);
 
         final Call<List<GroupMembership>> getGroupMembershipsCall;
-        getGroupMembershipsCall = getFetLifeApi().getMemberGroupMemberships(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), userId, limit, page);
+        getGroupMembershipsCall = getFetLifeApi().getMemberGroupMemberships(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), memberId, limit, page);
 
         Response<List<GroupMembership>> groupMembershipsResponse = getGroupMembershipsCall.execute();
         if (groupMembershipsResponse.isSuccess()) {
 
             final List<GroupMembership> retrievedGroupMemberships = groupMembershipsResponse.body();
-            List<GroupMembershipReference> currentGroups = new Select().from(GroupMembershipReference.class).where(GroupMembershipReference_Table.id.is(userId)).orderBy(OrderBy.fromProperty(GroupMembershipReference_Table.lastVisitedAt).descending()).queryList();
+            List<GroupMembershipReference> currentGroups = new Select().from(GroupMembershipReference.class).where(GroupMembershipReference_Table.id.is(memberId)).orderBy(OrderBy.fromProperty(GroupMembershipReference_Table.lastVisitedAt).descending()).queryList();
 
             int lastConfirmedGroupPosition;
             if (page == 1) {
                 lastConfirmedGroupPosition = -1;
             } else {
-                lastConfirmedGroupPosition = loadLastSyncedPosition(SyncedPositionType.GROUP,userId);
+                lastConfirmedGroupPosition = loadLastSyncedPosition(SyncedPositionType.GROUP,memberId);
             }
             int newItemCount = 0, deletedItemCount = 0;
 
@@ -2356,7 +2392,7 @@ public class FetLifeApiIntentService extends IntentService {
                     groupMembershipReference.setId(retrievedGroupMembership.getId());
                     groupMembershipReference.setCreatedAt(retrievedGroupMembership.getCreatedAt());
                     groupMembershipReference.setLastVisitedAt(retrievedGroupMembership.getLastVisitedAt());
-                    groupMembershipReference.setMemberId(userId);
+                    groupMembershipReference.setMemberId(memberId);
                     groupMembershipReference.setGroupId(retrievedGroupMembership.getGroup().getId());
                     groupMembershipReference.save();
                 } else {
@@ -2370,7 +2406,7 @@ public class FetLifeApiIntentService extends IntentService {
                 retrievedGroupMembership.getGroup().save();
             }
 
-            saveLastSyncedPosition(SyncedPositionType.GROUP,userId,lastConfirmedGroupPosition+newItemCount);
+            saveLastSyncedPosition(SyncedPositionType.GROUP,memberId,lastConfirmedGroupPosition+newItemCount);
 
             return retrievedGroupMemberships.size() - deletedItemCount;
         } else {
@@ -2379,24 +2415,27 @@ public class FetLifeApiIntentService extends IntentService {
     }
 
     private int retrieveMemberEvents(String[] params) throws IOException {
-        String userId = params[0];
+        String memberId = getLocalId(params[0]);
+        if (memberId == null) {
+            return Integer.MIN_VALUE;
+        }
         final int limit = getIntFromParams(params, 1, 10);
         final int page = getIntFromParams(params, 2, 1);
 
         final Call<List<Rsvp>> getRsvpsCall;
-        getRsvpsCall = getFetLifeApi().getMemberRsvps(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), userId, /*"start_date_time",*/ limit, page);
+        getRsvpsCall = getFetLifeApi().getMemberRsvps(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), memberId, /*"start_date_time",*/ limit, page);
 
         Response<List<Rsvp>> rsvpsResponse = getRsvpsCall.execute();
         if (rsvpsResponse.isSuccess()) {
 
             final List<Rsvp> retrievedRsvps = rsvpsResponse.body();
-            List<EventReference> currentEvents = new Select().from(EventReference.class).where(EventReference_Table.userId.is(userId)).orderBy(OrderBy.fromProperty(EventReference_Table.date).descending()).queryList();
+            List<EventReference> currentEvents = new Select().from(EventReference.class).where(EventReference_Table.userId.is(memberId)).orderBy(OrderBy.fromProperty(EventReference_Table.date).descending()).queryList();
 
             int lastConfirmedEventPosition;
             if (page == 1) {
                 lastConfirmedEventPosition = -1;
             } else {
-                lastConfirmedEventPosition = loadLastSyncedPosition(SyncedPositionType.EVENT,userId);
+                lastConfirmedEventPosition = loadLastSyncedPosition(SyncedPositionType.EVENT,memberId);
             }
             int newItemCount = 0, deletedItemCount = 0;
 
@@ -2418,7 +2457,7 @@ public class FetLifeApiIntentService extends IntentService {
                     eventReference.setId(retrievedEvent.getId());
                     eventReference.setCreatedAt(retrievedEvent.getCreatedAt());
                     eventReference.setRsvpStatus(retrievedRsvp.getRsvpStatus());
-                    eventReference.setUserId(userId);
+                    eventReference.setUserId(memberId);
                     eventReference.save();
                 } else {
                     for (int i = lastConfirmedEventPosition+1; i < foundPos; i++) {
@@ -2430,7 +2469,7 @@ public class FetLifeApiIntentService extends IntentService {
                 retrievedEvent.save();
             }
 
-            saveLastSyncedPosition(SyncedPositionType.EVENT,userId,lastConfirmedEventPosition+newItemCount);
+            saveLastSyncedPosition(SyncedPositionType.EVENT,memberId,lastConfirmedEventPosition+newItemCount);
 
             return retrievedRsvps.size() - deletedItemCount;
         } else {
@@ -2439,24 +2478,27 @@ public class FetLifeApiIntentService extends IntentService {
     }
 
     private int retrieveMemberWritings(String[] params) throws IOException {
-        String userId = params[0];
+        String memberId = getLocalId(params[0]);
+        if (memberId == null) {
+            return Integer.MIN_VALUE;
+        }
         final int limit = getIntFromParams(params, 1, 10);
         final int page = getIntFromParams(params, 2, 1);
 
         final Call<List<Writing>> getWritingsCall;
-        getWritingsCall = getFetLifeApi().getMemberWritings(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), userId, /*"start_date_time",*/ limit, page);
+        getWritingsCall = getFetLifeApi().getMemberWritings(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), memberId, /*"start_date_time",*/ limit, page);
 
         Response<List<Writing>> writingsResponse = getWritingsCall.execute();
         if (writingsResponse.isSuccess()) {
 
             final List<Writing> retrievedWritings = writingsResponse.body();
-            List<WritingReference> currentWritings = new Select().from(WritingReference.class).where(WritingReference_Table.userId.is(userId)).orderBy(OrderBy.fromProperty(WritingReference_Table.date).descending()).queryList();
+            List<WritingReference> currentWritings = new Select().from(WritingReference.class).where(WritingReference_Table.userId.is(memberId)).orderBy(OrderBy.fromProperty(WritingReference_Table.date).descending()).queryList();
 
             int lastConfirmedEventPosition;
             if (page == 1) {
                 lastConfirmedEventPosition = -1;
             } else {
-                lastConfirmedEventPosition = loadLastSyncedPosition(SyncedPositionType.WRITING,userId);
+                lastConfirmedEventPosition = loadLastSyncedPosition(SyncedPositionType.WRITING,memberId);
             }
             int newItemCount = 0, deletedItemCount = 0;
 
@@ -2475,7 +2517,7 @@ public class FetLifeApiIntentService extends IntentService {
                     writingReference.setId(retrievedWriting.getId());
                     writingReference.setCreatedAt(retrievedWriting.getCreatedAt());
                     writingReference.setDate(retrievedWriting.getDate());
-                    writingReference.setUserId(userId);
+                    writingReference.setUserId(memberId);
                     writingReference.save();
                 } else {
                     for (int i = lastConfirmedEventPosition+1; i < foundPos; i++) {
@@ -2487,7 +2529,7 @@ public class FetLifeApiIntentService extends IntentService {
                 retrievedWriting.save();
             }
 
-            saveLastSyncedPosition(SyncedPositionType.WRITING,userId,lastConfirmedEventPosition+newItemCount);
+            saveLastSyncedPosition(SyncedPositionType.WRITING,memberId,lastConfirmedEventPosition+newItemCount);
 
             return retrievedWritings.size() - deletedItemCount;
         } else {
@@ -2496,7 +2538,10 @@ public class FetLifeApiIntentService extends IntentService {
     }
 
     private int cancelFriendRequest(String[] params) throws IOException {
-        String memberId = params[0];
+        String memberId = getLocalId(params[0]);
+        if (memberId == null) {
+            return Integer.MIN_VALUE;
+        }
 
         int page = 1;
 
@@ -2530,7 +2575,10 @@ public class FetLifeApiIntentService extends IntentService {
     }
 
     private int cancelFriendship(String[] params) throws IOException {
-        String memberId = params[0];
+        String memberId = getLocalId(params[0]);
+        if (memberId == null) {
+            return Integer.MIN_VALUE;
+        }
         Call<ResponseBody> removeFriendshipCall = getFetLifeApi().removeFriendship(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), memberId);
         Response<ResponseBody> response = removeFriendshipCall.execute();
         return response.isSuccess() ? 1 : Integer.MIN_VALUE;
@@ -2729,5 +2777,24 @@ public class FetLifeApiIntentService extends IntentService {
             throw new RuntimeException(e);
         }
     }
+
+    private String getLocalId(final String serverId) throws IOException {
+        String localId = serverId;
+        if (ServerIdUtil.isServerId(serverId)) {
+            localId = ServerIdUtil.getLocalId(serverId);
+            if (localId == null) {
+                Call<AppId> getAppIdCall = getFetLifeApi().getAppId(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), ServerIdUtil.removePrefix(serverId));
+                Response<AppId> getAppIdResponse = getAppIdCall.execute();
+                if (getAppIdResponse.isSuccess()) {
+                    localId = getAppIdResponse.body().getId();
+                    ServerIdUtil.setLocalId(serverId,localId);
+                } else {
+                    return null;
+                }
+            }
+        }
+        return localId;
+    }
+
 
 }

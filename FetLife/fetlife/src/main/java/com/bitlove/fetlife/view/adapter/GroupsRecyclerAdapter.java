@@ -16,6 +16,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.db.GroupReference;
 import com.bitlove.fetlife.model.pojos.fetlife.db.GroupReference_Table;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Group;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Group_Table;
+import com.bitlove.fetlife.util.ServerIdUtil;
 import com.raizlabs.android.dbflow.annotation.Collate;
 import com.raizlabs.android.dbflow.sql.language.OrderBy;
 import com.raizlabs.android.dbflow.sql.language.Select;
@@ -33,7 +34,7 @@ public class GroupsRecyclerAdapter extends ResourceListRecyclerAdapter<Group, Gr
     private static final String LOCATION_SEPARATOR = " - ";
     private static final int MAX_DESC_LENGTH = 125;
 
-    private final String memberId;
+    private String memberId;
     protected List<Group> itemList;
 
     public GroupsRecyclerAdapter(String memberId) {
@@ -55,6 +56,13 @@ public class GroupsRecyclerAdapter extends ResourceListRecyclerAdapter<Group, Gr
     protected void loadItems() {
         //TODO: think of moving to separate thread with specific DB executor
         try {
+            if (ServerIdUtil.isServerId(memberId)) {
+                if (ServerIdUtil.containsServerId(memberId)) {
+                    memberId = ServerIdUtil.getLocalId(memberId);
+                } else {
+                    return;
+                }
+            }
             List<GroupMembershipReference> groupMembershipReferences = new Select().from(GroupMembershipReference.class).where(GroupMembershipReference_Table.memberId.is(memberId)).orderBy(OrderBy.fromProperty(GroupMembershipReference_Table.lastVisitedAt).descending()).queryList();
             final Map<String,Integer> orderReference = new HashMap<>();
             int i = 0;

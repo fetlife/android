@@ -32,6 +32,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,9 +110,7 @@ public class GroupMessageNotification extends OneSignalNotification {
             fetLifeApplication.getEventBus().post(new NewGroupMessageEvent(groupId,groupDiscussionId));
             Activity foregroundActivity = fetLifeApplication.getForegroundActivity();
             if (foregroundActivity instanceof GroupMessagesActivity) {
-                return true;
-                //TODO: uncomment this
-//                groupDiscussionInForeground = groupId.equals(((GroupMessagesActivity)foregroundActivity).getGroupId()) && groupDiscussionId.equals(((GroupMessagesActivity)foregroundActivity).getGroupDiscussionId());
+                return groupId.equals(((GroupMessagesActivity)foregroundActivity).getGroupId()) && groupDiscussionId.equals(((GroupMessagesActivity)foregroundActivity).getGroupDiscussionId());
             }
         }
 
@@ -162,7 +161,9 @@ public class GroupMessageNotification extends OneSignalNotification {
                 contentIntent.putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE,getNotificationType());
                 return TaskStackBuilder.create(context).addNextIntent(GroupsActivity.createIntent(context,true)).addNextIntent(GroupActivity.createIntent(context, groupId, null, true)).addNextIntent(contentIntent).getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
             } else {
-                return getLaunchPendingIntent(context,launchUrl,getNotificationType());
+                Intent contentIntent = GroupsActivity.createIntent(context, true);
+                contentIntent.putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE,getNotificationType());
+                return PendingIntent.getActivity(context,0,contentIntent,PendingIntent.FLAG_UPDATE_CURRENT);
             }
         }
     }
@@ -194,18 +195,20 @@ public class GroupMessageNotification extends OneSignalNotification {
 
     private List<String> getGroupedMessageTexts(FetLifeApplication fetLifeApplication, List<GroupMessageNotification> notifications) {
         LinkedHashMap<String,Integer> userMessageGroups = new LinkedHashMap<>();
+        Map<String,String> groupDiscussionTitles = new HashMap<>();
         for (GroupMessageNotification notification : notifications) {
-            Integer userMessageCount = userMessageGroups.get(notification.title);
+            Integer userMessageCount = userMessageGroups.get(notification.groupDiscussionId);
             if (userMessageCount == null) {
                 userMessageCount = 1;
             } else {
                 userMessageCount++;
             }
-            userMessageGroups.put(notification.title,userMessageCount);
+            groupDiscussionTitles.put(notification.groupDiscussionId,notification.groupDiscussionTitle);
+            userMessageGroups.put(notification.groupDiscussionId,userMessageCount);
         }
         List<String> messages = new ArrayList<>();
         for (Map.Entry<String,Integer> userMessageGroup : userMessageGroups.entrySet()) {
-            messages.add(new Integer(1).equals(userMessageGroup.getValue()) ? fetLifeApplication.getString(R.string.noification_text_new_group_message,userMessageGroup.getKey()) : fetLifeApplication.getString(R.string.noification_text_new_group_messages,userMessageGroup.getValue(),userMessageGroup.getKey()));
+            messages.add(new Integer(1).equals(userMessageGroup.getValue()) ? fetLifeApplication.getString(R.string.noification_text_new_group_message,groupDiscussionTitles.get(userMessageGroup.getKey())) : fetLifeApplication.getString(R.string.noification_text_new_group_messages,userMessageGroup.getValue(),groupDiscussionTitles.get(userMessageGroup.getKey())));
         }
         Collections.reverse(messages);
         return messages;

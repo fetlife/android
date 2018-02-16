@@ -13,11 +13,12 @@ import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.facebook.drawee.view.SimpleDraweeView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class MembersRecyclerAdapter extends ResourceListRecyclerAdapter<Member, MemberViewHolder> {
 
-    protected List<Member> itemList;
+    protected List<Member> itemList = new ArrayList<>();
 
     public MembersRecyclerAdapter(FetLifeApplication fetLifeApplication) {
         super(fetLifeApplication);

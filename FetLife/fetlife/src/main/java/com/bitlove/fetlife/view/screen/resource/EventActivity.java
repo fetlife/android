@@ -1,42 +1,44 @@
 package com.bitlove.fetlife.view.screen.resource;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.provider.CalendarContract;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.widget.ImageView;
-import android.widget.TextView;
+        import android.content.Intent;
+        import android.os.Bundle;
+        import android.provider.CalendarContract;
+        import android.support.design.widget.AppBarLayout;
+        import android.support.design.widget.CoordinatorLayout;
+        import android.support.v4.app.Fragment;
+        import android.support.v4.app.FragmentStatePagerAdapter;
+        import android.support.v4.view.ViewPager;
+        import android.support.v7.widget.Toolbar;
+        import android.text.TextUtils;
+        import android.view.MenuItem;
+        import android.view.View;
+        import android.view.animation.AlphaAnimation;
+        import android.widget.ImageView;
+        import android.widget.TextView;
 
-import com.bitlove.fetlife.R;
-import com.bitlove.fetlife.event.ServiceCallFailedEvent;
-import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
-import com.bitlove.fetlife.event.ServiceCallStartedEvent;
-import com.bitlove.fetlife.model.pojos.fetlife.db.EventRsvpReference;
-import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Event;
-import com.bitlove.fetlife.model.pojos.fetlife.json.Rsvp;
-import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
-import com.bitlove.fetlife.util.DateUtil;
-import com.bitlove.fetlife.util.UrlUtil;
-import com.bitlove.fetlife.view.screen.BaseActivity;
-import com.bitlove.fetlife.view.widget.FlingBehavior;
+        import com.bitlove.fetlife.R;
+        import com.bitlove.fetlife.event.ServiceCallFailedEvent;
+        import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
+        import com.bitlove.fetlife.event.ServiceCallStartedEvent;
+        import com.bitlove.fetlife.model.pojos.fetlife.db.EventRsvpReference;
+        import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Event;
+        import com.bitlove.fetlife.model.pojos.fetlife.json.Rsvp;
+        import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
+        import com.bitlove.fetlife.util.DateUtil;
+        import com.bitlove.fetlife.util.UrlUtil;
+        import com.bitlove.fetlife.view.screen.BaseActivity;
+        import com.bitlove.fetlife.view.widget.FlingBehavior;
+        import com.crashlytics.android.Crashlytics;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
+        import org.greenrobot.eventbus.Subscribe;
+        import org.greenrobot.eventbus.ThreadMode;
 
 public class EventActivity extends ResourceActivity implements AppBarLayout.OnOffsetChangedListener {
 
     private static final int PROFILE_MENU_HITREC_PADDING = 200;
 
     private static final String EXTRA_EVENTID = "EXTRA_EVENTID";
+    private String eventId;
     private TextView eventSubTitle;
     private TextView eventTitle;
 
@@ -59,10 +61,12 @@ public class EventActivity extends ResourceActivity implements AppBarLayout.OnOf
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        String eventId = getIntent().getStringExtra(EXTRA_EVENTID);
+        eventId = getIntent().getStringExtra(EXTRA_EVENTID);
         event = Event.loadEvent(eventId);
 
-        setEventDetails(event);
+        if (event != null ) {
+            setEventDetails(event);
+        }
 
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
@@ -70,11 +74,11 @@ public class EventActivity extends ResourceActivity implements AppBarLayout.OnOf
             public Fragment getItem(int position) {
                 switch (position) {
                     case 0:
-                        return EventInfoFragment.newInstance(event.getId());
+                        return EventInfoFragment.newInstance(eventId);
                     case 1:
-                        return EventRsvpsFragment.newInstance(event.getId(), EventRsvpReference.VALUE_RSVPTYPE_GOING);
+                        return EventRsvpsFragment.newInstance(eventId, EventRsvpReference.VALUE_RSVPTYPE_GOING);
                     case 2:
-                        return EventRsvpsFragment.newInstance(event.getId(), EventRsvpReference.VALUE_RSVPTYPE_MAYBE);
+                        return EventRsvpsFragment.newInstance(eventId, EventRsvpReference.VALUE_RSVPTYPE_MAYBE);
                     default:
                         return null;
                 }
@@ -186,8 +190,7 @@ public class EventActivity extends ResourceActivity implements AppBarLayout.OnOf
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void callFinished(ServiceCallFinishedEvent serviceCallFinishedEvent) {
         if (isRelatedCall(serviceCallFinishedEvent.getServiceCallAction(), serviceCallFinishedEvent.getParams())) {
-            final String eventId = getIntent().getStringExtra(EXTRA_EVENTID);
-            Event event = Event.loadEvent(eventId);
+            event = Event.loadEvent(eventId);
             setEventDetails(event);
             if (!isRelatedCall(FetLifeApiIntentService.getActionInProgress(), FetLifeApiIntentService.getInProgressActionParams())) {
                 dismissProgress();
@@ -203,7 +206,6 @@ public class EventActivity extends ResourceActivity implements AppBarLayout.OnOf
     }
 
     private boolean isRelatedCall(String serviceCallAction, String[] params) {
-        String eventId = event.getId();
         if (params != null && params.length > 0 && eventId != null && !eventId.equals(params[0])) {
             return false;
         }
@@ -223,17 +225,22 @@ public class EventActivity extends ResourceActivity implements AppBarLayout.OnOf
     }
 
     public void onShowEventOnMap(View v) {
-        EventsActivity.startActivity(this,event);
+        if (event != null) {
+            EventsActivity.startActivity(this, event);
+        }
     }
 
     public void onGoingToEvent(View v) {
+        if (event == null) {
+            return;
+        }
         if (event.getRsvpStatus() != Rsvp.RsvpStatus.YES) {
-            FetLifeApiIntentService.startApiCall(this,FetLifeApiIntentService.ACTION_APICALL_SET_RSVP_STATUS,event.getId(), Rsvp.RsvpStatus.YES.toString());
+            FetLifeApiIntentService.startApiCall(this,FetLifeApiIntentService.ACTION_APICALL_SET_RSVP_STATUS,eventId, Rsvp.RsvpStatus.YES.toString());
             event.setRsvpStatus(Rsvp.RsvpStatus.YES);
             event.save();
             setEventDetails(event);
         } else {
-            FetLifeApiIntentService.startApiCall(this,FetLifeApiIntentService.ACTION_APICALL_SET_RSVP_STATUS,event.getId(), Rsvp.RsvpStatus.NO.toString());
+            FetLifeApiIntentService.startApiCall(this,FetLifeApiIntentService.ACTION_APICALL_SET_RSVP_STATUS,eventId, Rsvp.RsvpStatus.NO.toString());
             event.setRsvpStatus(Rsvp.RsvpStatus.NO);
             event.save();
             setEventDetails(event);
@@ -241,13 +248,16 @@ public class EventActivity extends ResourceActivity implements AppBarLayout.OnOf
     }
 
     public void onMaybeToEvent(View v) {
+        if (event == null) {
+            return;
+        }
         if (event.getRsvpStatus() != Rsvp.RsvpStatus.MAYBE) {
-            FetLifeApiIntentService.startApiCall(this,FetLifeApiIntentService.ACTION_APICALL_SET_RSVP_STATUS,event.getId(), Rsvp.RsvpStatus.MAYBE.toString());
+            FetLifeApiIntentService.startApiCall(this,FetLifeApiIntentService.ACTION_APICALL_SET_RSVP_STATUS,eventId, Rsvp.RsvpStatus.MAYBE.toString());
             event.setRsvpStatus(Rsvp.RsvpStatus.MAYBE);
             event.save();
             setEventDetails(event);
         } else {
-            FetLifeApiIntentService.startApiCall(this,FetLifeApiIntentService.ACTION_APICALL_SET_RSVP_STATUS,event.getId(), Rsvp.RsvpStatus.NO.toString());
+            FetLifeApiIntentService.startApiCall(this,FetLifeApiIntentService.ACTION_APICALL_SET_RSVP_STATUS,eventId, Rsvp.RsvpStatus.NO.toString());
             event.setRsvpStatus(Rsvp.RsvpStatus.NO);
             event.save();
             setEventDetails(event);
@@ -255,6 +265,9 @@ public class EventActivity extends ResourceActivity implements AppBarLayout.OnOf
     }
 
     public void onAddEventToCalendar(View v) {
+        if (event == null) {
+            return;
+        }
         Intent intent = new Intent(Intent.ACTION_INSERT);
         intent.setType("vnd.android.cursor.item/event");
         intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, DateUtil.parseDate(event.getStartDateTime(),true));
@@ -284,7 +297,9 @@ public class EventActivity extends ResourceActivity implements AppBarLayout.OnOf
     }
 
     public void onViewEvent(View v) {
-        UrlUtil.openUrl(this,event.getUrl());
+        if (event != null) {
+            UrlUtil.openUrl(this, event.getUrl());
+        }
     }
 
     @Override

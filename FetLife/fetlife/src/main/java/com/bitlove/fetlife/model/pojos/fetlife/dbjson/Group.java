@@ -2,6 +2,7 @@ package com.bitlove.fetlife.model.pojos.fetlife.dbjson;
 
 import com.bitlove.fetlife.model.db.FetLifeDatabase;
 import com.bitlove.fetlife.util.DateUtil;
+import com.bitlove.fetlife.util.ServerIdUtil;
 import com.bitlove.fetlife.util.StringUtil;
 import com.crashlytics.android.Crashlytics;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,6 +17,9 @@ public class Group extends BaseModel {
 
     public static Group loadGroup(String groupId) {
         try {
+            if (ServerIdUtil.containsServerId(groupId)) {
+                groupId = ServerIdUtil.getLocalId(groupId);
+            }
             Group group = new Select().from(Group.class).where(Group_Table.id.is(groupId)).querySingle();
             return group;
         } catch (Throwable t) {

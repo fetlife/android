@@ -19,6 +19,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.db.PictureReference_Table;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Picture;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Picture_Table;
+import com.bitlove.fetlife.util.ServerIdUtil;
 import com.bitlove.fetlife.util.ViewUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.raizlabs.android.dbflow.sql.language.OrderBy;
@@ -34,7 +35,7 @@ public class PicturesRecyclerAdapter extends RecyclerView.Adapter<PictureViewHol
 
     private final FetLifeApplication fetLifeApplication;
 
-    private final String memberId;
+    private String memberId;
     private List<Picture> itemList;
     private ArrayList<String> displayLinks;
     private OnPictureClickListener onPictureClickListener;
@@ -60,6 +61,13 @@ public class PicturesRecyclerAdapter extends RecyclerView.Adapter<PictureViewHol
     private void loadItems() {
         //TODO: think of moving to separate thread with specific DB executor
         try {
+            if (ServerIdUtil.isServerId(memberId)) {
+                if (ServerIdUtil.containsServerId(memberId)) {
+                    memberId = ServerIdUtil.getLocalId(memberId);
+                } else {
+                    return;
+                }
+            }
             List<PictureReference> pictureReferences = new Select().from(PictureReference.class).where(PictureReference_Table.userId.is(memberId)).orderBy(OrderBy.fromProperty(PictureReference_Table.date).descending()).queryList();
             List<String> pictureIds = new ArrayList<>();
             for (PictureReference pictureReference : pictureReferences) {

@@ -16,13 +16,13 @@ import com.basecamp.turbolinks.TurbolinksView;
 import com.bitlove.fetlife.BuildConfig;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.model.api.FetLifeService;
+import com.bitlove.fetlife.util.UrlUtil;
 import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.component.MenuActivityComponent;
 import com.bitlove.fetlife.view.screen.standalone.LoginActivity;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -139,6 +139,8 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);
             return true;
+        } else if (UrlUtil.handleInternal(this,uri)) {
+            return true;
         }
         return false;
     }
@@ -201,6 +203,9 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
             Integer expectedTitleResourceId = supportedBaseUrls.get(location);
             if (expectedTitleResourceId != null) {
                 TurboLinksViewActivity.startActivity(this,location,getString(expectedTitleResourceId));
+                return;
+            } else if (UrlUtil.handleInternal(this,Uri.parse(location))){
+                return;
             } else {
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(location));
                 startActivity(intent);

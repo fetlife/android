@@ -224,6 +224,8 @@ public class MenuActivityComponent extends ActivityComponent {
             ExploreActivity.startActivity(menuActivity, ExploreActivity.Explore.KINKY_AND_POPULAR);
         } else if (id == R.id.nav_support) {
             TurboLinksViewActivity.startActivity(menuActivity,"support",menuActivity.getString(R.string.title_activity_support));
+//        } else if (id == R.id.nav_search) {
+//            TurboLinksViewActivity.startActivity(menuActivity,"search",menuActivity.getString(R.string.title_activity_search));
         } else if (id == R.id.nav_ads) {
             TurboLinksViewActivity.startActivity(menuActivity,"ads",menuActivity.getString(R.string.title_activity_ads));
         } else if (id == R.id.nav_glossary) {

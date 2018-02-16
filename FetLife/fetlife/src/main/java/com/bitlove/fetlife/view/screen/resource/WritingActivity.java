@@ -33,8 +33,10 @@ public class WritingActivity extends ResourceActivity implements AppBarLayout.On
 
     private static final String EXTRA_WRITINGID = "EXTRA_WRITINGID";
     private static final String EXTRA_MEMBERID = "EXTRA_MEMBERID";
+    private String memberId;
 
     private Writing writing;
+    private String writingId;
 
     public static void startActivity(BaseActivity baseActivity, String writingId, String memberId) {
         Intent intent = new Intent(baseActivity, WritingActivity.class);
@@ -53,10 +55,13 @@ public class WritingActivity extends ResourceActivity implements AppBarLayout.On
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        String writingId = getIntent().getStringExtra(EXTRA_WRITINGID);
+        memberId = getIntent().getStringExtra(EXTRA_MEMBERID);
+        writingId = getIntent().getStringExtra(EXTRA_WRITINGID);
         writing = Writing.loadWriting(writingId);
 
-        setWritingDetails(writing);
+        if (writing != null) {
+            setWritingDetails(writing);
+        }
 
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
@@ -99,6 +104,9 @@ public class WritingActivity extends ResourceActivity implements AppBarLayout.On
         writingLove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (writing == null) {
+                    return;
+                }
                 ImageView writingLove = (ImageView) v;
                 boolean isLoved = writing.isLovedByMe();
                 boolean newIsLoved = !isLoved;
@@ -121,7 +129,7 @@ public class WritingActivity extends ResourceActivity implements AppBarLayout.On
     public void callFinished(ServiceCallFinishedEvent serviceCallFinishedEvent) {
         if (isRelatedCall(serviceCallFinishedEvent.getServiceCallAction(), serviceCallFinishedEvent.getParams())) {
             final String writingId = getIntent().getStringExtra(EXTRA_WRITINGID);
-            Writing writing = Writing.loadWriting(writingId);
+            writing = Writing.loadWriting(writingId);
             setWritingDetails(writing);
             if (!isRelatedCall(FetLifeApiIntentService.getActionInProgress(), FetLifeApiIntentService.getInProgressActionParams())) {
                 dismissProgress();
@@ -137,7 +145,6 @@ public class WritingActivity extends ResourceActivity implements AppBarLayout.On
     }
 
     private boolean isRelatedCall(String serviceCallAction, String[] params) {
-        String writingId = writing.getId();
         if (params != null && params.length > 0 && writingId != null && !writingId.equals(params[0])) {
             return false;
         }
@@ -148,11 +155,13 @@ public class WritingActivity extends ResourceActivity implements AppBarLayout.On
     }
 
     public void onViewAuthor(View v) {
-        ProfileActivity.startActivity(this,writing.getMemberId());
+        ProfileActivity.startActivity(this,memberId);
     }
 
     public void onViewWriting(View v) {
-        UrlUtil.openUrl(this,writing.getUrl());
+        if (writing != null) {
+            UrlUtil.openUrl(this,writing.getUrl());
+        }
     }
 
     @Override
@@ -167,7 +176,7 @@ public class WritingActivity extends ResourceActivity implements AppBarLayout.On
 
     @Override
     protected void onResourceStart() {
-        FetLifeApiIntentService.startApiCall(this,FetLifeApiIntentService.ACTION_APICALL_WRITING,writing.getId(),writing.getMemberId());
+        FetLifeApiIntentService.startApiCall(this,FetLifeApiIntentService.ACTION_APICALL_WRITING,writingId,memberId);
     }
 
     @Override

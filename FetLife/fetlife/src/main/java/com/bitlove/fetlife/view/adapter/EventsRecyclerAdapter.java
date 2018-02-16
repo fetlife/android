@@ -17,6 +17,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Event;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Event_Table;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Rsvp;
 import com.bitlove.fetlife.util.DateUtil;
+import com.bitlove.fetlife.util.ServerIdUtil;
 import com.raizlabs.android.dbflow.annotation.Collate;
 import com.raizlabs.android.dbflow.sql.language.OrderBy;
 import com.raizlabs.android.dbflow.sql.language.Select;
@@ -31,7 +32,7 @@ public class EventsRecyclerAdapter extends ResourceListRecyclerAdapter<Event, Ev
     private static final String DATE_INTERVAL_SEPARATOR = " - ";
     private static final String LOCATION_SEPARATOR = " - ";
 
-    private final String memberId;
+    private String memberId;
     protected List<Event> itemList;
     private HashMap<String,Rsvp.RsvpStatus> statusMap;
 
@@ -54,6 +55,13 @@ public class EventsRecyclerAdapter extends ResourceListRecyclerAdapter<Event, Ev
     protected void loadItems() {
         //TODO: think of moving to separate thread with specific DB executor
         try {
+            if (ServerIdUtil.isServerId(memberId)) {
+                if (ServerIdUtil.containsServerId(memberId)) {
+                    memberId = ServerIdUtil.getLocalId(memberId);
+                } else {
+                    return;
+                }
+            }
             List<EventReference> eventReferences = new Select().from(EventReference.class).where(EventReference_Table.userId.is(memberId)).orderBy(OrderBy.fromProperty(EventReference_Table.id).ascending().collate(Collate.NOCASE)).queryList();
             List<String> eventIds = new ArrayList<>();
             statusMap = new HashMap<String,Rsvp.RsvpStatus>();

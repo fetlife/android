@@ -17,6 +17,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Writing;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Writing_Table;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Rsvp;
 import com.bitlove.fetlife.util.DateUtil;
+import com.bitlove.fetlife.util.ServerIdUtil;
 import com.raizlabs.android.dbflow.annotation.Collate;
 import com.raizlabs.android.dbflow.sql.language.OrderBy;
 import com.raizlabs.android.dbflow.sql.language.Select;
@@ -31,7 +32,7 @@ public class WritingsRecyclerAdapter extends ResourceListRecyclerAdapter<Writing
     private static final String DATE_INTERVAL_SEPARATOR = " - ";
     private static final String LOCATION_SEPARATOR = " - ";
 
-    private final String memberId;
+    private String memberId;
     protected List<Writing> itemList;
     private HashMap<String,Rsvp.RsvpStatus> statusMap;
 
@@ -54,6 +55,13 @@ public class WritingsRecyclerAdapter extends ResourceListRecyclerAdapter<Writing
     protected void loadItems() {
         //TODO: think of moving to separate thread with specific DB executor
         try {
+            if (ServerIdUtil.isServerId(memberId)) {
+                if (ServerIdUtil.containsServerId(memberId)) {
+                    memberId = ServerIdUtil.getLocalId(memberId);
+                } else {
+                    return;
+                }
+            }
             List<WritingReference> writingReferences = new Select().from(WritingReference.class).where(WritingReference_Table.userId.is(memberId)).queryList();
             List<String> writingIds = new ArrayList<>();
             for (WritingReference writingReference : writingReferences) {

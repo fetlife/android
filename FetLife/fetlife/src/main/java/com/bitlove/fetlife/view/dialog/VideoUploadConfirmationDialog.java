@@ -95,7 +95,7 @@ public class VideoUploadConfirmationDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 if (getArguments().getBoolean(ARGUMENT_IS_VIDEO, false)) {
-                    FetLifeApiIntentService.startApiCall(getActivity(), FetLifeApiIntentService.ACTION_APICALL_UPLOAD_VIDEO, getArguments().getString(ARGUMENT_MEDIA_URI), Boolean.toString(getArguments().getBoolean(ARGUMENT_DELETE_AFTER_UPLOAD)), editText.getText().toString(), Boolean.toString(checkBox.isChecked()));
+                    FetLifeApiIntentService.startApiCall(getActivity(), FetLifeApiIntentService.ACTION_APICALL_UPLOAD_VIDEO, getArguments().getString(ARGUMENT_MEDIA_URI), Boolean.toString(getArguments().getBoolean(ARGUMENT_DELETE_AFTER_UPLOAD)), editText.getText().toString(), editText2.getText().toString(), Boolean.toString(checkBox.isChecked()));
                 } else {
                     FetLifeApiIntentService.startApiCall(getActivity(), FetLifeApiIntentService.ACTION_APICALL_UPLOAD_PICTURE, getArguments().getString(ARGUMENT_MEDIA_URI), Boolean.toString(getArguments().getBoolean(ARGUMENT_DELETE_AFTER_UPLOAD)), editText.getText().toString(), editText2.getText().toString(), Boolean.toString(checkBox.isChecked()));
                 }

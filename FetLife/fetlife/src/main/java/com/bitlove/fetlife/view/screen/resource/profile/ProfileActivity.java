@@ -75,8 +75,8 @@ public class ProfileActivity extends ResourceActivity implements AppBarLayout.On
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 
-        memberId = getIntent().getStringExtra(EXTRA_MEMBERID);
-        Member member = Member.loadMember(memberId);
+        Member member = Member.loadMember(getIntent().getStringExtra(EXTRA_MEMBERID));
+        memberId = member != null ? member.getId() : getIntent().getStringExtra(EXTRA_MEMBERID);
 
         nickNameView = (TextView) findViewById(R.id.profile_nickname);
         metaView = (TextView) findViewById(R.id.profile_meta);
@@ -288,9 +288,10 @@ public class ProfileActivity extends ResourceActivity implements AppBarLayout.On
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void callFinished(ServiceCallFinishedEvent serviceCallFinishedEvent) {
         if (serviceCallFinishedEvent.getServiceCallAction().equals(FetLifeApiIntentService.ACTION_APICALL_MEMBER)) {
-            final String memberId = getIntent().getStringExtra(EXTRA_MEMBERID);
             Member member = Member.loadMember(memberId);
-            setMemberDetails(member);
+            if (member != null) {
+                setMemberDetails(member);
+            }
         }
         if (isRelatedCall(serviceCallFinishedEvent.getServiceCallAction(),serviceCallFinishedEvent.getParams()) && !isRelatedCall(FetLifeApiIntentService.getActionInProgress(),FetLifeApiIntentService.getInProgressActionParams())) {
             dismissProgress();
@@ -339,14 +340,14 @@ public class ProfileActivity extends ResourceActivity implements AppBarLayout.On
     }
 
     private void onMenuIconMessage() {
-        Member member = Member.loadMember(getIntent().getStringExtra(EXTRA_MEMBERID));
+        Member member = Member.loadMember(memberId);
         if (member != null) {
             MessagesActivity.startActivity(this, Conversation.createLocalConversation(member), member.getNickname(), member.getAvatarLink(), false);
         }
     }
 
     private void onMenuIconView() {
-        Member member = Member.loadMember(getIntent().getStringExtra(EXTRA_MEMBERID));
+        Member member = Member.loadMember(memberId);
         if (member != null) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(member.getLink()));
@@ -355,7 +356,7 @@ public class ProfileActivity extends ResourceActivity implements AppBarLayout.On
     }
 
     private void onMenuIconFriend() {
-        final Member member = Member.loadMember(getIntent().getStringExtra(EXTRA_MEMBERID));
+        final Member member = Member.loadMember(memberId);
         final String currentRelation = member.getRelationWithMe() != null ? member.getRelationWithMe() : "";
         switch (currentRelation) {
             case Member.VALUE_FRIEND:
@@ -449,7 +450,7 @@ public class ProfileActivity extends ResourceActivity implements AppBarLayout.On
     }
 
     private void onMenuIconFollow() {
-        Member member = Member.loadMember(getIntent().getStringExtra(EXTRA_MEMBERID));
+        Member member = Member.loadMember(memberId);
         if (member != null && !isFollowedByMe(member) && member.isFollowable()) {
             FollowRequest followRequest = new FollowRequest();
             followRequest.setMemberId(member.getId());

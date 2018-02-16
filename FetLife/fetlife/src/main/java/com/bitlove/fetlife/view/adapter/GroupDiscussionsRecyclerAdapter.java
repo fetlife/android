@@ -14,18 +14,20 @@ import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Conversation_Table;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.GroupPost;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.GroupPost_Table;
 import com.bitlove.fetlife.util.DateUtil;
+import com.bitlove.fetlife.util.ServerIdUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GroupDiscussionsRecyclerAdapter extends ResourceListRecyclerAdapter<GroupPost, GroupDiscussionViewHolder> {
 
     private static final int MAX_BODY_LENGTH = 125;
 
-    private final String groupId;
-    private List<GroupPost> itemList;
+    private String groupId;
+    private List<GroupPost> itemList = new ArrayList<>();
 
     public GroupDiscussionsRecyclerAdapter(String groupId, FetLifeApplication fetLifeApplication) {
         this.groupId = groupId;
@@ -45,6 +47,13 @@ public class GroupDiscussionsRecyclerAdapter extends ResourceListRecyclerAdapter
 
     private void loadItems() {
         //TODO: think of moving to separate thread with specific DB executor
+        if (ServerIdUtil.isServerId(groupId)) {
+            if (ServerIdUtil.containsServerId(groupId)) {
+                groupId = ServerIdUtil.getLocalId(groupId);
+            } else {
+                return;
+            }
+        }
         itemList = new Select().from(GroupPost.class).where(GroupPost_Table.groupId.is(groupId)).orderBy(GroupPost_Table.date,false).queryList();
     }
 

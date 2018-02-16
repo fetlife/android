@@ -7,6 +7,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.db.RelationReference;
 import com.bitlove.fetlife.model.pojos.fetlife.db.RelationReference_Table;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member_Table;
+import com.bitlove.fetlife.util.ServerIdUtil;
 import com.raizlabs.android.dbflow.annotation.Collate;
 import com.raizlabs.android.dbflow.sql.language.OrderBy;
 import com.raizlabs.android.dbflow.sql.language.Select;
@@ -19,7 +20,7 @@ import java.util.List;
 
 public class EventRsvpsRecyclerAdapter extends MembersRecyclerAdapter {
 
-    private final String eventId;
+    private String eventId;
     private final int rsvpType;
 
     public EventRsvpsRecyclerAdapter(String eventId, int rsvpType, FetLifeApplication fetLifeApplication) {
@@ -32,6 +33,13 @@ public class EventRsvpsRecyclerAdapter extends MembersRecyclerAdapter {
     protected void loadItems() {
         //TODO: think of moving to separate thread with specific DB executor
         try {
+            if (ServerIdUtil.isServerId(eventId)) {
+                if (ServerIdUtil.containsServerId(eventId)) {
+                    eventId = ServerIdUtil.getLocalId(eventId);
+                } else {
+                    return;
+                }
+            }
             List<EventRsvpReference> eventRsvpEventReferences = new Select().from(EventRsvpReference.class).where(EventRsvpReference_Table.eventId.is(eventId)).and(EventRsvpReference_Table.rsvpType.is(rsvpType)).orderBy(OrderBy.fromProperty(EventRsvpReference_Table.nickname).ascending().collate(Collate.UNICODE)).queryList();
             List<String> memberIds = new ArrayList<>();
             for (EventRsvpReference eventRsvpReference : eventRsvpEventReferences) {

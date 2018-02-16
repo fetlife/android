@@ -5,6 +5,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.db.GroupMembershipReference;
 import com.bitlove.fetlife.model.pojos.fetlife.db.GroupMembershipReference_Table;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member_Table;
+import com.bitlove.fetlife.util.ServerIdUtil;
 import com.raizlabs.android.dbflow.annotation.Collate;
 import com.raizlabs.android.dbflow.sql.language.OrderBy;
 import com.raizlabs.android.dbflow.sql.language.Select;
@@ -19,7 +20,7 @@ import java.util.Map;
 
 public class GroupMembersRecyclerAdapter extends MembersRecyclerAdapter {
 
-    private final String groupId;
+    private String groupId;
 
     public GroupMembersRecyclerAdapter(String groupId, FetLifeApplication fetLifeApplication) {
         super(fetLifeApplication);
@@ -30,6 +31,13 @@ public class GroupMembersRecyclerAdapter extends MembersRecyclerAdapter {
     protected void loadItems() {
         //TODO: think of moving to separate thread with specific DB executor
         try {
+            if (ServerIdUtil.isServerId(groupId)) {
+                if (ServerIdUtil.containsServerId(groupId)) {
+                    groupId = ServerIdUtil.getLocalId(groupId);
+                } else {
+                    return;
+                }
+            }
             List<GroupMembershipReference> relationReferences = new Select().from(GroupMembershipReference.class).where(GroupMembershipReference_Table.groupId.is(groupId)).orderBy(OrderBy.fromProperty(GroupMembershipReference_Table.createdAt).descending().collate(Collate.UNICODE)).queryList();
             final Map<String,Integer> orderReference = new HashMap<>();
             int i = 0;

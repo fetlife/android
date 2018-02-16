@@ -16,6 +16,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Picture;
 import com.bitlove.fetlife.model.pojos.fetlife.json.FeedEvent;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Story;
+import com.bitlove.fetlife.util.ServerIdUtil;
 import com.bitlove.fetlife.view.adapter.ResourceListRecyclerAdapter;
 import com.bitlove.fetlife.view.adapter.SwipeableViewHolder;
 import com.crashlytics.android.Crashlytics;
@@ -26,7 +27,7 @@ import java.util.List;
 
 public class FeedRecyclerAdapter extends ResourceListRecyclerAdapter<Story, FeedViewHolder> {
 
-    protected final String memberId;
+    protected String memberId;
 
     public interface OnFeedItemClickListener {
         void onMemberClick(Member member);
@@ -69,6 +70,13 @@ public class FeedRecyclerAdapter extends ResourceListRecyclerAdapter<Story, Feed
     protected void loadItems() {
         //TODO: think of moving to separate thread with specific DB executor
         if (memberId != null) {
+            if (ServerIdUtil.isServerId(memberId)) {
+                if (ServerIdUtil.containsServerId(memberId)) {
+                    memberId = ServerIdUtil.getLocalId(memberId);
+                } else {
+                    return;
+                }
+            }
             itemList = fetLifeApplication.getInMemoryStorage().getProfileFeed();
         } else {
             itemList = fetLifeApplication.getInMemoryStorage().getFeed();
