@@ -1,12 +1,20 @@
 package com.bitlove.fetlife.ui
 
-import com.bitlove.fetlife.FetLifeApplication
+import android.os.Bundle
+import com.bitlove.fetlife.R
+import com.bitlove.fetlife.databinding.ActivityCardListBinding
+import com.bitlove.fetlife.inTransaction
 import com.bitlove.fetlife.ui.generic.CardListActivity
-import com.bitlove.fetlife.ui.generic.CardViewDataHolder
-import io.reactivex.Flowable
 
-class ConversationsActivity : CardListActivity() {
-    override fun getCardFlowable(): Flowable<List<CardViewDataHolder>> {
-        return FetLifeApplication.instance!!.fetlifeDatabase.conversationDao().getAllOrderedByLastUpdated() as Flowable<List<CardViewDataHolder>>;
+class ConversationsActivity : CardListActivity<ActivityCardListBinding>() {
+    override fun getLayoutRes(): Int {
+        return R.layout.activity_card_list
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState == null) {
+            fragmentManager.inTransaction { add(R.id.cardListFragmentContainer, ConversationsFragment()) }
+        }
     }
 }

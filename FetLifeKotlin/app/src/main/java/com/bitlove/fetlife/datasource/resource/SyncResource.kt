@@ -2,6 +2,7 @@ package com.bitlove.fetlife.datasource.resource
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
+import org.jetbrains.anko.coroutines.experimental.bg
 
 abstract class SyncResource<ResourceType> constructor(forceSync : Boolean) {
 
@@ -14,15 +15,17 @@ abstract class SyncResource<ResourceType> constructor(forceSync : Boolean) {
     }
 
     private fun loadInBackground() {
-        val dbSource = loadFromDb()
-        liveData.addSource(dbSource, {data ->
-            liveData.value = data
-            liveData.removeSource(dbSource)
-            liveData.addSource(dbSource, {data -> liveData.value = data})
-            if (shouldSync(data,forceSync)) {
-                syncWithNetwork(data)
-            }
-        })
+        bg {
+            val dbSource = loadFromDb()
+            liveData.addSource(dbSource, {data ->
+                liveData.value = data
+                liveData.removeSource(dbSource)
+                liveData.addSource(dbSource, {data -> liveData.value = data})
+                if (shouldSync(data,forceSync)) {
+                    syncWithNetwork(data)
+                }
+            })
+        }
     }
 
     abstract fun loadFromDb() : LiveData<ResourceType>

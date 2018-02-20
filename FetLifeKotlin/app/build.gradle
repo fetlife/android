@@ -56,13 +56,14 @@ dependencies {
     implementation deps.lifecycle.extensions
     implementation deps.paging
     implementation deps.kotlin.stdlib
-    implementation deps.kotlin.reflect
     implementation deps.retrofit.runtime
     implementation deps.retrofit.gson
     implementation deps.okhttp_logging_interceptor
     implementation deps.glide
     implementation deps.rxjava2
     implementation deps.rx_android
+    implementation deps.anko
+    implementation deps.ktx
 
     // Android Testing Support Library's runner and rules
     androidTestImplementation deps.atsl.runner

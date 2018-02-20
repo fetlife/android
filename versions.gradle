@@ -5,7 +5,7 @@
 ext.deps = [:]
 def versions = [:]
 versions.arch = hasProperty("ARCH_VERSION") ? getProperty("ARCH_VERSION") : "1.0.0"
-versions.support = "26.1.0"
+versions.support = "27.0.0"
 versions.dagger = "2.11"
 versions.junit = "4.12"
 versions.espresso = "3.0.1"
@@ -27,6 +27,8 @@ versions.atsl_rules = "1.0.1"
 versions.hamcrest = "1.3"
 versions.kotlin = "1.2.10"
 versions.paging = "1.0.0-alpha4-1"
+versions.anko = "0.10.4"
+versions.ktx = "0.1"
 def deps = [:]
 
 def support = [:]
@@ -111,12 +113,14 @@ deps.rxjava2 = "io.reactivex.rxjava2:rxjava:$versions.rxjava2"
 deps.rx_android = "io.reactivex.rxjava2:rxandroid:$versions.rx_android"
 deps.hamcrest = "org.hamcrest:hamcrest-all:$versions.hamcrest"
 deps.android_gradle_plugin = "com.android.tools.build:gradle:$versions.android_gradle_plugin"
+deps.ktx =  "androidx.core:core-ktx:$versions.ktx"
+deps.anko =  "org.jetbrains.anko:anko:$versions.anko"
 ext.deps = deps
 
 def build_versions = [:]
 build_versions.min_sdk = 14
-build_versions.target_sdk = 26
-build_versions.build_tools = "26.0.2"
+build_versions.target_sdk = 27
+build_versions.build_tools = "27.0.3"
 ext.build_versions = build_versions
 
 def addRepos(RepositoryHandler handler) {

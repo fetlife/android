@@ -1,4 +1,3 @@
-package com.bitlove.fetlife.datasource.`do`
+package com.bitlove.fetlife.datasource.dataobject
 
-interface CardData {
-}
+interface CardData
