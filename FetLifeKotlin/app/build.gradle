@@ -1,16 +1,17 @@
 apply plugin: 'com.android.application'
 
+apply plugin: 'kotlin-kapt'
+
 apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
-
-apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion build_versions.target_sdk
     buildToolsVersion build_versions.build_tools
     defaultConfig {
         applicationId "com.bitlove.fetlife"
+        multiDexEnabled true
         minSdkVersion build_versions.min_sdk
         targetSdkVersion build_versions.target_sdk
         versionCode 1
@@ -41,11 +42,15 @@ android {
 }
 
 dependencies {
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     kapt deps.room.compiler
     kapt deps.databinding.compiler
 
+    implementation deps.kotlin.stdlib
+    implementation deps.kotlin.reflect
+
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation deps.constraint_layout
+    implementation deps.google_play
     implementation deps.support.app_compat
     implementation deps.support.recyclerview
     implementation deps.support.cardview
@@ -55,7 +60,6 @@ dependencies {
     implementation deps.lifecycle.runtime
     implementation deps.lifecycle.extensions
     implementation deps.paging
-    implementation deps.kotlin.stdlib
     implementation deps.retrofit.runtime
     implementation deps.retrofit.gson
     implementation deps.okhttp_logging_interceptor
@@ -64,6 +68,7 @@ dependencies {
     implementation deps.rx_android
     implementation deps.anko
     implementation deps.ktx
+    implementation deps.job_queue
 
     // Android Testing Support Library's runner and rules
     androidTestImplementation deps.atsl.runner

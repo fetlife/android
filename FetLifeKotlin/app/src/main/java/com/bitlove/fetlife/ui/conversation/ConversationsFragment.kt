@@ -1,4 +1,4 @@
-package com.bitlove.fetlife.ui
+package com.bitlove.fetlife.ui.conversation
 
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.databinding.FragmentCardListBinding

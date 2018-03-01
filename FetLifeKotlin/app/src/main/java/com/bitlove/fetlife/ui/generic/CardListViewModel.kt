@@ -4,7 +4,11 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
 
 abstract class CardListViewModel<T : CardViewDataHolder> : ViewModel() {
-    val cardList = loadCardList()
+    val cardList = loadCardList(false)
 
-    abstract fun loadCardList(): LiveData<List<T>>
+    abstract fun loadCardList(forceLoad: Boolean): LiveData<List<T>>
+
+    open fun refresh() {
+        loadCardList(true)
+    }
 }

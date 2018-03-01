@@ -14,31 +14,14 @@ import android.view.ViewGroup
 import com.bitlove.fetlife.getViewModel
 import com.bitlove.fetlife.inflateBinding
 
-abstract class BaseFragment<DataBinding : ViewDataBinding, ViewModel : android.arch.lifecycle.ViewModel> : Fragment(), LifecycleOwner {
+abstract class BaseFragment<ViewModel : android.arch.lifecycle.ViewModel> : Fragment(), LifecycleOwner {
 
-    private val lifecycleRegistry: Lifecycle = LifecycleRegistry(this)
-
-    lateinit var binding : DataBinding
     lateinit var viewModel : ViewModel
 
-    @LayoutRes
-    abstract fun getLayoutRes(): Int
-
-    abstract fun getViewModelClass() : Class<ViewModel>
+    abstract fun getViewModelClass() : Class<ViewModel>?
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = getViewModelClass().getViewModel(activity as FragmentActivity) as ViewModel
+        viewModel = getViewModelClass()?.getViewModel(activity as FragmentActivity) as ViewModel
     }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        super.onCreateView(inflater, container, savedInstanceState)
-        binding = inflater.inflateBinding(getLayoutRes(),container)
-        return binding.root
-    }
-
-    override fun getLifecycle(): Lifecycle {
-        return lifecycleRegistry
-    }
-
 }

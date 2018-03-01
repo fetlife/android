@@ -11,7 +11,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.bitlove.fetlife.ui.ConversationsActivity"
+            android:name="com.bitlove.fetlife.ui.conversation.ConversationsActivity"
             android:label="@string/title_activity_data_list"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>

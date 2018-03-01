@@ -1,4 +1,4 @@
-package com.bitlove.fetlife.ui
+package com.bitlove.fetlife.ui.conversation
 
 import android.os.Bundle
 import com.bitlove.fetlife.R

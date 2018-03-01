@@ -50,7 +50,7 @@ interface BaseDao<T> {
 
     /**
      * Delete an object from the database
-     *
+c     *
      * @param obj the object to be deleted
      */
     @Delete

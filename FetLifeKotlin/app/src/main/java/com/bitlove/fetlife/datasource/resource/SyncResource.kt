@@ -21,7 +21,7 @@ abstract class SyncResource<ResourceType> constructor(forceSync : Boolean) {
                 liveData.value = data
                 liveData.removeSource(dbSource)
                 liveData.addSource(dbSource, {data -> liveData.value = data})
-                if (shouldSync(data,forceSync)) {
+                if (true || shouldSync(data,forceSync)) {
                     syncWithNetwork(data)
                 }
             })
