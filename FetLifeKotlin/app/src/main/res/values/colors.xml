@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+
+    <color name="black">#000000</color>
+    <color name="raisinBlack">#242124</color>
+    <color name="eerieBlack">#252525</color>
+    <color name="jet">#303030</color>
+
+    <color name="ussCardinal">#990000</color>
+    <color name="bostonUniversityRed">#cc0000</color>
+
+    <color name="nearBlack">#111</color>
+    <color name="darkGray">#333</color>
+    <color name="midGray">#555</color>
+    <color name="gray">#777</color>
+    <color name="silver">#999</color>
+    <color name="lightSilver">#aaa</color>
+    <color name="moonGray">#ccc</color>
+    <color name="lightGray">#eee</color>
+    <color name="nearWhite">#f4f4f4</color>
+    <color name="white">#fff</color>
+
 </resources>

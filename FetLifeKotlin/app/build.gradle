@@ -69,6 +69,9 @@ dependencies {
     implementation deps.anko
     implementation deps.ktx
     implementation deps.job_queue
+    implementation deps.iconics.core
+    implementation deps.iconics.views
+    implementation deps.font.material_google
 
     // Android Testing Support Library's runner and rules
     androidTestImplementation deps.atsl.runner

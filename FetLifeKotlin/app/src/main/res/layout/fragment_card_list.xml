@@ -9,8 +9,9 @@
         android:id="@+id/cardList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="4dp"
         android:scrollbars="vertical"
-        app:layoutManager="LinearLayoutManager"
+        app:layoutManager="com.bitlove.fetlife.widget.GridAutofitLayoutManager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 </layout>
