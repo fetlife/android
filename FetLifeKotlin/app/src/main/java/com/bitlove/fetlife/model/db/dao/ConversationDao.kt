@@ -1,9 +1,9 @@
 package com.bitlove.fetlife.model.db.dao
 
 import android.arch.lifecycle.LiveData
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Query
-import com.bitlove.fetlife.model.dataobject.Conversation
+import android.arch.persistence.room.*
+import com.bitlove.fetlife.model.dataobject.base.Comment
+import com.bitlove.fetlife.model.dataobject.base.Conversation
 
 @Dao
 interface ConversationDao : BaseDao<Conversation> {

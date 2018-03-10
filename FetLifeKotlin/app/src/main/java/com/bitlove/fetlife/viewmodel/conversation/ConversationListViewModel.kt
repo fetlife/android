@@ -2,8 +2,7 @@ package com.bitlove.fetlife.viewmodel.conversation
 
 import android.arch.lifecycle.LiveData
 import com.bitlove.fetlife.FetLifeApplication
-import com.bitlove.fetlife.model.dataobject.Conversation
-import com.bitlove.fetlife.model.dataobject.ConversationWithMessages
+import com.bitlove.fetlife.model.dataobject.joined.ConversationWithMessages
 import com.bitlove.fetlife.viewmodel.generic.CardListViewModel
 
 class ConversationListViewModel : CardListViewModel<ConversationWithMessages>() {

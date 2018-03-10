@@ -1,6 +1,9 @@
 package com.bitlove.fetlife.model.network
 
-import com.bitlove.fetlife.model.dataobject.Conversation
+import com.bitlove.fetlife.model.dataobject.base.Comment
+import com.bitlove.fetlife.model.dataobject.base.Conversation
+import com.bitlove.fetlife.model.dataobject.base.Message
+import com.bitlove.fetlife.model.dataobject.temp.ExploreStory
 import com.bitlove.fetlife.model.network.networkobject.AuthBody
 import com.bitlove.fetlife.model.network.networkobject.Token
 import retrofit2.Call
@@ -22,5 +25,11 @@ interface FetLifeApi {
 
     @GET("/api/v2/me/conversations/{conversationId}")
     fun getConversation(@Header("Authorization") authHeader: String, @Path("conversationId") conversationId: String): Call<Conversation>
+
+    @GET("/api/v2/me/conversations/{conversationId}/messages")
+    fun getMessages(@Header("Authorization") authHeader: String, @Path("conversationId") conversationId: String, @Query("since_id") sinceMessageId: String, @Query("until_id") untilMessageId: String, @Query("limit") limit: Int): Call<Array<Comment>>
+
+    @GET("/api/v2/explore/stuff-you-love")
+    abstract fun getStuffYouLove(@Header("Authorization") authHeader: String, @Query("marker") timeStamp: String, @Query("limit") limit: Int?, @Query("page") page: Int?): Call<Array<ExploreStory>>
 
 }

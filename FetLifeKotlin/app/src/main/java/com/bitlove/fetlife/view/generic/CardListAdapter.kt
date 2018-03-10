@@ -4,17 +4,37 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bitlove.fetlife.databinding.ItemDataCardBinding
+import com.bitlove.fetlife.toUniqueLong
 import com.bitlove.fetlife.viewmodel.generic.CardViewDataHolder
+import com.bitlove.fetlife.viewmodel.generic.CardViewInteractionHandler
 
-class CardListAdapter<T: CardViewDataHolder> : RecyclerView.Adapter<CardViewHolder<T>>() {
+//TODO check generic DH + IH?, none?, DH?
+class CardListAdapter<DH: CardViewDataHolder> : RecyclerView.Adapter<CardViewHolder<DH>>(){
 
-    var items : List<T> = ArrayList()
+    init {
+        setHasStableIds(true)
+    }
+
+    var items : List<DH> = ArrayList()
+    var interactionHandlers : HashMap<String?,CardViewInteractionHandler> = HashMap()
 
     override fun getItemCount(): Int = items.size
 
-    override fun onBindViewHolder(holder: CardViewHolder<T>, position: Int) = holder.bindTo(items[position])
+    override fun getItemId(position: Int): Long {
+        return items[position].getAppId().toUniqueLong()
+    }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder<T> {
+    override fun onBindViewHolder(holder: CardViewHolder<DH>, position: Int) = holder.bindTo(items[position], getInteractionHandler(position))
+
+    private fun getInteractionHandler(position: Int): CardViewInteractionHandler {
+        val item = items[position]
+        if (!interactionHandlers.containsKey(item.getAppId())) {
+            interactionHandlers[item.getAppId()] = CardViewInteractionHandler()
+        }
+        return interactionHandlers[item.getAppId()]!!
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder<DH> {
         val binding = ItemDataCardBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         return CardViewHolder(binding)
     }

@@ -1,4 +1,4 @@
-package com.bitlove.fetlife.util
+package com.bitlove.fetlife.viewmodel.binding
 
 import android.databinding.BindingAdapter
 import android.view.View
@@ -7,6 +7,7 @@ import android.content.Context
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
 import android.text.Html
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.TextView
@@ -14,7 +15,7 @@ import androidx.view.get
 import androidx.view.size
 import com.android.databinding.library.baseAdapters.BR
 import com.bitlove.fetlife.R
-import com.bitlove.fetlife.model.dataobject.Comment
+import com.bitlove.fetlife.model.dataobject.base.Comment
 import com.bitlove.fetlife.loadWithGlide
 import com.bitlove.fetlife.viewmodel.generic.CommentViewDataHolder
 
@@ -28,28 +29,26 @@ fun setComments(viewGroup: ViewGroup,
         viewGroup.removeAllViews()
         return
     }
+    val maxComments = Math.min(comments.size,if (commentsDisplayed == true) CommentViewDataHolder.COMMENT_MAX_COUNT_EXPANDED else CommentViewDataHolder.COMMENT_MAX_COUNT_COLLAPSED)
+    if(viewGroup.childCount > maxComments) {
+        viewGroup.removeViews(maxComments,viewGroup.childCount-maxComments)
+    }
+
     val inflater = viewGroup.context
             .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-    val maxComments = Math.min(comments.size,if (commentsDisplayed == true) CommentViewDataHolder.COMMENT_MAX_COUNT_EXPANDED else CommentViewDataHolder.COMMENT_MAX_COUNT_COLLAPSED)
-    for (i in comments.indices) {
+    for (i in 0 until maxComments) {
         val binding = if (viewGroup.size > i) viewGroup[i].tag as ViewDataBinding else DataBindingUtil
                 .inflate<ViewDataBinding>(inflater, R.layout.item_data_card_comment, viewGroup, true)
-        binding.root.tag = binding
-        if (i < comments.size - maxComments) {
-            binding.root.visibility = View.GONE
-        } else {
-            binding.root.visibility = View.VISIBLE
-            val comment = comments[i].copy()
-            if (commentsDisplayed != true && comment.body != null) {
-                if (comment.body!!.length > Comment.TRUNCATED_LENGTH) {
-                    comment.body = comment.body!!.substring(0,Comment.TRUNCATED_LENGTH)
-                    comment.body = comment.body!!.substring(0,comment.body!!.lastIndexOf(' ')) + Comment.TRUNCATED_SUFFIX
-                }
+        viewGroup[i].tag = binding
+        val comment = comments[i].copy()
+        if (commentsDisplayed != true && comment.body != null) {
+            if (comment.body!!.length > Comment.TRUNCATED_LENGTH) {
+                comment.body = comment.body!!.substring(0, Comment.TRUNCATED_LENGTH)
+                comment.body = comment.body!!.substring(0,comment.body!!.lastIndexOf(' ')) + Comment.TRUNCATED_SUFFIX
             }
-            binding.setVariable(BR.commentData, comment)
-//            binding.root.findViewById<TextView>(R.id.comment_body)?.maxLines = if (commentsDisplayed == true) 100 else CommentViewDataHolder.COMMENT_WRAP_MAX_LINES
         }
+        binding.setVariable(BR.commentData, comment)
     }
 }
 

@@ -1,9 +1,8 @@
-package com.bitlove.fetlife.widget
+package com.bitlove.fetlife.view.widget
 
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.util.TypedValue
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.util.AttributeSet
@@ -11,7 +10,7 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 
 
-class GridAutofitLayoutManager : StaggeredGridLayoutManager {
+class GridAutoFitLayoutManager : StaggeredGridLayoutManager {
     private var mColumnWidth: Int = 0
     private var mColumnWidthChanged = true
 

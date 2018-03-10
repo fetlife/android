@@ -14,6 +14,7 @@ abstract class BaseFragment<ViewModel : android.arch.lifecycle.ViewModel> : Frag
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //TODO clean up
         viewModel = getViewModelClass()?.getViewModel(activity as FragmentActivity) as ViewModel
     }
 }

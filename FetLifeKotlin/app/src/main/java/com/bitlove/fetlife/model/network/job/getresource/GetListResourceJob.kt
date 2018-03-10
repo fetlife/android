@@ -10,10 +10,14 @@ abstract class GetListResourceJob<T : DataObject>(jobPriority: Int, doPersist: B
     override fun onRun() {
         val result = getCall().execute()
         if (result.isSuccessful){
-            getDao().insert(*result.body()!!)
+            saveToDb(result.body()!!)
         } else {
             //TODO notify
         }
+    }
+
+    open fun saveToDb(resourceArray: Array<T>) {
+        getDao().insert(*resourceArray)
     }
 
     abstract fun getDao() : BaseDao<T>

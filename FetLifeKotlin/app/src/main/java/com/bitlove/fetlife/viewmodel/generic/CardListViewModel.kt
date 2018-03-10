@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModel
 import android.view.View
 
 abstract class CardListViewModel<T : CardViewDataHolder> : ViewModel() {
+
     val cardList = loadCardList(false)
 
     abstract fun loadCardList(forceLoad: Boolean): LiveData<List<T>>

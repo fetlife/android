@@ -8,7 +8,7 @@ import android.content.res.Resources
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
 import com.bitlove.fetlife.model.db.FetlifeDatabase
-import com.bitlove.fetlife.model.dataobject.Conversation
+import com.bitlove.fetlife.model.dataobject.base.Conversation
 import android.support.annotation.LayoutRes
 import android.support.annotation.RawRes
 import android.support.v4.app.FragmentActivity
@@ -24,6 +24,7 @@ import kotlinx.coroutines.experimental.delay
 import org.jetbrains.anko.coroutines.experimental.bg
 import com.birbit.android.jobqueue.config.Configuration
 import android.databinding.BindingAdapter
+import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import com.bumptech.glide.Glide
@@ -71,15 +72,7 @@ class FetLifeApplication : Application() {
         async(UI) {
             bg {
                 fetlifeDatabase.conversationDao().deleteAll()
-                fetlifeDatabase.conversationDao().insert(Conversation("",false,false,"","",System.currentTimeMillis().toString(),null,null,0))
-            }
-            delay(3000)
-            bg {
-                fetlifeDatabase.conversationDao().insert(Conversation(System.currentTimeMillis().toString(),false,false,"","",System.currentTimeMillis().toString(),null,null,0))
-            }
-            delay(3000)
-            bg {
-                fetlifeDatabase.conversationDao().insert(Conversation(System.currentTimeMillis().toString(),false,false,"","",System.currentTimeMillis().toString(),null,null,0))
+                fetlifeDatabase.commentDao().deleteAll()
             }
         }
     }
@@ -139,6 +132,21 @@ fun ImageView.loadWithGlide(url : String?, placeHolderId : Int?) {
     }
 }
 
+fun String.toUniqueLong() : Long {
+    var h = 98764321261L
+    val chars = this.toCharArray()
+
+    for (char in chars) {
+        h = 31*h + char.toInt()
+    }
+    return h
+}
+
+fun RecyclerView.workaroundItemFlickeringOnChange() {
+    this.itemAnimator.changeDuration = 0
+}
+
+//TODO organise these functions
 //TODO check out kotlin tricks and functions:
 // https://antonioleiva.com/kotlin-awesome-tricks-for-android/
 // https://android.github.io/android-ktx/core-ktx/alltypes/index.html

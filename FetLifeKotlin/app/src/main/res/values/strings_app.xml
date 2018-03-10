@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">FetLife</string>
+    <string name="title_activity_conversations">Messages</string>
+    <string name="title_activity_explore">Explore</string>
+</resources>

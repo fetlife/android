@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:padding="4dp"
         android:scrollbars="vertical"
-        app:layoutManager="com.bitlove.fetlife.widget.GridAutofitLayoutManager"
+        app:layoutManager="com.bitlove.fetlife.view.widget.GridAutoFitLayoutManager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 </layout>

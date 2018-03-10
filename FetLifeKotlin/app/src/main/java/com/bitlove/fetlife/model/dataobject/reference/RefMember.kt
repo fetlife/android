@@ -1,6 +1,7 @@
-package com.bitlove.fetlife.model.dataobject
+package com.bitlove.fetlife.model.dataobject.reference
 
 import android.arch.persistence.room.Embedded
+import com.bitlove.fetlife.model.dataobject.embedded.EmbAvatar
 import com.google.gson.annotations.SerializedName
 
 data class RefMember(var id: String = "",

@@ -1,18 +1,24 @@
-package com.bitlove.fetlife.model.dataobject
+package com.bitlove.fetlife.model.dataobject.joined
 
 import android.arch.persistence.room.*
+import com.bitlove.fetlife.model.dataobject.DataObject
+import com.bitlove.fetlife.model.dataobject.base.Comment
+import com.bitlove.fetlife.model.dataobject.base.Conversation
 import com.bitlove.fetlife.viewmodel.generic.CardViewDataHolder
-import com.google.gson.annotations.SerializedName
 
-class ConversationWithMessages : CardViewDataHolder() {
+class ConversationWithMessages : DataObject, CardViewDataHolder() {
 
     @Embedded var conversation: Conversation? = null
 
-    @Relation(parentColumn = "appId", entityColumn = "commentForId")
+    @Relation(parentColumn = "conversationAppId", entityColumn = "parentId")
     var messages: List<Comment>? = null
 
-    override fun getDataId(): String {
-        return conversation!!.appId
+    override fun getAppId(): String {
+        return conversation!!.getAppId()
+    }
+
+    override fun getServerId(): String {
+        return conversation!!.getServerId()
     }
 
     override fun getAvatarUrl(): String? {
@@ -33,5 +39,9 @@ class ConversationWithMessages : CardViewDataHolder() {
 
     override fun getComments(): List<Comment>? {
         return messages
+    }
+
+    override fun hasNewComment(): Boolean? {
+        return conversation?.hasNewMessages
     }
 }

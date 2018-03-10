@@ -1,4 +1,4 @@
-package com.bitlove.fetlife.model.dataobject
+package com.bitlove.fetlife.model.dataobject.embedded
 
 data class EmbVariants(var small: String = "",
                        var mini: String = "",

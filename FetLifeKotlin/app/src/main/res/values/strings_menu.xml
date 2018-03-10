@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="menu_item_search">Search</string>
+    <string name="menu_item_conversations">Messages</string>
+    <string name="menu_item_explore">Explore</string>
+    <string name="menu_item_groups">Groups</string>
+    <string name="menu_item_events">Events</string>
+    <string name="menu_item_notifications">Notifications</string>
+    <string name="menu_item_people">People</string>
+</resources>

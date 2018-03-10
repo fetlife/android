@@ -1,6 +1,6 @@
 package com.bitlove.fetlife.model.network.job.syncresource
 
-import com.bitlove.fetlife.model.dataobject.Comment
+import com.bitlove.fetlife.model.dataobject.base.Comment
 import com.bitlove.fetlife.model.db.dao.BaseDao
 import retrofit2.Call
 
