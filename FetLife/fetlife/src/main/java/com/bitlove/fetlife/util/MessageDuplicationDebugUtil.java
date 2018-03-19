@@ -1,7 +1,7 @@
 package com.bitlove.fetlife.util;
 
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Message;
-import com.crashlytics.android.Crashlytics;
+import com.bitlove.fetlife.CrashlyticsWrapper;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
@@ -39,7 +39,7 @@ public class MessageDuplicationDebugUtil {
         lastSentHash = hash;
 
         if (sameAsBefore) {
-            Crashlytics.logException(new Exception("Sent Message match; body length: " + body.length()));
+            CrashlyticsWrapper.logException(new Exception("Sent Message match; body length: " + body.length()));
         }
 
         return sameAsBefore;

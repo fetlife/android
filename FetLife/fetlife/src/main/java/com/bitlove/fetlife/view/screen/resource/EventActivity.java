@@ -28,7 +28,6 @@ package com.bitlove.fetlife.view.screen.resource;
         import com.bitlove.fetlife.util.UrlUtil;
         import com.bitlove.fetlife.view.screen.BaseActivity;
         import com.bitlove.fetlife.view.widget.FlingBehavior;
-        import com.crashlytics.android.Crashlytics;
 
         import org.greenrobot.eventbus.Subscribe;
         import org.greenrobot.eventbus.ThreadMode;

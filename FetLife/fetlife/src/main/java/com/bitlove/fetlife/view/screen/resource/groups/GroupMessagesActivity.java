@@ -48,7 +48,7 @@ import com.bitlove.fetlife.view.screen.resource.MessagesActivity;
 import com.bitlove.fetlife.view.screen.resource.PictureShareActivity;
 import com.bitlove.fetlife.view.screen.resource.ResourceActivity;
 import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity;
-import com.crashlytics.android.Crashlytics;
+import com.bitlove.fetlife.CrashlyticsWrapper;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.InvalidDBConfiguration;
@@ -389,10 +389,10 @@ public class GroupMessagesActivity extends ResourceActivity
             try {
                 groupDiscussion.save();
             } catch (InvalidDBConfiguration idbce) {
-                Crashlytics.logException(idbce);
+                CrashlyticsWrapper.logException(idbce);
             }
         } else {
-            Crashlytics.logException(new Exception("Draft Message could not be saved : GroupPost is bull"));
+            CrashlyticsWrapper.logException(new Exception("Draft Message could not be saved : GroupPost is null"));
         }
     }
 

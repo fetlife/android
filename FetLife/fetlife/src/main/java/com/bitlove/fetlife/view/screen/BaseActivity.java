@@ -24,8 +24,8 @@ import com.bitlove.fetlife.BuildConfig;
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.view.screen.component.ActivityComponent;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.CustomEvent;
+import com.bitlove.fetlife.AnswersWrapper;
+import com.bitlove.fetlife.CustomEventWrapper;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
@@ -83,8 +83,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     }
 
     protected void logEvent() {
-        Answers.getInstance().logCustom(
-                new CustomEvent(BaseActivity.this.getClass().getSimpleName()));
+        AnswersWrapper.getInstance().logCustom(
+                new CustomEventWrapper(BaseActivity.this.getClass().getSimpleName()));
     }
 
     protected abstract void onCreateActivityComponents();

@@ -1,10 +1,11 @@
 package com.bitlove.fetlife.model.pojos.fetlife.dbjson;
 
+import com.bitlove.fetlife.CrashlyticsWrapper;
 import com.bitlove.fetlife.model.db.FetLifeDatabase;
 import com.bitlove.fetlife.util.DateUtil;
 import com.bitlove.fetlife.util.ServerIdUtil;
 import com.bitlove.fetlife.util.StringUtil;
-import com.crashlytics.android.Crashlytics;
+import com.bitlove.fetlife.CrashlyticsWrapper;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -23,7 +24,7 @@ public class Group extends BaseModel {
             Group group = new Select().from(Group.class).where(Group_Table.id.is(groupId)).querySingle();
             return group;
         } catch (Throwable t) {
-            Crashlytics.logException(t);
+            CrashlyticsWrapper.logException(t);
             return null;
         }
     }

@@ -20,8 +20,8 @@ import com.bitlove.fetlife.util.UrlUtil;
 import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.component.MenuActivityComponent;
 import com.bitlove.fetlife.view.screen.standalone.LoginActivity;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.CustomEvent;
+import com.bitlove.fetlife.AnswersWrapper;
+import com.bitlove.fetlife.CustomEventWrapper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,8 +61,8 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
 
     protected void logEvent() {
         String pageUrl = getIntent().getStringExtra(EXTRA_PAGE_URL);
-        Answers.getInstance().logCustom(
-                new CustomEvent(getClass().getSimpleName() + ":" + pageUrl));
+        AnswersWrapper.getInstance().logCustom(
+                new CustomEventWrapper(getClass().getSimpleName() + ":" + pageUrl));
     }
 
     @Override

@@ -18,7 +18,7 @@ import com.bitlove.fetlife.util.PreferenceKeys;
 import com.bitlove.fetlife.util.SecurityUtil;
 import com.bitlove.fetlife.util.StringUtil;
 import com.bitlove.fetlife.view.screen.standalone.SettingsActivity;
-import com.crashlytics.android.Crashlytics;
+import com.bitlove.fetlife.CrashlyticsWrapper;
 import com.onesignal.OneSignal;
 import com.raizlabs.android.dbflow.config.FlowManager;
 
@@ -186,7 +186,7 @@ public class UserSessionManager {
             if (BuildConfig.DEBUG) {
                 Log.e("UserSession","User preferences could not be loaded");
             }
-            Crashlytics.logException(new Exception("User preferences could not be loaded"));
+            CrashlyticsWrapper.logException(new Exception("User preferences could not be loaded"));
         }
 
         if (BuildConfig.DEBUG) {
@@ -317,9 +317,9 @@ public class UserSessionManager {
             if (BuildConfig.DEBUG) {
                 Log.e("UserSession","User record could not be found");
             }
-            Crashlytics.logException(new Exception("User record could not be found"));
+            CrashlyticsWrapper.logException(new Exception("User record could not be found"));
         } else {
-            Crashlytics.log("User notification:" + user.getNotificationToken());
+            CrashlyticsWrapper.log("User notification:" + user.getNotificationToken());
         }
         return user;
     }
@@ -328,7 +328,7 @@ public class UserSessionManager {
         if (BuildConfig.DEBUG) {
             Log.d("UserSession","Updating user record for user " + userRecord.getId());
         }
-        Crashlytics.log("User notification:" + userRecord.getNotificationToken());
+        CrashlyticsWrapper.log("User notification:" + userRecord.getNotificationToken());
         userRecord.mergeSave();
         currentUser = userRecord;
     }

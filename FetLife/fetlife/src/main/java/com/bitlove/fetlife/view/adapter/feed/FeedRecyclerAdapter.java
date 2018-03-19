@@ -19,7 +19,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.json.Story;
 import com.bitlove.fetlife.util.ServerIdUtil;
 import com.bitlove.fetlife.view.adapter.ResourceListRecyclerAdapter;
 import com.bitlove.fetlife.view.adapter.SwipeableViewHolder;
-import com.crashlytics.android.Crashlytics;
+import com.bitlove.fetlife.CrashlyticsWrapper;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -136,7 +136,7 @@ public class FeedRecyclerAdapter extends ResourceListRecyclerAdapter<Story, Feed
                     break;
             }
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            CrashlyticsWrapper.logException(e);
             feedNotSupportedAdapterBinder.bindNotSupportedStory(fetLifeApplication, feedViewHolder,story, onFeedItemClickListener);
         }
     }

@@ -20,7 +20,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.dbjson.FriendRequest_Table;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.view.screen.resource.ResourceListActivity;
-import com.crashlytics.android.Crashlytics;
+import com.bitlove.fetlife.CrashlyticsWrapper;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.Select;
@@ -236,19 +236,19 @@ public class FriendRequestsRecyclerAdapter extends ResourceListRecyclerAdapter<F
     public void onBindViewHolder(FriendRequestScreenViewHolder friendRequestScreenViewHolder, int position) {
         if (getItemViewType(position) == VIEWTYPE_HEADER) {
             if (!(friendRequestScreenViewHolder instanceof  FriendRequestHeaderViewHolder)) {
-                Crashlytics.logException(new ClassCastException("friendRequestScreenViewHolder is not a FriendRequestHeaderViewHolder"));
+                CrashlyticsWrapper.logException(new ClassCastException("friendRequestScreenViewHolder is not a FriendRequestHeaderViewHolder"));
                 return;
             }
             onBindHeaderViewHolder((FriendRequestHeaderViewHolder) friendRequestScreenViewHolder, position == 0);
         } else if (--position < friendRequestList.size()) {
             if (!(friendRequestScreenViewHolder instanceof  FriendRequestItemViewHolder)) {
-                Crashlytics.logException(new ClassCastException("friendRequestScreenViewHolder is not a FriendRequestItemViewHolder"));
+                CrashlyticsWrapper.logException(new ClassCastException("friendRequestScreenViewHolder is not a FriendRequestItemViewHolder"));
                 return;
             }
             onBindFriendRequestItemViewHolder((FriendRequestItemViewHolder) friendRequestScreenViewHolder, friendRequestList.get(position));
         } else {
             if (!(friendRequestScreenViewHolder instanceof  FriendRequestItemViewHolder)) {
-                Crashlytics.logException(new ClassCastException("friendRequestScreenViewHolder is not a FriendRequestItemViewHolder"));
+                CrashlyticsWrapper.logException(new ClassCastException("friendRequestScreenViewHolder is not a FriendRequestItemViewHolder"));
                 return;
             }
             position--;

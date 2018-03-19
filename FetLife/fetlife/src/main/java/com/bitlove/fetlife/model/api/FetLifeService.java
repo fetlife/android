@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
-import com.crashlytics.android.Crashlytics;
+import com.bitlove.fetlife.CrashlyticsWrapper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.squareup.okhttp.Interceptor;
@@ -75,7 +75,7 @@ public class FetLifeService {
                 if (lastResponseCode > 299) {
                     BufferedSource source = response.body().source();
                     Buffer bufferedCopy = source.buffer().clone();
-                    Crashlytics.log("EXTRA LOG Failed request response" + "\n" + response.body().string());
+                    CrashlyticsWrapper.log("EXTRA LOG Failed request response" + "\n" + response.body().string());
                     return new Response.Builder().body(ResponseBody.create(response.body().contentType(), response.body().contentLength(), bufferedCopy)).build();
                 }
                 return response;

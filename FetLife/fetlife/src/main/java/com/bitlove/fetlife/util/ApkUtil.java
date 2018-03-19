@@ -11,7 +11,7 @@ import android.os.Environment;
 
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
-import com.crashlytics.android.Crashlytics;
+import com.bitlove.fetlife.CrashlyticsWrapper;
 
 import java.io.File;
 
@@ -72,7 +72,7 @@ public class ApkUtil {
             context.registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
         } catch (Throwable e) {
-            Crashlytics.logException(e);
+            CrashlyticsWrapper.logException(e);
 
             NotificationUtil.cancelNotification(context,NotificationUtil.RELEASE_DOWNLOAD_NOTIFICATION_ID);
 

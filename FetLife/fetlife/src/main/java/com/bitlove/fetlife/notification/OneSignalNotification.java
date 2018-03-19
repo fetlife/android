@@ -15,7 +15,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.db.NotificationHistoryItem;
 import com.bitlove.fetlife.util.AppUtil;
 import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.resource.NotificationHistoryActivity;
-import com.crashlytics.android.Crashlytics;
+import com.bitlove.fetlife.CrashlyticsWrapper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -68,7 +68,7 @@ public abstract class OneSignalNotification {
             Method method = Class.forName(className).getMethod("handleInnerLaunchUrl", Context.class, String.class);
             method.invoke(null,context,launchUrl);
         } catch (Throwable t) {
-            Crashlytics.logException(t);
+            CrashlyticsWrapper.logException(t);
         }
     }
 

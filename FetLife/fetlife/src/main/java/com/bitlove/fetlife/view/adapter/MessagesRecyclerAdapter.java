@@ -39,7 +39,7 @@ import com.bitlove.fetlife.view.screen.resource.ConversationsActivity;
 import com.bitlove.fetlife.view.screen.resource.PictureShareActivity;
 import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity;
 import com.bitlove.fetlife.view.widget.AutoAlignGridView;
-import com.crashlytics.android.Crashlytics;
+import com.bitlove.fetlife.CrashlyticsWrapper;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.raizlabs.android.dbflow.sql.language.Select;
@@ -135,8 +135,8 @@ public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessageViewHol
             if (spannedBody.length() >= endPosition) {
                 spannedBody.setSpan(clickableSpan, mention.getOffset(), endPosition, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             } else {
-                Crashlytics.log("Mention body:" + spannedBody + " mention: " + mention.getOffset() + "," + mention.getLength());
-                Crashlytics.logException(new Exception("Invalid mention position"));
+                CrashlyticsWrapper.log("Mention body:" + spannedBody + " mention: " + mention.getOffset() + "," + mention.getLength());
+                CrashlyticsWrapper.logException(new Exception("Invalid mention position"));
             }
         }
 

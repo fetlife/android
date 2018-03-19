@@ -14,7 +14,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.json.FeedEvent;
 import com.bitlove.fetlife.model.pojos.fetlife.json.PeopleInto;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Story;
 import com.bitlove.fetlife.util.DateUtil;
-import com.crashlytics.android.Crashlytics;
+import com.bitlove.fetlife.CrashlyticsWrapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -478,7 +478,7 @@ public class FeedItemResourceHelper {
                         } catch (JsonProcessingException e) {
                             exceptionText = e.getMessage();
                         }
-                        Crashlytics.logException(new Exception(exceptionText));
+                        CrashlyticsWrapper.logException(new Exception(exceptionText));
                         return null;
                     }
                 case LIKE_CREATED:

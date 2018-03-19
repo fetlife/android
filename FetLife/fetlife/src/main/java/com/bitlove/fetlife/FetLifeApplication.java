@@ -24,7 +24,9 @@ import com.bitlove.fetlife.session.UserSessionManager;
 import com.bitlove.fetlife.util.FileUtil;
 import com.bitlove.fetlife.view.screen.resource.ResourceListActivity;
 import com.bitlove.fetlife.view.screen.standalone.LoginActivity;
-import com.crashlytics.android.Crashlytics;
+import com.bitlove.fetlife.CrashlyticsWrapper;
+import com.bitlove.fetlife.FabricWrapper;
+
 import com.facebook.cache.common.CacheKey;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
@@ -50,7 +52,6 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import io.fabric.sdk.android.Fabric;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -143,7 +144,7 @@ public class FetLifeApplication extends MultiDexApplication {
         initFrescoImageLibrary();
 
         //Init crash logging
-        Fabric.with(this, new Crashlytics());
+        FabricWrapper.with(this, new CrashlyticsWrapper());
 
         PendingIntent restartIntent = PendingIntent.getActivity(this,42, LoginActivity.createIntent(this,getString(R.string.error_session_invalid)),PendingIntent.FLAG_ONE_SHOT);
         Thread.setDefaultUncaughtExceptionHandler(new FetLifeUncaughtExceptionHandler(Thread.getDefaultUncaughtExceptionHandler(),restartIntent));
@@ -378,7 +379,7 @@ public class FetLifeApplication extends MultiDexApplication {
         try {
             FileUtil.deleteDir(getDatabasePath(FetLifeDatabase.NAME + ".db").getParentFile());
         } catch (Exception e) {
-            Crashlytics.logException(e);
+            CrashlyticsWrapper.logException(e);
         }
     }
 

@@ -9,7 +9,7 @@ import android.preference.PreferenceManager;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.model.pojos.github.Release;
 import com.bitlove.fetlife.view.screen.BaseActivity;
-import com.crashlytics.android.Crashlytics;
+import com.bitlove.fetlife.CrashlyticsWrapper;
 
 public class VersionUtil {
 
@@ -64,7 +64,7 @@ public class VersionUtil {
             }
             return Integer.parseInt(versionText);
         } catch (Exception e) {
-            Crashlytics.logException(new Exception("Incorrect version text: " + versionText, e));
+            CrashlyticsWrapper.logException(new Exception("Incorrect version text: " + versionText, e));
             return -1;
         }
     }

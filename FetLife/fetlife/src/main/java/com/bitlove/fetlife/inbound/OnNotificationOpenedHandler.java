@@ -1,8 +1,9 @@
 package com.bitlove.fetlife.inbound;
 
+import com.bitlove.fetlife.CrashlyticsWrapper;
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.notification.OneSignalNotification;
-import com.crashlytics.android.Crashlytics;
+import com.bitlove.fetlife.CrashlyticsWrapper;
 import com.onesignal.OSNotificationOpenResult;
 import com.onesignal.OSNotificationPayload;
 import com.onesignal.OneSignal;
@@ -18,16 +19,16 @@ public class OnNotificationOpenedHandler implements OneSignal.NotificationOpened
     @Override
     public void notificationOpened(OSNotificationOpenResult osNotificationOpenResult) {
         if (osNotificationOpenResult == null || osNotificationOpenResult.notification == null) {
-            Crashlytics.logException(new Exception("Null notification from one signal"));
+            CrashlyticsWrapper.logException(new Exception("Null notification from one signal"));
             return;
         }
         if (!isValidNotification(osNotificationOpenResult)) {
             //Investigating further some strange exceptions at this point
             try {
                 OneSignal.cancelNotification(osNotificationOpenResult.notification.androidNotificationId);
-                Crashlytics.logException(new Exception("Invalid notification from one signal; Cancel invoked. json: " + osNotificationOpenResult.toJSONObject().toString()));
+                CrashlyticsWrapper.logException(new Exception("Invalid notification from one signal; Cancel invoked. json: " + osNotificationOpenResult.toJSONObject().toString()));
             } catch (Throwable t) {
-                Crashlytics.logException(new Exception("Invalid notification from one signal; JSON not available; displayType: " + osNotificationOpenResult.notification.displayType));
+                CrashlyticsWrapper.logException(new Exception("Invalid notification from one signal; JSON not available; displayType: " + osNotificationOpenResult.notification.displayType));
             }
             return;
         }

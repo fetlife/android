@@ -9,9 +9,9 @@ import com.bitlove.fetlife.notification.AnonymNotification;
 import com.bitlove.fetlife.notification.NotificationParser;
 import com.bitlove.fetlife.notification.OneSignalNotification;
 import com.bitlove.fetlife.util.AppUtil;
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.CustomEvent;
+import com.bitlove.fetlife.CrashlyticsWrapper;
+import com.bitlove.fetlife.AnswersWrapper;
+import com.bitlove.fetlife.CustomEventWrapper;
 import com.onesignal.NotificationExtenderService;
 import com.onesignal.OSNotificationDisplayedResult;
 import com.onesignal.OSNotificationReceivedResult;
@@ -49,8 +49,8 @@ public class OneSignalNotificationExtenderService extends NotificationExtenderSe
             long time2Client = clientTime-googleTime;
             long totalTime = clientTime-serverTime;
 
-            Answers.getInstance().logCustom(
-                    new CustomEvent("CloudMessageReceived")
+            AnswersWrapper.getInstance().logCustom(
+                    new CustomEventWrapper("CloudMessageReceived")
                             .putCustomAttribute("notificationId",notification.payload.notificationID)
                             .putCustomAttribute("type",type)
                             .putCustomAttribute("time2Google",time2Google)
@@ -58,7 +58,7 @@ public class OneSignalNotificationExtenderService extends NotificationExtenderSe
                             .putCustomAttribute("totalTime",totalTime));
 
         } catch (Throwable t) {
-            Crashlytics.logException(t);
+            CrashlyticsWrapper.logException(t);
         }
 
         FetLifeApplication fetLifeApplication = getFetLifeApplication();

@@ -33,7 +33,7 @@ import com.bitlove.fetlife.view.screen.resource.FriendRequestsActivity;
 import com.bitlove.fetlife.view.screen.resource.MessagesActivity;
 import com.bitlove.fetlife.view.screen.resource.ResourceActivity;
 import com.bitlove.fetlife.view.widget.FlingBehavior;
-import com.crashlytics.android.Crashlytics;
+import com.bitlove.fetlife.CrashlyticsWrapper;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -173,7 +173,7 @@ public class ProfileActivity extends ResourceActivity implements AppBarLayout.On
 
     private void setMemberDetails(final Member member) {
         if (member == null) {
-            Crashlytics.logException(new Exception("Member is null"));
+            CrashlyticsWrapper.logException(new Exception("Member is null"));
         }
 
         AsyncTask.execute(new Runnable() {

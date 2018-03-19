@@ -108,7 +108,7 @@ import com.bitlove.fetlife.util.UrlUtil;
 import com.bitlove.fetlife.util.VersionUtil;
 import com.bitlove.fetlife.view.adapter.feed.FeedItemResourceHelper;
 import com.bitlove.fetlife.view.screen.resource.ExploreActivity;
-import com.crashlytics.android.Crashlytics;
+import com.bitlove.fetlife.CrashlyticsWrapper;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.raizlabs.android.dbflow.annotation.Collate;
@@ -360,7 +360,7 @@ public class FetLifeApiIntentService extends IntentService {
 
         //Check for network state
         if (NetworkUtil.getConnectivityStatus(this) == NetworkUtil.NETWORK_STATUS_NOT_CONNECTED) {
-            Crashlytics.logException(new Exception("EXTRA LOG Connection failed due to no network connection"));
+            CrashlyticsWrapper.logException(new Exception("EXTRA LOG Connection failed due to no network connection"));
             sendConnectionFailedNotification(action, params);
             return;
         }
@@ -542,7 +542,7 @@ public class FetLifeApiIntentService extends IntentService {
 
             if (result == Integer.MIN_VALUE) {
                 //If the call failed notify all subscribers about
-                Crashlytics.logException(new Exception("EXTRA LOG Load failed with response code: " + action + ";" + lastResponseCode));
+                CrashlyticsWrapper.logException(new Exception("EXTRA LOG Load failed with response code: " + action + ";" + lastResponseCode));
                 sendLoadFailedNotification(action, params);
             } else if (action != ACTION_APICALL_LOGON_USER && (lastResponseCode == 401)) {
                 //If the result is failed due to Authentication or Authorization issue, let's try to refreshUi the token as it is most probably expired
@@ -561,7 +561,7 @@ public class FetLifeApiIntentService extends IntentService {
             }
         } catch (IOException ioe) {
             //If the call failed notify all subscribers about
-            Crashlytics.logException(new Exception("EXTRA LOG Connection failed with exception",ioe));
+            CrashlyticsWrapper.logException(new Exception("EXTRA LOG Connection failed with exception",ioe));
             sendConnectionFailedNotification(action, params);
         } catch (SQLiteDiskIOException | InvalidDBConfiguration | SQLiteReadOnlyDatabaseException | IllegalStateException idb) {
             //db might have been closed due probably to user logout, check it and let
@@ -738,7 +738,7 @@ public class FetLifeApiIntentService extends IntentService {
             postConversationResponse = postConversationCall.execute();
         } catch (IllegalArgumentException iae ) {
             //okio bug
-            Crashlytics.logException(iae);
+            CrashlyticsWrapper.logException(iae);
             postConversationResponse = null;
         }
         if (postConversationResponse != null && postConversationResponse.isSuccess()) {
@@ -1085,7 +1085,7 @@ public class FetLifeApiIntentService extends IntentService {
         String mimeType = getMimeType(uri, false, contentResolver);
 
         if (mimeType == null) {
-            Crashlytics.logException(new Exception("Media type for file to upload not found"));
+            CrashlyticsWrapper.logException(new Exception("Media type for file to upload not found"));
             if (deleteAfterUpload) {
                 deleteUri(uri);
             }
@@ -1097,7 +1097,7 @@ public class FetLifeApiIntentService extends IntentService {
         try {
             inputStream = contentResolver.openInputStream(uri);
         } catch (Exception e) {
-            Crashlytics.logException(new Exception("Media file to upload not found", e));
+            CrashlyticsWrapper.logException(new Exception("Media file to upload not found", e));
             if (deleteAfterUpload) {
                 deleteUri(uri);
             }
@@ -1157,7 +1157,7 @@ public class FetLifeApiIntentService extends IntentService {
         String mimeType = getMimeType(uri, true, contentResolver);
 
         if (mimeType == null) {
-            Crashlytics.logException(new Exception("Media type for file to upload not found"));
+            CrashlyticsWrapper.logException(new Exception("Media type for file to upload not found"));
             return Integer.MIN_VALUE;
         }
 
@@ -1260,7 +1260,7 @@ public class FetLifeApiIntentService extends IntentService {
             try {
                 inputStream = contentResolver.openInputStream(uri);
             } catch (Exception e) {
-                Crashlytics.logException(new Exception("Media file to upload not found", e));
+                CrashlyticsWrapper.logException(new Exception("Media file to upload not found", e));
                 getFetLifeApplication().getEventBus().post(new VideoChunkUploadFailedEvent(videoUploadId, chunkToProcess+1, uris.length, false));
                 return Integer.MAX_VALUE;
             }
@@ -1317,7 +1317,7 @@ public class FetLifeApiIntentService extends IntentService {
                 FetLifeApiIntentService.startApiCall(getFetLifeApplication(), ACTION_APICALL_UPLOAD_VIDEO_CHUNK, params);
                 return 0;
             } else {
-                Crashlytics.logException(new Exception("Video chunk upload failed after retries",ioException));
+                CrashlyticsWrapper.logException(new Exception("Video chunk upload failed after retries",ioException));
                 getFetLifeApplication().getEventBus().post(new VideoChunkUploadFailedEvent(videoUploadId, chunkToProcess+1, uris.length, false));
                 for (int i = chunkToProcess; i < uris.length; i++) {
                     Uri chunkUri = Uri.parse(uris[i]);
@@ -1350,7 +1350,7 @@ public class FetLifeApiIntentService extends IntentService {
 
         if (mimeType == null || mimeType.trim().length() == 0) {
             //let's give a try
-            Crashlytics.logException(new Exception("MimeType could not be read for image upload, falling back to image/jpeg"));
+            CrashlyticsWrapper.logException(new Exception("MimeType could not be read for image upload, falling back to image/jpeg"));
             mimeType = isVideo ? "video/mp4" : "image/jpeg";
         }
 
@@ -1819,9 +1819,9 @@ public class FetLifeApiIntentService extends IntentService {
         if (relationsResponse.isSuccess()) {
             final List<Event> foundEvents = relationsResponse.body();
             getFetLifeApplication().getEventBus().post(new EventsByLocationRetrievedEvent(searchBounds,page,foundEvents));
-            Crashlytics.logException(new Exception("EXTRA LOG event search request succeeded"));
+            CrashlyticsWrapper.logException(new Exception("EXTRA LOG event search request succeeded"));
         } else {
-            Crashlytics.logException(new Exception("EXTRA LOG event search request failed:" + getFetLifeApplication().getFetLifeService().getLastResponseCode()));
+            CrashlyticsWrapper.logException(new Exception("EXTRA LOG event search request failed:" + getFetLifeApplication().getFetLifeService().getLastResponseCode()));
             getFetLifeApplication().getEventBus().post(new EventsByLocationRetrieveFailedEvent(searchBounds,page));
         }
         return Integer.MAX_VALUE;
@@ -2568,7 +2568,7 @@ public class FetLifeApiIntentService extends IntentService {
             }
             //Safety check to never go to endless loop not even if the API behaviour change.
             if (page == 20) {
-                Crashlytics.logException(new Exception("Cancel friend request page limit has reached"));
+                CrashlyticsWrapper.logException(new Exception("Cancel friend request page limit has reached"));
                 return Integer.MIN_VALUE;
             }
         }

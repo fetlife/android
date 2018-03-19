@@ -23,7 +23,7 @@ import com.bitlove.fetlife.view.screen.component.EventDisplayHandler;
 import com.bitlove.fetlife.view.screen.standalone.AboutActivity;
 import com.bitlove.fetlife.view.screen.standalone.LoginActivity;
 import com.bitlove.fetlife.view.screen.standalone.ReleaseNotesActivity;
-import com.crashlytics.android.Crashlytics;
+import com.bitlove.fetlife.CrashlyticsWrapper;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -95,7 +95,7 @@ public abstract class ResourceActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onAuthenticationFailed(AuthenticationFailedEvent authenticationFailedEvent) {
         eventDisplayHandler.onAuthenticationFailed(this, authenticationFailedEvent);
-        Crashlytics.logException(new Exception("User authenticationFailed"));
+        CrashlyticsWrapper.logException(new Exception("User authenticationFailed"));
         if (FetLifeApplication.getInstance().getUserSessionManager().getCurrentUser() != null) {
             FetLifeApplication.getInstance().getUserSessionManager().resetAllUserDatabase();
         }

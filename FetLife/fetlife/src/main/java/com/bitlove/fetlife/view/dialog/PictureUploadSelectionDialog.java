@@ -19,7 +19,7 @@ import android.widget.ImageView;
 
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.view.screen.resource.ResourceListActivity;
-import com.crashlytics.android.Crashlytics;
+import com.bitlove.fetlife.CrashlyticsWrapper;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.File;
@@ -133,7 +133,7 @@ public class PictureUploadSelectionDialog extends DialogFragment {
                 exception = new Exception("Image selection failed");
             }
             dismissAllowingStateLoss();
-            Crashlytics.logException(exception);
+            CrashlyticsWrapper.logException(exception);
             cleanUpCameraPicture();
         }
     }
@@ -145,7 +145,7 @@ public class PictureUploadSelectionDialog extends DialogFragment {
         try {
             getActivity().getContentResolver().delete(cameraPictureUri,null,null);
         } catch (Exception e) {
-            Crashlytics.logException(new Exception("Camera Picture could not be removed"));
+            CrashlyticsWrapper.logException(new Exception("Camera Picture could not be removed"));
         }
         cameraPictureUri = null;
     }

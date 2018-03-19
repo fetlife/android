@@ -11,8 +11,8 @@ import com.bitlove.fetlife.model.pojos.fetlife.json.Story;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.view.adapter.ResourceListRecyclerAdapter;
 import com.bitlove.fetlife.view.adapter.feed.ExploreRecyclerAdapter;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.CustomEvent;
+import com.bitlove.fetlife.AnswersWrapper;
+import com.bitlove.fetlife.CustomEventWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,8 +61,8 @@ public class ExploreActivity extends FeedActivity {
     }
 
     protected void logEvent() {
-        Answers.getInstance().logCustom(
-                new CustomEvent(getClass().getSimpleName() + ":" + exploreType));
+        AnswersWrapper.getInstance().logCustom(
+                new CustomEventWrapper(getClass().getSimpleName() + ":" + exploreType));
     }
 
     @Override

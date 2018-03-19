@@ -1,9 +1,10 @@
 package com.bitlove.fetlife.model.pojos.fetlife.dbjson;
 
+import com.bitlove.fetlife.CrashlyticsWrapper;
 import com.bitlove.fetlife.model.db.FetLifeDatabase;
 import com.bitlove.fetlife.util.DateUtil;
 import com.bitlove.fetlife.util.StringUtil;
-import com.crashlytics.android.Crashlytics;
+import com.bitlove.fetlife.CrashlyticsWrapper;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -26,7 +27,7 @@ public class GroupPost extends BaseModel {
             GroupPost groupPost = new Select().from(GroupPost.class).where(GroupPost_Table.id.is(groupPostId)).querySingle();
             return groupPost;
         } catch (Throwable t) {
-            Crashlytics.logException(t);
+            CrashlyticsWrapper.logException(t);
             return null;
         }
     }

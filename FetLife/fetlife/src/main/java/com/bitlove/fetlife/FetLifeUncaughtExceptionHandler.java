@@ -5,7 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.database.sqlite.SQLiteException;
 
-import com.crashlytics.android.Crashlytics;
+import com.bitlove.fetlife.CrashlyticsWrapper;
 import com.raizlabs.android.dbflow.structure.InvalidDBConfiguration;
 
 public class FetLifeUncaughtExceptionHandler implements Thread.UncaughtExceptionHandler {
@@ -28,7 +28,7 @@ public class FetLifeUncaughtExceptionHandler implements Thread.UncaughtException
             if (FetLifeApplication.getInstance().getUserSessionManager().getCurrentUser() != null) {
                 FetLifeApplication.getInstance().getUserSessionManager().resetAllUserDatabase();
             }
-            Crashlytics.logException(new Exception("DB closed",throwable));
+            CrashlyticsWrapper.logException(new Exception("DB closed",throwable));
             //Duck exception DB is closed before background thread finished its job
             FetLifeApplication fetLifeApplication = FetLifeApplication.getInstance();
             if (fetLifeApplication.isAppInForeground()) {

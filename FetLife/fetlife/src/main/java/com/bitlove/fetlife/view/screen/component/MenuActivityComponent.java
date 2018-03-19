@@ -38,8 +38,8 @@ import com.bitlove.fetlife.view.screen.standalone.ReleaseNotesActivity;
 import com.bitlove.fetlife.view.screen.standalone.AddNfcFriendActivity;
 import com.bitlove.fetlife.view.screen.standalone.LoginActivity;
 import com.bitlove.fetlife.view.screen.standalone.SettingsActivity;
-import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.CustomEvent;
+import com.bitlove.fetlife.AnswersWrapper;
+import com.bitlove.fetlife.CustomEventWrapper;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 public class MenuActivityComponent extends ActivityComponent {
@@ -255,8 +255,8 @@ public class MenuActivityComponent extends ActivityComponent {
     }
 
     private void logEvent(String item) {
-        Answers.getInstance().logCustom(
-                new CustomEvent("Menu Item: " + item + " selected"));
+        AnswersWrapper.getInstance().logCustom(
+                new CustomEventWrapper("Menu Item: " + item + " selected"));
     }
 
     private void requestStoragePermission(int requestAction) {

@@ -35,7 +35,7 @@ import com.bitlove.fetlife.util.MessageDuplicationDebugUtil;
 import com.bitlove.fetlife.util.SpaceTokenizer;
 import com.bitlove.fetlife.view.adapter.MessagesRecyclerAdapter;
 import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity;
-import com.crashlytics.android.Crashlytics;
+import com.bitlove.fetlife.CrashlyticsWrapper;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.InvalidDBConfiguration;
@@ -355,10 +355,10 @@ public class MessagesActivity extends ResourceActivity
             try {
                 conversation.save();
             } catch (InvalidDBConfiguration idbce) {
-                Crashlytics.logException(idbce);
+                CrashlyticsWrapper.logException(idbce);
             }
         } else {
-            Crashlytics.logException(new Exception("Draft Message could not be saved : Conversation is bull"));
+            CrashlyticsWrapper.logException(new Exception("Draft Message could not be saved : Conversation is bull"));
         }
     }
 

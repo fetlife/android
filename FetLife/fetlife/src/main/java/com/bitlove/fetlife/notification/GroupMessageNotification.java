@@ -23,7 +23,7 @@ import com.bitlove.fetlife.view.screen.resource.ConversationsActivity;
 import com.bitlove.fetlife.view.screen.resource.groups.GroupActivity;
 import com.bitlove.fetlife.view.screen.resource.groups.GroupMessagesActivity;
 import com.bitlove.fetlife.view.screen.resource.groups.GroupsActivity;
-import com.crashlytics.android.Crashlytics;
+import com.bitlove.fetlife.CrashlyticsWrapper;
 import com.onesignal.OneSignal;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.InvalidDBConfiguration;
@@ -49,11 +49,11 @@ public class GroupMessageNotification extends OneSignalNotification {
         super(title, message,launchUrl,additionalData,id, group);
         JSONObject apiContainer = additionalData.optJSONObject(NotificationParser.JSON_FIELD_OBJECT_API);
         if (apiContainer == null) {
-            Crashlytics.log("Missing Group Notification API key");
-            Crashlytics.log("title: " + title);
-            Crashlytics.log("message: " + message);
-            Crashlytics.log("additional data: " + additionalData != null ? additionalData.toString() : "null");
-            Crashlytics.logException(new Exception());
+            CrashlyticsWrapper.log("Missing Group Notification API key");
+            CrashlyticsWrapper.log("title: " + title);
+            CrashlyticsWrapper.log("message: " + message);
+            CrashlyticsWrapper.log("additional data: " + additionalData != null ? additionalData.toString() : "null");
+            CrashlyticsWrapper.logException(new Exception());
         } else {
             groupId = apiContainer.optString(NotificationParser.JSON_FIELD_STRING_GROUPID);
             groupDiscussionId = apiContainer.optString(NotificationParser.JSON_FIELD_STRING_GROUPPOSTID);

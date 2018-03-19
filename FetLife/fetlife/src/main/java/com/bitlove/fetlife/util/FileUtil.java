@@ -8,7 +8,7 @@ import android.os.Build;
 import android.util.Log;
 
 import com.bitlove.fetlife.BuildConfig;
-import com.crashlytics.android.Crashlytics;
+import com.bitlove.fetlife.CrashlyticsWrapper;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -53,7 +53,7 @@ public class FileUtil {
                 if (BuildConfig.DEBUG) {
                     Log.e("FileUtil","Source File cannot be read");
                 }
-                Crashlytics.logException(new Exception("File copy cannot be performed, source cannot be read"));
+                CrashlyticsWrapper.logException(new Exception("File copy cannot be performed, source cannot be read"));
                 return;
             }
 
@@ -68,7 +68,7 @@ public class FileUtil {
                 if (BuildConfig.DEBUG) {
                     Log.e("FileUtil","Target File cannot be written");
                 }
-                Crashlytics.logException(new Exception("File copy cannot be performed, target cannot be written"));
+                CrashlyticsWrapper.logException(new Exception("File copy cannot be performed, target cannot be written"));
                 return;
             }
 
@@ -98,7 +98,7 @@ public class FileUtil {
             if (BuildConfig.DEBUG) {
                 Log.e("FileUtil","File copy failed",e);
             }
-            Crashlytics.logException(e);
+            CrashlyticsWrapper.logException(e);
         }
     }
 
@@ -113,7 +113,7 @@ public class FileUtil {
                 if (BuildConfig.DEBUG) {
                     Log.e("FileUtil","File cannot be read");
                 }
-                Crashlytics.logException(new Exception("File copy cannot be performed, source cannot be read"));
+                CrashlyticsWrapper.logException(new Exception("File copy cannot be performed, source cannot be read"));
                 return;
             }
 
@@ -125,7 +125,7 @@ public class FileUtil {
             if (BuildConfig.DEBUG) {
                 Log.e("FileUtil","File content clear failed",e);
             }
-            Crashlytics.logException(e);
+            CrashlyticsWrapper.logException(e);
         }
     }
 
