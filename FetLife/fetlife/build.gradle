@@ -1,6 +1,22 @@
+def taskRequests = getGradle().getStartParameter().getTaskRequests().toString()
+def isGoogle = taskRequests.contains("Google") || taskRequests.contains("google")
+
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
+
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
-apply plugin: 'io.fabric'
+if (isGoogle) {
+    apply plugin: 'io.fabric'
+}
+
 
 def Properties releaseProperties = new Properties()
 def propFile = file('../../../android-release/release.properties')
@@ -27,6 +43,20 @@ android {
 
         buildConfigField "Boolean", "PREVIEW", "false"
 
+    }
+
+    flavorDimensions "type"
+
+    productFlavors {
+        // includes proprietary libs
+        google {
+            dimension "type"
+        }
+
+        // only foss
+        foss {
+            dimension "type"
+        }
     }
 
     signingConfigs {
@@ -123,7 +153,7 @@ dependencies {
     compile 'com.android.support:preference-v14:25.3.1'
     compile 'com.android.support:support-core-utils:25.3.1'
     compile 'com.google.firebase:firebase-core:11.0.0'
-    compile('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
+    googleCompile('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
         transitive = true
     }
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
@@ -151,29 +181,29 @@ dependencies {
 }
 
 
-import com.crashlytics.tools.utils.PropertiesUtils
+if (isGoogle) {
+    File crashlyticsProperties = new File("${project.projectDir.absolutePath}/fabric.properties")
+    android.applicationVariants.all { variant ->
 
-File crashlyticsProperties = new File("${project.projectDir.absolutePath}/fabric.properties")
-android.applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            output.outputFile = new File(
+                    output.outputFile.parent,
+                    output.outputFile.name.replace(".apk", "-${variant.versionName}.apk").replace("-release", ""))
 
-    variant.outputs.each { output ->
-        output.outputFile = new File(
-                output.outputFile.parent,
-                output.outputFile.name.replace(".apk", "-${variant.versionName}.apk").replace("-release", ""))
+    //        variant.outputs.all {
+    //        outputFileName = "${variant.name}-${variant.versionName}.apk"
+        }
 
-//        variant.outputs.all {
-//        outputFileName = "${variant.name}-${variant.versionName}.apk"
+        def variantSuffix = variant.name.capitalize()
+        def generateResourcesTask = project.tasks.getByName("fabricGenerateResources${variantSuffix}")
+        def generatePropertiesTask = task("fabricGenerateProperties${variantSuffix}") << {
+            Properties properties = new Properties()
+            properties.put("apiSecret", variant.buildType.fabricApiSecret)
+            properties.put("apiKey", variant.buildType.fabricApiKey)
+            com.crashlytics.tools.utils.PropertiesUtils.injectPropertyInFile(crashlyticsProperties, properties, "")
+        }
+        generateResourcesTask.dependsOn generatePropertiesTask
     }
-
-    def variantSuffix = variant.name.capitalize()
-    def generateResourcesTask = project.tasks.getByName("fabricGenerateResources${variantSuffix}")
-    def generatePropertiesTask = task("fabricGenerateProperties${variantSuffix}") << {
-        Properties properties = new Properties()
-        properties.put("apiSecret", variant.buildType.fabricApiSecret)
-        properties.put("apiKey", variant.buildType.fabricApiKey)
-        PropertiesUtils.injectPropertyInFile(crashlyticsProperties, properties, "")
-    }
-    generateResourcesTask.dependsOn generatePropertiesTask
 }
 
 apply plugin: 'com.google.gms.google-services'
