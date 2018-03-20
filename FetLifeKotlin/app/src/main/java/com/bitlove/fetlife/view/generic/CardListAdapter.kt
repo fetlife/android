@@ -21,17 +21,18 @@ class CardListAdapter<DH: CardViewDataHolder> : RecyclerView.Adapter<CardViewHol
     override fun getItemCount(): Int = items.size
 
     override fun getItemId(position: Int): Long {
-        return items[position].getAppId().toUniqueLong()
+        //TODO safety check
+        return items[position].getLocalId()!!.toUniqueLong()
     }
 
     override fun onBindViewHolder(holder: CardViewHolder<DH>, position: Int) = holder.bindTo(items[position], getInteractionHandler(position))
 
     private fun getInteractionHandler(position: Int): CardViewInteractionHandler {
         val item = items[position]
-        if (!interactionHandlers.containsKey(item.getAppId())) {
-            interactionHandlers[item.getAppId()] = CardViewInteractionHandler()
+        if (!interactionHandlers.containsKey(item.getLocalId())) {
+            interactionHandlers[item.getLocalId()] = CardViewInteractionHandler()
         }
-        return interactionHandlers[item.getAppId()]!!
+        return interactionHandlers[item.getLocalId()]!!
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder<DH> {

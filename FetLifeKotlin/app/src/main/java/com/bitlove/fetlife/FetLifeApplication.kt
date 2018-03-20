@@ -1,5 +1,6 @@
 package com.bitlove.fetlife
 
+import android.annotation.SuppressLint
 import android.app.*
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProviders
@@ -7,8 +8,7 @@ import android.arch.persistence.room.Room
 import android.content.res.Resources
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
-import com.bitlove.fetlife.model.db.FetlifeDatabase
-import com.bitlove.fetlife.model.dataobject.base.Conversation
+import com.bitlove.fetlife.model.db.FetLifeDatabase
 import android.support.annotation.LayoutRes
 import android.support.annotation.RawRes
 import android.support.v4.app.FragmentActivity
@@ -20,10 +20,12 @@ import com.bitlove.fetlife.model.network.FetLifeService
 import com.google.gson.Gson
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.delay
 import org.jetbrains.anko.coroutines.experimental.bg
 import com.birbit.android.jobqueue.config.Configuration
 import android.databinding.BindingAdapter
+import android.support.design.internal.BottomNavigationItemView
+import android.support.design.internal.BottomNavigationMenuView
+import android.support.design.widget.BottomNavigationView
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
@@ -31,6 +33,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 
 //TODO check out developer book: https://antonioleiva.com/kotlin-android-developers-book/
+
+//TODO check out warnings
 
 class FetLifeApplication : Application() {
 
@@ -53,7 +57,7 @@ class FetLifeApplication : Application() {
 
     }
 
-    lateinit var fetlifeDatabase : FetlifeDatabase
+    lateinit var fetLifeDatabase: FetLifeDatabase
     lateinit var fetlifeService : FetLifeService
     lateinit var fetlifeDataSource: FetLifeDataSource
     lateinit var jobManager: JobManager
@@ -63,7 +67,7 @@ class FetLifeApplication : Application() {
         instance = this
 
         //TODO use database per user
-        fetlifeDatabase = Room.databaseBuilder(this, FetlifeDatabase::class.java, "fetlife_database").build()
+        fetLifeDatabase = Room.databaseBuilder(this, FetLifeDatabase::class.java, "fetlife_database").build()
         fetlifeService = FetLifeService()
         fetlifeDataSource = FetLifeDataSource()
         jobManager = createJobManager()
@@ -71,8 +75,8 @@ class FetLifeApplication : Application() {
         //fill test data
         async(UI) {
             bg {
-                fetlifeDatabase.conversationDao().deleteAll()
-                fetlifeDatabase.commentDao().deleteAll()
+                fetLifeDatabase.contentDao().deleteAll()
+                fetLifeDatabase.reactionDao().deleteAll()
             }
         }
     }
@@ -144,6 +148,25 @@ fun String.toUniqueLong() : Long {
 
 fun RecyclerView.workaroundItemFlickeringOnChange() {
     this.itemAnimator.changeDuration = 0
+}
+
+@SuppressLint("RestrictedApi")
+fun BottomNavigationView.disableShiftMode() {
+    val menuView = getChildAt(0) as BottomNavigationMenuView
+    try {
+        val shiftingMode = menuView::class.java.getDeclaredField("mShiftingMode")
+        shiftingMode.isAccessible = true
+        shiftingMode.setBoolean(menuView, false)
+        shiftingMode.isAccessible = false
+        for (i in 0 until menuView.childCount) {
+            val item = menuView.getChildAt(i) as BottomNavigationItemView
+            item.setShiftingMode(false)
+            // set once again checked value, so view will be updated
+            item.setChecked(item.itemData.isChecked)
+        }
+    } catch (e: Throwable) {
+        //TODO log
+    }
 }
 
 //TODO organise these functions

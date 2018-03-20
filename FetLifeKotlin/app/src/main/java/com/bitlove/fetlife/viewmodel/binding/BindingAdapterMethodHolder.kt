@@ -7,7 +7,6 @@ import android.content.Context
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
 import android.text.Html
-import android.util.Log
 import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.TextView
@@ -15,13 +14,13 @@ import androidx.view.get
 import androidx.view.size
 import com.android.databinding.library.baseAdapters.BR
 import com.bitlove.fetlife.R
-import com.bitlove.fetlife.model.dataobject.base.Comment
 import com.bitlove.fetlife.loadWithGlide
-import com.bitlove.fetlife.viewmodel.generic.CommentViewDataHolder
+import com.bitlove.fetlife.model.dataobject.wrapper.Reaction
+import com.bitlove.fetlife.viewmodel.generic.ReactionViewDataHolder
 
 @BindingAdapter("comments", "commentsDisplayed")
 fun setComments(viewGroup: ViewGroup,
-                comments: List<Comment>?, commentsDisplayed: Boolean?) {
+                comments: List<ReactionViewDataHolder>?, commentsDisplayed: Boolean?) {
     if (viewGroup.visibility == View.GONE) {
         return
     }
@@ -29,7 +28,7 @@ fun setComments(viewGroup: ViewGroup,
         viewGroup.removeAllViews()
         return
     }
-    val maxComments = Math.min(comments.size,if (commentsDisplayed == true) CommentViewDataHolder.COMMENT_MAX_COUNT_EXPANDED else CommentViewDataHolder.COMMENT_MAX_COUNT_COLLAPSED)
+    val maxComments = Math.min(comments.size,if (commentsDisplayed == true) ReactionViewDataHolder.COMMENT_MAX_COUNT_EXPANDED else ReactionViewDataHolder.COMMENT_MAX_COUNT_COLLAPSED)
     if(viewGroup.childCount > maxComments) {
         viewGroup.removeViews(maxComments,viewGroup.childCount-maxComments)
     }
@@ -41,13 +40,14 @@ fun setComments(viewGroup: ViewGroup,
         val binding = if (viewGroup.size > i) viewGroup[i].tag as ViewDataBinding else DataBindingUtil
                 .inflate<ViewDataBinding>(inflater, R.layout.item_data_card_comment, viewGroup, true)
         viewGroup[i].tag = binding
-        val comment = comments[i].copy()
-        if (commentsDisplayed != true && comment.body != null) {
-            if (comment.body!!.length > Comment.TRUNCATED_LENGTH) {
-                comment.body = comment.body!!.substring(0, Comment.TRUNCATED_LENGTH)
-                comment.body = comment.body!!.substring(0,comment.body!!.lastIndexOf(' ')) + Comment.TRUNCATED_SUFFIX
-            }
-        }
+        //TODO copy?
+        val comment = comments[i]
+//        if (commentsDisplayed != true && comment.body != null) {
+//            if (comment.body!!.length > Reaction.TRUNCATED_LENGTH) {
+//                comment.body = comment.body!!.substring(0, Comment.TRUNCATED_LENGTH)
+//                comment.body = comment.body!!.substring(0,comment.body!!.lastIndexOf(' ')) + Comment.TRUNCATED_SUFFIX
+//            }
+//        }
         binding.setVariable(BR.commentData, comment)
     }
 }

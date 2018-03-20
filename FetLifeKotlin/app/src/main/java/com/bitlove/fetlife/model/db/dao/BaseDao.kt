@@ -17,9 +17,10 @@ package com.bitlove.fetlife.model.db.dao
  */
 
 import android.arch.persistence.room.*
+import com.bitlove.fetlife.model.dataobject.entity.DataEntity
 
 @Dao
-interface BaseDao<in T> {
+interface BaseDao<in T : DataEntity> {
 
     /**
      * Insert an object in the database.

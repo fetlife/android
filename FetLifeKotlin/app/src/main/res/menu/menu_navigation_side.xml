@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_item_navigation_people"
+        app:showAsAction="always"
+        app:ico_color="@color/silver"
+        app:ico_icon="gmd-people-outline"
+        app:ico_size="24dp"
+        android:title="@string/menu_item_people"/>
+
+    <item
+        android:id="@+id/menu_item_navigation_notifications"
+        app:showAsAction="always"
+        app:ico_color="@color/silver"
+        app:ico_icon="gmd-add-alert"
+        app:ico_size="24dp"
+        android:title="@string/menu_item_notifications"/>
+</menu>

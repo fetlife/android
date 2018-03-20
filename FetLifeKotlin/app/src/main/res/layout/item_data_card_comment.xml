@@ -5,7 +5,7 @@
         <import type="android.view.View" />
         <variable
             name="commentData"
-            type="com.bitlove.fetlife.viewmodel.generic.CommentViewDataHolder" />
+            type="com.bitlove.fetlife.viewmodel.generic.ReactionViewDataHolder" />
     </data>
 
     <android.support.constraint.ConstraintLayout
@@ -16,13 +16,13 @@
 
         <ImageView
             android:id="@+id/avatar_image"
-            android:visibility="@{commentData.avatarUrl != null ? View.VISIBLE : View.GONE}"
+            android:visibility="@{commentData.avatar.avatarUrl != null ? View.VISIBLE : View.GONE}"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginLeft="8dp"
             android:padding="4dp"
             android:scaleType="centerCrop"
-            app:srcGlide="@{commentData.avatarUrl}"
+            app:srcGlide="@{commentData.avatar.avatarUrl}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 
@@ -30,7 +30,7 @@
             android:id="@+id/avatar_name"
             android:layout_marginLeft="4dp"
             android:layout_marginTop="4dp"
-            android:text="@{commentData.avatarName}"
+            android:text="@{commentData.avatar.avatarName}"
             android:textIsSelectable="true"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             android:textColor="@color/silver"

@@ -17,7 +17,6 @@ abstract class CardListFragment<DH: CardViewDataHolder, DataBinding : ViewDataBi
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         cardList.workaroundItemFlickeringOnChange()
-        
         cardList.adapter = CardListAdapter<DH>()
         //TODO remove forever and use state based
         viewModel.cardList.observeForever({
@@ -29,6 +28,8 @@ abstract class CardListFragment<DH: CardViewDataHolder, DataBinding : ViewDataBi
                 diffResult.dispatchUpdatesTo(cardList.adapter)
             }
         })
-        viewModel.refresh()
+        if (savedInstanceState == null) {
+            viewModel.refresh()
+        }
     }
 }
