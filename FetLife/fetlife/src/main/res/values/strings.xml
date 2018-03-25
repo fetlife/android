@@ -836,7 +836,7 @@
     <string name="menu_discussion_follow">Follow</string>
     <string name="menu_discussion_unfollow">Unfollow</string>
     <string name="title_dialog_join_group">Join Group</string>
-    <string name="message_dialog_join_group">Did you read the descritpion and do you agree with the rules of this group?</string>
+    <string name="message_dialog_join_group">Did you read the description and do you agree with the rules of this group?</string>
     <string name="title_dialog_leave_group">Leave Group</string>
     <string name="message_dialog_leave_group">Please confirm you want to leave this group</string>
     <string name="message_discussion_followed">You are following the discussion</string>
