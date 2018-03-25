@@ -1,4 +1,4 @@
-package com.bitlove.fetlife.model.network.job.getresource
+package com.bitlove.fetlife.model.network.job.get
 
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.model.dataobject.SyncObject
@@ -24,6 +24,6 @@ open class GetCommentListJob(private val parent: SyncObject<ContentEntity>) : Ge
 
     override fun getCall(): Call<Array<ReactionEntity>> {
         //TODO return comment call
-        return FetLifeApplication.instance.fetlifeService.fetLifApi.getMessages("das",parent.getRemoteId(),"","",0)
+        return FetLifeApplication.instance.fetlifeService.fetLifeApi.getMessages("das",parent.getRemoteId(),"","",0)
     }
 }

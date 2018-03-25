@@ -1,11 +1,11 @@
-package com.bitlove.fetlife.model.resource
+package com.bitlove.fetlife.model.resource.get
 
 import android.arch.lifecycle.LiveData
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.model.dataobject.wrapper.Content
-import com.bitlove.fetlife.model.network.job.getresource.GetConversationListJob
+import com.bitlove.fetlife.model.network.job.get.GetConversationListJob
 
-class ConversationListResource(forceLoad: Boolean, page: Int, limit: Int) : SyncResource<List<Content>>(forceLoad) {
+class ConversationListResource(forceLoad: Boolean, page: Int, limit: Int) : GetResource<List<Content>>(forceLoad) {
 
     private val contentDao = FetLifeApplication.instance.fetLifeDatabase.contentDao()
 

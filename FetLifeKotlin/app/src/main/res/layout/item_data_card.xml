@@ -125,7 +125,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginTop="12dp"
-                android:scaleType="centerCrop"
+                android:scaleType="centerInside"
                 app:srcGlide="@{cardData.mediaUrl}"
                 app:layout_constraintDimensionRatio="H,16:9"
                 app:layout_constraintTop_toBottomOf="@+id/avatar_barrier"
@@ -234,7 +234,7 @@
 
             <LinearLayout
                 android:animateLayoutChanges="false"
-                android:visibility="@{cardData.comments.size() > 0 ? View.VISIBLE : View.GONE}"
+                android:visibility="@{cardInteractionHandler.commentsDisplayed ? View.VISIBLE : View.GONE}"
                 android:id="@+id/comments_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -251,7 +251,7 @@
 
             <View
                 android:id="@+id/new_comment_separator"
-                android:visibility="@{cardData.comments.size() > 0 ? View.VISIBLE : View.GONE}"
+                android:visibility="@{cardInteractionHandler.commentsDisplayed ? View.VISIBLE : View.GONE}"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/raisinBlack"
@@ -265,6 +265,7 @@
 
             <EditText
                 android:id="@+id/comment_edit"
+                android:visibility="@{cardInteractionHandler.commentsDisplayed ? View.VISIBLE : View.GONE}"
                 android:layout_marginLeft="-12dp"
                 android:layout_marginRight="-12dp"
                 android:hint="Add your reply"
@@ -279,7 +280,10 @@
                 android:textColor="@color/silver"
                 app:layout_constraintTop_toBottomOf="@id/new_comment_separator"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:onSubmitHandler="@{cardInteractionHandler}"
+                app:onSubmitData="@{cardData}"
+                />
 
         </android.support.constraint.ConstraintLayout>
 

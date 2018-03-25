@@ -8,6 +8,7 @@ import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
 import android.text.Html
 import android.view.LayoutInflater
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.view.get
@@ -16,6 +17,8 @@ import com.android.databinding.library.baseAdapters.BR
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.loadWithGlide
 import com.bitlove.fetlife.model.dataobject.wrapper.Reaction
+import com.bitlove.fetlife.viewmodel.generic.CardViewDataHolder
+import com.bitlove.fetlife.viewmodel.generic.CardViewInteractionHandler
 import com.bitlove.fetlife.viewmodel.generic.ReactionViewDataHolder
 
 @BindingAdapter("comments", "commentsDisplayed")
@@ -70,6 +73,17 @@ fun setFormattedText(textView: TextView?, formattedText: String?, textEntities :
 @BindingAdapter("srcGlide")
 fun setGlideSrc(imageView: ImageView, srcGlide: String?) {
     imageView.loadWithGlide(srcGlide, R.mipmap.ic_launcher_round)
+}
+
+@BindingAdapter("onSubmitHandler","onSubmitData")
+fun bindSubmit(editText: EditText, onSubmitHandler: CardViewInteractionHandler, onSubmitData: CardViewDataHolder) {
+    editText.setOnEditorActionListener { v, actionId, event ->
+        if (event != null && event.isShiftPressed) {
+            false
+        }
+        onSubmitHandler.onSendComment(editText,onSubmitData)
+        true
+    }
 }
 
 //TODO: check out other list bindings:

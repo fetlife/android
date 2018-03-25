@@ -16,16 +16,24 @@ class Content : CardViewDataHolder(), SyncObject<ContentEntity> {
 
     enum class TYPE {CONVERSATION, PICTURE}
 
-    @Embedded var contentEntity: ContentEntity? = null
+    @Embedded lateinit var contentEntity: ContentEntity
 
     @Relation(parentColumn = "memberId", entityColumn = "dbId", entity = MemberEntity::class)
     var ownerSingleItemList: List<MemberEntity>? = null
 
     @Relation(parentColumn = "dbId", entityColumn = "contentId", entity = ReactionEntity::class)
-    var reactions: List<ReactionEntity>? = null
+    var reactions: List<Reaction>? = null
 
     @Ignore var commentList: List<Reaction>? = null
     @Ignore var loveList: List<Reaction>? = null
+
+    override fun getTitle(): String? {
+        return contentEntity?.subject
+    }
+
+    override fun getSupportingText(): String? {
+        return contentEntity?.body
+    }
 
     override fun getLocalId(): String? {
         return contentEntity?.dbId
@@ -36,7 +44,16 @@ class Content : CardViewDataHolder(), SyncObject<ContentEntity> {
     }
 
     override fun getAvatar(): AvatarViewDataHolder? {
-        return Member(ownerSingleItemList?.firstOrNull())
+        val member = ownerSingleItemList?.firstOrNull() ?: return null
+        return Member(member)
+    }
+
+    override fun getMediaUrl(): String? {
+        return contentEntity?.pictureVariants?.huge?.url
+    }
+
+    override fun hasNewComment(): Boolean? {
+        return contentEntity?.hasNewComments
     }
 
     override fun getComments(): List<ReactionViewDataHolder> {
@@ -53,22 +70,14 @@ class Content : CardViewDataHolder(), SyncObject<ContentEntity> {
         return loveList!!
     }
 
-    open fun populateComments() {
-        val commentArrayList = ArrayList<Reaction>()
+    private fun populateComments() {
         var reactions = reactions ?: return
-        reactions
-                .filter { it.type == Reaction.TYPE.COMMENT.toString() }
-                .mapTo(commentArrayList) { Reaction(it) }
-        commentList = commentArrayList
+        commentList = reactions.filter { it.reactionEntity?.type == Reaction.TYPE.COMMENT.toString() }
     }
 
-    open fun populateLoves() {
-        val loveArrayList = ArrayList<Reaction>()
+    private fun populateLoves() {
         var reactions = reactions ?: return
-        reactions
-                .filter { it.type == Reaction.TYPE.LOVE.toString() }
-                .mapTo(loveArrayList) { Reaction(it) }
-        loveList = loveArrayList
+        loveList = reactions.filter { it.reactionEntity?.type == Reaction.TYPE.LOVE.toString() }
     }
 
     override fun getEntity(): ContentEntity? {

@@ -1,56 +1,61 @@
-package com.bitlove.fetlife.view.base
+package com.bitlove.fetlife.view.navigation
 
 import android.app.Fragment
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
-import com.bitlove.fetlife.R
 import com.mikepenz.iconics.context.IconicsContextWrapper
 import com.mikepenz.iconics.utils.IconicsMenuInflaterUtil
 import kotlinx.android.synthetic.main.activity_phone_navigation.*
 import kotlinx.android.synthetic.main.include_appbar.*
 import com.bitlove.fetlife.view.widget.BottomNavigationBehavior
 import android.support.design.widget.CoordinatorLayout
-import com.bitlove.fetlife.disableShiftMode
 import android.support.v4.view.GravityCompat
 import android.view.MenuItem
-import com.bitlove.fetlife.inTransaction
-import com.bitlove.fetlife.view.conversation.ConversationsFragment
+import com.bitlove.fetlife.*
+import com.bitlove.fetlife.view.widget.FloatingActionButtonBehavior
+import com.mikepenz.google_material_typeface_library.GoogleMaterial
+import com.mikepenz.iconics.IconicsDrawable
 
 open class PhoneNavigationActivity : AppCompatActivity(), NavigationCallback {
 
+    companion object {
+        const val STATE_KEY_NAVIGATION = "STATE_KEY_NAVIGATION"
+        const val STATE_KEY_LAYOUT = "STATE_KEY_LAYOUT"
+    }
+
+    private var navigation: Int? = null
+    private var layout: NavigationCallback.Layout? = null
+
+    val navigationFragmentFactory = FetLifeApplication.instance.navigationFragmentFactory
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setLayout()
+        setLayoutResource()
+        setStateContentFragment(savedInstanceState)
+        setTitle()
         setActionBar()
         setBottomNavigation()
         setSideNavigation()
-        addContentFragment(savedInstanceState)
+        setFloatingActionButton()
     }
 
-    private fun addContentFragment(savedInstanceState: Bundle?) {
-        if (savedInstanceState == null) {
-            fragmentManager.inTransaction { add(R.id.content_fragment_container, ConversationsFragment()) }
-        } else {
-            //TODO : solve preselection
-        }
-    }
-
-    override fun onNavigate(actionId: Int) : Boolean {
-        when (actionId) {
-            R.id.menu_item_navigation_explore -> setContentFragment(ConversationsFragment())
-            R.id.menu_item_navigation_conversations -> setContentFragment(ConversationsFragment())
-        }
+    override fun onNavigate(navigation: Int?) : Boolean {
+        this.navigation = navigation
+        setContentFragment(navigationFragmentFactory.createFragment(navigation,layout))
+        setTitle()
         return true
     }
 
-    private fun setContentFragment(fragment: Fragment) {
-        fragmentManager.inTransaction { replace(R.id.content_fragment_container, fragment) }
+    override fun onLayoutChange(layout: NavigationCallback.Layout?) {
+        this.layout = layout
+        setContentFragment(navigationFragmentFactory.createFragment(navigation,layout),false)
     }
 
-    open fun setLayout() {
+    open fun setLayoutResource() {
         val layoutRes = getLayoutRes()
         if (layoutRes != null) {
             setContentView(getLayoutRes())
@@ -66,8 +71,42 @@ open class PhoneNavigationActivity : AppCompatActivity(), NavigationCallback {
         setSupportActionBar(toolbar)
     }
 
+    private fun setStateContentFragment(savedInstanceState: Bundle?) {
+        if (savedInstanceState != null) {
+            navigation = savedInstanceState.getInt(STATE_KEY_NAVIGATION)
+            layout = savedInstanceState.getSerializable(STATE_KEY_LAYOUT) as? NavigationCallback.Layout
+        }
+        setContentFragment(navigationFragmentFactory.createFragment(navigation),false)
+    }
+
+    private fun setContentFragment(fragment: Fragment, addToBackStack: Boolean = true) {
+        fragmentManager.inTransaction {
+            val transaction = replace(R.id.content_fragment_container, fragment)
+            if (addToBackStack) {
+                transaction.addToBackStack(null)
+            } else {
+                transaction
+            }
+        }
+    }
+
+    private fun setTitle() {
+        super.setTitle(navigationFragmentFactory.getNavigationTitle(navigation))
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        if (navigation != null) {
+            outState?.putInt(STATE_KEY_NAVIGATION,navigation!!)
+        }
+        if (layout != null) {
+            outState?.putSerializable(STATE_KEY_LAYOUT,layout)
+        }
+    }
+
     open fun setSideNavigation() {
-        supportActionBar?.setHomeAsUpIndicator(android.R.drawable.ic_menu_add)
+
+        supportActionBar?.setHomeAsUpIndicator(IconicsDrawable(this).icon(GoogleMaterial.Icon.gmd_menu).color(getSafeColor(R.color.midGray)).sizeDp(24))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         navigation_view.setNavigationItemSelectedListener { menuItem ->
@@ -96,6 +135,15 @@ open class PhoneNavigationActivity : AppCompatActivity(), NavigationCallback {
             item -> onNavigate(item.itemId)
         })
     }
+
+    private fun setFloatingActionButton() {
+        val layoutParams = button_change_layout.layoutParams as CoordinatorLayout.LayoutParams
+        layoutParams.behavior = FloatingActionButtonBehavior()
+        button_change_layout.setOnClickListener({
+            view -> onLayoutChange(layout?.next())
+        })
+    }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {

@@ -23,11 +23,21 @@
             android:id="@+id/navigation_bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@color/black"
-            app:itemIconTint="@drawable/selector_midgray_to_silver"
-            app:itemTextColor="@drawable/selector_midgray_to_silver"
+            android:background="@color/darkGray"
+            app:itemIconTint="@drawable/selector_silver_to_moon"
+            app:itemTextColor="@drawable/selector_silver_to_moon"
             android:layout_gravity="bottom"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/button_change_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:layout_gravity="bottom|right"
+            android:layout_above="@+id/navigation_bottom"
+            android:layout_marginBottom="72dp"
+            android:layout_marginRight="24dp"
+            app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
 
     </android.support.design.widget.CoordinatorLayout>
 

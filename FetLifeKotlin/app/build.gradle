@@ -55,6 +55,7 @@ dependencies {
     implementation deps.support.recyclerview
     implementation deps.support.cardview
     implementation deps.support.design
+    implementation deps.support.v13
     implementation deps.room.runtime
     implementation deps.room.rxjava2
     implementation deps.lifecycle.runtime

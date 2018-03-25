@@ -1,7 +1,15 @@
 package com.bitlove.fetlife.model.network
 
 import android.content.Context
+import android.media.session.MediaSession
 import com.bitlove.fetlife.FetLifeApplication
+import com.bitlove.fetlife.model.network.networkobject.AuthBody
+import com.bitlove.fetlife.model.network.networkobject.Token
+import org.jetbrains.anko.coroutines.experimental.bg
+import retrofit2.Call
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+
 
 //import com.bitlove.fetlife.FetLifeApplication
 //import com.bitlove.fetlife.R
@@ -32,10 +40,32 @@ import com.bitlove.fetlife.FetLifeApplication
 //import retrofit.Retrofit
 //import retrofit2.Retrofit
 
-class FetLifeService @Throws(Exception::class)
-constructor() {
+class FetLifeService {
 
-//    val fetLifeApi: FetLifeApi
+    //TODO implement
+
+    var authToken : String? = null
+
+    var fetLifeApi: FetLifeApi
+
+    init {
+        val retrofit = Retrofit.Builder()
+                .baseUrl("https://app.fetlife.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+        fetLifeApi = retrofit.create(FetLifeApi::class.java)
+    }
+
+    fun login() {
+        val tokenCall : Call<Token> = fetLifeApi.login(
+                "d8f8ebd522bf5123c3f29db3c8faf09029a032b44f0d1739d4325cd3ccf11570",
+                "47273306a9a3a3448a908748eff13a21a477cc46f6a3968b5c7d05611c4f2f26",
+                "urn:ietf:wg:oauth:2.0:oob",
+                AuthBody("dreamlite", "isThisMyPassword?"))
+        val result = tokenCall.execute()
+        authToken = "Bearer " + result.body()?.accessToken
+    }
+
 //    val fetLifeMultipartUploadApi: FetLifeMultipartUploadApi
 //
 //    var lastResponseCode = -1

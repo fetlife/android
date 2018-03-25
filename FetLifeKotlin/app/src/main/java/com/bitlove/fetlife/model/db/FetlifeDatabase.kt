@@ -10,4 +10,7 @@ abstract class FetLifeDatabase : RoomDatabase() {
     abstract fun contentDao(): ContentDao
     abstract fun memberDao(): MemberDao
     abstract fun reactionDao(): ReactionDao
+    abstract fun relationDao(): RelationDao
+    abstract fun exploreStoryDao(): ExploreStoryDao
+    abstract fun exploreEventDao(): ExploreEventDao
 }

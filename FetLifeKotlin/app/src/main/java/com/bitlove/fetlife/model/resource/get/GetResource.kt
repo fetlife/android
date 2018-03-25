@@ -1,10 +1,10 @@
-package com.bitlove.fetlife.model.resource
+package com.bitlove.fetlife.model.resource.get
 
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import org.jetbrains.anko.coroutines.experimental.bg
 
-abstract class SyncResource<ResourceType> constructor(forceSync : Boolean) {
+abstract class GetResource<ResourceType>(forceSync : Boolean) {
 
     private val forceSync = forceSync
     private val liveData : MediatorLiveData<ResourceType> = MediatorLiveData()
@@ -21,7 +21,7 @@ abstract class SyncResource<ResourceType> constructor(forceSync : Boolean) {
                 liveData.value = data
                 liveData.removeSource(dbSource)
                 liveData.addSource(dbSource, {data -> liveData.value = data})
-                //TODO implement
+                //TODO implement normally
                 if (true || shouldSync(data,forceSync)) {
                     syncWithNetwork(data)
                 }

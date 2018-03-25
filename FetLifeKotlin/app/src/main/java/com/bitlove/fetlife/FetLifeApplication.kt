@@ -5,6 +5,7 @@ import android.app.*
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProviders
 import android.arch.persistence.room.Room
+import android.content.Context
 import android.content.res.Resources
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
@@ -23,12 +24,14 @@ import kotlinx.coroutines.experimental.async
 import org.jetbrains.anko.coroutines.experimental.bg
 import com.birbit.android.jobqueue.config.Configuration
 import android.databinding.BindingAdapter
+import android.os.Build
 import android.support.design.internal.BottomNavigationItemView
 import android.support.design.internal.BottomNavigationMenuView
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
+import com.bitlove.fetlife.view.navigation.NavigationFragmentFactory
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 
@@ -61,6 +64,7 @@ class FetLifeApplication : Application() {
     lateinit var fetlifeService : FetLifeService
     lateinit var fetlifeDataSource: FetLifeDataSource
     lateinit var jobManager: JobManager
+    lateinit var navigationFragmentFactory: NavigationFragmentFactory
 
     override fun onCreate() {
         super.onCreate()
@@ -71,12 +75,13 @@ class FetLifeApplication : Application() {
         fetlifeService = FetLifeService()
         fetlifeDataSource = FetLifeDataSource()
         jobManager = createJobManager()
+        navigationFragmentFactory = NavigationFragmentFactory()
 
         //fill test data
         async(UI) {
             bg {
-                fetLifeDatabase.contentDao().deleteAll()
-                fetLifeDatabase.reactionDao().deleteAll()
+//                fetLifeDatabase.contentDao().deleteAll()
+//                fetLifeDatabase.reactionDao().deleteAll()
             }
         }
     }
@@ -166,6 +171,14 @@ fun BottomNavigationView.disableShiftMode() {
         }
     } catch (e: Throwable) {
         //TODO log
+    }
+}
+
+fun Context.getSafeColor(resId : Int): Int {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        getColor(resId)
+    } else {
+        resources.getColor(resId)
     }
 }
 

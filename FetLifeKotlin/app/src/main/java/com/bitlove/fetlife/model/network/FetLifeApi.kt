@@ -9,6 +9,7 @@ import retrofit2.Call
 import retrofit2.http.*
 
 interface FetLifeApi {
+
     @POST("/api/oauth/token")
     fun login(@Query("client_id") clientId: String, @Query("client_secret") clientSecret: String, @Query("redirect_uri") redirectUrl: String, @Body authBody: AuthBody): Call<Token>
 
@@ -29,6 +30,6 @@ interface FetLifeApi {
     fun getMessages(@Header("Authorization") authHeader: String, @Path("conversationId") conversationId: String?, @Query("since_id") sinceMessageId: String?, @Query("until_id") untilMessageId: String?, @Query("limit") limit: Int?): Call<Array<ReactionEntity>>
 
     @GET("/api/v2/explore/stuff-you-love")
-    abstract fun getStuffYouLove(@Header("Authorization") authHeader: String, @Query("marker") timeStamp: String, @Query("limit") limit: Int?, @Query("page") page: Int?): Call<Array<ExploreStoryEntity>>
+    fun getStuffYouLove(@Header("Authorization") authHeader: String, @Query("marker") timeStamp: String?, @Query("limit") limit: Int?, @Query("page") page: Int?): Call<Array<ExploreStoryEntity>>
 
 }

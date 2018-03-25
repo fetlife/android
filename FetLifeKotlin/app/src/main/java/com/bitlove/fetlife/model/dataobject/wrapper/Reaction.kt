@@ -13,11 +13,11 @@ class Reaction() : ReactionViewDataHolder(), SyncObject<ReactionEntity> {
 
     enum class TYPE {COMMENT, LOVE}
 
-    constructor(reactionEntity: ReactionEntity? = null) : this() {
+    constructor(reactionEntity: ReactionEntity) : this() {
         this.reactionEntity = reactionEntity
     }
 
-    @Embedded var reactionEntity: ReactionEntity? = null
+    @Embedded lateinit var reactionEntity: ReactionEntity
 
     @Relation(parentColumn = "memberId", entityColumn = "dbId", entity = MemberEntity::class)
     var creatorSingleItemList: List<MemberEntity>? = null
@@ -33,7 +33,8 @@ class Reaction() : ReactionViewDataHolder(), SyncObject<ReactionEntity> {
     }
 
     override fun getAvatar(): AvatarViewDataHolder? {
-        return Member(creatorSingleItemList?.firstOrNull())
+        val member = creatorSingleItemList?.firstOrNull() ?: return null
+        return Member(member)
     }
 
     override fun getText(): String? {

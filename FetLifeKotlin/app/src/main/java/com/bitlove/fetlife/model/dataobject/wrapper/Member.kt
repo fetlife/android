@@ -11,11 +11,11 @@ import com.bitlove.fetlife.viewmodel.generic.AvatarViewDataHolder
 
 class Member() : AvatarViewDataHolder(), SyncObject<MemberEntity> {
 
-    constructor(memberEntity: MemberEntity? = null) : this() {
+    constructor(memberEntity: MemberEntity) : this() {
         this.memberEntity = memberEntity
     }
 
-    @Embedded var memberEntity: MemberEntity? = null
+    @Embedded lateinit var memberEntity: MemberEntity
 
     @Relation(parentColumn = "dbId", entityColumn = "memberId", entity = ContentEntity::class)
     var memberContent: List<ContentEntity>? = null

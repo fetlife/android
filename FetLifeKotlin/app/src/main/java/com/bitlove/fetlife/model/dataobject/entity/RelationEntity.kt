@@ -17,17 +17,20 @@ import java.util.*
                 entity = MemberEntity::class,
                 parentColumns = arrayOf("dbId"),
                 childColumns = arrayOf("memberId"),
-                onDelete = ForeignKey.CASCADE),
+                onDelete = ForeignKey.CASCADE,
+                onUpdate = ForeignKey.RESTRICT),
         ForeignKey(
                 entity = GroupEntity::class,
                 parentColumns = arrayOf("dbId"),
                 childColumns = arrayOf("groupId"),
-                onDelete = ForeignKey.CASCADE),
+                onDelete = ForeignKey.CASCADE,
+                onUpdate = ForeignKey.RESTRICT),
         ForeignKey(
                 entity = EventEntity::class,
                 parentColumns = arrayOf("dbId"),
                 childColumns = arrayOf("eventId"),
-                onDelete = ForeignKey.CASCADE)
+                onDelete = ForeignKey.CASCADE,
+                onUpdate = ForeignKey.RESTRICT)
 ))
 data class RelationEntity(
         @SerializedName("related_member_id") var relatedMemberId: String = "",

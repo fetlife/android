@@ -19,20 +19,14 @@ abstract class MemberDao : BaseDao<MemberEntity> {
 
     @Transaction
     open fun update(memberReference: MemberRef) : String {
-        val currentMember = getMemberEntity(memberReference.id)
-        return if (currentMember != null) {
-            currentMember.nickname = memberReference.nickname
-            currentMember.avatar = memberReference.avatar
-            update(currentMember)
-            currentMember.dbId
+        val referenceEntity = memberReference.asEntity()
+        val currentMember = getMemberEntity(referenceEntity.dbId)
+        if (currentMember != null) {
+            update(memberReference.asEntity(currentMember))
         } else {
-            val member = MemberEntity()
-            member.networkId = memberReference.id
-            member.nickname = memberReference.nickname
-            member.avatar = memberReference.avatar
-            insert(member)
-            member.dbId
+            insert(referenceEntity)
         }
+        return referenceEntity.dbId
     }
 
     @Query("SELECT * FROM members WHERE dbId = :dbId")

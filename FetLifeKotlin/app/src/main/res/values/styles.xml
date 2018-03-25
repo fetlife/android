@@ -4,9 +4,13 @@
     <style name="AppTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
         <!--<item name="android:fontFamily">@font/lucida_grande</item>-->
         <item name="android:windowBackground">@color/raisinBlack</item>
+        <item name="android:textColor">@color/silver</item>
+        <item name="android:textColorPrimary">@color/silver</item>
+        <item name="android:textColorSecondary">@color/silver</item>
+        <item name="actionMenuTextColor">@color/silver</item>
         <item name="colorPrimary">@color/black</item>
         <item name="colorPrimaryDark">@color/black</item>
-        <item name="colorAccent">@color/silver</item>
+        <item name="colorAccent">@color/darkGray</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

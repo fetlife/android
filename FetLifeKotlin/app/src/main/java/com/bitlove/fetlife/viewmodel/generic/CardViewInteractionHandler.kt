@@ -6,8 +6,6 @@ import android.view.View
 import android.widget.EditText
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.model.dataobject.SyncObject
-import com.bitlove.fetlife.model.dataobject.entity.ContentEntity
-import com.bitlove.fetlife.model.network.job.getresource.GetCommentListJob
 
 class CardViewInteractionHandler {
 
@@ -19,15 +17,22 @@ class CardViewInteractionHandler {
 
 
     open fun onDisplayComments(v: View, cardData: CardViewDataHolder) {
-        commentsDisplayed.set(!commentsDisplayed.get())
+        if (cardData.getComments() == null || cardData.getComments()!!.isEmpty()) {
+            commentsDisplayed.set(false)
+        } else {
+            commentsDisplayed.set(!commentsDisplayed.get())
+        }
 
         //commentsLoadInProgress.set(true)
         //TODO verify this cast
-        FetLifeApplication.instance.jobManager.addJobInBackground(GetCommentListJob(cardData as SyncObject<ContentEntity>))
+        //FetLifeApplication.instance.jobManager.addJobInBackground(GetCommentListJob(cardData as SyncObject<ContentEntity>))
     }
 
-    open fun onSendComment(editText: EditText, cardData: CardViewDataHolder) {
-        //TODO add created at and current user
+    open fun onSendComment(view: View, cardData: CardViewDataHolder) {
+        if (cardData is SyncObject<*> && view is EditText) {
+            FetLifeApplication.instance.fetlifeDataSource.sendComment(view.text.toString(), cardData)
+            view.setText("")
+        }
     }
 
     open fun onLove(v: View, cardData: CardViewDataHolder) {

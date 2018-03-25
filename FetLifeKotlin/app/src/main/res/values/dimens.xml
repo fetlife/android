@@ -1,2 +1,5 @@
 <resources>
+    <!-- To Override Navigation Panel Defaults -->
+    <dimen name="design_bottom_navigation_text_size">10sp</dimen>
+    <dimen name="design_bottom_navigation_active_text_size">10sp</dimen>
 </resources>
