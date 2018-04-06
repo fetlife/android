@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <item name="menu_item_navigation_explore_friends_activity" type="id">1111</item>
-    <item name="menu_item_navigation_explore_fresh_and_pervy" type="id">1122</item>
-    <item name="menu_item_navigation_explore_kinky_and_popular" type="id">1133</item>
-    <item name="menu_item_navigation_explore_stuff_you_love" type="id">1144</item>
-    <item name="menu_item_navigation_conversations_active" type="id">2211</item>
-    <item name="menu_item_navigation_conversations_archived" type="id">2222</item>
+    <item name="navigation_explore_friends_activity" type="id">1111</item>
+    <item name="navigation_explore_fresh_and_pervy" type="id">1122</item>
+    <item name="navigation_explore_kinky_and_popular" type="id">1133</item>
+    <item name="navigation_explore_stuff_you_love" type="id">1144</item>
+    <item name="navigation_conversations_inbox" type="id">2211</item>
+    <item name="navigation_conversations_all" type="id">2222</item>
+    <item name="navigation_login" type="id">9911</item>
+    <item name="navigation_recover" type="id">9922</item>
+    <item name="navigation_signup" type="id">9933</item>
 </resources>

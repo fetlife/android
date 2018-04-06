@@ -18,8 +18,8 @@ import com.bitlove.fetlife.model.dataobject.wrapper.Reaction
 @Dao
 abstract class ExploreStoryDao : BaseDao<ExploreStoryEntity> {
 
-    @Query("SELECT * FROM explore_stories ORDER BY createdAt DESC")
-    abstract fun getStories(): LiveData<List<ExploreStory>>
+    @Query("SELECT * FROM explore_stories WHERE type=:type ORDER BY serverOrder")
+    abstract fun getStories(type: String): LiveData<List<ExploreStory>>
 
     @Query("DELETE FROM explore_stories")
     abstract fun deleteAll()

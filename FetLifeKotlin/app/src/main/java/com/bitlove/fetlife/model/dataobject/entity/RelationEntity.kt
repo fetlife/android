@@ -34,10 +34,10 @@ import java.util.*
 ))
 data class RelationEntity(
         @SerializedName("related_member_id") var relatedMemberId: String = "",
-        @SerializedName("action") var memberId: String = "",
+        @SerializedName("member") var memberId: String = "",
         @SerializedName("group_id") var groupId: String? = "",
         @SerializedName("event_id") var eventId: String? = "",
-        @SerializedName("type") var type: String? = "",
+        @SerializedName("action") var type: String? = "",
         @SerializedName("created_at") var createdAt: String? = ""
 ) : DataEntity {
     @PrimaryKey

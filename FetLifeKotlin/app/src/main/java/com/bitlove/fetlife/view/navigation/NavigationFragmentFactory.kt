@@ -3,34 +3,52 @@ package com.bitlove.fetlife.view.navigation
 import android.app.Fragment
 import android.app.FragmentManager
 import com.bitlove.fetlife.R
-import com.bitlove.fetlife.view.conversation.ConversationsFragment
-import com.bitlove.fetlife.view.explore.ExploreFragment
+import com.bitlove.fetlife.view.login.LoginFragment
+import com.bitlove.fetlife.view.responsive.TurbolinksFragment
+import com.bitlove.fetlife.view.screen.ConversationsFragment
+import com.bitlove.fetlife.view.screen.FreshAndPervyFragment
+import com.bitlove.fetlife.view.screen.KinkyAndPopularFragment
+import com.bitlove.fetlife.view.screen.StuffYouLoveFragment
 
 class NavigationFragmentFactory {
 
     companion object {
-        const val DEFAULT_NAVIGATION = R.id.menu_item_navigation_conversations
+        const val DEFAULT_NAVIGATION = R.id.navigation_explore
     }
 
-    fun createFragment(navigation: Int?, layout: NavigationCallback.Layout? = null): Fragment =
-            NavigationContentFragment.newFragment(navigation ?: DEFAULT_NAVIGATION,layout)
+    fun createFragment(navigation: Int?, layout: NavigationCallback.Layout? = null, selectedPosition: Int? = null): Fragment {
+        return when(navigation) {
+            R.id.navigation_login -> LoginFragment()
+            R.id.navigation_logout -> LoginFragment()
+            R.id.navigation_signup -> TurbolinksFragment.newInstance(R.id.navigation_signup)
+            R.id.navigation_recover -> TurbolinksFragment.newInstance(R.id.navigation_recover)
+            else -> NavigationContentFragment.newFragment(navigation ?: DEFAULT_NAVIGATION,layout,selectedPosition)
+        }
+    }
 
     fun createNavigationFragmentAdapter(fragmentManager: FragmentManager, navigation: Int?, layout: NavigationCallback.Layout? = null) : NavigationPagerAdapter {
         return when (navigation) {
-            R.id.menu_item_navigation_explore -> NavigationPagerAdapter(fragmentManager, layout, R.id.menu_item_navigation_explore_friends_activity, R.id.menu_item_navigation_explore_fresh_and_pervy, R.id.menu_item_navigation_explore_kinky_and_popular, R.id.menu_item_navigation_explore_stuff_you_love)
-            R.id.menu_item_navigation_conversations -> NavigationPagerAdapter(fragmentManager, layout, R.id.menu_item_navigation_conversations_active, R.id.menu_item_navigation_conversations_archived)
-            else -> NavigationPagerAdapter(fragmentManager, layout, R.id.menu_item_navigation_conversations_active, R.id.menu_item_navigation_conversations_archived)
+            R.id.navigation_explore -> NavigationPagerAdapter(fragmentManager, layout, R.id.navigation_explore_fresh_and_pervy, R.id.navigation_explore_kinky_and_popular, R.id.navigation_explore_stuff_you_love, R.id.navigation_explore_friends_activity)
+            R.id.navigation_conversations -> NavigationPagerAdapter(fragmentManager, layout, R.id.navigation_conversations_inbox, R.id.navigation_conversations_all)
+            R.id.navigation_search -> NavigationPagerAdapter(fragmentManager, NavigationCallback.Layout.WEB, R.id.navigation_search)
+            //TODO rely on default constant
+            else -> NavigationPagerAdapter(fragmentManager, layout, R.id.navigation_conversations_inbox, R.id.navigation_conversations_all)
         }
     }
 
     fun createNavigationFragment(navigation: Int?, layout: NavigationCallback.Layout? = null) : Fragment {
+        if (layout == NavigationCallback.Layout.WEB) {
+            //TODO rely on default constant
+            return TurbolinksFragment.newInstance(navigation?: R.id.navigation_conversations_inbox)
+        }
         return when (navigation) {
-            R.id.menu_item_navigation_explore_friends_activity -> ExploreFragment()
-            R.id.menu_item_navigation_explore_fresh_and_pervy -> ExploreFragment()
-            R.id.menu_item_navigation_explore_kinky_and_popular -> ExploreFragment()
-            R.id.menu_item_navigation_explore_stuff_you_love -> ExploreFragment()
-            R.id.menu_item_navigation_conversations_active -> ConversationsFragment()
-            R.id.menu_item_navigation_conversations_archived -> ConversationsFragment()
+            R.id.navigation_search -> TurbolinksFragment.newInstance(R.id.navigation_search)
+            R.id.navigation_explore_friends_activity -> StuffYouLoveFragment()
+            R.id.navigation_explore_fresh_and_pervy -> FreshAndPervyFragment()
+            R.id.navigation_explore_kinky_and_popular -> KinkyAndPopularFragment()
+            R.id.navigation_explore_stuff_you_love -> StuffYouLoveFragment()
+            R.id.navigation_conversations_inbox -> ConversationsFragment()
+            R.id.navigation_conversations_all -> ConversationsFragment()
             else -> ConversationsFragment()
         }
     }
@@ -38,16 +56,32 @@ class NavigationFragmentFactory {
     fun getNavigationTitle(navigation: Int?) : String {
         return when (navigation) {
         //TODO use string resources
-            R.id.menu_item_navigation_explore -> "ExploreStory"
-            R.id.menu_item_navigation_explore_friends_activity -> "Friends"
-            R.id.menu_item_navigation_explore_fresh_and_pervy -> "Fresh and Pervy"
-            R.id.menu_item_navigation_explore_kinky_and_popular -> "Kinky and Popular"
-            R.id.menu_item_navigation_explore_stuff_you_love -> "Stuff you Love"
-            R.id.menu_item_navigation_conversations -> "Messages"
+            R.id.navigation_search -> "Search"
+            R.id.navigation_explore -> "Explore"
+            R.id.navigation_explore_friends_activity -> "Friends"
+            R.id.navigation_explore_fresh_and_pervy -> "Fresh and Pervy"
+            R.id.navigation_explore_kinky_and_popular -> "Kinky and Popular"
+            R.id.navigation_explore_stuff_you_love -> "Stuff you Love"
+            R.id.navigation_conversations -> "Messages"
             null -> "Messages"
-            R.id.menu_item_navigation_conversations_active -> "Active"
-            R.id.menu_item_navigation_conversations_archived -> "Archived"
+            R.id.navigation_conversations_inbox -> "Inbox"
+            R.id.navigation_conversations_all -> "All"
             else -> "FetLife"
+        }
+    }
+
+    fun getNavigationUrl(navigationId: Int): String? {
+        return when(navigationId) {
+            R.id.navigation_search -> "/search"
+            R.id.navigation_recover -> "/users/password/new"
+            R.id.navigation_signup -> "/signup_step_profile"
+            R.id.navigation_explore_friends_activity -> "/explore/following"
+            R.id.navigation_explore_fresh_and_pervy -> "/explore/fresh-and-pervy"
+            R.id.navigation_explore_kinky_and_popular -> "/explore"
+            R.id.navigation_explore_stuff_you_love -> "/explore/stuff-you-love"
+            R.id.navigation_conversations_inbox -> "/conversations"
+            R.id.navigation_conversations_all -> "/conversations/all"
+            else -> "/"
         }
     }
 

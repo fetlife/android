@@ -15,18 +15,20 @@ class NavigationContentFragment : Fragment() {
     companion object {
         private const val ARG_KEY_NAVIGATION = "ARG_KEY_NAVIGATION"
         private const val ARG_KEY_LAYOUT = "ARG_KEY_LAYOUT"
+        private const val ARG_KEY_CURRENT_ITEM = "ARG_KEY_CURRENT_ITEM"
 
-        fun newFragment(navigation: Int, layout: NavigationCallback.Layout? = null) : NavigationContentFragment {
+        fun newFragment(navigation: Int, layout: NavigationCallback.Layout? = null, selectedPosition: Int? = null) : NavigationContentFragment {
             val args = Bundle()
             args.putInt(ARG_KEY_NAVIGATION,navigation)
             args.putSerializable(ARG_KEY_LAYOUT,layout)
+            args.putInt(ARG_KEY_CURRENT_ITEM,selectedPosition?:-1)
             val contentFragment = NavigationContentFragment()
             contentFragment.arguments = args
             return contentFragment
         }
     }
 
-    val navigationFragmentFactory = FetLifeApplication.instance.navigationFragmentFactory
+    private val navigationFragmentFactory = FetLifeApplication.instance.navigationFragmentFactory
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater!!.inflate(R.layout.fragment_navigation_content,container,false)
@@ -37,6 +39,10 @@ class NavigationContentFragment : Fragment() {
 
         val viewPager = view.findViewById<SlideControlViewPager>(R.id.content_view_pager)
         viewPager.adapter = adapter
+        val selectedPosition = adapter.getPosition(arguments.getInt(ARG_KEY_CURRENT_ITEM))
+        if (selectedPosition >= 0) {
+            viewPager.currentItem = selectedPosition
+        }
         val tabs = view.findViewById<SlidingTabLayout>(R.id.navigation_tabs)
         //TODO move to xml
         tabs.setDividerColorResource(R.color.silver)
@@ -48,6 +54,13 @@ class NavigationContentFragment : Fragment() {
         }
 
         return view
+    }
+
+    fun getCurrentNavigation() : Int {
+        val viewPager = view.findViewById<SlideControlViewPager>(R.id.content_view_pager)
+        val adapter = viewPager.adapter as NavigationPagerAdapter
+        return adapter.getItemId(viewPager.currentItem)
+
     }
 
 }

@@ -2,7 +2,7 @@ package com.bitlove.fetlife.view.navigation
 
 import android.app.Fragment
 import android.content.Context
-import android.graphics.drawable.Drawable
+import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.LayoutRes
 import android.support.v7.app.AppCompatActivity
@@ -16,6 +16,7 @@ import android.support.design.widget.CoordinatorLayout
 import android.support.v4.view.GravityCompat
 import android.view.MenuItem
 import com.bitlove.fetlife.*
+import com.bitlove.fetlife.view.login.LoginActivity
 import com.bitlove.fetlife.view.widget.FloatingActionButtonBehavior
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
@@ -25,15 +26,28 @@ open class PhoneNavigationActivity : AppCompatActivity(), NavigationCallback {
     companion object {
         const val STATE_KEY_NAVIGATION = "STATE_KEY_NAVIGATION"
         const val STATE_KEY_LAYOUT = "STATE_KEY_LAYOUT"
+
+        fun start(context: Context) {
+            val intent = Intent(context, PhoneNavigationActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            context.startActivity(intent)
+        }
     }
 
     private var navigation: Int? = null
     private var layout: NavigationCallback.Layout? = null
 
-    val navigationFragmentFactory = FetLifeApplication.instance.navigationFragmentFactory
+    private val navigationFragmentFactory = FetLifeApplication.instance.navigationFragmentFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (FetLifeApplication.instance.loggedInUser == null) {
+            //TODO: move to start activity
+            startActivity(Intent(this,LoginActivity::class.java))
+            return
+        }
+
         setLayoutResource()
         setStateContentFragment(savedInstanceState)
         setTitle()
@@ -41,6 +55,10 @@ open class PhoneNavigationActivity : AppCompatActivity(), NavigationCallback {
         setBottomNavigation()
         setSideNavigation()
         setFloatingActionButton()
+    }
+
+    override fun onOpenUrl(url: String): Boolean {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onNavigate(navigation: Int?) : Boolean {
@@ -52,7 +70,12 @@ open class PhoneNavigationActivity : AppCompatActivity(), NavigationCallback {
 
     override fun onLayoutChange(layout: NavigationCallback.Layout?) {
         this.layout = layout
-        setContentFragment(navigationFragmentFactory.createFragment(navigation,layout),false)
+        val contentFragmet = fragmentManager.findFragmentById(R.id.content_fragment_container)
+        var currentNavigation : Int? = null
+        if (contentFragmet!= null && contentFragmet is NavigationContentFragment) {
+            currentNavigation = contentFragmet.getCurrentNavigation()
+        }
+        setContentFragment(navigationFragmentFactory.createFragment(navigation,layout,currentNavigation),false)
     }
 
     open fun setLayoutResource() {
@@ -110,6 +133,13 @@ open class PhoneNavigationActivity : AppCompatActivity(), NavigationCallback {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         navigation_view.setNavigationItemSelectedListener { menuItem ->
+            if (menuItem.itemId == R.id.navigation_logout) {
+                //TODO: ask about notification registration
+                //TODO: ask about clear local content
+                FetLifeApplication.instance.onUserLoggedOut()
+                LoginActivity.start(this)
+                true
+            }
             onNavigate(menuItem.itemId)
             menuItem.isChecked = true
             drawer_layout.closeDrawers()
@@ -125,7 +155,7 @@ open class PhoneNavigationActivity : AppCompatActivity(), NavigationCallback {
         // https://stackoverflow.com/questions/40176244/how-to-disable-bottomnavigationview-shift-mode
         inflateIconicsMenu(R.menu.menu_navigation_bottom, navigation_bottom.menu)
         navigation_bottom.disableShiftMode()
-        navigation_bottom.selectedItemId = R.id.menu_item_navigation_conversations
+        navigation_bottom.selectedItemId = R.id.navigation_conversations
 
         val layoutParams = navigation_bottom.layoutParams as CoordinatorLayout.LayoutParams
         layoutParams.behavior = BottomNavigationBehavior()
@@ -140,7 +170,7 @@ open class PhoneNavigationActivity : AppCompatActivity(), NavigationCallback {
         val layoutParams = button_change_layout.layoutParams as CoordinatorLayout.LayoutParams
         layoutParams.behavior = FloatingActionButtonBehavior()
         button_change_layout.setOnClickListener({
-            view -> onLayoutChange(layout?.next())
+            view -> onLayoutChange(layout?.next()?:NavigationCallback.Layout.WEB)
         })
     }
 

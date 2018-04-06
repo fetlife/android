@@ -6,8 +6,10 @@ import android.view.ViewGroup
 import android.content.Context
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
+import android.support.constraint.ConstraintLayout
 import android.text.Html
 import android.view.LayoutInflater
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -20,6 +22,7 @@ import com.bitlove.fetlife.model.dataobject.wrapper.Reaction
 import com.bitlove.fetlife.viewmodel.generic.CardViewDataHolder
 import com.bitlove.fetlife.viewmodel.generic.CardViewInteractionHandler
 import com.bitlove.fetlife.viewmodel.generic.ReactionViewDataHolder
+import com.facebook.drawee.view.SimpleDraweeView
 
 @BindingAdapter("comments", "commentsDisplayed")
 fun setComments(viewGroup: ViewGroup,
@@ -72,7 +75,19 @@ fun setFormattedText(textView: TextView?, formattedText: String?, textEntities :
 
 @BindingAdapter("srcGlide")
 fun setGlideSrc(imageView: ImageView, srcGlide: String?) {
-    imageView.loadWithGlide(srcGlide, R.mipmap.ic_launcher_round)
+    imageView.loadWithGlide(srcGlide, null)
+}
+
+//TODO: consider using screen height as max height to make sure pictures fit
+@BindingAdapter("srcFresco")
+fun setFrescoSrc(imageView: SimpleDraweeView, srcFresco: String?) {
+    imageView.setImageURI(srcFresco)
+}
+
+@BindingAdapter("arFresco")
+fun setFrescoAr(imageView: SimpleDraweeView, arFresco: Float?) {
+    val constraintLayout = imageView.parent as ConstraintLayout
+    imageView.aspectRatio = arFresco?:16f/9f
 }
 
 @BindingAdapter("onSubmitHandler","onSubmitData")
@@ -82,6 +97,8 @@ fun bindSubmit(editText: EditText, onSubmitHandler: CardViewInteractionHandler, 
             false
         }
         onSubmitHandler.onSendComment(editText,onSubmitData)
+        val imm = editText.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(editText.windowToken, 0)
         true
     }
 }

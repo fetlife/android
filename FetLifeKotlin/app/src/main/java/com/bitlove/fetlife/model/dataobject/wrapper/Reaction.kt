@@ -41,7 +41,7 @@ class Reaction() : ReactionViewDataHolder(), SyncObject<ReactionEntity> {
         return reactionEntity?.body
     }
 
-    override fun getEntity(): ReactionEntity? {
+    override fun getEntity(): ReactionEntity {
         return reactionEntity
     }
 

@@ -2,7 +2,9 @@ package com.bitlove.fetlife.model.network
 
 import com.bitlove.fetlife.model.dataobject.entity.ContentEntity
 import com.bitlove.fetlife.model.dataobject.entity.ExploreStoryEntity
+import com.bitlove.fetlife.model.dataobject.entity.MemberEntity
 import com.bitlove.fetlife.model.dataobject.entity.ReactionEntity
+import com.bitlove.fetlife.model.dataobject.wrapper.Member
 import com.bitlove.fetlife.model.network.networkobject.AuthBody
 import com.bitlove.fetlife.model.network.networkobject.Token
 import retrofit2.Call
@@ -12,6 +14,9 @@ interface FetLifeApi {
 
     @POST("/api/oauth/token")
     fun login(@Query("client_id") clientId: String, @Query("client_secret") clientSecret: String, @Query("redirect_uri") redirectUrl: String, @Body authBody: AuthBody): Call<Token>
+
+    @GET("/api/v2/me")
+    fun getMe(@Header("Authorization") authHeader: String): Call<MemberEntity>
 
     @FormUrlEncoded
     @POST("/api/oauth/token")
@@ -28,6 +33,15 @@ interface FetLifeApi {
 
     @GET("/api/v2/me/conversations/{conversationId}/messages")
     fun getMessages(@Header("Authorization") authHeader: String, @Path("conversationId") conversationId: String?, @Query("since_id") sinceMessageId: String?, @Query("until_id") untilMessageId: String?, @Query("limit") limit: Int?): Call<Array<ReactionEntity>>
+
+    @GET("/api/v2/members/{memberId}/{entityType}/{entityId}/comments")
+    fun getComments(@Header("Authorization") authHeader: String, @Path("memberId") memberId: String?, @Path("entityType") entityType: String?, @Path("entityId") entityId: String?, @Query("since_id") sinceCommentId: String?, @Query("until_id") untilCommentId: String?, @Query("limit") limit: Int?): Call<Array<ReactionEntity>>
+
+    @GET("/api/v2/explore/fresh-and-pervy")
+    fun getFreshAndPervy(@Header("Authorization") authHeader: String, @Query("until") timeStamp: String?, @Query("limit") limit: Int?, @Query("page") page: Int?): Call<Array<ExploreStoryEntity>>
+
+    @GET("/api/v2/explore/kinky-and-popular")
+    fun getKinkyAndPopular(@Header("Authorization") authHeader: String, @Query("until") timeStamp: String?, @Query("limit") limit: Int?, @Query("page") page: Int?): Call<Array<ExploreStoryEntity>>
 
     @GET("/api/v2/explore/stuff-you-love")
     fun getStuffYouLove(@Header("Authorization") authHeader: String, @Query("marker") timeStamp: String?, @Query("limit") limit: Int?, @Query("page") page: Int?): Call<Array<ExploreStoryEntity>>

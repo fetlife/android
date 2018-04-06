@@ -4,7 +4,6 @@ interface NavigationCallback {
 
     enum class Layout {
         CARD,
-        BASIC,
         WEB;
 
         fun next(): Layout? {
@@ -13,6 +12,7 @@ interface NavigationCallback {
         }
     }
 
+    fun onOpenUrl(url: String): Boolean
     fun onNavigate(actionId: Int?): Boolean
     fun onLayoutChange(layout: Layout?)
 

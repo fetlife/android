@@ -1,4 +1,4 @@
-package com.bitlove.fetlife.view.conversation
+package com.bitlove.fetlife.view.screen
 
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.databinding.FragmentCardListBinding

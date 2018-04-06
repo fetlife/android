@@ -5,9 +5,15 @@ abstract class CardViewDataHolder {
     open fun getLocalId() : String? = null
     open fun getAvatar() : AvatarViewDataHolder? = null
     open fun getMediaUrl() : String? = null
+    open fun getMediaAspectRatio() : Float? = null
     open fun getTitle() : String? = null
     open fun getSupportingText() : String? = null
+    open fun getCommentCount() : String? = null
+    open fun getLoveCount() : String? = null
+    open fun isLoved() : Boolean? = null
 
+    open fun displayComments() : Boolean? = null
+    open fun isDeletable() : Boolean? = false
     open fun hasNewComment() : Boolean? = false
     open fun getComments() : List<ReactionViewDataHolder>? = null
     //open fun hasNewLove() : Boolean? = false

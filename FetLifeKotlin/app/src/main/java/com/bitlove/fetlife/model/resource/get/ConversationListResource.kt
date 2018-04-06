@@ -7,7 +7,7 @@ import com.bitlove.fetlife.model.network.job.get.GetConversationListJob
 
 class ConversationListResource(forceLoad: Boolean, page: Int, limit: Int) : GetResource<List<Content>>(forceLoad) {
 
-    private val contentDao = FetLifeApplication.instance.fetLifeDatabase.contentDao()
+    private val contentDao = FetLifeApplication.instance.fetLifeContentDatabase.contentDao()
 
     val page = page
     val limit = limit

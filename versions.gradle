@@ -32,6 +32,7 @@ versions.ktx = "0.1"
 versions.job_queue = "2.0.1"
 versions.google_play = "11.8.0"
 versions.iconics = "3.0.3@aar"
+versions.fresco = "1.8.1"
 versions.font_material_google = "3.0.1.2.original@aar"
 versions.font_material_iconic = "2.2.0.4@aar"
 def deps = [:]
@@ -117,6 +118,11 @@ def iconics = [:]
 iconics.core = "com.mikepenz:iconics-core:$versions.iconics"
 iconics.views = "com.mikepenz:iconics-views:$versions.iconics"
 deps.iconics = iconics
+
+def fresco = [:]
+fresco.core = "com.facebook.fresco:imagepipeline-okhttp3:$versions.fresco"
+fresco.pipeline = "com.facebook.fresco:fresco:$versions.fresco"
+deps.fresco = fresco
 
 deps.paging = "android.arch.paging:runtime:$versions.paging"
 deps.glide = "com.github.bumptech.glide:glide:$versions.glide"

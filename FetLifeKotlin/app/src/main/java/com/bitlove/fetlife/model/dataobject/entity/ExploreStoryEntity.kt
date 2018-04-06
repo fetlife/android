@@ -3,15 +3,12 @@ package com.bitlove.fetlife.model.dataobject.entity
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.PrimaryKey
-import android.arch.persistence.room.util.StringUtil
 import android.text.TextUtils
-import com.bitlove.fetlife.model.dataobject.LocalObject
 import com.google.gson.annotations.SerializedName
-import java.util.*
 
 @Entity(tableName = "explore_stories")
 data class ExploreStoryEntity (
-        @SerializedName("name") var type: String? = "",
+        @SerializedName("name") var action: String? = "",
         @SerializedName("created_at") var createdAt: String? = "",
         @Ignore @SerializedName("events") var events: List<ExploreEventEntity>? = null
 ) : DataEntity {
@@ -25,10 +22,13 @@ data class ExploreStoryEntity (
             return field
         }
 
+    var type: String? = null
+    var serverOrder: Int? = null
+
     private fun generateDbId(): String {
         var dbId = ""
         dbId += type
-        dbId += events?.firstOrNull()?.dbId
+        dbId += serverOrder
         return dbId
     }
 }

@@ -23,6 +23,9 @@ abstract class ReactionDao : BaseDao<ReactionEntity> {
         insert(reaction)
     }
 
+    @Query("SELECT * FROM reactions WHERE contentId = :contentId")
+    abstract fun getReactions(contentId: String): LiveData<List<Reaction>>
+
     @Query("SELECT * FROM reactions WHERE dbId = :dbId")
     abstract fun getReaction(dbId: String): LiveData<Reaction>
 

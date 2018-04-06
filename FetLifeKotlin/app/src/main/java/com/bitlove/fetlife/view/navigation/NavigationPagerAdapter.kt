@@ -5,7 +5,7 @@ import android.app.FragmentManager
 import android.support.v13.app.FragmentStatePagerAdapter
 import com.bitlove.fetlife.FetLifeApplication
 
-class NavigationPagerAdapter(fragmentManager: FragmentManager, layout: NavigationCallback.Layout? = null, vararg navigationIds: Int) : FragmentStatePagerAdapter(fragmentManager) {
+class NavigationPagerAdapter(fragmentManager: FragmentManager, val layout: NavigationCallback.Layout? = null, vararg navigationIds: Int) : FragmentStatePagerAdapter(fragmentManager) {
 
     private val navigationIds = navigationIds
     private val navigationFragmentFactory = FetLifeApplication.instance.navigationFragmentFactory
@@ -19,7 +19,20 @@ class NavigationPagerAdapter(fragmentManager: FragmentManager, layout: Navigatio
     }
 
     override fun getItem(position: Int): Fragment {
-        return navigationFragmentFactory.createNavigationFragment(navigationIds[position])
+        return navigationFragmentFactory.createNavigationFragment(navigationIds[position], layout)
+    }
+
+    fun getItemId(position: Int) : Int {
+        return navigationIds[position]
+    }
+
+    fun getPosition(id: Int) : Int {
+        for ((i,navId) in navigationIds.withIndex()) {
+            if (navId == id) {
+                return i
+            }
+        }
+        return -1
     }
 
 }

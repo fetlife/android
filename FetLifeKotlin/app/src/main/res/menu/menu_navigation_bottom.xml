@@ -2,35 +2,35 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_item_navigation_search"
+        android:id="@+id/navigation_search"
         app:showAsAction="always"
         app:ico_color="@color/silver"
         app:ico_icon="gmd-search"
         app:ico_size="20dp"
         android:title="@string/menu_item_search"/>
     <item
-        android:id="@+id/menu_item_navigation_conversations"
+        android:id="@+id/navigation_conversations"
         app:showAsAction="always"
         app:ico_color="@color/silver"
         app:ico_icon="gmd-message"
         app:ico_size="20dp"
         android:title="@string/menu_item_conversations"/>
     <item
-        android:id="@+id/menu_item_navigation_explore"
+        android:id="@+id/navigation_explore"
         app:showAsAction="always"
         app:ico_color="@android:color/white"
         app:ico_icon="gmd-explore"
         app:ico_size="20dp"
         android:title="@string/menu_item_explore"/>
     <item
-        android:id="@+id/menu_item_navigation_groups"
+        android:id="@+id/navigation_groups"
         app:showAsAction="always"
         app:ico_color="@color/silver"
         app:ico_icon="gmd-people"
         app:ico_size="20dp"
         android:title="@string/menu_item_groups"/>
     <item
-        android:id="@+id/menu_item_navigation_events"
+        android:id="@+id/navigation_events"
         app:showAsAction="always"
         app:ico_color="@color/silver"
         app:ico_icon="gmd-event"
@@ -38,7 +38,7 @@
         android:title="@string/menu_item_events"/>
     <!--
     <item
-        android:id="@+id/menu_item_navigation_people"
+        android:id="@+id/navigation_people"
         app:showAsAction="always"
         app:ico_color="@color/silver"
         app:ico_icon="gmd-people-outline"
@@ -46,7 +46,7 @@
         android:title="@string/menu_item_people"/>
 
     <item
-        android:id="@+id/menu_item_navigation_notifications"
+        android:id="@+id/navigation_notifications"
         app:showAsAction="always"
         app:ico_color="@color/silver"
         app:ico_icon="gmd-add-alert"

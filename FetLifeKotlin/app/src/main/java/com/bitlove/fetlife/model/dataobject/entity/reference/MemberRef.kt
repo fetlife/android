@@ -13,6 +13,7 @@ data class MemberRef(@SerializedName("id") var id: String = "",
         val entity = MemberEntity()
         entity.networkId = id
         entity.nickname = nickname
+        entity.metaInfo = metaInfo
         entity.avatar = avatar
         return entity
     }
@@ -23,6 +24,9 @@ data class MemberRef(@SerializedName("id") var id: String = "",
         }
         if (avatar != null) {
             mergeEntity.avatar = avatar
+        }
+        if (metaInfo != null) {
+            mergeEntity.metaInfo = metaInfo
         }
         return mergeEntity
     }

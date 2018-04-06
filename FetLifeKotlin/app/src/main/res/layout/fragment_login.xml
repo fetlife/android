@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/login_title"
+            android:gravity="center"
+            android:text="Welcome Home"
+            android:layout_marginTop="32dp"
+            android:textStyle="bold"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:textColor="@color/bostonUniversityRed"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <TextView
+            android:id="@+id/login_subtitle"
+            android:gravity="center"
+            android:text="We've missed you... big time!"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:textColor="@color/silver"
+            android:layout_marginTop="2dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/login_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <LinearLayout
+            android:id="@+id/login_form"
+            android:layout_marginTop="24dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:padding="12dp"
+            android:layout_width="match_parent"
+            android:maxWidth="400dp"
+            android:layout_height="wrap_content"
+            android:background="@color/black"
+            android:orientation="vertical"
+            android:clipToPadding="false"
+            app:layout_constraintTop_toBottomOf="@id/login_subtitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <TextView
+                android:id="@+id/username_title"
+                android:text="Nickname or Email"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:textColor="@color/silver"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <EditText
+                android:layout_marginTop="8dp"
+                android:id="@+id/username_field"
+                android:background="@color/midGray"
+                android:textColorHint="@color/silver"
+                android:padding="6dp"
+                android:maxLines="1"
+                android:inputType="textPersonName"
+                android:hint="Nickname or Email"
+                android:nextFocusForward="@id/password_field"
+                android:textColor="@color/nearWhite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/password_title"
+                android:layout_marginTop="16dp"
+                android:text="Password"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:textColor="@color/silver"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <EditText
+                android:layout_marginTop="8dp"
+                android:id="@+id/password_field"
+                android:background="@color/midGray"
+                android:textColorHint="@color/silver"
+                android:nextFocusForward="@id/login_remember"
+                android:nextFocusDown="@id/login_remember"
+                android:padding="6dp"
+                android:maxLines="1"
+                android:inputType="textPassword"
+                android:hint="Password"
+                android:textColor="@color/nearWhite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <CheckBox
+                android:id="@+id/login_remember"
+                android:nextFocusForward="@id/login_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="-8dp"
+                android:text="Remember me, I'll be back"
+                android:textColor="@color/silver"/>
+
+            <View
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="-20dp"
+                android:layout_marginEnd="-20dp"
+                android:background="@color/eerieBlack"/>
+
+            <Button
+                android:id="@+id/login_button"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="16dp"
+                android:text="Login to FetLife"
+                android:background="@color/ussCardinal"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/nearWhite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/login_recover_link"
+            android:gravity="center"
+            android:text="Forgot your login information?"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/silver"
+            android:layout_marginTop="24dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/login_form"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <TextView
+            android:id="@+id/login_signup_link"
+            android:gravity="center"
+            android:text="Not a member yet? Sign up to Fetlife"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/gray"
+            android:layout_marginTop="8dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/login_recover_link"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+</ScrollView>

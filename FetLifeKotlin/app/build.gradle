@@ -72,7 +72,10 @@ dependencies {
     implementation deps.job_queue
     implementation deps.iconics.core
     implementation deps.iconics.views
+    implementation deps.fresco.core
+    implementation deps.fresco.pipeline
     implementation deps.font.material_google
+    implementation project(':turbolinks')
 
     // Android Testing Support Library's runner and rules
     androidTestImplementation deps.atsl.runner

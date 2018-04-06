@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="comments_get_more">Get more</string>
+    <string name="comments_progress">Getting more...</string>
+</resources>

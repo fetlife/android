@@ -1,4 +1,4 @@
-package com.bitlove.fetlife.view.base
+package com.bitlove.fetlife.view.generic
 
 import android.app.Fragment
 import android.arch.lifecycle.LifecycleOwner

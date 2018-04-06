@@ -31,6 +31,13 @@ class Content : CardViewDataHolder(), SyncObject<ContentEntity> {
         return contentEntity?.subject
     }
 
+    override fun displayComments(): Boolean? {
+        return when(contentEntity?.type) {
+            TYPE.CONVERSATION.toString() -> true
+            else -> false
+        }
+    }
+
     override fun getSupportingText(): String? {
         return contentEntity?.body
     }
@@ -44,30 +51,65 @@ class Content : CardViewDataHolder(), SyncObject<ContentEntity> {
     }
 
     override fun getAvatar(): AvatarViewDataHolder? {
-        val member = ownerSingleItemList?.firstOrNull() ?: return null
-        return Member(member)
+        val memberEntity = ownerSingleItemList?.firstOrNull() ?: return null
+        val member = Member(memberEntity)
+        if (contentEntity?.type == TYPE.CONVERSATION.toString()) {
+            member.subLine = contentEntity?.subject
+        }
+        return member
     }
 
     override fun getMediaUrl(): String? {
         return contentEntity?.pictureVariants?.huge?.url
     }
 
+    override fun getMediaAspectRatio(): Float? {
+        val picVariant = contentEntity?.pictureVariants?.huge
+        return if (picVariant != null) {
+            picVariant.width.toFloat() / picVariant.height.toFloat()
+        } else {
+            null
+        }
+    }
+
+    override fun isDeletable(): Boolean? {
+        return when(contentEntity?.type) {
+            TYPE.CONVERSATION.toString() -> true
+            else -> false
+        }
+    }
+
     override fun hasNewComment(): Boolean? {
         return contentEntity?.hasNewComments
     }
 
-    override fun getComments(): List<ReactionViewDataHolder> {
+    override fun getCommentCount(): String? {
+        return when(contentEntity?.type) {
+            TYPE.CONVERSATION.toString() -> contentEntity?.messageCount?.toString()
+            else -> contentEntity?.commentCount?.toString()
+        }
+    }
+
+    override fun getComments(): List<Reaction> {
         if (commentList == null) {
             populateComments()
         }
         return commentList!!
     }
 
-    override fun getLoves(): List<ReactionViewDataHolder> {
+    override fun getLoves(): List<Reaction> {
         if (loveList == null) {
             populateLoves()
         }
         return loveList!!
+    }
+
+    override fun isLoved(): Boolean? {
+        return contentEntity?.loved
+    }
+
+    override fun getLoveCount(): String? {
+        return contentEntity?.loveCount?.toString()
     }
 
     private fun populateComments() {
@@ -80,7 +122,7 @@ class Content : CardViewDataHolder(), SyncObject<ContentEntity> {
         loveList = reactions.filter { it.reactionEntity?.type == Reaction.TYPE.LOVE.toString() }
     }
 
-    override fun getEntity(): ContentEntity? {
+    override fun getEntity(): ContentEntity {
         return contentEntity
     }
 

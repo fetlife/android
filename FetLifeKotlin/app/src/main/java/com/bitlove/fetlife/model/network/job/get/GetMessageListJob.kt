@@ -9,6 +9,6 @@ import retrofit2.Call
 class GetMessageListJob(parent: SyncObject<ContentEntity>) : GetCommentListJob(parent) {
 
     override fun getCall(): Call<Array<ReactionEntity>> {
-        return FetLifeApplication.instance.fetlifeService.fetLifeApi.getMessages("fsdfsf",null,null,null, null)
+        return FetLifeApplication.instance.fetlifeService.fetLifeApi.getMessages(FetLifeApplication.instance.fetlifeService.accessToken!!,parent.getRemoteId(),null,null, 5)
     }
 }

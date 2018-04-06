@@ -12,14 +12,15 @@ import com.bitlove.fetlife.model.dataobject.entity.ExploreStoryEntity
 import com.bitlove.fetlife.model.dataobject.entity.ReactionEntity
 import com.bitlove.fetlife.model.dataobject.entity.reference.ReactionRef
 import com.bitlove.fetlife.model.dataobject.wrapper.Content
+import com.bitlove.fetlife.model.dataobject.wrapper.ExploreEvent
 import com.bitlove.fetlife.model.dataobject.wrapper.ExploreStory
 import com.bitlove.fetlife.model.dataobject.wrapper.Reaction
 
 @Dao
 abstract class ExploreEventDao : BaseDao<ExploreEventEntity> {
 
-    @Query("SELECT * FROM explore_events ORDER BY createdAt DESC")
-    abstract fun getEvents(): LiveData<List<ExploreStory>>
+    @Query("SELECT * FROM explore_events")
+    abstract fun getEvents(): LiveData<List<ExploreEvent>>
 
     @Query("DELETE FROM explore_events")
     abstract fun deleteAll()

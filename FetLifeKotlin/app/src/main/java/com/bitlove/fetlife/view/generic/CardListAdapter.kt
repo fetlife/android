@@ -30,7 +30,7 @@ class CardListAdapter<DH: CardViewDataHolder> : RecyclerView.Adapter<CardViewHol
     private fun getInteractionHandler(position: Int): CardViewInteractionHandler {
         val item = items[position]
         if (!interactionHandlers.containsKey(item.getLocalId())) {
-            interactionHandlers[item.getLocalId()] = CardViewInteractionHandler()
+            interactionHandlers[item.getLocalId()] = CardViewInteractionHandler(item)
         }
         return interactionHandlers[item.getLocalId()]!!
     }

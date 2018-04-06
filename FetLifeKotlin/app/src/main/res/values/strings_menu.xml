@@ -7,4 +7,5 @@
     <string name="menu_item_events">Events</string>
     <string name="menu_item_notifications">Notifications</string>
     <string name="menu_item_people">People</string>
+    <string name="menu_item_logout">Logout</string>
 </resources>

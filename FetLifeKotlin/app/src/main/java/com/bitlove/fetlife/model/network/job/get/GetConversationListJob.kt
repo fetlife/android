@@ -45,10 +45,11 @@ class GetConversationListJob : GetListResourceJob<ContentEntity>(PRIORITY_GET_RE
         if (memberRef != null) {
             val memberId = memberDao.update(memberRef)
             content.memberId = memberId
+            content.memberRemoteId = memberRef.id
         }
     }
 
     override fun getCall(): Call<Array<ContentEntity>> {
-        return FetLifeApplication.instance.fetlifeService.fetLifeApi.getConversations(FetLifeApplication.instance.fetlifeService.authToken!!,null,25,1)
+        return FetLifeApplication.instance.fetlifeService.fetLifeApi.getConversations(FetLifeApplication.instance.fetlifeService.accessToken!!,null,25,1)
     }
 }
