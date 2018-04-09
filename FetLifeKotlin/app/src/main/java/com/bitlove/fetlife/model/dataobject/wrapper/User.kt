@@ -1,17 +1,7 @@
 package com.bitlove.fetlife.model.dataobject.wrapper
 
 import android.arch.persistence.room.Embedded
-import android.arch.persistence.room.Ignore
-import android.arch.persistence.room.Relation
-import com.bitlove.fetlife.model.dataobject.SyncObject
-import com.bitlove.fetlife.model.dataobject.entity.ContentEntity
-import com.bitlove.fetlife.model.dataobject.entity.MemberEntity
-import com.bitlove.fetlife.model.dataobject.entity.ReactionEntity
 import com.bitlove.fetlife.model.dataobject.entity.UserEntity
-import com.bitlove.fetlife.model.db.dao.ContentDao
-import com.bitlove.fetlife.viewmodel.generic.AvatarViewDataHolder
-import com.bitlove.fetlife.viewmodel.generic.CardViewDataHolder
-import com.bitlove.fetlife.viewmodel.generic.ReactionViewDataHolder
 
 class User {
 

@@ -12,7 +12,7 @@ abstract class GetListResourceJob<T : DataEntity>(jobPriority: Int, doPersist: B
         val result = getCall().execute()
         if (result.isSuccessful){
             try {
-                saveToDb(result.body()!!)
+                getDatabase().runInTransaction { saveToDb(result.body()!!) }
             } catch (e: IllegalStateException) {
                 //TODO: handle db closed
             }

@@ -10,14 +10,15 @@
         <import type="android.text.TextUtils"/>
         <variable
             name="cardData"
-            type="com.bitlove.fetlife.viewmodel.generic.CardViewDataHolder" />
+            type="com.bitlove.fetlife.logic.dataholder.CardViewDataHolder" />
         <variable
             name="cardInteractionHandler"
-            type="com.bitlove.fetlife.viewmodel.generic.CardViewInteractionHandler" />
+            type="com.bitlove.fetlife.logic.interactionhandler.CardViewInteractionHandler" />
     </data>
 
     <android.support.v7.widget.CardView
         style="@style/CardView"
+        android:onClick="@{(view) -> cardInteractionHandler.onOpenCard()}"
         android:animateLayoutChanges="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -8,13 +8,17 @@ import com.bitlove.fetlife.getViewModel
 
 abstract class BaseFragment<ViewModel : android.arch.lifecycle.ViewModel> : Fragment(), LifecycleOwner {
 
-    lateinit var viewModel : ViewModel
+    var viewModel : ViewModel? = null
 
     abstract fun getViewModelClass() : Class<ViewModel>?
+
+    open fun getViewModelParam() : String? {
+        return null
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //TODO clean up
-        viewModel = getViewModelClass()?.getViewModel(activity as FragmentActivity) as ViewModel
+        viewModel = getViewModelClass()?.getViewModel(activity as FragmentActivity) as? ViewModel
     }
 }

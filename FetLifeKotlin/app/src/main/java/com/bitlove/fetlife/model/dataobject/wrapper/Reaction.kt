@@ -6,8 +6,8 @@ import com.bitlove.fetlife.model.dataobject.SyncObject
 import com.bitlove.fetlife.model.dataobject.entity.MemberEntity
 import com.bitlove.fetlife.model.dataobject.entity.ReactionEntity
 import com.bitlove.fetlife.model.db.dao.BaseDao
-import com.bitlove.fetlife.viewmodel.generic.AvatarViewDataHolder
-import com.bitlove.fetlife.viewmodel.generic.ReactionViewDataHolder
+import com.bitlove.fetlife.logic.dataholder.AvatarViewDataHolder
+import com.bitlove.fetlife.logic.dataholder.ReactionViewDataHolder
 
 class Reaction() : ReactionViewDataHolder(), SyncObject<ReactionEntity> {
 

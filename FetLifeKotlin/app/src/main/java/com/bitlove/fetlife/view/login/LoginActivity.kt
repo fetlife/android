@@ -10,9 +10,9 @@ import com.bitlove.fetlife.R
 import com.bitlove.fetlife.inTransaction
 import com.bitlove.fetlife.view.navigation.NavigationCallback
 import com.bitlove.fetlife.view.navigation.PhoneNavigationActivity
+import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 
 class LoginActivity : Activity(), NavigationCallback {
-
     companion object {
         const val STATE_KEY_NAVIGATION = "STATE_KEY_NAVIGATION"
         fun start(context: Context) {
@@ -27,7 +27,7 @@ class LoginActivity : Activity(), NavigationCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        setContentView(R.layout.activity_phone_fragment)
         setStateContentFragment(savedInstanceState)
         setTitle()
     }
@@ -46,7 +46,7 @@ class LoginActivity : Activity(), NavigationCallback {
 
     private fun setContentFragment(fragment: Fragment, addToBackStack: Boolean = true) {
         fragmentManager.inTransaction {
-            val transaction = replace(R.id.login_fragment_container, fragment)
+            val transaction = replace(R.id.fragment_container, fragment)
             if (addToBackStack) {
                 transaction.addToBackStack(null)
             } else {
@@ -67,13 +67,17 @@ class LoginActivity : Activity(), NavigationCallback {
         return true
     }
 
+    //TODO make NavigationCallBack an abstract class rather
     override fun onOpenUrl(url: String): Boolean {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onLayoutChange(layout: NavigationCallback.Layout?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+
+    override fun onCardNavigate(cardList: List<CardViewDataHolder>, position: Int) {
+    }
+
 
 
 }

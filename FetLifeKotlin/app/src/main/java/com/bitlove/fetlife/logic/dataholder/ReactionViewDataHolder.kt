@@ -1,6 +1,4 @@
-package com.bitlove.fetlife.viewmodel.generic
-
-import com.bitlove.fetlife.model.dataobject.entity.embedded.Avatar
+package com.bitlove.fetlife.logic.dataholder
 
 abstract class ReactionViewDataHolder {
 

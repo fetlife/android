@@ -7,6 +7,7 @@ import org.jetbrains.anko.coroutines.experimental.bg
 abstract class GetResource<ResourceType>(forceSync : Boolean) {
 
     private val forceSync = forceSync
+    private var synced = false
     private val liveData : MediatorLiveData<ResourceType> = MediatorLiveData()
 
     fun load() : LiveData<ResourceType> {
@@ -19,10 +20,9 @@ abstract class GetResource<ResourceType>(forceSync : Boolean) {
             val dbSource = loadFromDb()
             liveData.addSource(dbSource, {data ->
                 liveData.value = data
-                liveData.removeSource(dbSource)
-                liveData.addSource(dbSource, {data -> liveData.value = data})
-                //TODO implement normally
-                if (true || shouldSync(data,forceSync)) {
+                //TODO implement with should sync
+                if (!synced) {
+                    synced = true
                     syncWithNetwork(data)
                 }
             })

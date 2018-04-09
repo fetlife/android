@@ -3,12 +3,10 @@ package com.bitlove.fetlife.view.navigation
 import android.app.Fragment
 import android.app.FragmentManager
 import com.bitlove.fetlife.R
+import com.bitlove.fetlife.logic.viewmodel.CardListViewModel
+import com.bitlove.fetlife.view.generic.CardListFragment
 import com.bitlove.fetlife.view.login.LoginFragment
 import com.bitlove.fetlife.view.responsive.TurbolinksFragment
-import com.bitlove.fetlife.view.screen.ConversationsFragment
-import com.bitlove.fetlife.view.screen.FreshAndPervyFragment
-import com.bitlove.fetlife.view.screen.KinkyAndPopularFragment
-import com.bitlove.fetlife.view.screen.StuffYouLoveFragment
 
 class NavigationFragmentFactory {
 
@@ -32,7 +30,7 @@ class NavigationFragmentFactory {
             R.id.navigation_conversations -> NavigationPagerAdapter(fragmentManager, layout, R.id.navigation_conversations_inbox, R.id.navigation_conversations_all)
             R.id.navigation_search -> NavigationPagerAdapter(fragmentManager, NavigationCallback.Layout.WEB, R.id.navigation_search)
             //TODO rely on default constant
-            else -> NavigationPagerAdapter(fragmentManager, layout, R.id.navigation_conversations_inbox, R.id.navigation_conversations_all)
+            else -> NavigationPagerAdapter(fragmentManager, layout, R.id.navigation_explore_fresh_and_pervy, R.id.navigation_explore_kinky_and_popular, R.id.navigation_explore_stuff_you_love, R.id.navigation_explore_friends_activity)
         }
     }
 
@@ -43,13 +41,13 @@ class NavigationFragmentFactory {
         }
         return when (navigation) {
             R.id.navigation_search -> TurbolinksFragment.newInstance(R.id.navigation_search)
-            R.id.navigation_explore_friends_activity -> StuffYouLoveFragment()
-            R.id.navigation_explore_fresh_and_pervy -> FreshAndPervyFragment()
-            R.id.navigation_explore_kinky_and_popular -> KinkyAndPopularFragment()
-            R.id.navigation_explore_stuff_you_love -> StuffYouLoveFragment()
-            R.id.navigation_conversations_inbox -> ConversationsFragment()
-            R.id.navigation_conversations_all -> ConversationsFragment()
-            else -> ConversationsFragment()
+            R.id.navigation_explore_friends_activity -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_FRIENDS_FEED)
+            R.id.navigation_explore_fresh_and_pervy -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_FRESH_AND_PERVY)
+            R.id.navigation_explore_kinky_and_popular -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_KINKY_AND_POPULAR)
+            R.id.navigation_explore_stuff_you_love -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_STUFF_YOU_LOVE)
+            R.id.navigation_conversations_inbox -> CardListFragment.newInstance(CardListViewModel.CardListType.CONVERSATIONS)
+            R.id.navigation_conversations_all -> CardListFragment.newInstance(CardListViewModel.CardListType.CONVERSATIONS)
+            else -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_KINKY_AND_POPULAR)
         }
     }
 
@@ -63,7 +61,7 @@ class NavigationFragmentFactory {
             R.id.navigation_explore_kinky_and_popular -> "Kinky and Popular"
             R.id.navigation_explore_stuff_you_love -> "Stuff you Love"
             R.id.navigation_conversations -> "Messages"
-            null -> "Messages"
+            null -> "Kinky and Popular"
             R.id.navigation_conversations_inbox -> "Inbox"
             R.id.navigation_conversations_all -> "All"
             else -> "FetLife"

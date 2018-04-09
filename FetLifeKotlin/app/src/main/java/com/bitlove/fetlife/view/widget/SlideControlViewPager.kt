@@ -7,17 +7,17 @@ import android.view.MotionEvent
 
 class SlideControlViewPager(context: Context, attrs: AttributeSet) : ViewPager(context, attrs) {
 
-    var pagingEnabled: Boolean = false
+    var slideEnabled: Boolean = false
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        return if (this.pagingEnabled) {
+        return if (this.slideEnabled) {
             super.onTouchEvent(event)
         } else false
 
     }
 
     override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
-        return if (this.pagingEnabled) {
+        return if (this.slideEnabled) {
             super.onInterceptTouchEvent(event)
         } else false
 

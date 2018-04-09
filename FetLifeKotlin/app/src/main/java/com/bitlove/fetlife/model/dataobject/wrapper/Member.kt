@@ -8,7 +8,7 @@ import com.bitlove.fetlife.model.dataobject.entity.ContentEntity
 import com.bitlove.fetlife.model.dataobject.entity.MemberEntity
 import com.bitlove.fetlife.model.dataobject.entity.RelationEntity
 import com.bitlove.fetlife.model.db.dao.BaseDao
-import com.bitlove.fetlife.viewmodel.generic.AvatarViewDataHolder
+import com.bitlove.fetlife.logic.dataholder.AvatarViewDataHolder
 
 class Member() : AvatarViewDataHolder(), SyncObject<MemberEntity> {
 

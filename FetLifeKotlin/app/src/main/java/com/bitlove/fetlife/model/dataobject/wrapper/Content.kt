@@ -8,9 +8,8 @@ import com.bitlove.fetlife.model.dataobject.entity.ContentEntity
 import com.bitlove.fetlife.model.dataobject.entity.MemberEntity
 import com.bitlove.fetlife.model.dataobject.entity.ReactionEntity
 import com.bitlove.fetlife.model.db.dao.ContentDao
-import com.bitlove.fetlife.viewmodel.generic.AvatarViewDataHolder
-import com.bitlove.fetlife.viewmodel.generic.CardViewDataHolder
-import com.bitlove.fetlife.viewmodel.generic.ReactionViewDataHolder
+import com.bitlove.fetlife.logic.dataholder.AvatarViewDataHolder
+import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 
 class Content : CardViewDataHolder(), SyncObject<ContentEntity> {
 

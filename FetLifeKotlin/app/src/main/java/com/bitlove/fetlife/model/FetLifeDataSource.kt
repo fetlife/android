@@ -3,7 +3,6 @@ package com.bitlove.fetlife.model
 import android.arch.lifecycle.LiveData
 import com.bitlove.fetlife.model.dataobject.entity.MemberEntity
 import com.bitlove.fetlife.model.dataobject.entity.ReactionEntity
-import com.bitlove.fetlife.model.dataobject.entity.UserEntity
 import com.bitlove.fetlife.model.dataobject.wrapper.Content
 import com.bitlove.fetlife.model.dataobject.wrapper.ExploreStory
 import com.bitlove.fetlife.model.dataobject.wrapper.Reaction
@@ -11,7 +10,7 @@ import com.bitlove.fetlife.model.dataobject.wrapper.User
 import com.bitlove.fetlife.model.resource.get.*
 import com.bitlove.fetlife.model.resource.login.LoginResource
 import com.bitlove.fetlife.model.resource.put.PutCommentResource
-import com.bitlove.fetlife.viewmodel.generic.CardViewDataHolder
+import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import java.util.*
 
 class FetLifeDataSource {

@@ -1,5 +1,7 @@
 package com.bitlove.fetlife.view.navigation
 
+import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
+
 interface NavigationCallback {
 
     enum class Layout {
@@ -15,5 +17,6 @@ interface NavigationCallback {
     fun onOpenUrl(url: String): Boolean
     fun onNavigate(actionId: Int?): Boolean
     fun onLayoutChange(layout: Layout?)
+    fun onCardNavigate(cardList: List<CardViewDataHolder>, position: Int)
 
 }

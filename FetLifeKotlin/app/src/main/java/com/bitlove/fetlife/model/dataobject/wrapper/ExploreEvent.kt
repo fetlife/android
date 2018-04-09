@@ -8,7 +8,7 @@ import com.bitlove.fetlife.model.dataobject.entity.ContentEntity
 import com.bitlove.fetlife.model.dataobject.entity.ExploreEventEntity
 import com.bitlove.fetlife.model.dataobject.entity.MemberEntity
 import com.bitlove.fetlife.model.db.dao.BaseDao
-import com.bitlove.fetlife.viewmodel.generic.CardViewDataHolder
+import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 
 class ExploreEvent : CardViewDataHolder(), LocalObject<ExploreEventEntity> {
     @Embedded

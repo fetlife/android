@@ -1,4 +1,4 @@
-package com.bitlove.fetlife.viewmodel.binding
+package com.bitlove.fetlife.logic.binding
 
 import android.databinding.BindingAdapter
 import android.view.View
@@ -18,10 +18,9 @@ import androidx.view.size
 import com.android.databinding.library.baseAdapters.BR
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.loadWithGlide
-import com.bitlove.fetlife.model.dataobject.wrapper.Reaction
-import com.bitlove.fetlife.viewmodel.generic.CardViewDataHolder
-import com.bitlove.fetlife.viewmodel.generic.CardViewInteractionHandler
-import com.bitlove.fetlife.viewmodel.generic.ReactionViewDataHolder
+import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
+import com.bitlove.fetlife.logic.interactionhandler.CardViewInteractionHandler
+import com.bitlove.fetlife.logic.dataholder.ReactionViewDataHolder
 import com.facebook.drawee.view.SimpleDraweeView
 
 @BindingAdapter("comments", "commentsDisplayed")
@@ -91,7 +90,10 @@ fun setFrescoAr(imageView: SimpleDraweeView, arFresco: Float?) {
 }
 
 @BindingAdapter("onSubmitHandler","onSubmitData")
-fun bindSubmit(editText: EditText, onSubmitHandler: CardViewInteractionHandler, onSubmitData: CardViewDataHolder) {
+fun bindSubmit(editText: EditText, onSubmitHandler: CardViewInteractionHandler?, onSubmitData: CardViewDataHolder?) {
+    if (onSubmitData == null || onSubmitHandler == null) {
+        return
+    }
     editText.setOnEditorActionListener { v, actionId, event ->
         if (event != null && event.isShiftPressed) {
             false

@@ -27,20 +27,14 @@ import com.birbit.android.jobqueue.JobManager
 import com.bitlove.fetlife.model.FetLifeDataSource
 import com.bitlove.fetlife.model.network.FetLifeService
 import com.google.gson.Gson
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
 import org.jetbrains.anko.coroutines.experimental.bg
 import com.birbit.android.jobqueue.config.Configuration
 import android.os.Build
-import android.preference.PreferenceManager
 import android.support.design.internal.BottomNavigationItemView
 import android.support.design.internal.BottomNavigationMenuView
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.widget.RecyclerView
-import android.text.TextUtils
 import android.widget.ImageView
-import com.bitlove.fetlife.model.dataobject.entity.UserEntity
-import com.bitlove.fetlife.model.dataobject.wrapper.User
 import com.bitlove.fetlife.model.db.FetLifeUserDatabase
 import com.bitlove.fetlife.view.navigation.NavigationFragmentFactory
 import com.bitlove.fetlife.view.widget.FrescoImageLoader
@@ -178,7 +172,8 @@ fun String.toUniqueLong() : Long {
 }
 
 fun RecyclerView.workaroundItemFlickeringOnChange() {
-    this.itemAnimator.changeDuration = 0
+    this.itemAnimator = null
+//    this.itemAnimator.changeDuration = 0
 }
 
 @SuppressLint("RestrictedApi")

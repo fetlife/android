@@ -1,4 +1,4 @@
-package com.bitlove.fetlife.viewmodel.generic
+package com.bitlove.fetlife.logic.dataholder
 
 abstract class AvatarViewDataHolder {
 

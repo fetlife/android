@@ -16,11 +16,14 @@ import android.support.design.widget.CoordinatorLayout
 import android.support.v4.view.GravityCompat
 import android.view.MenuItem
 import com.bitlove.fetlife.*
+import com.bitlove.fetlife.model.dataobject.wrapper.ExploreStory
 import com.bitlove.fetlife.view.login.LoginActivity
 import com.bitlove.fetlife.view.widget.FloatingActionButtonBehavior
+import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
 
+//TODO: move away navigation callback from being a context object
 open class PhoneNavigationActivity : AppCompatActivity(), NavigationCallback {
 
     companion object {
@@ -66,6 +69,12 @@ open class PhoneNavigationActivity : AppCompatActivity(), NavigationCallback {
         setContentFragment(navigationFragmentFactory.createFragment(navigation,layout))
         setTitle()
         return true
+    }
+
+    override fun onCardNavigate(cardList: List<CardViewDataHolder>, position: Int) {
+        if (cardList.firstOrNull() as? ExploreStory != null) {
+            PhoneCardActivity.start(this, cardList, position)
+        }
     }
 
     override fun onLayoutChange(layout: NavigationCallback.Layout?) {
@@ -155,7 +164,7 @@ open class PhoneNavigationActivity : AppCompatActivity(), NavigationCallback {
         // https://stackoverflow.com/questions/40176244/how-to-disable-bottomnavigationview-shift-mode
         inflateIconicsMenu(R.menu.menu_navigation_bottom, navigation_bottom.menu)
         navigation_bottom.disableShiftMode()
-        navigation_bottom.selectedItemId = R.id.navigation_conversations
+        navigation_bottom.selectedItemId = R.id.navigation_explore
 
         val layoutParams = navigation_bottom.layoutParams as CoordinatorLayout.LayoutParams
         layoutParams.behavior = BottomNavigationBehavior()

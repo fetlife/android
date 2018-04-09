@@ -5,7 +5,7 @@
         <import type="android.view.View" />
         <variable
             name="commentData"
-            type="com.bitlove.fetlife.viewmodel.generic.ReactionViewDataHolder" />
+            type="com.bitlove.fetlife.logic.dataholder.ReactionViewDataHolder" />
     </data>
 
     <android.support.constraint.ConstraintLayout

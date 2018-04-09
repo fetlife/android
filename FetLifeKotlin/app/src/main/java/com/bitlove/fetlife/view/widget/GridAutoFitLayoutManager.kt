@@ -1,15 +1,18 @@
 package com.bitlove.fetlife.view.widget
 
 import android.content.Context
+import android.graphics.Rect
 import android.support.v7.widget.RecyclerView
 import android.util.TypedValue
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.StaggeredGridLayoutManager
 import android.util.AttributeSet
+import android.view.View
 import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 
 
+//TODO: check this : https://github.com/yuvaraj119/Picasso-RecyclerView-StaggeredGridLayoutManager
 class GridAutoFitLayoutManager : StaggeredGridLayoutManager {
     private var mColumnWidth: Int = 0
     private var mColumnWidthChanged = true
@@ -17,6 +20,7 @@ class GridAutoFitLayoutManager : StaggeredGridLayoutManager {
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
         spanCount = 1
         setColumnWidth(checkedColumnWidth(context, mColumnWidth))
+        gapStrategy = GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS
     }
 
 
@@ -56,5 +60,13 @@ class GridAutoFitLayoutManager : StaggeredGridLayoutManager {
             mColumnWidthChanged = false
         }
         super.onLayoutChildren(recycler, state)
+    }
+
+    override fun requestChildRectangleOnScreen(parent: RecyclerView?, child: View?, rect: Rect?, immediate: Boolean): Boolean {
+        return false
+    }
+
+    override fun requestChildRectangleOnScreen(parent: RecyclerView?, child: View?, rect: Rect?, immediate: Boolean, focusedChildVisible: Boolean): Boolean {
+        return false
     }
 }

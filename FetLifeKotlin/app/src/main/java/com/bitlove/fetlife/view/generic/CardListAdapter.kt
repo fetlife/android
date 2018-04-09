@@ -5,18 +5,19 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.bitlove.fetlife.databinding.ItemDataCardBinding
 import com.bitlove.fetlife.toUniqueLong
-import com.bitlove.fetlife.viewmodel.generic.CardViewDataHolder
-import com.bitlove.fetlife.viewmodel.generic.CardViewInteractionHandler
+import com.bitlove.fetlife.view.navigation.NavigationCallback
+import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
+import com.bitlove.fetlife.logic.interactionhandler.CardViewInteractionHandler
 
 //TODO check generic DH + IH?, none?, DH?
-class CardListAdapter<DH: CardViewDataHolder> : RecyclerView.Adapter<CardViewHolder<DH>>(){
+class CardListAdapter(val navigationCallback: NavigationCallback) : RecyclerView.Adapter<CardViewHolder>(){
 
     init {
         setHasStableIds(true)
     }
 
-    var items : List<DH> = ArrayList()
-    var interactionHandlers : HashMap<String?,CardViewInteractionHandler> = HashMap()
+    var items : List<CardViewDataHolder> = ArrayList()
+    var interactionHandlers : HashMap<String?, CardViewInteractionHandler> = HashMap()
 
     override fun getItemCount(): Int = items.size
 
@@ -25,17 +26,18 @@ class CardListAdapter<DH: CardViewDataHolder> : RecyclerView.Adapter<CardViewHol
         return items[position].getLocalId()!!.toUniqueLong()
     }
 
-    override fun onBindViewHolder(holder: CardViewHolder<DH>, position: Int) = holder.bindTo(items[position], getInteractionHandler(position))
+    override fun onBindViewHolder(holder: CardViewHolder, position: Int) = holder.bindTo(items[position], getInteractionHandler(position))
 
+    //TODO: clean up need of CardData from two sources
     private fun getInteractionHandler(position: Int): CardViewInteractionHandler {
         val item = items[position]
         if (!interactionHandlers.containsKey(item.getLocalId())) {
-            interactionHandlers[item.getLocalId()] = CardViewInteractionHandler(item)
+            interactionHandlers[item.getLocalId()] = CardViewInteractionHandler(item, items, position, navigationCallback)
         }
         return interactionHandlers[item.getLocalId()]!!
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder<DH> {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
         val binding = ItemDataCardBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         return CardViewHolder(binding)
     }

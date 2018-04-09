@@ -24,4 +24,6 @@ abstract class ExploreStoryDao : BaseDao<ExploreStoryEntity> {
     @Query("DELETE FROM explore_stories")
     abstract fun deleteAll()
 
+    @Query("SELECT * FROM explore_stories WHERE dbId = :cardId")
+    abstract fun getStory(cardId: String): LiveData<ExploreStory>
 }
