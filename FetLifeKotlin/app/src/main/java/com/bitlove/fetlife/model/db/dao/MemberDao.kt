@@ -4,7 +4,7 @@ import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Query
 import android.arch.persistence.room.Transaction
-import com.bitlove.fetlife.model.dataobject.entity.MemberEntity
+import com.bitlove.fetlife.model.dataobject.entity.content.MemberEntity
 import com.bitlove.fetlife.model.dataobject.entity.reference.MemberRef
 import com.bitlove.fetlife.model.dataobject.wrapper.Member
 

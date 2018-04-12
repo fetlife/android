@@ -3,14 +3,14 @@ package com.bitlove.fetlife.model.dataobject.wrapper
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Relation
 import com.bitlove.fetlife.FetLifeApplication
-import com.bitlove.fetlife.model.dataobject.LocalObject
-import com.bitlove.fetlife.model.dataobject.entity.ContentEntity
-import com.bitlove.fetlife.model.dataobject.entity.ExploreEventEntity
-import com.bitlove.fetlife.model.dataobject.entity.MemberEntity
+import com.bitlove.fetlife.model.dataobject.entity.content.ContentEntity
+import com.bitlove.fetlife.model.dataobject.entity.content.ExploreEventEntity
+import com.bitlove.fetlife.model.dataobject.entity.content.MemberEntity
 import com.bitlove.fetlife.model.db.dao.BaseDao
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
+import com.bitlove.fetlife.model.dataobject.SyncObject
 
-class ExploreEvent : CardViewDataHolder(), LocalObject<ExploreEventEntity> {
+class ExploreEvent : CardViewDataHolder(), SyncObject<ExploreEventEntity> {
     @Embedded
     lateinit var exploreEventEntity: ExploreEventEntity
 
@@ -22,6 +22,10 @@ class ExploreEvent : CardViewDataHolder(), LocalObject<ExploreEventEntity> {
 
     fun getMember() : Member? {
         return ownerSingleItemList?.firstOrNull()
+    }
+
+    override fun getType(): String? {
+        return if (contents != null && contents!!.size == 1) contents!!.first()?.getType() else null
     }
 
     override fun isLoved(): Boolean? {
@@ -40,8 +44,8 @@ class ExploreEvent : CardViewDataHolder(), LocalObject<ExploreEventEntity> {
         return if (contents != null && contents!!.size == 1) contents!!.first()?.getLoveCount() else null
     }
 
-    override fun getCommentCount(): String? {
-        return if (contents != null && contents!!.size == 1) contents!!.first()?.getCommentCount() else null
+    override fun getCommentCountText(): String? {
+        return if (contents != null && contents!!.size == 1) contents!!.first()?.getCommentCountText() else null
     }
 
     override fun getComments(): List<Reaction>? {

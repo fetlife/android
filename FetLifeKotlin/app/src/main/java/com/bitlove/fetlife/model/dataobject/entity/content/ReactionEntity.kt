@@ -1,4 +1,4 @@
-package com.bitlove.fetlife.model.dataobject.entity
+package com.bitlove.fetlife.model.dataobject.entity.content
 
 import android.arch.persistence.room.*
 import com.bitlove.fetlife.model.dataobject.entity.reference.MemberRef
@@ -32,7 +32,7 @@ data class ReactionEntity(
 
     @PrimaryKey var dbId: String = ""
         get() {
-            return type + ":" + networkId
+            return "$type:$networkId"
         }
 
 }

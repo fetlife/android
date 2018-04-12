@@ -1,32 +1,35 @@
 package com.bitlove.fetlife.model.network.job.get
 
-import com.bitlove.fetlife.FetLifeApplication
-import com.bitlove.fetlife.model.dataobject.entity.DataEntity
-import com.bitlove.fetlife.model.db.FetLifeContentDatabase
+import com.bitlove.fetlife.model.dataobject.entity.content.DataEntity
 import com.bitlove.fetlife.model.network.job.BaseJob
 import retrofit2.Call
+import retrofit2.Response
 
 abstract class GetListResourceJob<T : DataEntity>(jobPriority: Int, doPersist: Boolean, vararg tags: String) : BaseJob(jobPriority,doPersist,*tags) {
 
-    override fun onRun() {
+    override fun onRunJob() : Boolean {
+        //Workaround for different feed result
         val result = getCall().execute()
-        if (result.isSuccessful){
+        return if (result.isSuccessful){
             try {
-                getDatabase().runInTransaction { saveToDb(result.body()!!) }
+                getDatabase().runInTransaction { saveToDb(getResultBody(result)) }
             } catch (e: IllegalStateException) {
-                //TODO: handle db closed
+                //TODO(cleanup): solve closed db
             }
+            true
         } else {
-            //TODO notify
+            false
         }
     }
 
-    open fun getDatabase() : FetLifeContentDatabase {
-        return FetLifeApplication.instance.fetLifeContentDatabase
+    open fun getResultBody(result: Response<*>) : Array<T> {
+        return result.body() as Array<T>
     }
 
+    //TODO(cleanup): cleanup save to dbs
     abstract fun saveToDb(resourceArray: Array<T>)
 
-    abstract fun getCall(): Call<Array<T>>
+    //Workaround * to support Feed vs Story Array
+    abstract fun getCall(): Call<*>
 
 }

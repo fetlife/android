@@ -3,11 +3,7 @@ package com.bitlove.fetlife.model.db.dao
 import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Query
-import android.arch.persistence.room.Transaction
-import com.bitlove.fetlife.model.dataobject.entity.MemberEntity
-import com.bitlove.fetlife.model.dataobject.entity.UserEntity
-import com.bitlove.fetlife.model.dataobject.entity.reference.MemberRef
-import com.bitlove.fetlife.model.dataobject.wrapper.Member
+import com.bitlove.fetlife.model.dataobject.entity.user.UserEntity
 import com.bitlove.fetlife.model.dataobject.wrapper.User
 
 @Dao

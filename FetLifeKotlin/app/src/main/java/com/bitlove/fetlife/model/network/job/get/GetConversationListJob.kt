@@ -1,7 +1,7 @@
 package com.bitlove.fetlife.model.network.job.get
 
 import com.bitlove.fetlife.FetLifeApplication
-import com.bitlove.fetlife.model.dataobject.entity.ContentEntity
+import com.bitlove.fetlife.model.dataobject.entity.content.ContentEntity
 import com.bitlove.fetlife.model.dataobject.wrapper.Content
 import com.bitlove.fetlife.model.dataobject.wrapper.Reaction
 import com.bitlove.fetlife.model.db.dao.MemberDao
@@ -50,6 +50,6 @@ class GetConversationListJob : GetListResourceJob<ContentEntity>(PRIORITY_GET_RE
     }
 
     override fun getCall(): Call<Array<ContentEntity>> {
-        return FetLifeApplication.instance.fetlifeService.fetLifeApi.getConversations(FetLifeApplication.instance.fetlifeService.accessToken!!,null,25,1)
+        return FetLifeApplication.instance.fetlifeService.fetLifeApi.getConversations(FetLifeApplication.instance.fetlifeService.authHeader!!,null,25,1)
     }
 }

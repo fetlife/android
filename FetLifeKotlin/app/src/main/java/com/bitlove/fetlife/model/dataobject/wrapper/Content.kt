@@ -3,13 +3,13 @@ package com.bitlove.fetlife.model.dataobject.wrapper
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.Relation
-import com.bitlove.fetlife.model.dataobject.SyncObject
-import com.bitlove.fetlife.model.dataobject.entity.ContentEntity
-import com.bitlove.fetlife.model.dataobject.entity.MemberEntity
-import com.bitlove.fetlife.model.dataobject.entity.ReactionEntity
+import com.bitlove.fetlife.model.dataobject.entity.content.ContentEntity
+import com.bitlove.fetlife.model.dataobject.entity.content.MemberEntity
+import com.bitlove.fetlife.model.dataobject.entity.content.ReactionEntity
 import com.bitlove.fetlife.model.db.dao.ContentDao
 import com.bitlove.fetlife.logic.dataholder.AvatarViewDataHolder
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
+import com.bitlove.fetlife.model.dataobject.SyncObject
 
 class Content : CardViewDataHolder(), SyncObject<ContentEntity> {
 
@@ -23,8 +23,8 @@ class Content : CardViewDataHolder(), SyncObject<ContentEntity> {
     @Relation(parentColumn = "dbId", entityColumn = "contentId", entity = ReactionEntity::class)
     var reactions: List<Reaction>? = null
 
-    @Ignore var commentList: List<Reaction>? = null
-    @Ignore var loveList: List<Reaction>? = null
+    @Ignore private var commentList: List<Reaction>? = null
+    @Ignore private var loveList: List<Reaction>? = null
 
     override fun getTitle(): String? {
         return contentEntity?.subject
@@ -47,6 +47,10 @@ class Content : CardViewDataHolder(), SyncObject<ContentEntity> {
 
     override fun getRemoteId(): String? {
         return contentEntity?.networkId
+    }
+
+    override fun getType(): String? {
+        return contentEntity?.type
     }
 
     override fun getAvatar(): AvatarViewDataHolder? {
@@ -82,7 +86,7 @@ class Content : CardViewDataHolder(), SyncObject<ContentEntity> {
         return contentEntity?.hasNewComments
     }
 
-    override fun getCommentCount(): String? {
+    override fun getCommentCountText(): String? {
         return when(contentEntity?.type) {
             TYPE.CONVERSATION.toString() -> contentEntity?.messageCount?.toString()
             else -> contentEntity?.commentCount?.toString()
@@ -113,7 +117,7 @@ class Content : CardViewDataHolder(), SyncObject<ContentEntity> {
 
     private fun populateComments() {
         var reactions = reactions ?: return
-        commentList = reactions.filter { it.reactionEntity?.type == Reaction.TYPE.COMMENT.toString() }
+        commentList = reactions.filter { it.reactionEntity?.type == Reaction.TYPE.COMMENT.toString() }.sortedBy { it.getEntity().createdAt }
     }
 
     private fun populateLoves() {

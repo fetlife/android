@@ -17,6 +17,12 @@ class CardListAdapter(val navigationCallback: NavigationCallback) : RecyclerView
     }
 
     var items : List<CardViewDataHolder> = ArrayList()
+        set(value) {
+            field = value
+            for (interactionHandler in interactionHandlers.values) {
+                interactionHandler.cardList = value
+            }
+        }
     var interactionHandlers : HashMap<String?, CardViewInteractionHandler> = HashMap()
 
     override fun getItemCount(): Int = items.size
@@ -30,6 +36,7 @@ class CardListAdapter(val navigationCallback: NavigationCallback) : RecyclerView
 
     //TODO: clean up need of CardData from two sources
     private fun getInteractionHandler(position: Int): CardViewInteractionHandler {
+//        return CardViewInteractionHandler(items[position], items, position, navigationCallback)
         val item = items[position]
         if (!interactionHandlers.containsKey(item.getLocalId())) {
             interactionHandlers[item.getLocalId()] = CardViewInteractionHandler(item, items, position, navigationCallback)

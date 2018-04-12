@@ -4,8 +4,10 @@ import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
+import com.bitlove.fetlife.model.dataobject.wrapper.ProgressTracker
+import com.bitlove.fetlife.model.resource.ResourceResult
 
-class CardDetailViewModel() : ViewModel() {
+class CardDetailViewModel : ViewModel() {
 
     enum class CardType {
         CONVERSATION,
@@ -17,27 +19,29 @@ class CardDetailViewModel() : ViewModel() {
     lateinit var cardId: String
     lateinit var cardType: CardType
     lateinit var cardDetail : LiveData<CardViewDataHolder>
+    lateinit var progressTracker: LiveData<ProgressTracker>
 
     fun init(cardId: String, cardType: CardType) {
         this.cardId = cardId
         this.cardType = cardType
-        cardDetail = loadCardDetail(cardId, false)
+        loadCardDetail(cardId, false)
     }
 
     open fun refresh() {
         loadCardDetail(cardId, true)
     }
 
-    private fun loadCardDetail(cardId: String, forceLoad: Boolean): LiveData<CardViewDataHolder> {
+    private fun loadCardDetail(cardId: String, forceLoad: Boolean) {
         val dataSource = FetLifeApplication.instance.fetlifeDataSource
         //TODO(cleanup) use resource instead
         val database = FetLifeApplication.instance.fetLifeContentDatabase
-        return when (cardType) {
-            CardType.CONVERSATION,CardType.CONTENT -> database.contentDao().getContent(cardId) as LiveData<CardViewDataHolder>
-            CardType.EXPLORE -> database.exploreStoryDao().getStory(cardId) as LiveData<CardViewDataHolder>
-            else -> database.contentDao().getContent(cardId) as LiveData<CardViewDataHolder>
+        val resourceResult = when (cardType) {
+            CardType.CONVERSATION,CardType.CONTENT -> dataSource.loadContentDetail(cardId) as ResourceResult<CardViewDataHolder>
+            CardType.EXPLORE -> dataSource.loadExploreStoryDetail(cardId) as ResourceResult<CardViewDataHolder>
+            else -> {throw IllegalArgumentException()}
         }
-
+        cardDetail = resourceResult.liveData
+        progressTracker = resourceResult.progressTracker
     }
 
 }

@@ -3,9 +3,11 @@ package com.bitlove.fetlife.model.network
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.model.network.networkobject.AuthBody
 import com.bitlove.fetlife.model.network.networkobject.Token
+import okhttp3.OkHttpClient
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 
 //import com.bitlove.fetlife.FetLifeApplication
@@ -42,15 +44,21 @@ class FetLifeService {
     //TODO implement
 
     val baseUrl : String = "https://app.fetlife.com"
-    var accessToken : String? = null
+    var authHeader : String? = null
     var refreshToken : String? = null
 
     var fetLifeApi: FetLifeApi
 
     init {
+        val client = OkHttpClient.Builder()
+                .readTimeout(25, TimeUnit.SECONDS)
+                .connectTimeout(25, TimeUnit.SECONDS)
+                .build()
+
         val retrofit = Retrofit.Builder()
                 .baseUrl("https://app.fetlife.com")
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
                 .build()
         fetLifeApi = retrofit.create(FetLifeApi::class.java)
     }

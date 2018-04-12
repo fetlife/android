@@ -20,4 +20,6 @@
     <color name="nearWhite">#f4f4f4</color>
     <color name="white">#fff</color>
 
+    <color name="silver_50">#80999999</color>
+
 </resources>

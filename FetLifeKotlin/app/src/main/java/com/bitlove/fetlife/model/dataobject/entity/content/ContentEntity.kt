@@ -1,11 +1,10 @@
-package com.bitlove.fetlife.model.dataobject.entity
+package com.bitlove.fetlife.model.dataobject.entity.content
 
 import android.arch.persistence.room.*
 import com.bitlove.fetlife.model.dataobject.entity.reference.MemberRef
 import com.bitlove.fetlife.model.dataobject.entity.reference.PictureVariants
 import com.bitlove.fetlife.model.dataobject.entity.reference.ReactionRef
 import com.google.gson.annotations.SerializedName
-import org.jetbrains.anko.db.FOREIGN_KEY
 
 @Entity(tableName = "contents",
         foreignKeys = arrayOf(

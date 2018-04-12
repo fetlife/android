@@ -23,37 +23,37 @@ import com.bitlove.fetlife.logic.interactionhandler.CardViewInteractionHandler
 import com.bitlove.fetlife.logic.dataholder.ReactionViewDataHolder
 import com.facebook.drawee.view.SimpleDraweeView
 
-@BindingAdapter("comments", "commentsDisplayed")
+@BindingAdapter("comments", "commentsDisplayed", "maxCommentCount")
 fun setComments(viewGroup: ViewGroup,
-                comments: List<ReactionViewDataHolder>?, commentsDisplayed: Boolean?) {
-    if (viewGroup.visibility == View.GONE) {
-        return
-    }
-    if (comments == null || comments.isEmpty()) {
-        viewGroup.removeAllViews()
-        return
-    }
-    val maxComments = Math.min(comments.size,if (commentsDisplayed == true) ReactionViewDataHolder.COMMENT_MAX_COUNT_EXPANDED else ReactionViewDataHolder.COMMENT_MAX_COUNT_COLLAPSED)
+                comments: List<ReactionViewDataHolder>?, commentsDisplayed: Boolean?, maxCommentCount: Int?) {
+
+    if (viewGroup.visibility == View.GONE) return
+    if (comments == null || comments.isEmpty()) {viewGroup.removeAllViews();return}
+
+    //TODO comments : solve max comment count
+    val maxComments = Math.min(comments.size,maxCommentCount?:0)
     if(viewGroup.childCount > maxComments) {
         viewGroup.removeViews(maxComments,viewGroup.childCount-maxComments)
     }
 
-    val inflater = viewGroup.context
-            .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    val inflater = viewGroup.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     for (i in 0 until maxComments) {
-        val binding = if (viewGroup.size > i) viewGroup[i].tag as ViewDataBinding else DataBindingUtil
-                .inflate<ViewDataBinding>(inflater, R.layout.item_data_card_comment, viewGroup, true)
+        val binding =
+                if (viewGroup.size > i) viewGroup[i].tag as ViewDataBinding
+                else DataBindingUtil.inflate<ViewDataBinding>(inflater, R.layout.item_data_card_comment, viewGroup, true)
+
         viewGroup[i].tag = binding
-        //TODO copy?
-        val comment = comments[i]
+
+//        //Truncate Code
 //        if (commentsDisplayed != true && comment.body != null) {
 //            if (comment.body!!.length > Reaction.TRUNCATED_LENGTH) {
 //                comment.body = comment.body!!.substring(0, Comment.TRUNCATED_LENGTH)
 //                comment.body = comment.body!!.substring(0,comment.body!!.lastIndexOf(' ')) + Comment.TRUNCATED_SUFFIX
 //            }
 //        }
-        binding.setVariable(BR.commentData, comment)
+
+        binding.setVariable(BR.commentData, comments[i])
     }
 }
 
@@ -63,10 +63,13 @@ fun setFormattedText(textView: TextView?, formattedText: String?, textEntities :
         textView?.text = null
         return
     }
-    var formattedString = formattedText
-    if (removeLineBreaks == true) {
-        formattedString = formattedText?.replace("\\s".toRegex()," ")
+
+    var formattedString = if (removeLineBreaks == true) {
+        formattedText?.replace("\\s".toRegex()," ")
+    } else {
+        formattedText
     }
+
     //TODO Add Text entities to the appropriate view
     textView?.text = Html.fromHtml(formattedString)
 }
@@ -84,13 +87,12 @@ fun setFrescoSrc(imageView: SimpleDraweeView, srcFresco: String?) {
 }
 
 @BindingAdapter("arFresco")
-fun setFrescoAr(imageView: SimpleDraweeView, arFresco: Float?) {
-    val constraintLayout = imageView.parent as ConstraintLayout
-    imageView.aspectRatio = arFresco?:16f/9f
+fun setFrescoAr(simpleDraweeView: SimpleDraweeView, arFresco: Float?) {
+    simpleDraweeView.aspectRatio = arFresco?:16f/9f
 }
 
 @BindingAdapter("onSubmitHandler","onSubmitData")
-fun bindSubmit(editText: EditText, onSubmitHandler: CardViewInteractionHandler?, onSubmitData: CardViewDataHolder?) {
+fun bindSubmitComment(editText: EditText, onSubmitHandler: CardViewInteractionHandler?, onSubmitData: CardViewDataHolder?) {
     if (onSubmitData == null || onSubmitHandler == null) {
         return
     }

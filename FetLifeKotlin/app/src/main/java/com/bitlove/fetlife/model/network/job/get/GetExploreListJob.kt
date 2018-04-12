@@ -1,9 +1,8 @@
 package com.bitlove.fetlife.model.network.job.get
 
-import com.bitlove.fetlife.FetLifeApplication
-import com.bitlove.fetlife.model.dataobject.entity.ContentEntity
-import com.bitlove.fetlife.model.dataobject.entity.ExploreEventEntity
-import com.bitlove.fetlife.model.dataobject.entity.ExploreStoryEntity
+import com.bitlove.fetlife.model.dataobject.entity.content.ContentEntity
+import com.bitlove.fetlife.model.dataobject.entity.content.ExploreEventEntity
+import com.bitlove.fetlife.model.dataobject.entity.content.ExploreStoryEntity
 import com.bitlove.fetlife.model.dataobject.entity.reference.MemberRef
 import com.bitlove.fetlife.model.dataobject.entity.reference.TargetRef
 import com.bitlove.fetlife.model.dataobject.wrapper.ExploreStory
@@ -11,12 +10,35 @@ import com.bitlove.fetlife.model.db.dao.ContentDao
 import com.bitlove.fetlife.model.db.dao.MemberDao
 import com.bitlove.fetlife.model.db.dao.ReactionDao
 import com.bitlove.fetlife.model.db.dao.RelationDao
+import com.bitlove.fetlife.model.network.networkobject.Feed
 import retrofit2.Call
+import retrofit2.Response
 
-abstract class GetExploreListJob : GetListResourceJob<ExploreStoryEntity>(PRIORITY_GET_RESOURCE_FRONT,false, TAG_GET_STUFF_YOU_LOVE, TAG_GET_RESOURCE) {
+class GetExploreListJob(val type: ExploreStory.TYPE, val limit: Int, val page: Int, val marker : String? = null) : GetListResourceJob<ExploreStoryEntity>(PRIORITY_GET_RESOURCE_FRONT,false, TAG_EXPLORE, TAG_GET_RESOURCE) {
 
     companion object {
-        const val TAG_GET_STUFF_YOU_LOVE = "TAG_GET_STUFF_YOU_LOVE"
+        //TODO separate tags
+        const val TAG_EXPLORE = "TAG_EXPLORE"
+    }
+
+    //Workaround * for Feed vs Story Array
+    override fun getCall(): Call<*> {
+        return when(type) {
+            ExploreStory.TYPE.FRESH_AND_PERVY -> getApi().getFreshAndPervy(getAuthHeader(),marker,limit,page)
+            ExploreStory.TYPE.STUFF_YOU_LOVE -> getApi().getStuffYouLove(getAuthHeader(),marker,limit,page)
+            ExploreStory.TYPE.KINKY_AND_POPULAR -> getApi().getKinkyAndPopular(getAuthHeader(),marker,limit,page)
+            ExploreStory.TYPE.EXPLORE_FRIENDS -> getApi().getFriendsFeed(getAuthHeader(),marker,limit,page)
+        }
+    }
+
+    //Workaround for Feed vs Story Array
+    override fun getResultBody(result: Response<*>): Array<ExploreStoryEntity> {
+        return when(type) {
+            ExploreStory.TYPE.EXPLORE_FRIENDS -> {
+                return (result as Response<Feed>).body()?.stories ?: arrayOf()
+            }
+            else -> super.getResultBody(result)
+        }
     }
 
     override fun saveToDb(resourceArray: Array<ExploreStoryEntity>) {
@@ -31,7 +53,7 @@ abstract class GetExploreListJob : GetListResourceJob<ExploreStoryEntity>(PRIORI
             if (story?.events == null || story?.events?.size == 0 || story?.events?.first()?.action != "picture_created") {
                 continue
             }
-            story.type = getType().toString()
+            story.type = type.toString()
             story.serverOrder = i
             exploreStoryDao.insert(story)
             for (event in story.events!!) {
@@ -42,8 +64,6 @@ abstract class GetExploreListJob : GetListResourceJob<ExploreStoryEntity>(PRIORI
             }
         }
     }
-
-    abstract fun getType(): ExploreStory.TYPE
 
     private fun saveEventTargets(event: ExploreEventEntity, memberDao: MemberDao, contentDao: ContentDao, reactionDao: ReactionDao, relationDao: RelationDao) {
         val target = event.target

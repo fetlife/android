@@ -3,12 +3,13 @@ package com.bitlove.fetlife.view.generic
 import android.os.Bundle
 import android.view.View
 import com.bitlove.fetlife.R
+import com.bitlove.fetlife.databinding.FragmentCardDetailBinding
 import com.bitlove.fetlife.databinding.ItemDataCardBinding
 import com.bitlove.fetlife.logic.viewmodel.CardDetailViewModel
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.logic.interactionhandler.CardViewInteractionHandler
 
-class CardDetailFragment : BindingFragment<ItemDataCardBinding, CardDetailViewModel>() {
+class CardDetailFragment : BindingFragment<FragmentCardDetailBinding, CardDetailViewModel>() {
 
     companion object {
         private const val ARG_CARD_TYPE = "ARG_CARD_TYPE"
@@ -26,8 +27,10 @@ class CardDetailFragment : BindingFragment<ItemDataCardBinding, CardDetailViewMo
     private lateinit var cardId: String
     private lateinit var cardType: CardDetailViewModel.CardType
 
+    private var cardViewInteractionHandler: CardViewInteractionHandler? = null
+
     override fun getLayoutRes(): Int {
-        return R.layout.item_data_card
+        return R.layout.fragment_card_detail
     }
 
     override fun getViewModelClass(): Class<CardDetailViewModel>? {
@@ -50,8 +53,11 @@ class CardDetailFragment : BindingFragment<ItemDataCardBinding, CardDetailViewMo
         //TODO remove forever and use state based
         viewModel!!.cardDetail.observeForever({
             cardData ->
-            binding.cardData = cardData
-            binding.cardInteractionHandler = CardViewInteractionHandler(cardData as CardViewDataHolder)
+            if (cardViewInteractionHandler == null) {
+                cardViewInteractionHandler = CardViewInteractionHandler(cardData)
+            }
+            binding.cardView!!.cardData = cardData
+            binding.cardView!!.cardInteractionHandler = cardViewInteractionHandler
         })
     }
 }

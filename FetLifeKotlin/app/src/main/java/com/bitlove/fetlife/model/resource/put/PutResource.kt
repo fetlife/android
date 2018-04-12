@@ -1,11 +1,15 @@
 package com.bitlove.fetlife.model.resource.put
 
+import android.arch.lifecycle.LiveData
+import com.bitlove.fetlife.model.dataobject.wrapper.ProgressTracker
+import com.bitlove.fetlife.model.resource.BaseResource
 import org.jetbrains.anko.coroutines.experimental.bg
 
-abstract class PutResource<in ResourceType> {
+abstract class PutResource<ResourceType> : BaseResource<ResourceType>() {
 
-    fun put(resource: ResourceType) {
+    override fun put(resource: ResourceType) : LiveData<ProgressTracker> {
         putInBackground(resource)
+        return super.put(resource)
     }
 
     private fun putInBackground(resource: ResourceType) {

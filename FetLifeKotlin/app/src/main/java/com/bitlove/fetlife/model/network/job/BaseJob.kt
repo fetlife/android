@@ -1,13 +1,23 @@
 package com.bitlove.fetlife.model.network.job
 
+import android.arch.lifecycle.MediatorLiveData
 import com.birbit.android.jobqueue.Job
 import com.birbit.android.jobqueue.Params
 import com.birbit.android.jobqueue.RetryConstraint
 import com.bitlove.fetlife.FetLifeApplication
+import com.bitlove.fetlife.model.dataobject.entity.technical.JobProgressEntity
+import com.bitlove.fetlife.model.dataobject.wrapper.ProgressTracker
+import com.bitlove.fetlife.model.db.FetLifeContentDatabase
+import com.bitlove.fetlife.model.network.FetLifeApi
+import org.jetbrains.anko.coroutines.experimental.bg
+import java.util.*
 import kotlin.reflect.full.primaryConstructor
 
-abstract class BaseJob(jobPriority: Int, doPersist: Boolean, vararg tags: String) : Job(createParams(jobPriority,doPersist,*tags)) {
+abstract class BaseJob(jobPriority: Int, doPersist: Boolean, vararg tags: String, var progressTrackerId: String = UUID.randomUUID().toString()) : Job(createParams(jobPriority,doPersist,*tags)) {
     companion object {
+
+        val PRIORITY_LOGIN = 0
+
         //priority change cancel reason range
         val PRIORITY_CHANGE_RANGE_LOW = 1111
         val PRIORITY_CHANGE_RANGE_HIGH = 1999
@@ -23,11 +33,14 @@ abstract class BaseJob(jobPriority: Int, doPersist: Boolean, vararg tags: String
         val TAG_SYNC_RESOURCE = "TAG_SYNC_RESOURCE"
     }
 
-    final override fun onCancel(cancelReason: Int, throwable: Throwable?) {
-        if (PRIORITY_CHANGE_RANGE_LOW <= cancelReason && cancelReason <+ PRIORITY_CHANGE_RANGE_HIGH) {
-            FetLifeApplication.instance.jobManager.addJobInBackground(cloneWithPriority(cancelReason))
-        } else {
-            onCancelJob(cancelReason,throwable)
+    val progressTrackerLiveData : MediatorLiveData<ProgressTracker> = MediatorLiveData()
+
+    init {
+        bg {
+            val jobProgressEntity = JobProgressEntity(progressTrackerId, ProgressTracker.STATE.NEW.toString())
+            val jobProgressDao = getDatabase().jobProgressDao()
+            jobProgressDao.insert(jobProgressEntity)
+            progressTrackerLiveData.addSource(jobProgressDao.getTracker(progressTrackerId),{data -> progressTrackerLiveData.value = data})
         }
     }
 
@@ -35,14 +48,60 @@ abstract class BaseJob(jobPriority: Int, doPersist: Boolean, vararg tags: String
         return RetryConstraint.CANCEL
     }
 
-    override fun onAdded() {
+    abstract fun onRunJob() : Boolean
+
+    final override fun onRun() {
+        if (onRunJob()) {
+            updateProgressState(ProgressTracker.STATE.FINISHED)
+        } else {
+            updateProgressState(ProgressTracker.STATE.FAILED,getJobMessage())
+        }
     }
 
-    open fun onCancelJob(cancelReason: Int, throwable: Throwable?) {
+    open fun getJobMessage(): String? {
+        return null
+    }
+
+    open fun onAddedJob() {}
+
+    final override fun onAdded() {
+        updateProgressState(ProgressTracker.STATE.QUEUED)
+        onAddedJob()
+    }
+
+    open fun onCancelJob(cancelReason: Int, throwable: Throwable?) {}
+
+    final override fun onCancel(cancelReason: Int, throwable: Throwable?) {
+        if (PRIORITY_CHANGE_RANGE_LOW <= cancelReason && cancelReason <+ PRIORITY_CHANGE_RANGE_HIGH) {
+            FetLifeApplication.instance.jobManager.addJobInBackground(cloneWithPriority(cancelReason))
+        } else {
+            updateProgressState(ProgressTracker.STATE.CANCELLED)
+            onCancelJob(cancelReason,throwable)
+        }
+    }
+
+    private fun updateProgressState(state: ProgressTracker.STATE, message: String? = null) {
+        bg {
+            val jobProgressEntity = JobProgressEntity(progressTrackerId, state.toString(), message)
+            val jobProgressDao = getDatabase().jobProgressDao()
+            jobProgressDao.update(jobProgressEntity)
+        }
+    }
+
+    open fun getDatabase() : FetLifeContentDatabase {
+        return FetLifeApplication.instance.fetLifeContentDatabase
+    }
+
+    open fun getApi() : FetLifeApi {
+        return FetLifeApplication.instance.fetlifeService.fetLifeApi
+    }
+
+    open fun getAuthHeader() : String {
+        return FetLifeApplication.instance.fetlifeService.authHeader!!
     }
 
     open fun cloneWithPriority(newPriority: Int): Job {
-        return this::class.primaryConstructor!!.call(newPriority,isPersistent,tags)
+        return this::class.primaryConstructor!!.call(newPriority,isPersistent,tags, progressTrackerId)
     }
 }
 

@@ -4,7 +4,7 @@ import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.model.dataobject.wrapper.Reaction
 import com.bitlove.fetlife.model.network.job.put.PutCommentJob
 
-class PutCommentResource : PutResource<Reaction>() {
+class PutReactionResource : PutResource<Reaction>() {
 
     private val reactionDao = FetLifeApplication.instance.fetLifeContentDatabase.reactionDao()
 
@@ -17,6 +17,8 @@ class PutCommentResource : PutResource<Reaction>() {
     }
 
     override fun syncWithNetwork(reaction: Reaction) {
-        FetLifeApplication.instance.jobManager.addJobInBackground(PutCommentJob(reaction))
+        val job = PutCommentJob(reaction)
+        setProgressTracker(job.progressTrackerLiveData)
+        FetLifeApplication.instance.jobManager.addJobInBackground(job)
     }
 }

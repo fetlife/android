@@ -40,6 +40,7 @@ import com.bitlove.fetlife.view.navigation.NavigationFragmentFactory
 import com.bitlove.fetlife.view.widget.FrescoImageLoader
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import java.net.URI
 import java.security.NoSuchAlgorithmException
 
 //TODO check out developer book: https://antonioleiva.com/kotlin-android-developers-book/
@@ -75,7 +76,7 @@ class FetLifeApplication : Application() {
     }
 
     fun onUserLoggedIn(userName: String, accessToken: String, refreshToken: String?) {
-        fetlifeService.accessToken = accessToken
+        fetlifeService.authHeader = accessToken
         fetlifeService.refreshToken = refreshToken
         if (loggedInUser != userName) {
             loggedInUser = userName
@@ -95,7 +96,7 @@ class FetLifeApplication : Application() {
 
         loggedInUser = null
         //TODO: assign value to clear memory instead of null
-        fetlifeService.accessToken = null
+        fetlifeService.authHeader = null
         fetlifeService.refreshToken = null
         //TODO: close database carefully (jobs might want to use it)
         fetLifeContentDatabase.close()
@@ -169,6 +170,15 @@ fun String.toUniqueLong() : Long {
         h = 31*h + char.toInt()
     }
     return h
+}
+
+fun String.getBaseUrl() : String {
+    return try {
+        val uri = URI(this)
+        URI(uri.getScheme(),uri.getAuthority(),uri.getPath(),null, null).toString()
+    } catch (t: Throwable) {
+        this
+    }
 }
 
 fun RecyclerView.workaroundItemFlickeringOnChange() {

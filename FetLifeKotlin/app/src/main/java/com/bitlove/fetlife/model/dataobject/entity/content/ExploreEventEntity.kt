@@ -1,4 +1,4 @@
-package com.bitlove.fetlife.model.dataobject.entity
+package com.bitlove.fetlife.model.dataobject.entity.content
 
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.ForeignKey
@@ -8,7 +8,6 @@ import android.text.TextUtils
 import com.bitlove.fetlife.model.dataobject.entity.reference.MemberRef
 import com.bitlove.fetlife.model.dataobject.entity.reference.TargetRef
 import com.google.gson.annotations.SerializedName
-import java.util.*
 
 @Entity(tableName = "explore_events",
         foreignKeys = arrayOf(

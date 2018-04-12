@@ -1,4 +1,4 @@
-package com.bitlove.fetlife.model.dataobject.entity
+package com.bitlove.fetlife.model.dataobject.entity.content
 
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Entity

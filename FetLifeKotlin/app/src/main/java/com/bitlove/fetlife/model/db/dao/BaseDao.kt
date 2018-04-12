@@ -17,7 +17,7 @@ package com.bitlove.fetlife.model.db.dao
  */
 
 import android.arch.persistence.room.*
-import com.bitlove.fetlife.model.dataobject.entity.DataEntity
+import com.bitlove.fetlife.model.dataobject.entity.content.DataEntity
 
 @Dao
 interface BaseDao<in T : DataEntity> {
@@ -44,7 +44,7 @@ interface BaseDao<in T : DataEntity> {
      * @param obj the object to be updated
      */
     @Update
-    fun update(obj: T)
+    fun update(obj: T) : Int
 
     /**
      * Delete an object from the database

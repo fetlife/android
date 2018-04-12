@@ -55,7 +55,7 @@ class TurbolinksFragment : Fragment(), TurbolinksAdapter, TurbolinksSession.Prog
                 .addPageObserver(this)
                 .restoreWithCachedSnapshot(false)
                 .setPullToRefreshEnabled(false)
-                .visitWithAuthHeader(FetLifeApplication.instance.fetlifeService.baseUrl + navigationFragmentFactory.getNavigationUrl(navigationId!!), FetLifeApplication.instance.fetlifeService.accessToken)
+                .visitWithAuthHeader(FetLifeApplication.instance.fetlifeService.baseUrl + navigationFragmentFactory.getNavigationUrl(navigationId!!), FetLifeApplication.instance.fetlifeService.authHeader)
     }
 
     override fun onAttach(context: Context?) {

@@ -1,7 +1,7 @@
 package com.bitlove.fetlife.model.network.job.put
 
 import com.bitlove.fetlife.model.dataobject.SyncObject
-import com.bitlove.fetlife.model.dataobject.entity.ReactionEntity
+import com.bitlove.fetlife.model.dataobject.entity.content.ReactionEntity
 import retrofit2.Call
 
 //TODO: solve persistence

@@ -9,9 +9,12 @@ import com.bitlove.fetlife.inTransaction
 import com.bitlove.fetlife.model.dataobject.wrapper.ExploreStory
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.logic.viewmodel.CardDetailViewModel
+import com.bitlove.fetlife.model.dataobject.wrapper.Content
+import com.bitlove.fetlife.model.dataobject.wrapper.Member
 import com.bitlove.fetlife.view.generic.CardSwipeFragment
+import com.bitlove.fetlife.view.generic.ResourceActivity
 
-class PhoneCardActivity : AppCompatActivity() {
+class PhoneCardActivity : ResourceActivity() {
 
     companion object {
         private const val EXTRA_CARD_TYPE = "EXTRA_CARD_TYPE"
@@ -21,12 +24,13 @@ class PhoneCardActivity : AppCompatActivity() {
         fun start(context: Context, cardList: List<CardViewDataHolder>, position: Int) {
             val cardTemplate = cardList.firstOrNull()?: return
             val intent = Intent(context, PhoneCardActivity::class.java)
-            if (cardTemplate is ExploreStory) {
-                intent.putExtra(EXTRA_CARD_TYPE, CardDetailViewModel.CardType.EXPLORE)
-            } else {
-                //TODO implement
-                intent.putExtra(EXTRA_CARD_TYPE, CardDetailViewModel.CardType.CONTENT)
+            val cardType = when (cardTemplate) {
+                is ExploreStory -> CardDetailViewModel.CardType.EXPLORE
+                is Content -> CardDetailViewModel.CardType.CONTENT
+                else -> throw IllegalArgumentException()
             }
+            intent.putExtra(EXTRA_CARD_TYPE, cardType)
+
             val cardIds = ArrayList<String>()
             for (card in cardList) {
                 cardIds.add(card.getLocalId()!!)

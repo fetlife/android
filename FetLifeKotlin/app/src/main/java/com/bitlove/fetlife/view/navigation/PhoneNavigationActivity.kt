@@ -20,11 +20,12 @@ import com.bitlove.fetlife.model.dataobject.wrapper.ExploreStory
 import com.bitlove.fetlife.view.login.LoginActivity
 import com.bitlove.fetlife.view.widget.FloatingActionButtonBehavior
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
+import com.bitlove.fetlife.view.generic.ResourceActivity
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
 
 //TODO: move away navigation callback from being a context object
-open class PhoneNavigationActivity : AppCompatActivity(), NavigationCallback {
+open class PhoneNavigationActivity : ResourceActivity(), NavigationCallback {
 
     companion object {
         const val STATE_KEY_NAVIGATION = "STATE_KEY_NAVIGATION"
@@ -72,7 +73,7 @@ open class PhoneNavigationActivity : AppCompatActivity(), NavigationCallback {
     }
 
     override fun onCardNavigate(cardList: List<CardViewDataHolder>, position: Int) {
-        if (cardList.firstOrNull() as? ExploreStory != null) {
+        if (cardList.firstOrNull() != null) {
             PhoneCardActivity.start(this, cardList, position)
         }
     }
@@ -193,10 +194,6 @@ open class PhoneNavigationActivity : AppCompatActivity(), NavigationCallback {
         }
 
         return super.onOptionsItemSelected(item)
-    }
-
-    override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(IconicsContextWrapper.wrap(newBase))
     }
 
     open fun inflateIconicsMenu(menuRes: Int, menu: Menu?) {

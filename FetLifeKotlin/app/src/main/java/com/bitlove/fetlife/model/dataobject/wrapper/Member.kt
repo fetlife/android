@@ -4,9 +4,9 @@ import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.Relation
 import com.bitlove.fetlife.model.dataobject.SyncObject
-import com.bitlove.fetlife.model.dataobject.entity.ContentEntity
-import com.bitlove.fetlife.model.dataobject.entity.MemberEntity
-import com.bitlove.fetlife.model.dataobject.entity.RelationEntity
+import com.bitlove.fetlife.model.dataobject.entity.content.ContentEntity
+import com.bitlove.fetlife.model.dataobject.entity.content.MemberEntity
+import com.bitlove.fetlife.model.dataobject.entity.content.RelationEntity
 import com.bitlove.fetlife.model.db.dao.BaseDao
 import com.bitlove.fetlife.logic.dataholder.AvatarViewDataHolder
 
@@ -33,6 +33,10 @@ class Member() : AvatarViewDataHolder(), SyncObject<MemberEntity> {
 
     override fun getRemoteId(): String? {
         return memberEntity?.networkId
+    }
+
+    override fun getType(): String? {
+        return Member::class.simpleName
     }
 
     override fun getAvatarUrl(): String? {

@@ -1,7 +1,7 @@
 package com.bitlove.fetlife.model.dataobject.wrapper
 
 import android.arch.persistence.room.Embedded
-import com.bitlove.fetlife.model.dataobject.entity.UserEntity
+import com.bitlove.fetlife.model.dataobject.entity.user.UserEntity
 
 class User {
 

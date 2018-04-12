@@ -61,7 +61,7 @@ class LoginFragment : Fragment(), LifecycleOwner {
             val timeStamp = System.currentTimeMillis()
             val username = username_field.text.toString()
             val userData = FetLifeApplication.instance.fetlifeDataSource.login(username, password_field.text.toString(), login_remember.isChecked)
-            userData.observeForever {userList ->
+            userData.liveData.observeForever {userList ->
                 val user = userList?.firstOrNull()
                 if (user?.getUserName() == username && user.getLastLoggedIn() > timeStamp) {
                     PhoneNavigationActivity.start(view.context)

@@ -1,6 +1,6 @@
 package com.bitlove.fetlife.model.dataobject.entity.reference
 
-import com.bitlove.fetlife.model.dataobject.entity.ReactionEntity
+import com.bitlove.fetlife.model.dataobject.entity.content.ReactionEntity
 import com.google.gson.annotations.SerializedName
 
 data class ReactionRef(@SerializedName("id") var id: String = "",

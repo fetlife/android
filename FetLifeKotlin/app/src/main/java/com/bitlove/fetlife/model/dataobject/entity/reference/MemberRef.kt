@@ -1,6 +1,6 @@
 package com.bitlove.fetlife.model.dataobject.entity.reference
 
-import com.bitlove.fetlife.model.dataobject.entity.MemberEntity
+import com.bitlove.fetlife.model.dataobject.entity.content.MemberEntity
 import com.bitlove.fetlife.model.dataobject.entity.embedded.Avatar
 import com.google.gson.annotations.SerializedName
 
