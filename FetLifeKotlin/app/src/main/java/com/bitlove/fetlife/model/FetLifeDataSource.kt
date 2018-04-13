@@ -15,39 +15,40 @@ import java.util.*
 
 class FetLifeDataSource {
 
-    fun loadConversations(forceLoad: Boolean, page: Int, limit: Int) : ResourceResult<List<Content>> {
-        return GetContentListResource(Content.TYPE.CONVERSATION, forceLoad, page, limit).load()
+    fun getConversationsLoader(forceLoad: Boolean, page: Int, limit: Int) : ResourceResult<List<Content>> {
+        return GetContentListResource(Content.TYPE.CONVERSATION, forceLoad, page, limit).loadResult
     }
 
-    fun loadFriendsFeed(forceLoad: Boolean, page: Int, limit: Int): ResourceResult<List<ExploreStory>> {
-        return GetExploreListResource(ExploreStory.TYPE.EXPLORE_FRIENDS,forceLoad, page, limit).load()
+    fun getFriendsFeedLoader(forceLoad: Boolean, page: Int, limit: Int): ResourceResult<List<ExploreStory>> {
+        return GetExploreListResource(ExploreStory.TYPE.EXPLORE_FRIENDS,forceLoad, page, limit).loadResult
     }
 
-    fun loadStuffYouLove(forceLoad: Boolean, page: Int, limit: Int): ResourceResult<List<ExploreStory>> {
-        return GetExploreListResource(ExploreStory.TYPE.STUFF_YOU_LOVE,forceLoad, page, limit).load()
+    fun getStuffYouLoveLoader(forceLoad: Boolean, page: Int, limit: Int): ResourceResult<List<ExploreStory>> {
+        return GetExploreListResource(ExploreStory.TYPE.STUFF_YOU_LOVE,forceLoad, page, limit).loadResult
     }
 
-    fun loadFreshAndPervy(forceLoad: Boolean, page: Int, limit: Int): ResourceResult<List<ExploreStory>> {
-        return GetExploreListResource(ExploreStory.TYPE.FRESH_AND_PERVY,forceLoad, page, limit).load()
+    fun getFreshAndPervyLoader(forceLoad: Boolean, page: Int, limit: Int): ResourceResult<List<ExploreStory>> {
+        return GetExploreListResource(ExploreStory.TYPE.FRESH_AND_PERVY,forceLoad, page, limit).loadResult
     }
 
-    fun loadKinkyAndPopular(forceLoad: Boolean, page: Int, limit: Int): ResourceResult<List<ExploreStory>> {
-        return GetExploreListResource(ExploreStory.TYPE.KINKY_AND_POPULAR,forceLoad, page, limit).load()
+    fun getKinkyAndPopularLoader(forceLoad: Boolean, page: Int, limit: Int): ResourceResult<List<ExploreStory>> {
+        return GetExploreListResource(ExploreStory.TYPE.KINKY_AND_POPULAR,forceLoad, page, limit).loadResult
     }
 
-    fun loadContentDetail(contentId: String): ResourceResult<Content> {
-        return GetContentResource(contentId,true).load()
+    fun getContentDetailLoader(contentId: String): ResourceResult<Content> {
+        return GetContentResource(contentId,true).loadResult
     }
 
-    fun loadExploreStoryDetail(storyId: String): ResourceResult<ExploreStory> {
-        return GetExploreResource(storyId, true).load()
+    fun getExploreStoryDetailLoader(storyId: String): ResourceResult<ExploreStory> {
+        return GetExploreResource(storyId, true).loadResult
     }
 
-    fun loadComments(cardData: SyncObject<*>, page: Int, limit: Int): ResourceResult<List<Reaction>> {
-        return GetReactionListResource(Reaction.TYPE.COMMENT,cardData,true, page, limit).load()
+    fun getCommentsLoader(cardData: SyncObject<*>, page: Int, limit: Int): ResourceResult<List<Reaction>> {
+        return GetReactionListResource(Reaction.TYPE.COMMENT,cardData,true, page, limit).loadResult
     }
 
     fun sendComment(comment: String, content: CardViewDataHolder) {
+        //TODO solve add Source trigger problem
         var commentReaction = ReactionEntity()
         commentReaction.type = Reaction.TYPE.COMMENT.toString()
         commentReaction.contentId = content.getLocalId()
@@ -63,6 +64,7 @@ class FetLifeDataSource {
     }
 
     fun login(userName: String, password: String, rememberUser: Boolean): ResourceResult<List<User>> {
+        //TODO solve add Source trigger problem
         return LoginResource().login(userName,password,rememberUser)
     }
 

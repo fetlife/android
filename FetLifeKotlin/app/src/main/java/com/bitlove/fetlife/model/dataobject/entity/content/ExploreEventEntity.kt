@@ -20,6 +20,12 @@ import com.google.gson.annotations.SerializedName
         ForeignKey(
                 entity = MemberEntity::class,
                 parentColumns = arrayOf("dbId"),
+                childColumns = arrayOf("ownerId"),
+                onDelete = ForeignKey.CASCADE,
+                onUpdate = ForeignKey.RESTRICT),
+        ForeignKey(
+                entity = MemberEntity::class,
+                parentColumns = arrayOf("dbId"),
                 childColumns = arrayOf("memberId"),
                 onDelete = ForeignKey.CASCADE,
                 onUpdate = ForeignKey.RESTRICT),
@@ -44,8 +50,9 @@ import com.google.gson.annotations.SerializedName
 ))
 data class ExploreEventEntity(
         @SerializedName("story_id") var storyId: String = "",
-        @SerializedName("member_id") var memberId: String = "",
+        @SerializedName("owner_Id") var ownerId: String = "",
         @SerializedName("action") var action: String = "",
+        @SerializedName("member_id") var memberId: String? = null,
         @SerializedName("content_id") var contentId: String? = null,
         @SerializedName("reaction_id") var reactionId: String? = null,
         @SerializedName("relation_id") var relationId: String? = null,
@@ -64,7 +71,22 @@ data class ExploreEventEntity(
             return field
         }
 
+    var remoteId: String = ""
+        get() {
+            if (TextUtils.isEmpty(field)) {
+                field = generateRemoteId()
+            }
+            return field
+        }
+
     private fun generateDbId(): String {
+        var dbId = ""
+        dbId += storyId
+        dbId += remoteId
+        return dbId
+    }
+
+    private fun generateRemoteId(): String {
         var dbId = ""
         dbId += memberRef?.id
         dbId += target?.id

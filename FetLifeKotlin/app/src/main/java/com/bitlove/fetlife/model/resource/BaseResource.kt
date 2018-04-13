@@ -5,7 +5,7 @@ import com.bitlove.fetlife.model.dataobject.wrapper.ProgressTracker
 
 abstract class BaseResource<ResourceType> {
 
-    open var loadResult = ResourceResult<ResourceType>()
+    open var loadResult = ResourceResult<ResourceType>(this)
 
     open fun load() : ResourceResult<ResourceType> { return loadResult}
 

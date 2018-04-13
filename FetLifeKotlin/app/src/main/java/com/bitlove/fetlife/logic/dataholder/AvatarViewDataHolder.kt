@@ -4,14 +4,10 @@ import android.arch.persistence.room.Ignore
 import com.bitlove.fetlife.getBaseUrl
 import com.bitlove.fetlife.hash
 
-abstract class AvatarViewDataHolder {
+abstract class AvatarViewDataHolder : CardViewDataHolder() {
 
     @Ignore
-    private var contentHash : String? = null
-
-    open fun getLocalId() : String? = null
-    open fun getRemoteId() : String? = null
-    open fun getType() : String? = null
+    private var avatarHash : String? = null
 
     open fun getAvatarUrl() : String? = null
     open fun getAvatarName() : String? = null
@@ -19,19 +15,11 @@ abstract class AvatarViewDataHolder {
     open fun getAvatarSubline() : String? = null
     open fun getAvatarSublineExtra() : String? = ""
 
-    open fun isSame(other: AvatarViewDataHolder): Boolean {
-        return this.getRemoteId() == other.getRemoteId() && this.getType() == this.getType()
-    }
-
-    open fun hasSameContent(other: AvatarViewDataHolder): Boolean {
-        return genContentHash() == other.genContentHash()
-    }
-
-    fun genContentHash() : String {
-        if (contentHash == null) {
-            contentHash = (getAvatarName() + getAvatarUrl()?.getBaseUrl() + getAvatarMeta() + getAvatarSubline() + getAvatarSublineExtra()).hash()
+    override fun getContentHash() : String {
+        if (avatarHash == null) {
+            avatarHash = super.getContentHash() + (getAvatarName() + getAvatarUrl()?.getBaseUrl() + getAvatarMeta() + getAvatarSubline() + getAvatarSublineExtra()).hash()
         }
-        return contentHash!!
+        return avatarHash!!
     }
 
 }

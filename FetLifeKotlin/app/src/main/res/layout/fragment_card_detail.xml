@@ -5,22 +5,29 @@
 
     <data/>
 
-    <ScrollView
-        android:id="@+id/card_scroll"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="0dp"
-        android:background="@color/raisinBlack"
-        android:scrollbars="vertical"
-        android:descendantFocusability="beforeDescendants"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="match_parent">
 
-        <include
-            android:id="@+id/card_view"
+        <ScrollView
+            android:id="@+id/card_scroll"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            layout="@layout/item_data_card"/>
+            android:layout_height="match_parent"
+            android:padding="0dp"
+            android:background="@color/raisinBlack"
+            android:scrollbars="vertical"
+            android:descendantFocusability="beforeDescendants"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    </ScrollView>
+            <include
+                android:id="@+id/card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/item_data_card"/>
+
+        </ScrollView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </layout>

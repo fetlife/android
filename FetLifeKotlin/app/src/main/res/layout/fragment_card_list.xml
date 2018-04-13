@@ -15,15 +15,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/card_list"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="4dp"
-            android:scrollbars="vertical"
-            android:descendantFocusability="beforeDescendants"
-            app:layoutManager="com.bitlove.fetlife.view.widget.GridAutoFitLayoutManager"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/card_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="4dp"
+                android:scrollbars="vertical"
+                android:descendantFocusability="beforeDescendants"
+                app:layoutManager="com.bitlove.fetlife.view.widget.GridAutoFitLayoutManager"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
 
         <ProgressBar
             android:visibility="@{progressTracker != null &amp;&amp; progressTracker.inProgress() ? View.VISIBLE : View.GONE}"

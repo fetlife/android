@@ -13,17 +13,17 @@ class GetReactionListResource(val type: Reaction.TYPE, val parent: SyncObject<*>
     private val reactionDao = FetLifeApplication.instance.fetLifeContentDatabase.reactionDao()
 
     override fun loadFromDb(): LiveData<List<Reaction>> {
-        val content = (parent as? Content) ?: (parent as? ExploreStory)?.getContent() ?: null
-        return reactionDao.getReactions(content?.getLocalId()!!)
+        val content = (parent as? Content) ?: (parent as? ExploreStory)?.getChild() as? Content ?: throw IllegalArgumentException()
+        return reactionDao.getReactions(content!!.getLocalId()!!)
     }
 
     override fun shouldSync(data: List<Reaction>?, forceSync: Boolean): Boolean {
         //TODO : Consider using expiration time
-        return true
+        return forceSync
     }
 
     override fun syncWithNetwork(data: List<Reaction>?) {
-        val content = (parent as? Content) ?: (parent as? ExploreStory)?.getContent() ?: return
+        val content = (parent as? Content) ?: (parent as? ExploreStory)?.getChild() as? Content ?: return
         val job = GetReactionListJob(type,content,limit,page,sinceMarker,untilMarker)
         setProgressTracker(job.progressTrackerLiveData)
         FetLifeApplication.instance.jobManager.addJobInBackground(job)

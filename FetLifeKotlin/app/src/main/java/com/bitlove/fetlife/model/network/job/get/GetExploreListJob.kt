@@ -48,19 +48,31 @@ class GetExploreListJob(val type: ExploreStory.TYPE, val limit: Int, val page: I
         val reactionDao = getDatabase().reactionDao()
         val relationDao = getDatabase().relationDao()
         val contentDao = getDatabase().contentDao()
-        //TODO: take care of page based ids
         for ((i,story) in resourceArray.withIndex()) {
-            if (story?.events == null || story?.events?.size == 0 || story?.events?.first()?.action != "picture_created") {
+            if (!isSupported(story)) {
                 continue
             }
             story.type = type.toString()
-            story.serverOrder = i
+            //TODO: take care of page based ids in case of markers
+            story.serverOrder = i + limit*(page-1)
             exploreStoryDao.insert(story)
             for (event in story.events!!) {
                 event.storyId = story.dbId
-                event.memberId = saveMemberRef(event.memberRef, memberDao)
+                event.ownerId = saveMemberRef(event.memberRef, memberDao)
                 saveEventTargets(event,memberDao,contentDao,reactionDao,relationDao)
                 exploreEventDao.insert(event)
+            }
+        }
+    }
+
+    private fun isSupported(story: ExploreStoryEntity): Boolean {
+        return if (story?.events?.isEmpty() != false) {
+            false
+        } else {
+            return when (story.action) {
+                "picture_created",
+                "like_created" -> true
+                else -> false
             }
         }
     }

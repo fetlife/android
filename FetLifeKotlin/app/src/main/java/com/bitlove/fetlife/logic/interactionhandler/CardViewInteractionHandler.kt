@@ -4,11 +4,9 @@ import android.databinding.ObservableField
 import android.view.View
 import android.widget.EditText
 import com.bitlove.fetlife.FetLifeApplication
-import com.bitlove.fetlife.model.resource.get.GetReactionListResource
 import com.bitlove.fetlife.view.navigation.NavigationCallback
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.model.dataobject.SyncObject
-import com.bitlove.fetlife.model.dataobject.wrapper.Reaction
 import org.jetbrains.anko.coroutines.experimental.bg
 
 class CardViewInteractionHandler(cardData: CardViewDataHolder?, var cardList: List<CardViewDataHolder>? = null, private val position: Int = -1, private val navigationCallback: NavigationCallback? = null) {
@@ -43,13 +41,14 @@ class CardViewInteractionHandler(cardData: CardViewDataHolder?, var cardList: Li
 
     private fun startCommentCall(cardData: SyncObject<*>) {
         //TODO use lifecycle observe
-        val resourceResult = FetLifeApplication.instance.fetlifeDataSource.loadComments(cardData, pageRequested, COMMENT_PAGE_COUNT)
+        val resourceResult = FetLifeApplication.instance.fetlifeDataSource.getCommentsLoader(cardData, pageRequested, COMMENT_PAGE_COUNT)
         resourceResult.liveData.observeForever{
             bg{cardData.save()}
         }
         resourceResult.progressTracker.observeForever(
                 {progressTracker -> commentLoadInProgress.set(progressTracker != null && progressTracker.inProgress()) }
         )
+        resourceResult.fetch()
     }
 
     open fun onGetMoreComments(view: View, cardData: CardViewDataHolder) {

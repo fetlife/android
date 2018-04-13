@@ -29,7 +29,8 @@
             android:layout_gravity="bottom"/>
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/button_change_layout"
+            android:id="@+id/button_floating"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"

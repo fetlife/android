@@ -13,6 +13,8 @@ data class ExploreStoryEntity (
         @Ignore @SerializedName("events") var events: List<ExploreEventEntity>? = null
 ) : DataEntity {
 
+    var serverOrder : Int = 0
+
     @PrimaryKey
     var dbId: String = ""
         get() {
@@ -23,12 +25,15 @@ data class ExploreStoryEntity (
         }
 
     var type: String? = null
-    var serverOrder: Int? = null
 
     private fun generateDbId(): String {
         var dbId = ""
         dbId += type
-        dbId += serverOrder
+        if (events != null) {
+            for (event in events!!) {
+                dbId += event.remoteId
+            }
+        }
         return dbId
     }
 }

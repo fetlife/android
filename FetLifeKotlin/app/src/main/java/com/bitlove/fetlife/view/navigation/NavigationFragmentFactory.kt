@@ -45,8 +45,8 @@ class NavigationFragmentFactory {
             R.id.navigation_explore_fresh_and_pervy -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_FRESH_AND_PERVY)
             R.id.navigation_explore_kinky_and_popular -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_KINKY_AND_POPULAR)
             R.id.navigation_explore_stuff_you_love -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_STUFF_YOU_LOVE)
-            R.id.navigation_conversations_inbox -> CardListFragment.newInstance(CardListViewModel.CardListType.CONVERSATIONS)
-            R.id.navigation_conversations_all -> CardListFragment.newInstance(CardListViewModel.CardListType.CONVERSATIONS)
+            R.id.navigation_conversations_inbox -> CardListFragment.newInstance(CardListViewModel.CardListType.CONVERSATIONS_INBOX)
+            R.id.navigation_conversations_all -> CardListFragment.newInstance(CardListViewModel.CardListType.CONVERSATIONS_ALL)
             else -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_KINKY_AND_POPULAR)
         }
     }

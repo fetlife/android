@@ -3,69 +3,84 @@ package com.bitlove.fetlife.model.dataobject.wrapper
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Relation
 import com.bitlove.fetlife.FetLifeApplication
-import com.bitlove.fetlife.model.dataobject.entity.content.ContentEntity
-import com.bitlove.fetlife.model.dataobject.entity.content.ExploreEventEntity
-import com.bitlove.fetlife.model.dataobject.entity.content.MemberEntity
+import com.bitlove.fetlife.logic.dataholder.AvatarViewDataHolder
 import com.bitlove.fetlife.model.db.dao.BaseDao
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
+import com.bitlove.fetlife.logic.dataholder.ReactionViewDataHolder
 import com.bitlove.fetlife.model.dataobject.SyncObject
+import com.bitlove.fetlife.model.dataobject.entity.content.*
 
 class ExploreEvent : CardViewDataHolder(), SyncObject<ExploreEventEntity> {
     @Embedded
     lateinit var exploreEventEntity: ExploreEventEntity
 
-    @Relation(parentColumn = "memberId", entityColumn = "dbId", entity = MemberEntity::class)
+    @Relation(parentColumn = "ownerId", entityColumn = "dbId", entity = MemberEntity::class)
     var ownerSingleItemList: List<Member>? = null
 
     @Relation(parentColumn = "contentId", entityColumn = "dbId", entity = ContentEntity::class)
     var contents: List<Content>? = null
 
-    fun getMember() : Member? {
+    @Relation(parentColumn = "reactionId", entityColumn = "dbId", entity = ReactionEntity::class)
+    var reactions: List<Reaction>? = null
+
+    @Relation(parentColumn = "memberId", entityColumn = "dbId", entity = MemberEntity::class)
+    var members: List<Member>? = null
+
+    override fun getAvatar(): AvatarViewDataHolder? {
         return ownerSingleItemList?.firstOrNull()
     }
 
     override fun getType(): String? {
-        return if (contents != null && contents!!.size == 1) contents!!.first()?.getType() else null
+        return getChild()?.getType() ?: null
     }
 
     override fun isLoved(): Boolean? {
-        return if (contents != null && contents!!.size == 1) contents!!.first()?.isLoved() else null
+        return getChild()?.isLoved() ?: null
     }
 
     override fun getSupportingText(): String? {
-        return if (contents != null && contents!!.size == 1) contents!!.first()?.getSupportingText() else null
+        return getChild()?.getSupportingText() ?: null
     }
 
     override fun hasNewComment(): Boolean? {
-        return if (contents != null && contents!!.size == 1) contents!!.first()?.hasNewComment() else null
+        return getChild()?.hasNewComment() ?: null
     }
 
     override fun getLoveCount(): String? {
-        return if (contents != null && contents!!.size == 1) contents!!.first()?.getLoveCount() else null
+        return getChild()?.getLoveCount() ?: null
     }
 
     override fun getCommentCountText(): String? {
-        return if (contents != null && contents!!.size == 1) contents!!.first()?.getCommentCountText() else null
+        return getChild()?.getCommentCountText() ?: null
     }
 
-    override fun getComments(): List<Reaction>? {
-        return if (contents != null && contents!!.size == 1) contents!!.first()?.getComments() else null
+    override fun getComments(): List<ReactionViewDataHolder>? {
+        return getChild()?.getComments() ?: null
     }
 
     override fun getMediaUrl(): String? {
-        return if (contents != null && contents!!.size == 1) contents!!.first()?.getMediaUrl() else null
+        return getChild()?.getMediaUrl() ?: null
     }
 
     override fun getMediaAspectRatio(): Float? {
-        return if (contents != null && contents!!.size == 1) contents!!.first()?.getMediaAspectRatio() else null
+        return getChild()?.getMediaAspectRatio() ?: null
     }
 
     override fun getDao(): BaseDao<ExploreEventEntity> {
         return FetLifeApplication.instance.fetLifeContentDatabase.exploreEventDao()
     }
 
-    fun getContent(): Content? {
-        return if (contents != null && contents!!.size == 1) contents!!.first() else null
+    override fun getChild() : CardViewDataHolder? {
+        if (contents?.isEmpty() == false) {
+            return  contents!!.first()
+        }
+        if (reactions?.isEmpty() == false) {
+            return  reactions!!.first()
+        }
+        if (members?.isEmpty() == false) {
+            return  members!!.first()
+        }
+        return null
     }
 
     override fun getEntity(): ExploreEventEntity {

@@ -18,7 +18,7 @@ class GetExploreResource(private val storyId: String, forceLoad: Boolean) : GetR
 
     override fun shouldSync(data: ExploreStory?, forceSync: Boolean): Boolean {
         //TODO : Consider using expiration time
-        return false
+        return forceSync
     }
 
     override fun syncWithNetwork(data: ExploreStory?) {

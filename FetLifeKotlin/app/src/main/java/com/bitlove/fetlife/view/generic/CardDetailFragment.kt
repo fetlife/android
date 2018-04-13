@@ -48,10 +48,9 @@ class CardDetailFragment : BindingFragment<FragmentCardDetailBinding, CardDetail
         if (viewModel == null) {
             return
         }
-        viewModel!!.init(cardId, cardType)
 
         //TODO remove forever and use state based
-        viewModel!!.cardDetail.observeForever({
+        viewModel!!.observeDataForever(cardType, cardId, {
             cardData ->
             if (cardViewInteractionHandler == null) {
                 cardViewInteractionHandler = CardViewInteractionHandler(cardData)
@@ -59,5 +58,13 @@ class CardDetailFragment : BindingFragment<FragmentCardDetailBinding, CardDetail
             binding.cardView!!.cardData = cardData
             binding.cardView!!.cardInteractionHandler = cardViewInteractionHandler
         })
+
+        viewModel!!.refresh(cardType, cardId, savedInstanceState == null)
     }
+
+    override fun onDetach() {
+        super.onDetach()
+        viewModel!!.remove(cardType,cardId)
+    }
+
 }

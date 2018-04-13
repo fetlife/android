@@ -1,11 +1,8 @@
 package com.bitlove.fetlife.logic.viewmodel
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
-import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.model.dataobject.wrapper.ProgressTracker
-import com.bitlove.fetlife.model.resource.ResourceResult
 
 class CardDetailViewModel : ViewModel() {
 
@@ -16,32 +13,31 @@ class CardDetailViewModel : ViewModel() {
         EXPLORE
     }
 
-    lateinit var cardId: String
-    lateinit var cardType: CardType
-    lateinit var cardDetail : LiveData<CardViewDataHolder>
-    lateinit var progressTracker: LiveData<ProgressTracker>
+    var viewModelObjects = HashMap<String, CardDetailViewModelObject>()
 
-    fun init(cardId: String, cardType: CardType) {
-        this.cardId = cardId
-        this.cardType = cardType
-        loadCardDetail(cardId, false)
-    }
-
-    open fun refresh() {
-        loadCardDetail(cardId, true)
-    }
-
-    private fun loadCardDetail(cardId: String, forceLoad: Boolean) {
-        val dataSource = FetLifeApplication.instance.fetlifeDataSource
-        //TODO(cleanup) use resource instead
-        val database = FetLifeApplication.instance.fetLifeContentDatabase
-        val resourceResult = when (cardType) {
-            CardType.CONVERSATION,CardType.CONTENT -> dataSource.loadContentDetail(cardId) as ResourceResult<CardViewDataHolder>
-            CardType.EXPLORE -> dataSource.loadExploreStoryDetail(cardId) as ResourceResult<CardViewDataHolder>
-            else -> {throw IllegalArgumentException()}
+    private fun getViewModelObject(cardType: CardType, cardId: String) : CardDetailViewModelObject {
+        if (!viewModelObjects.containsKey(cardType.toString()+cardId)) {
+            viewModelObjects[cardType.toString()+cardId] = CardDetailViewModelObject(cardType, cardId)
         }
-        cardDetail = resourceResult.liveData
-        progressTracker = resourceResult.progressTracker
+        return viewModelObjects[cardType.toString()+cardId]!!
+    }
+
+
+    open fun refresh(cardType: CardType, cardId: String, forceLoad: Boolean = false) {
+        getViewModelObject(cardType, cardId).refresh(forceLoad)
+    }
+
+    fun observeDataForever(cardType: CardType, cardId: String, observer: (CardViewDataHolder?) -> Unit) {
+        getViewModelObject(cardType, cardId).cardDetail.observeForever { data -> observer.invoke(data) }
+    }
+
+    fun observeProgressForever(cardType: CardType, cardId: String, observer: (ProgressTracker?) -> Unit) {
+        getViewModelObject(cardType,cardId).progressTracker.observeForever{ tracker -> observer.invoke(tracker) }
+    }
+
+    fun remove(cardType: CardType, cardId: String) {
+        //TODO: remove live data observers
+        viewModelObjects.remove(cardType.toString()+cardId)
     }
 
 }

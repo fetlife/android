@@ -1,12 +1,10 @@
 package com.bitlove.fetlife.logic.viewmodel
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
-import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.model.dataobject.wrapper.ProgressTracker
-import com.bitlove.fetlife.model.resource.ResourceResult
 
+//TODO: merge with CardDetailViewModel into super class
 class CardListViewModel : ViewModel() {
 
     companion object {
@@ -14,38 +12,38 @@ class CardListViewModel : ViewModel() {
     }
 
     enum class CardListType {
-        CONVERSATIONS,
+        CONVERSATIONS_INBOX,
+        CONVERSATIONS_ALL,
         EXPLORE_STUFF_YOU_LOVE,
         EXPLORE_FRESH_AND_PERVY,
         EXPLORE_KINKY_AND_POPULAR,
         EXPLORE_FRIENDS_FEED
     }
 
-    lateinit var cardListType : CardListType
-    lateinit var cardList : LiveData<List<CardViewDataHolder>>
-    lateinit var progressTracker: LiveData<ProgressTracker>
+    var viewModelObjects = HashMap<CardListType, CardListViewModelObject>()
 
-    fun init(cardListType: CardListType) {
-        this.cardListType = cardListType
-        loadCardList(false)
+    fun observerDataForever(cardListType: CardListType, observer: (List<CardViewDataHolder>?) -> Unit) {
+        getViewModelObject(cardListType).cardList.observeForever { data -> observer.invoke(data) }
     }
 
-    open fun refresh(limit: Int = DEFAULT_PAGE_SIZE, page: Int = 1) {
-        loadCardList(true, limit, page)
+    fun observerProgressForever(cardListType: CardListType, observer: (ProgressTracker?) -> Unit) {
+        getViewModelObject(cardListType).progressTracker.observeForever{ tracker -> observer.invoke(tracker) }
     }
 
-    private fun loadCardList(forceLoad: Boolean, limit: Int = DEFAULT_PAGE_SIZE, page: Int = 1) {
-        val dataSource = FetLifeApplication.instance.fetlifeDataSource
-        val resourceResult = when (cardListType) {
-            CardListType.CONVERSATIONS -> dataSource.loadConversations(forceLoad,page,limit) as ResourceResult<List<CardViewDataHolder>>
-            CardListType.EXPLORE_FRESH_AND_PERVY -> dataSource.loadFreshAndPervy(forceLoad,page,limit) as ResourceResult<List<CardViewDataHolder>>
-            CardListType.EXPLORE_KINKY_AND_POPULAR -> dataSource.loadKinkyAndPopular(forceLoad,page,limit) as ResourceResult<List<CardViewDataHolder>>
-            CardListType.EXPLORE_STUFF_YOU_LOVE -> dataSource.loadStuffYouLove(forceLoad,page,limit) as ResourceResult<List<CardViewDataHolder>>
-            CardListType.EXPLORE_FRIENDS_FEED -> dataSource.loadFriendsFeed(forceLoad,page,limit) as ResourceResult<List<CardViewDataHolder>>
-            else -> {throw IllegalArgumentException()}
+    private fun getViewModelObject(cardListType: CardListType) : CardListViewModelObject {
+        if (!viewModelObjects.containsKey(cardListType)) {
+            viewModelObjects[cardListType] = CardListViewModelObject(cardListType)
         }
-        cardList = resourceResult.liveData
-        progressTracker = resourceResult.progressTracker
+        return viewModelObjects[cardListType]!!
+    }
+
+    open fun refresh(cardListType: CardListType, forceLoad: Boolean = false, limit: Int = DEFAULT_PAGE_SIZE, page: Int = 1) {
+        getViewModelObject(cardListType).refresh(forceLoad,limit,page)
+    }
+
+    fun remove(cardListType: CardListType) {
+        //TODO: remove live data observers
+        viewModelObjects.remove(cardListType)
     }
 
 }

@@ -1,8 +1,6 @@
 package com.bitlove.fetlife.model.resource.get
 
 import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MediatorLiveData
-import com.bitlove.fetlife.model.dataobject.wrapper.ProgressTracker
 import com.bitlove.fetlife.model.resource.BaseResource
 import com.bitlove.fetlife.model.resource.ResourceResult
 import org.jetbrains.anko.coroutines.experimental.bg
@@ -10,7 +8,7 @@ import org.jetbrains.anko.coroutines.experimental.bg
 abstract class GetResource<ResourceType>(forceSync : Boolean) : BaseResource<ResourceType>() {
 
     private val forceSync = forceSync
-    private var synced = false
+    private var networkSyncChecked = false
 
     override fun load() : ResourceResult<ResourceType> {
         loadInBackground()
@@ -23,8 +21,8 @@ abstract class GetResource<ResourceType>(forceSync : Boolean) : BaseResource<Res
             loadResult.liveData.addSource(dbSource, {data ->
                 loadResult.liveData.value = data
                 //TODO(cleanup) implement with should sync
-                if (!synced) {
-                    synced = true
+                if (!networkSyncChecked && shouldSync(data, forceSync)) {
+                    networkSyncChecked = true
                     syncWithNetwork(data)
                 }
             })

@@ -18,7 +18,7 @@ class GetContentResource(val contentId: String, forceLoad: Boolean) : GetResourc
 
     override fun shouldSync(data: Content?, forceSync: Boolean): Boolean {
         //TODO : Consider using expiration time
-        return false
+        return forceSync
     }
 
     override fun syncWithNetwork(data: Content?) {

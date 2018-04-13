@@ -1,6 +1,5 @@
 package com.bitlove.fetlife.view.generic
 
-import android.databinding.ViewDataBinding
 import android.os.Bundle
 import android.support.v7.util.DiffUtil
 import android.view.View
@@ -10,7 +9,6 @@ import com.bitlove.fetlife.view.navigation.NavigationCallback
 import com.bitlove.fetlife.logic.dataholder.CardDiffUtilCallback
 import com.bitlove.fetlife.logic.viewmodel.CardListViewModel
 import com.bitlove.fetlife.workaroundItemFlickeringOnChange
-
 import kotlinx.android.synthetic.main.fragment_card_list.*
 
 class CardListFragment : BindingFragment<FragmentCardListBinding, CardListViewModel>() {
@@ -46,13 +44,13 @@ class CardListFragment : BindingFragment<FragmentCardListBinding, CardListViewMo
         if (viewModel == null) {
             return
         }
+
         card_list.workaroundItemFlickeringOnChange()
         //TODO: get NavigationCallBack from activity rather than use it itself
         card_list.adapter = CardListAdapter(activity as NavigationCallback)
 
-        viewModel!!.init(cardListType)
         //TODO remove forever and use state based
-        viewModel!!.cardList!!.observeForever({
+        viewModel!!.observerDataForever(cardListType,{
             newCardList ->
             if (card_list != null) {
                 val cardListAdapter = (card_list.adapter as CardListAdapter)
@@ -61,8 +59,22 @@ class CardListFragment : BindingFragment<FragmentCardListBinding, CardListViewMo
                 diffResult.dispatchUpdatesTo(card_list.adapter)
             }
         })
-        viewModel!!.progressTracker.observeForever({
+
+        viewModel!!.observerProgressForever(cardListType,{
             tracker -> binding.progressTracker = tracker
         })
+
+        swipe_refresh.setOnRefreshListener {
+            viewModel!!.refresh(cardListType,true)
+            swipe_refresh.isRefreshing = false
+        }
+
+        viewModel!!.refresh(cardListType,savedInstanceState == null)
     }
+
+    override fun onDetach() {
+        super.onDetach()
+        viewModel!!.remove(cardListType)
+    }
+
 }

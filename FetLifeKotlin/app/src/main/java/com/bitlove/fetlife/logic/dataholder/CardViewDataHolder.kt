@@ -7,7 +7,7 @@ import com.bitlove.fetlife.hash
 abstract class CardViewDataHolder {
 
     @Ignore
-    var contentHash: String? = null
+    var cardHash: String? = null
 
     //TODO: Clean up sync object hierarchy
     open fun getLocalId() : String? = null
@@ -31,6 +31,9 @@ abstract class CardViewDataHolder {
         }
     }
 
+    open fun getChild() : CardViewDataHolder? = null
+    open fun getChildren() : List<CardViewDataHolder>? = null
+
     open fun hasNewComment() : Boolean? = false
     //open fun hasNewLove() : Boolean? = false
     open fun getLoveCount() : String? = null
@@ -48,13 +51,13 @@ abstract class CardViewDataHolder {
     }
 
     open fun hasSameContent(other: CardViewDataHolder): Boolean {
-        return genContentHash() == other.genContentHash()
+        return getContentHash() == other.getContentHash()
     }
 
-    private fun genContentHash() : String {
-        if (contentHash == null) {
-            contentHash = (
-                    getAvatar()?.genContentHash() +
+    open fun getContentHash() : String {
+        if (cardHash == null) {
+            cardHash = (
+                    getAvatar()?.getContentHash() +
                     getTitle() +
                     getSupportingText() +
                     getMediaUrl()?.getBaseUrl() +
@@ -67,7 +70,7 @@ abstract class CardViewDataHolder {
                     getLoves()?.size
             ).hash()
         }
-        return contentHash!!
+        return cardHash!!
     }
 
 }

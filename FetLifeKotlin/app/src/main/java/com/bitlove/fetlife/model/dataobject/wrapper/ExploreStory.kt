@@ -1,11 +1,8 @@
 package com.bitlove.fetlife.model.dataobject.wrapper
 
 import android.arch.persistence.room.Embedded
-import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.Relation
 import com.bitlove.fetlife.FetLifeApplication
-import com.bitlove.fetlife.getBaseUrl
-import com.bitlove.fetlife.hash
 import com.bitlove.fetlife.model.db.dao.BaseDao
 import com.bitlove.fetlife.logic.dataholder.AvatarViewDataHolder
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
@@ -15,6 +12,7 @@ import com.bitlove.fetlife.model.dataobject.entity.content.ExploreEventEntity
 import com.bitlove.fetlife.model.dataobject.entity.content.ExploreStoryEntity
 
 class ExploreStory: CardViewDataHolder(), SyncObject<ExploreStoryEntity> {
+
     enum class TYPE {FRESH_AND_PERVY, KINKY_AND_POPULAR, STUFF_YOU_LOVE, EXPLORE_FRIENDS}
 
     @Embedded
@@ -23,30 +21,48 @@ class ExploreStory: CardViewDataHolder(), SyncObject<ExploreStoryEntity> {
     @Relation(parentColumn = "dbId", entityColumn = "storyId", entity = ExploreEventEntity::class)
     var exploreEvents: List<ExploreEvent>? = null
 
-    @Ignore
-    var remoteHash: String? = null
-
     override fun getTitle(): String? {
         return exploreStoryEntity?.action
     }
 
+    override fun getChildren(): List<CardViewDataHolder>? {
+        return if (exploreEvents?.size == 1) {
+            null
+        } else {
+            exploreEvents
+        }
+    }
+
     override fun getCommentCountText(): String? {
-        if (exploreEvents == null || exploreEvents!!.size != 1) return null
-        return exploreEvents!!.first()?.getCommentCountText()
+        return if (exploreEvents?.size == 1) {
+            exploreEvents!!.first().getCommentCountText()
+        } else {
+            null
+        }
     }
 
     override fun hasNewComment(): Boolean? {
-        return false
+        return if (exploreEvents?.size == 1) {
+            exploreEvents!!.first().hasNewComment()
+        } else {
+            null
+        }
     }
 
     override fun getLoveCount(): String? {
-        if (exploreEvents == null || exploreEvents!!.size != 1) return null
-        return exploreEvents!!.first()?.getLoveCount()
+        return if (exploreEvents?.size == 1) {
+            exploreEvents!!.first().getLoveCount()
+        } else {
+            null
+        }
     }
 
     override fun isLoved(): Boolean? {
-        if (exploreEvents == null || exploreEvents!!.size != 1) return null
-        return exploreEvents!!.first()?.isLoved()
+        return if (exploreEvents?.size == 1) {
+            exploreEvents!!.first().isLoved()
+        } else {
+            null
+        }
     }
 
     override fun isDeletable(): Boolean? {
@@ -54,26 +70,43 @@ class ExploreStory: CardViewDataHolder(), SyncObject<ExploreStoryEntity> {
     }
 
     override fun getMediaUrl(): String? {
-        if (exploreEvents == null || exploreEvents!!.size != 1) return null
-        return exploreEvents!!.first()?.getMediaUrl()
+        return if (exploreEvents?.size == 1) {
+            exploreEvents!!.first().getMediaUrl()
+        } else {
+            null
+        }
     }
 
     override fun getMediaAspectRatio(): Float? {
-        if (exploreEvents == null || exploreEvents!!.size != 1) return null
-        return exploreEvents!!.first()?.getMediaAspectRatio()
+        return if (exploreEvents?.size == 1) {
+            exploreEvents!!.first().getMediaAspectRatio()
+        } else {
+            null
+        }
     }
 
     override fun getSupportingText(): String? {
-        if (exploreEvents == null || exploreEvents!!.size != 1) return null
-        return exploreEvents!!.first()?.getSupportingText()
+        return if (exploreEvents?.size == 1) {
+            exploreEvents!!.first().getSupportingText()
+        } else {
+            null
+        }
     }
 
     override fun getComments(): List<ReactionViewDataHolder>? {
-        return if (exploreEvents != null && exploreEvents!!.size == 1) exploreEvents!!.first().getComments() else null
+        return if (exploreEvents?.size == 1) {
+            exploreEvents!!.first().getComments()
+        } else {
+            null
+        }
     }
 
     override fun getAvatar(): AvatarViewDataHolder? {
-        return exploreEvents?.firstOrNull()?.getMember()
+        return if (exploreEvents?.isEmpty() == false) {
+            exploreEvents!!.first().getAvatar()
+        } else {
+            null
+        }
     }
 
     override fun getLocalId(): String? {
@@ -81,27 +114,27 @@ class ExploreStory: CardViewDataHolder(), SyncObject<ExploreStoryEntity> {
     }
 
     override fun getRemoteId(): String? {
-        if (remoteHash == null) {
-            remoteHash = (getAvatar()?.getAvatarName() + getTitle() + getSupportingText() + getMediaUrl()?.getBaseUrl() + getEntity()?.type + getEntity().createdAt).hash()
-        }
-        return remoteHash!!
+        return exploreStoryEntity?.dbId
     }
 
     override fun getType(): String? {
-        return exploreEvents?.firstOrNull()?.getType()
+        return exploreStoryEntity.type
+    }
+
+    override fun getChild(): CardViewDataHolder? {
+        return if (exploreEvents?.isEmpty() == false) {
+            exploreEvents!!.first().getChild()
+        } else {
+            null
+        }
     }
 
     override fun getEntity(): ExploreStoryEntity {
         return exploreStoryEntity
     }
 
-
     override fun getDao(): BaseDao<ExploreStoryEntity> {
         return FetLifeApplication.instance.fetLifeContentDatabase.exploreStoryDao()
-    }
-
-    fun getContent(): Content? {
-        return exploreEvents?.firstOrNull()?.getContent()
     }
 
 }

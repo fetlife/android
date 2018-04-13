@@ -177,13 +177,9 @@ open class PhoneNavigationActivity : ResourceActivity(), NavigationCallback {
     }
 
     private fun setFloatingActionButton() {
-        val layoutParams = button_change_layout.layoutParams as CoordinatorLayout.LayoutParams
+        val layoutParams = button_floating.layoutParams as CoordinatorLayout.LayoutParams
         layoutParams.behavior = FloatingActionButtonBehavior()
-        button_change_layout.setOnClickListener({
-            view -> onLayoutChange(layout?.next()?:NavigationCallback.Layout.WEB)
-        })
     }
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
