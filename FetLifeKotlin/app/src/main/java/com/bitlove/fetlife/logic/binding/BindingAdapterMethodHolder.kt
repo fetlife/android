@@ -6,22 +6,20 @@ import android.view.ViewGroup
 import android.content.Context
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
-import android.support.constraint.ConstraintLayout
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.view.get
 import androidx.view.size
 import com.android.databinding.library.baseAdapters.BR
 import com.bitlove.fetlife.R
-import com.bitlove.fetlife.loadWithGlide
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.logic.interactionhandler.CardViewInteractionHandler
 import com.bitlove.fetlife.logic.dataholder.ReactionViewDataHolder
+import com.bitlove.fetlife.view.generic.MediaCardAdapter
 import com.facebook.drawee.view.SimpleDraweeView
+import com.mikepenz.iconics.IconicsDrawable
 
 @BindingAdapter("comments", "commentsDisplayed", "maxCommentCount")
 fun setComments(viewGroup: ViewGroup,
@@ -39,11 +37,11 @@ fun setComments(viewGroup: ViewGroup,
     val inflater = viewGroup.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     for (i in 0 until maxComments) {
-        val binding =
-                if (viewGroup.size > i) viewGroup[i].tag as ViewDataBinding
+        val binding = if (viewGroup.size > i) viewGroup[i].tag as ViewDataBinding
                 else DataBindingUtil.inflate<ViewDataBinding>(inflater, R.layout.item_data_card_comment, viewGroup, true)
-
         viewGroup[i].tag = binding
+        binding.setVariable(BR.commentData, comments[i+(comments.size-maxComments)])
+    }
 
 //        //Truncate Code
 //        if (commentsDisplayed != true && comment.body != null) {
@@ -53,12 +51,30 @@ fun setComments(viewGroup: ViewGroup,
 //            }
 //        }
 
-        binding.setVariable(BR.commentData, comments[i])
-    }
 }
 
-@BindingAdapter("formattedText", "textEntities", "mediaEntityHolder", "removeLineBreaks")
-fun setFormattedText(textView: TextView?, formattedText: String?, textEntities : String? = null, mediaEntityHolder : Int, removeLineBreaks : Boolean? = false) {
+@BindingAdapter( "parentCard", "childrenInteractionHandler", "limitCardCount","childrenCardCount")
+fun setChildrenCards(mediaGridView: AdapterView<ListAdapter>, parentCard: CardViewDataHolder?, childrenInteractionHandler: CardViewInteractionHandler?, limitCardCount : Boolean = false, childrenCardCount: Int = 6) {
+
+    if (mediaGridView.visibility == View.GONE) return
+
+    var mediaCardAdapter = MediaCardAdapter()
+    mediaGridView.adapter = mediaCardAdapter
+
+    mediaCardAdapter.maxCount = if (limitCardCount) childrenCardCount else Int.MAX_VALUE
+    mediaCardAdapter.mediaCards = parentCard?.getChildren()
+    if (childrenInteractionHandler?.expandable?.get() == true || parentCard?.getChildren() != null && (parentCard!!.getChildren()!!.size > childrenCardCount)) {
+        childrenInteractionHandler!!.expandable.set(true)
+    }
+    mediaCardAdapter.clickListener = {position -> childrenInteractionHandler?.onOpenChildrenCard(position, parentCard)}
+
+}
+
+@BindingAdapter("textInteractionHandler", "formattedText", "truncateText", "truncatedLength", "removeLineBreaks"/*, "textEntities", "mediaEntityHolder"*/)
+fun setFormattedText(textView: TextView?, textInteractionHandler: CardViewInteractionHandler?, formattedText: String?, truncateText : Boolean? = false, truncatedLength : Int = 200, removeLineBreaks : Boolean? = false/*, textEntities : String? = null, mediaEntityHolder : Int? = 0*/) {
+    var minCharacterTreshold = 10
+    var ellipsizeChr = "…"
+
     if (formattedText == null) {
         textView?.text = null
         return
@@ -70,14 +86,28 @@ fun setFormattedText(textView: TextView?, formattedText: String?, textEntities :
         formattedText
     }
 
+    val maxLength = Math.min(formattedString.length,truncatedLength)
+
+    formattedString = if (truncateText == true && formattedString.length > (maxLength + minCharacterTreshold)) {
+        textInteractionHandler?.expandable?.set(true)
+        formattedText?.substring(0,maxLength) + ellipsizeChr
+    } else {
+        formattedText
+    }
+
     //TODO Add Text entities to the appropriate view
     textView?.text = Html.fromHtml(formattedString)
 }
 
+@BindingAdapter("visible")
+fun setVisibility(view: View?, visible: Boolean) {
+    view?.visibility = if (visible) View.VISIBLE else View.GONE
+}
 
-@BindingAdapter("srcGlide")
-fun setGlideSrc(imageView: ImageView, srcGlide: String?) {
-    imageView.loadWithGlide(srcGlide, null)
+@BindingAdapter("ico_icon_bind","ico_size_bind")
+fun setIcon(view: ImageView, refText: String, sizeDp: Int) {
+    val iconicsDrawable = IconicsDrawable(view.context,refText).sizeDp(sizeDp)
+    view.setImageDrawable(iconicsDrawable)
 }
 
 //TODO: consider using screen height as max height to make sure pictures fit

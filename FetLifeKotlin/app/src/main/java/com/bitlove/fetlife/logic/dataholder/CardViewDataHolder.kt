@@ -19,6 +19,8 @@ abstract class CardViewDataHolder {
     open fun getTitle() : String? = null
     open fun getSupportingText() : String? = null
 
+    open fun getThumbUrl() : String? = null
+
     open fun getMediaUrl() : String? = null
     open fun getMediaAspectRatio() : Float? = null
 
@@ -33,6 +35,7 @@ abstract class CardViewDataHolder {
 
     open fun getChild() : CardViewDataHolder? = null
     open fun getChildren() : List<CardViewDataHolder>? = null
+    open fun getChildrenScreenTitle() : String? = getTitle()
 
     open fun hasNewComment() : Boolean? = false
     //open fun hasNewLove() : Boolean? = false

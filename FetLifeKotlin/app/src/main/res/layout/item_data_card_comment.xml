@@ -14,15 +14,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/avatar_image"
-            android:visibility="@{commentData.avatar.avatarUrl != null ? View.VISIBLE : View.GONE}"
+            android:visibility="@{commentData.avatar.avatarUrl != null ? View.VISIBLE : View.INVISIBLE}"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_marginLeft="8dp"
             android:padding="4dp"
             android:scaleType="centerCrop"
-            app:srcGlide="@{commentData.avatar.avatarUrl}"
+            app:srcFresco="@{commentData.avatar.avatarUrl}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 
@@ -33,22 +32,26 @@
             android:text="@{commentData.avatar.avatarName}"
             android:textIsSelectable="true"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            android:textColor="@color/silver"
+            android:textColor="@color/lightSilver"
             android:autoLink="web"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@+id/avatar_image"/>
 
+        <!--app:textEntities='@{""}'-->
+        <!--app:mediaEntityHolder="@{@id/comment_body}"-->
+
         <TextView
             android:id="@+id/comment_body"
+            app:textInteractionHandler="@{null}"
             app:formattedText="@{commentData.text}"
-            app:textEntities='@{""}'
-            app:mediaEntityHolder="@{@id/comment_body}"
-            app:removeLineBreaks="@{true}"
+            app:removeLineBreaks="@{false}"
+            app:truncateText="@{false}"
+            app:truncatedLength="@{0}"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             android:autoLink="web"
-            android:textColor="@color/midGray"
+            android:textColor="@color/gray"
             android:layout_marginLeft="4dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

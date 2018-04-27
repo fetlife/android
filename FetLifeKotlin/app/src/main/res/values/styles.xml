@@ -10,7 +10,8 @@
         <item name="actionMenuTextColor">@color/silver</item>
         <item name="colorPrimary">@color/black</item>
         <item name="colorPrimaryDark">@color/black</item>
-        <item name="colorAccent">@color/darkGray</item>
+        <item name="colorAccent">@color/moonGray</item>
+        <item name="colorControlNormal">@color/gray</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

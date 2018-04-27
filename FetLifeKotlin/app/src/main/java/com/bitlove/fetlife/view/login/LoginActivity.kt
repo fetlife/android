@@ -72,12 +72,4 @@ class LoginActivity : Activity(), NavigationCallback {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun onLayoutChange(layout: NavigationCallback.Layout?) {
-    }
-
-    override fun onCardNavigate(cardList: List<CardViewDataHolder>, position: Int) {
-    }
-
-
-
 }

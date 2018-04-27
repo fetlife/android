@@ -4,9 +4,11 @@ import com.bitlove.fetlife.model.dataobject.entity.content.ContentEntity
 import com.bitlove.fetlife.model.dataobject.entity.content.ExploreStoryEntity
 import com.bitlove.fetlife.model.dataobject.entity.content.MemberEntity
 import com.bitlove.fetlife.model.dataobject.entity.content.ReactionEntity
+import com.bitlove.fetlife.model.dataobject.wrapper.Reaction
 import com.bitlove.fetlife.model.network.networkobject.AuthBody
 import com.bitlove.fetlife.model.network.networkobject.Feed
 import com.bitlove.fetlife.model.network.networkobject.Token
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -31,8 +33,16 @@ interface FetLifeApi {
     @GET("/api/v2/me/conversations/{conversationId}/messages")
     fun getMessages(@Header("Authorization") authHeader: String, @Path("conversationId") conversationId: String?, @Query("since_id") sinceMessageId: String?, @Query("until_id") untilMessageId: String?, @Query("limit") limit: Int?, @Query("page") page: Int?): Call<Array<ReactionEntity>>
 
+    @FormUrlEncoded
+    @POST("/api/v2/me/conversations/{conversationId}/messages")
+    fun postMessage(@Header("Authorization") authHeader: String, @Path("conversationId") conversationId: String, @Field("body") body: String): Call<ReactionEntity>
+
     @GET("/api/v2/members/{memberId}/{entityType}/{entityId}/comments")
     fun getComments(@Header("Authorization") authHeader: String, @Path("memberId") memberId: String?, @Path("entityType") entityType: String?, @Path("entityId") entityId: String?, @Query("since_id") sinceCommentId: String?, @Query("until_id") untilCommentId: String?, @Query("limit") limit: Int?, @Query("page") page: Int?): Call<Array<ReactionEntity>>
+
+    @FormUrlEncoded
+    @POST("/api/v2/members/{memberId}/{entityType}/{entityId}/comments")
+    fun postComment(@Header("Authorization") authHeader: String, @Path("memberId") memberId: String?, @Path("entityType") entityType: String?, @Path("entityId") entityId: String?, @Field("body") body: String): Call<ReactionEntity>
 
     @GET("/api/v2/me/feed")
     fun getFriendsFeed(@Header("Authorization") authHeader: String, @Query("until") timeStamp: String?, @Query("limit") limit: Int?, @Query("page") page: Int?): Call<Feed>
@@ -45,5 +55,11 @@ interface FetLifeApi {
 
     @GET("/api/v2/explore/stuff-you-love")
     fun getStuffYouLove(@Header("Authorization") authHeader: String, @Query("marker") timeStamp: String?, @Query("limit") limit: Int?, @Query("page") page: Int?): Call<Array<ExploreStoryEntity>>
+
+    @PUT("/api/v2/me/loves/{content_type}/{content_id}")
+    abstract fun putLove(@Header("Authorization") authHeader: String, @Path("content_id") contentId: String, @Path("content_type") contentType: String): Call<ResponseBody>
+
+    @DELETE("/api/v2/me/loves/{content_type}/{content_id}")
+    abstract fun deleteLove(@Header("Authorization") authHeader: String, @Path("content_id") contentId: String, @Path("content_type") contentType: String): Call<ResponseBody>
 
 }

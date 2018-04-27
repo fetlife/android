@@ -73,7 +73,7 @@ class FetLifeService {
 //
 //        val keyStoreType = KeyStore.getDefaultType()
 //        val keyStore = KeyStore.getInstance(keyStoreType)
-//        keyStore.load(null, null)
+//        keyStore.execute(null, null)
 //        keyStore.setCertificateEntry("fetlife", loadCertificate(fetLifeApplication))
 //
 //        val tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm()

@@ -10,7 +10,8 @@ class CardDetailViewModel : ViewModel() {
         CONVERSATION,
         CONTENT,
         MEMBER,
-        EXPLORE
+        EXPLORE_STORY,
+        EXPLORE_EVENT
     }
 
     var viewModelObjects = HashMap<String, CardDetailViewModelObject>()

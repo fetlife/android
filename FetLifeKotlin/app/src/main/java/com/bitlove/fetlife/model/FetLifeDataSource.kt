@@ -4,13 +4,11 @@ import com.bitlove.fetlife.model.dataobject.entity.content.MemberEntity
 import com.bitlove.fetlife.model.dataobject.entity.content.ReactionEntity
 import com.bitlove.fetlife.model.resource.get.*
 import com.bitlove.fetlife.model.resource.login.LoginResource
-import com.bitlove.fetlife.model.resource.put.PutReactionResource
+import com.bitlove.fetlife.model.resource.post.PostReactionResource
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
-import com.bitlove.fetlife.logic.interactionhandler.CardViewInteractionHandler
 import com.bitlove.fetlife.model.dataobject.SyncObject
 import com.bitlove.fetlife.model.dataobject.wrapper.*
 import com.bitlove.fetlife.model.resource.ResourceResult
-import org.apache.commons.lang3.Conversion
 import java.util.*
 
 class FetLifeDataSource {
@@ -40,27 +38,23 @@ class FetLifeDataSource {
     }
 
     fun getExploreStoryDetailLoader(storyId: String): ResourceResult<ExploreStory> {
-        return GetExploreResource(storyId, true).loadResult
+        return GetExploreStoryResource(storyId, true).loadResult
+    }
+
+    fun getExploreEventDetailLoader(eventId: String): ResourceResult<ExploreEvent> {
+        return GetExploreEventResource(eventId, true).loadResult
     }
 
     fun getCommentsLoader(cardData: SyncObject<*>, page: Int, limit: Int): ResourceResult<List<Reaction>> {
         return GetReactionListResource(Reaction.TYPE.COMMENT,cardData,true, page, limit).loadResult
     }
 
-    fun sendComment(comment: String, content: CardViewDataHolder) {
-        //TODO solve add Source trigger problem
-        var commentReaction = ReactionEntity()
-        commentReaction.type = Reaction.TYPE.COMMENT.toString()
-        commentReaction.contentId = content.getLocalId()
+    fun sendLove(content: Content) : ResourceResult<Reaction> {
+        return PostReactionResource.newPostLoveResource(content).loadResult
+    }
 
-        //TODO(send_comment) resolve memberId, network Id, and createdAt
-        val memberEntity = MemberEntity()
-        memberEntity.networkId = "106d3ab4"
-        commentReaction.memberId = memberEntity.dbId
-        commentReaction.networkId = UUID.randomUUID().toString()
-        commentReaction.body = comment
-
-        PutReactionResource().put(Reaction(commentReaction))
+    fun sendComment(comment: String, content: Content) : ResourceResult<Reaction> {
+        return PostReactionResource.newPostCommentResource(comment,content).loadResult
     }
 
     fun login(userName: String, password: String, rememberUser: Boolean): ResourceResult<List<User>> {

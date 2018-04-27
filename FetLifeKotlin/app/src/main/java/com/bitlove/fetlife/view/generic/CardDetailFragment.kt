@@ -1,6 +1,8 @@
 package com.bitlove.fetlife.view.generic
 
+import android.content.Context
 import android.os.Bundle
+import android.support.v7.widget.Toolbar
 import android.view.View
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.databinding.FragmentCardDetailBinding
@@ -8,6 +10,7 @@ import com.bitlove.fetlife.databinding.ItemDataCardBinding
 import com.bitlove.fetlife.logic.viewmodel.CardDetailViewModel
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.logic.interactionhandler.CardViewInteractionHandler
+import com.bitlove.fetlife.view.navigation.NavigationCallback
 
 class CardDetailFragment : BindingFragment<FragmentCardDetailBinding, CardDetailViewModel>() {
 
@@ -52,14 +55,18 @@ class CardDetailFragment : BindingFragment<FragmentCardDetailBinding, CardDetail
         //TODO remove forever and use state based
         viewModel!!.observeDataForever(cardType, cardId, {
             cardData ->
-            if (cardViewInteractionHandler == null) {
-                cardViewInteractionHandler = CardViewInteractionHandler(cardData)
+            if (cardData != null && cardViewInteractionHandler == null) {
+                cardViewInteractionHandler = CardViewInteractionHandler(cardData, true, true, activity as? NavigationCallback, cardData.getChildrenScreenTitle())
             }
             binding.cardView!!.cardData = cardData
             binding.cardView!!.cardInteractionHandler = cardViewInteractionHandler
         })
 
         viewModel!!.refresh(cardType, cardId, savedInstanceState == null)
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
     }
 
     override fun onDetach() {

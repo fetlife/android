@@ -1,7 +1,9 @@
 package com.bitlove.fetlife.view.navigation
 
 import android.app.Fragment
+import android.content.Context
 import android.os.Bundle
+import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,6 +31,7 @@ class NavigationContentFragment : Fragment() {
     }
 
     private val navigationFragmentFactory = FetLifeApplication.instance.navigationFragmentFactory
+    private var navigationCallback: NavigationCallback? = null
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater!!.inflate(R.layout.fragment_navigation_content,container,false)
@@ -43,6 +46,13 @@ class NavigationContentFragment : Fragment() {
         if (selectedPosition >= 0) {
             viewPager.currentItem = selectedPosition
         }
+        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {}
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+            override fun onPageSelected(position: Int) {
+                navigationCallback?.onChangeView(adapter.getItemId(position))
+            }
+        })
         val tabs = view.findViewById<SlidingTabLayout>(R.id.navigation_tabs)
         //TODO move to xml
         tabs.setDividerColorResource(R.color.silver)
@@ -61,6 +71,16 @@ class NavigationContentFragment : Fragment() {
         val adapter = viewPager.adapter as NavigationPagerAdapter
         return adapter.getItemId(viewPager.currentItem)
 
+    }
+
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        navigationCallback = context as? NavigationCallback
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        navigationCallback = null
     }
 
 }

@@ -4,27 +4,28 @@ import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.model.dataobject.entity.content.ContentEntity
 import com.bitlove.fetlife.model.dataobject.wrapper.Content
 import com.bitlove.fetlife.model.dataobject.wrapper.Reaction
+import com.bitlove.fetlife.model.db.FetLifeContentDatabase
 import com.bitlove.fetlife.model.db.dao.MemberDao
 import com.bitlove.fetlife.model.db.dao.ReactionDao
 import retrofit2.Call
 
-class GetConversationListJob : GetListResourceJob<ContentEntity>(PRIORITY_GET_RESOURCE_FRONT,false, TAG_GET_CONVERSATIONS, TAG_GET_RESOURCE) {
+class GetConversationListJob(userId : String?) : GetListResourceJob<ContentEntity>(PRIORITY_GET_RESOURCE_FRONT,false, userId, TAG_GET_CONVERSATIONS, TAG_GET_RESOURCE) {
 
     companion object {
         const val TAG_GET_CONVERSATIONS = "TAG_GET_CONVERSATIONS"
     }
 
-    override fun saveToDb(resourceArray: Array<ContentEntity>) {
-        val memberDao = getDatabase().memberDao()
-        val reactionDao = getDatabase().reactionDao()
-        val contentDao = getDatabase().contentDao()
+    override fun saveToDb(contentDb: FetLifeContentDatabase, resourceArray: Array<ContentEntity>) {
+        val memberDao = contentDb.memberDao()
+        val reactionDao = contentDb.reactionDao()
+        val contentDao = contentDb.contentDao()
         for (content in resourceArray) {
             saveContentMember(content,memberDao)
             content.type = Content.TYPE.CONVERSATION.toString()
             contentDao.insert(content)
             saveLastMessage(content,reactionDao,memberDao)
         }
-//        getDatabase().contentDao().insert(*resourceArray)
+//        contenDb.contentDao().insert(*resourceArray)
     }
 
     private fun saveLastMessage(content: ContentEntity, reactionDao: ReactionDao, memberDao: MemberDao) {
@@ -45,7 +46,7 @@ class GetConversationListJob : GetListResourceJob<ContentEntity>(PRIORITY_GET_RE
         if (memberRef != null) {
             val memberId = memberDao.update(memberRef)
             content.memberId = memberId
-            content.memberRemoteId = memberRef.id
+            content.remoteMemberId = memberRef.id
         }
     }
 

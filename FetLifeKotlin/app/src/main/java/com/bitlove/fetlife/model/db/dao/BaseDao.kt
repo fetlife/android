@@ -38,6 +38,12 @@ interface BaseDao<in T : DataEntity> {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(vararg obj: T)
 
+    fun insertOrUpdate(obj: T) {
+        if (update(obj) != 1) {
+            insert(obj)
+        }
+    }
+
     /**
      * Update an object from the database.
      *

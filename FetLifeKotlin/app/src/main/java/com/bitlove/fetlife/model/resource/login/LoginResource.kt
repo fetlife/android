@@ -9,7 +9,7 @@ import com.bitlove.fetlife.model.resource.BaseResource
 import com.bitlove.fetlife.model.resource.ResourceResult
 import org.jetbrains.anko.coroutines.experimental.bg
 
-class LoginResource : BaseResource<List<User>>() {
+class LoginResource : BaseResource<List<User>>(null) {
 
     fun login(username: String, password: String, rememberUser: Boolean) : ResourceResult<List<User>> {
         loginInBackground(username, password, rememberUser)

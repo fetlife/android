@@ -42,7 +42,7 @@ class CardListViewModelObject(private var cardListType : CardListViewModel.CardL
         progressTracker.addSource(resourceResult.progressTracker, {data -> progressTracker.value = data})
         currentProgressTrackerSource = resourceResult.progressTracker
 
-        resourceResult.fetch()
+        resourceResult.execute()
     }
 
 }

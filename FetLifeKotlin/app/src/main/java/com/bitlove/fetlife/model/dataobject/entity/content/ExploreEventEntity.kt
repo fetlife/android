@@ -56,7 +56,6 @@ data class ExploreEventEntity(
         @SerializedName("content_id") var contentId: String? = null,
         @SerializedName("reaction_id") var reactionId: String? = null,
         @SerializedName("relation_id") var relationId: String? = null,
-        @SerializedName("created_at") var createdAt: String? = null,
         @Ignore @SerializedName("member") var memberRef: MemberRef? = null,
         @Ignore @SerializedName("target") var target: TargetRef? = null,
         @Ignore @SerializedName("secondary_target") var secondaryTarget: TargetRef? = null
@@ -65,32 +64,9 @@ data class ExploreEventEntity(
     @PrimaryKey
     var dbId: String = ""
         get() {
-            if (TextUtils.isEmpty(field)) {
-                field = generateDbId()
-            }
-            return field
+            return type + createdAt
         }
+    var type: String? = null
+    var createdAt: String? = ""
 
-    var remoteId: String = ""
-        get() {
-            if (TextUtils.isEmpty(field)) {
-                field = generateRemoteId()
-            }
-            return field
-        }
-
-    private fun generateDbId(): String {
-        var dbId = ""
-        dbId += storyId
-        dbId += remoteId
-        return dbId
-    }
-
-    private fun generateRemoteId(): String {
-        var dbId = ""
-        dbId += memberRef?.id
-        dbId += target?.id
-        dbId += secondaryTarget?.id
-        return dbId
-    }
 }

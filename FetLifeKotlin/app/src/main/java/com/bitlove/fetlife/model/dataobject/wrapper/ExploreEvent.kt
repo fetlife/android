@@ -2,13 +2,13 @@ package com.bitlove.fetlife.model.dataobject.wrapper
 
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Relation
-import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.logic.dataholder.AvatarViewDataHolder
 import com.bitlove.fetlife.model.db.dao.BaseDao
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.logic.dataholder.ReactionViewDataHolder
 import com.bitlove.fetlife.model.dataobject.SyncObject
 import com.bitlove.fetlife.model.dataobject.entity.content.*
+import com.bitlove.fetlife.model.db.FetLifeContentDatabase
 
 class ExploreEvent : CardViewDataHolder(), SyncObject<ExploreEventEntity> {
     @Embedded
@@ -32,6 +32,14 @@ class ExploreEvent : CardViewDataHolder(), SyncObject<ExploreEventEntity> {
 
     override fun getType(): String? {
         return getChild()?.getType() ?: null
+    }
+
+    override fun getLocalId(): String? {
+        return exploreEventEntity.dbId
+    }
+
+    override fun getRemoteId(): String? {
+        return exploreEventEntity.dbId
     }
 
     override fun isLoved(): Boolean? {
@@ -58,6 +66,10 @@ class ExploreEvent : CardViewDataHolder(), SyncObject<ExploreEventEntity> {
         return getChild()?.getComments() ?: null
     }
 
+    override fun getThumbUrl(): String? {
+        return getChild()?.getThumbUrl() ?: null
+    }
+
     override fun getMediaUrl(): String? {
         return getChild()?.getMediaUrl() ?: null
     }
@@ -66,8 +78,8 @@ class ExploreEvent : CardViewDataHolder(), SyncObject<ExploreEventEntity> {
         return getChild()?.getMediaAspectRatio() ?: null
     }
 
-    override fun getDao(): BaseDao<ExploreEventEntity> {
-        return FetLifeApplication.instance.fetLifeContentDatabase.exploreEventDao()
+    override fun getDao(contentDb: FetLifeContentDatabase): BaseDao<ExploreEventEntity> {
+        return contentDb.exploreEventDao()
     }
 
     override fun getChild() : CardViewDataHolder? {

@@ -9,7 +9,7 @@ import com.bitlove.fetlife.model.dataobject.wrapper.ExploreStory
 @Dao
 abstract class ExploreStoryDao : BaseDao<ExploreStoryEntity> {
 
-    @Query("SELECT * FROM explore_stories WHERE type=:type ORDER BY serverOrder")
+    @Query("SELECT * FROM explore_stories WHERE type=:type ORDER BY createdAt DESC limit 50")
     abstract fun getStories(type: String): LiveData<List<ExploreStory>>
 
     @Query("DELETE FROM explore_stories")

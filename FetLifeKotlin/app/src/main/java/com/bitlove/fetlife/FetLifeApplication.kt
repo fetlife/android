@@ -1,12 +1,5 @@
 package com.bitlove.fetlife
 
-//TODO 1: Login
-//TODO 2: Job Manager Fine Tune
-//TODO 3: Push notification with poll support
-//TODO 4: Settings with Personalization
-//TODO 5: Turbolink link handling
-//TODO 6: Further screens
-
 import android.annotation.SuppressLint
 import android.app.*
 import android.arch.lifecycle.ViewModel
@@ -17,7 +10,6 @@ import android.content.SharedPreferences
 import android.content.res.Resources
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
-import com.bitlove.fetlife.model.db.FetLifeContentDatabase
 import android.support.annotation.LayoutRes
 import android.support.annotation.RawRes
 import android.support.v4.app.FragmentActivity
@@ -35,6 +27,8 @@ import android.support.design.internal.BottomNavigationMenuView
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.widget.RecyclerView
 import android.widget.ImageView
+import com.bitlove.fetlife.model.dataobject.wrapper.User
+import com.bitlove.fetlife.model.db.FetLifeContentDatabaseWrapper
 import com.bitlove.fetlife.model.db.FetLifeUserDatabase
 import com.bitlove.fetlife.view.navigation.NavigationFragmentFactory
 import com.bitlove.fetlife.view.widget.FrescoImageLoader
@@ -44,18 +38,17 @@ import java.net.URI
 import java.security.NoSuchAlgorithmException
 
 //TODO check out developer book: https://antonioleiva.com/kotlin-android-developers-book/
-
 //TODO check out warnings
-
+//TODO add privacy policy (crashlytics)
 class FetLifeApplication : Application() {
 
     companion object {
         lateinit var instance : FetLifeApplication
     }
 
-    var loggedInUser: String? = null
+    var loggedInUser: User? = null
     lateinit var fetLifeUserDatabase: FetLifeUserDatabase
-    lateinit var fetLifeContentDatabase: FetLifeContentDatabase
+    lateinit var fetLifeContentDatabaseWrapper: FetLifeContentDatabaseWrapper
     lateinit var fetlifeService : FetLifeService
     lateinit var fetlifeDataSource: FetLifeDataSource
     lateinit var jobManager: JobManager
@@ -66,6 +59,7 @@ class FetLifeApplication : Application() {
         instance = this
 
         fetLifeUserDatabase = Room.databaseBuilder(this, FetLifeUserDatabase::class.java, "fetlife_user_database").build()
+        fetLifeContentDatabaseWrapper = FetLifeContentDatabaseWrapper()
         fetlifeService = FetLifeService()
         fetlifeDataSource = FetLifeDataSource()
         jobManager = createJobManager()
@@ -75,14 +69,14 @@ class FetLifeApplication : Application() {
 
     }
 
-    fun onUserLoggedIn(userName: String, accessToken: String, refreshToken: String?) {
+    fun onUserLoggedIn(user: User, accessToken: String, refreshToken: String?) {
         fetlifeService.authHeader = accessToken
         fetlifeService.refreshToken = refreshToken
-        if (loggedInUser != userName) {
-            loggedInUser = userName
+        if (loggedInUser != user) {
             //TODO: close db
-            fetLifeContentDatabase = Room.databaseBuilder(this, FetLifeContentDatabase::class.java, "fetlife_database_" + userName).build()
+            fetLifeContentDatabaseWrapper.init(user.getLocalId(),true)
         }
+        loggedInUser = user
     }
 
     fun onUserLoggedOut() {
@@ -90,8 +84,12 @@ class FetLifeApplication : Application() {
             return
         }
 
+        val userId = loggedInUser!!.getLocalId()!!
         bg {
-            fetLifeUserDatabase.userDao().delete(loggedInUser!!)
+            //TODO: cancel all jobs for the current user
+            fetLifeUserDatabase.userDao().delete(userId)
+            fetLifeContentDatabaseWrapper.close(userId)
+            fetLifeContentDatabaseWrapper.releaseDb()
         }
 
         loggedInUser = null
@@ -99,7 +97,6 @@ class FetLifeApplication : Application() {
         fetlifeService.authHeader = null
         fetlifeService.refreshToken = null
         //TODO: close database carefully (jobs might want to use it)
-        fetLifeContentDatabase.close()
     }
 
     private fun createJobManager(): JobManager {
@@ -109,6 +106,10 @@ class FetLifeApplication : Application() {
         return JobManager(builder.build())
     }
 
+}
+
+fun getLoggedInUserId() : String? {
+    return FetLifeApplication.instance.loggedInUser?.getLocalId()
 }
 
 //Extension functions

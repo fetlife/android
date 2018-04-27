@@ -1,14 +1,29 @@
 package com.bitlove.fetlife.model.dataobject.wrapper
 
 import android.arch.persistence.room.Embedded
+import android.arch.persistence.room.Ignore
+import com.bitlove.fetlife.model.dataobject.entity.content.MemberEntity
 import com.bitlove.fetlife.model.dataobject.entity.user.UserEntity
 
 class User {
 
     @Embedded lateinit var userEntity: UserEntity
+    @Ignore lateinit var memberEntity: MemberEntity
 
-    fun getUserName(): String {
-        return userEntity.username
+    fun getLocalId(): String {
+        return userEntity.dbId
+    }
+
+    fun getNetworkId(): String {
+        return memberEntity.networkId
+    }
+
+    fun getUserName(): String? {
+        return userEntity.userName
+    }
+
+    fun getNickname() : String? {
+        return memberEntity?.nickname
     }
 
     fun getAccessToken(): String? {

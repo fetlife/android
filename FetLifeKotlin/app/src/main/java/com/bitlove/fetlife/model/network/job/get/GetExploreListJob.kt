@@ -1,11 +1,13 @@
 package com.bitlove.fetlife.model.network.job.get
 
+import com.bitlove.fetlife.getLoggedInUserId
 import com.bitlove.fetlife.model.dataobject.entity.content.ContentEntity
 import com.bitlove.fetlife.model.dataobject.entity.content.ExploreEventEntity
 import com.bitlove.fetlife.model.dataobject.entity.content.ExploreStoryEntity
 import com.bitlove.fetlife.model.dataobject.entity.reference.MemberRef
 import com.bitlove.fetlife.model.dataobject.entity.reference.TargetRef
 import com.bitlove.fetlife.model.dataobject.wrapper.ExploreStory
+import com.bitlove.fetlife.model.db.FetLifeContentDatabase
 import com.bitlove.fetlife.model.db.dao.ContentDao
 import com.bitlove.fetlife.model.db.dao.MemberDao
 import com.bitlove.fetlife.model.db.dao.ReactionDao
@@ -14,7 +16,7 @@ import com.bitlove.fetlife.model.network.networkobject.Feed
 import retrofit2.Call
 import retrofit2.Response
 
-class GetExploreListJob(val type: ExploreStory.TYPE, val limit: Int, val page: Int, val marker : String? = null) : GetListResourceJob<ExploreStoryEntity>(PRIORITY_GET_RESOURCE_FRONT,false, TAG_EXPLORE, TAG_GET_RESOURCE) {
+class GetExploreListJob(val type: ExploreStory.TYPE, val limit: Int, val page: Int, val marker : String? = null, userId: String?) : GetListResourceJob<ExploreStoryEntity>(PRIORITY_GET_RESOURCE_FRONT,false, userId, TAG_EXPLORE, TAG_GET_RESOURCE) {
 
     companion object {
         //TODO separate tags
@@ -41,26 +43,29 @@ class GetExploreListJob(val type: ExploreStory.TYPE, val limit: Int, val page: I
         }
     }
 
-    override fun saveToDb(resourceArray: Array<ExploreStoryEntity>) {
-        val exploreStoryDao = getDatabase().exploreStoryDao()
-        val exploreEventDao = getDatabase().exploreEventDao()
-        val memberDao = getDatabase().memberDao()
-        val reactionDao = getDatabase().reactionDao()
-        val relationDao = getDatabase().relationDao()
-        val contentDao = getDatabase().contentDao()
+    override fun saveToDb(contenDb: FetLifeContentDatabase, resourceArray: Array<ExploreStoryEntity>) {
+        val exploreStoryDao = contenDb.exploreStoryDao()
+        val exploreEventDao = contenDb.exploreEventDao()
+        val memberDao = contenDb.memberDao()
+        val reactionDao = contenDb.reactionDao()
+        val relationDao = contenDb.relationDao()
+        val contentDao = contenDb.contentDao()
         for ((i,story) in resourceArray.withIndex()) {
             if (!isSupported(story)) {
                 continue
             }
             story.type = type.toString()
+            story.createdAt = story.events?.firstOrNull()?.target?.createdAt
             //TODO: take care of page based ids in case of markers
-            story.serverOrder = i + limit*(page-1)
-            exploreStoryDao.insert(story)
+            exploreStoryDao.insertOrUpdate(story)
             for (event in story.events!!) {
+                event.type = type.toString()
+                event.createdAt = event.target?.createdAt
+
                 event.storyId = story.dbId
                 event.ownerId = saveMemberRef(event.memberRef, memberDao)
                 saveEventTargets(event,memberDao,contentDao,reactionDao,relationDao)
-                exploreEventDao.insert(event)
+                exploreEventDao.insertOrUpdate(event)
             }
         }
     }
@@ -70,8 +75,17 @@ class GetExploreListJob(val type: ExploreStory.TYPE, val limit: Int, val page: I
             false
         } else {
             return when (story.action) {
+                "post_created",
                 "picture_created",
-                "like_created" -> true
+                "like_created" -> {
+                    if (story.events!![0]?.target?.picture != null || story.events!![0]?.secondaryTarget?.picture != null) {
+                        true
+                    } else if (story.events!!.size > 1 ){
+                        false
+                    } else {
+                        story.events!![0]?.target?.writing != null ||  story.events!![0]?.secondaryTarget?.writing != null
+                    }
+                }
                 else -> false
             }
         }
@@ -89,14 +103,23 @@ class GetExploreListJob(val type: ExploreStory.TYPE, val limit: Int, val page: I
     }
 
     private fun saveEventTarget(event: ExploreEventEntity, target: TargetRef, memberDao: MemberDao, contentDao: ContentDao, reactionDao: ReactionDao, relationDao: RelationDao) {
-        if (target.picture != null) {
-            val contentEntity : ContentEntity = target.picture.asEntity()
-            val memberRef = target.picture.memberRef
-            contentEntity.memberId = saveMemberRef(memberRef, memberDao)
-            contentEntity.memberRemoteId = memberRef.id
-            contentDao.insert(contentEntity)
-            event.contentId = contentEntity.dbId
+        var memberRef : MemberRef? = null
+        val contentEntity : ContentEntity? =
+        when {
+            target.picture != null -> {
+                memberRef = target.picture!!.memberRef
+                target.picture!!.asEntity()
+            }
+            target.writing != null -> {
+                memberRef = target.writing!!.memberRef
+                target.writing!!.asEntity()
+            }
+            else -> return
         }
+        contentEntity!!.memberId = saveMemberRef(memberRef, memberDao)
+        contentEntity!!.remoteMemberId = memberRef?.id
+        contentDao.insertOrUpdate(contentEntity)
+        event.contentId = contentEntity.dbId
     }
 
     private fun saveMemberRef(memberRef: MemberRef?, memberDao: MemberDao) : String {

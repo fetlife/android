@@ -5,9 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.LayoutRes
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
-import com.mikepenz.iconics.context.IconicsContextWrapper
 import com.mikepenz.iconics.utils.IconicsMenuInflaterUtil
 import kotlinx.android.synthetic.main.activity_phone_navigation.*
 import kotlinx.android.synthetic.main.include_appbar.*
@@ -16,7 +14,6 @@ import android.support.design.widget.CoordinatorLayout
 import android.support.v4.view.GravityCompat
 import android.view.MenuItem
 import com.bitlove.fetlife.*
-import com.bitlove.fetlife.model.dataobject.wrapper.ExploreStory
 import com.bitlove.fetlife.view.login.LoginActivity
 import com.bitlove.fetlife.view.widget.FloatingActionButtonBehavior
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
@@ -43,9 +40,7 @@ open class PhoneNavigationActivity : ResourceActivity(), NavigationCallback {
 
     private val navigationFragmentFactory = FetLifeApplication.instance.navigationFragmentFactory
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
+    override fun onResourceCreate(savedInstanceState: Bundle?) {
         if (FetLifeApplication.instance.loggedInUser == null) {
             //TODO: move to start activity
             startActivity(Intent(this,LoginActivity::class.java))
@@ -72,9 +67,14 @@ open class PhoneNavigationActivity : ResourceActivity(), NavigationCallback {
         return true
     }
 
-    override fun onCardNavigate(cardList: List<CardViewDataHolder>, position: Int) {
+    override fun onChangeView(navigation: Int?) {
+        this.navigation = navigation
+        setTitle()
+    }
+
+    override fun onCardNavigate(cardList: List<CardViewDataHolder>, position: Int, screenTitle: String?) {
         if (cardList.firstOrNull() != null) {
-            PhoneCardActivity.start(this, cardList, position)
+            PhoneCardActivity.start(this, cardList, position, screenTitle)
         }
     }
 
@@ -139,7 +139,7 @@ open class PhoneNavigationActivity : ResourceActivity(), NavigationCallback {
 
     open fun setSideNavigation() {
 
-        supportActionBar?.setHomeAsUpIndicator(IconicsDrawable(this).icon(GoogleMaterial.Icon.gmd_menu).color(getSafeColor(R.color.midGray)).sizeDp(24))
+        supportActionBar?.setHomeAsUpIndicator(IconicsDrawable(this).icon(GoogleMaterial.Icon.gmd_menu).color(getSafeColor(R.color.toolbar_icon_color)).sizeDp(18))
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         navigation_view.setNavigationItemSelectedListener { menuItem ->

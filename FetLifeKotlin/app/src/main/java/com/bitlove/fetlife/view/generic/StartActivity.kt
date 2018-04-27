@@ -37,12 +37,24 @@ class StartActivity : Activity(), LifecycleOwner {
             userDao.clean()
             userDao.getLastLoggedInUser().observe(this, Observer{
                 userList ->
-                val user = userList?.firstOrNull()
-                if (user?.getAccessToken() != null && user.rememberUser()) {
-                    FetLifeApplication.instance.onUserLoggedIn(user.getUserName(), user.getAccessToken()!!, user.getRefreshToken())
-                    PhoneNavigationActivity.start(this)
-                } else {
-                    LoginActivity.start(this)
+                bg {
+                    val user = userList?.firstOrNull()
+                    if (user?.getAccessToken() != null && user.rememberUser()) {
+                        val userId = user.getLocalId()
+                        FetLifeApplication.instance.onUserLoggedIn(user, user.getAccessToken()!!, user.getRefreshToken())
+                        val contentDatabaseWrapper = FetLifeApplication.instance.fetLifeContentDatabaseWrapper
+                        val memberDao = contentDatabaseWrapper.lockDb(userId)?.memberDao()
+                        val memberEntity = memberDao?.getMemberEntity(userId)
+                        contentDatabaseWrapper.releaseDb()
+                        if (memberEntity == null) {
+                            LoginActivity.start(this)
+                        } else {
+                            user.memberEntity = memberEntity!!
+                            PhoneNavigationActivity.start(this)
+                        }
+                    } else {
+                        LoginActivity.start(this)
+                    }
                 }
             })
         }

@@ -8,9 +8,11 @@ import com.bitlove.fetlife.toUniqueLong
 import com.bitlove.fetlife.view.navigation.NavigationCallback
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.logic.interactionhandler.CardViewInteractionHandler
+import com.bitlove.fetlife.model.dataobject.wrapper.Content
+import org.apache.commons.lang3.Conversion
 
 //TODO check generic DH + IH?, none?, DH?
-class CardListAdapter(val navigationCallback: NavigationCallback) : RecyclerView.Adapter<CardViewHolder>(){
+class CardListAdapter(private val navigationCallback: NavigationCallback, private val cardListTitle: String? = null) : RecyclerView.Adapter<CardViewHolder>(){
 
     init {
         setHasStableIds(true)
@@ -39,7 +41,11 @@ class CardListAdapter(val navigationCallback: NavigationCallback) : RecyclerView
 //        return CardViewInteractionHandler(items[position], items, position, navigationCallback)
         val item = items[position]
         if (!interactionHandlers.containsKey(item.getLocalId())) {
-            interactionHandlers[item.getLocalId()] = CardViewInteractionHandler(item, items, position, navigationCallback)
+            interactionHandlers[item.getLocalId()] = if ((item as? Content)?.getType() == Content.TYPE.CONVERSATION.toString())
+                CardViewInteractionHandler(items, position, false, items[position].displayComments() == true, navigationCallback, cardListTitle, 1, false)
+            else {
+                CardViewInteractionHandler(items, position, false, items[position].displayComments() == true, navigationCallback, cardListTitle)
+            }
         }
         return interactionHandlers[item.getLocalId()]!!
     }

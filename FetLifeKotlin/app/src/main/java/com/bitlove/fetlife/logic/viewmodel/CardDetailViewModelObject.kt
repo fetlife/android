@@ -30,7 +30,8 @@ class CardDetailViewModelObject(private var cardType: CardDetailViewModel.CardTy
         //TODO(cleanup) use resource instead
         val resourceResult = when (cardType) {
             CardDetailViewModel.CardType.CONVERSATION,CardDetailViewModel.CardType.CONTENT -> dataSource.getContentDetailLoader(cardId) as ResourceResult<CardViewDataHolder>
-            CardDetailViewModel.CardType.EXPLORE -> dataSource.getExploreStoryDetailLoader(cardId) as ResourceResult<CardViewDataHolder>
+            CardDetailViewModel.CardType.EXPLORE_STORY -> dataSource.getExploreStoryDetailLoader(cardId) as ResourceResult<CardViewDataHolder>
+            CardDetailViewModel.CardType.EXPLORE_EVENT -> dataSource.getExploreEventDetailLoader(cardId) as ResourceResult<CardViewDataHolder>
             else -> {throw IllegalArgumentException()}
         }
 
@@ -40,7 +41,7 @@ class CardDetailViewModelObject(private var cardType: CardDetailViewModel.CardTy
         progressTracker.addSource(resourceResult.progressTracker, {data -> progressTracker.value = data})
         currentProgressTrackerSource = resourceResult.progressTracker
 
-        resourceResult.fetch()
+        resourceResult.execute()
     }
 
 }

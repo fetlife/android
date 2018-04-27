@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <import type="android.view.View" />
@@ -23,360 +22,351 @@
         android:animateLayoutChanges="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/black"
-        android:layout_margin="4dp">
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        app:cardBackgroundColor="@color/black">
 
-        <android.support.constraint.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp"
-            android:paddingTop="12dp">
+            android:orientation="vertical">
 
-            <com.facebook.drawee.view.SimpleDraweeView
-                android:id="@+id/avatar_image"
-                android:visibility="@{cardData.avatar.avatarUrl != null ? View.VISIBLE : View.GONE}"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:padding="4dp"
-                android:scaleType="centerCrop"
-                app:srcFresco="@{cardData.avatar.avatarUrl}"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"/>
-
-            <TextView
-                android:id="@+id/avatar_title_text"
-                android:text="@{cardData.avatar.avatarName}"
-                android:visibility="@{cardData.avatar.avatarName != null ? View.VISIBLE : View.GONE}"
-                android:textIsSelectable="true"
-                android:layout_width="wrap_content"
-                android:layout_height="18dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginTop="4dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:padding="0dp"
-                android:textColor="@color/bostonUniversityRed"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:gravity="center_vertical"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/avatar_image"/>
-
-            <TextView
-                android:id="@+id/avatar_title_meta_text"
-                android:text="@{cardData.avatar.avatarMeta}"
-                android:visibility="@{cardData.avatar.avatarMeta != null ? View.VISIBLE : View.GONE}"
-                android:layout_width="0dp"
-                android:layout_height="18dp"
-                android:gravity="center_vertical"
-                android:layout_marginLeft="8dp"
-                android:textIsSelectable="true"
-                android:layout_marginTop="4dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                android:textColor="@color/silver"
-                android:ellipsize="end"
-                android:maxLines="1"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/avatar_title_text"/>
-
-            <TextView
-                android:id="@+id/avatar_subtitle_text"
-                android:text="@{cardData.avatar.avatarSubline}"
-                android:visibility="@{cardData.avatar.avatarSubline != null ? View.VISIBLE : View.GONE}"
-                android:layout_width="wrap_content"
-                android:layout_height="18dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginTop="4dp"
-                android:textIsSelectable="true"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                android:textColor="@color/silver"
-                android:ellipsize="end"
-                android:singleLine="true"
-                app:layout_constraintTop_toBottomOf="@id/avatar_title_text"
-                app:layout_constraintLeft_toRightOf="@+id/avatar_image"/>
-
-            <TextView
-                android:id="@+id/avatar_subtitle_meta_text"
-                android:text="@{cardData.avatar.avatarSublineExtra}"
-                android:visibility="@{cardData.avatar.avatarSublineExtra != null ? View.VISIBLE : View.GONE}"
-                android:layout_width="wrap_content"
-                android:layout_height="18dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginTop="4dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                android:textIsSelectable="true"
-                android:textColor="@color/silver"
-                android:ellipsize="end"
-                android:maxLines="1"
-                app:layout_constraintBaseline_toBaselineOf="@id/avatar_subtitle_text"
-                app:layout_constraintTop_toBottomOf="@id/avatar_title_meta_text"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/avatar_subtitle_text"/>
-
-            <android.support.constraint.Barrier
-                android:id="@+id/avatar_barrier"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/avatar_area"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:barrierDirection="bottom"
-                app:constraint_referenced_ids="avatar_image,avatar_title_text,avatar_title_meta_text,avatar_subtitle_text,avatar_subtitle_meta_text"/>
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                >
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/avatar_image"
+                    app:visible="@{cardData.avatar.avatarUrl != null}"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentStart="true"
+                    android:scaleType="centerCrop"
+                    app:srcFresco="@{cardData.avatar.avatarUrl}"
+                    app:viewAspectRatio="1"
+                    />
+
+                <TextView
+                    android:id="@+id/avatar_title_text"
+                    app:visible="@{cardData.avatar.avatarName != null}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:gravity="bottom"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@id/avatar_image"
+                    android:layout_marginLeft="8dp"
+                    android:textSize="14sp"
+                    android:textColor="@color/lightSilver"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:textIsSelectable="true"
+                    android:text="@{cardData.avatar.avatarName}"
+                    />
+
+                <ImageView
+                    android:id="@+id/avatar_title_text_separator"
+                    app:visible="@{cardData.avatar.avatarName != null}"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="2dp"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    android:layout_toRightOf="@id/avatar_title_text"
+                    android:layout_alignParentTop="true"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/fetlife_logo_muted"
+                    />
+
+                <TextView
+                    android:id="@+id/avatar_title_meta_text"
+                    app:visible="@{cardData.avatar.avatarMeta != null}"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:gravity="bottom"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@id/avatar_title_text_separator"
+                    android:textSize="13sp"
+                    android:textColor="@color/gray"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:textIsSelectable="true"
+                    android:text="@{cardData.avatar.avatarMeta}"
+                    />
+
+                <TextView
+                    android:id="@+id/avatar_subtitle_text"
+                    app:visible="@{cardData.title != null}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="8dp"
+                    android:gravity="top"
+                    android:layout_toRightOf="@id/avatar_image"
+                    android:layout_below="@id/avatar_title_text"
+                    android:textSize="13sp"
+                    android:textColor="@color/lightSilver"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:textIsSelectable="true"
+                    android:text="@{cardData.title}"
+                    />
+
+                <TextView
+                    android:id="@+id/avatar_subtitle_meta_text"
+                    app:visible="@{cardData.avatar.avatarSublineExtra != null}"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="4dp"
+                    android:gravity="top"
+                    android:layout_toRightOf="@id/avatar_subtitle_text"
+                    android:layout_below="@id/avatar_title_meta_text"
+                    android:textSize="13sp"
+                    android:textColor="@color/gray"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:textIsSelectable="true"
+                    android:text="@{cardData.avatar.avatarSublineExtra}"
+                    />
+
+            </RelativeLayout>
+
+            <com.bitlove.fetlife.view.widget.AutoAlignGridView
+                android:id="@+id/media_grid"
+                app:visible="@{cardData.children != null}"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:columnWidth="90dp"
+                android:numColumns="auto_fit"
+                android:orientation="vertical"
+                app:parentCard="@{cardData}"
+                app:limitCardCount="@{!cardInteractionHandler.expanded}"
+                app:childrenInteractionHandler="@{cardInteractionHandler}"
+                app:childrenCardCount='@{8}'/>
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/media_image"
-                android:visibility="@{cardData.mediaUrl != null ? View.VISIBLE : View.GONE}"
-                android:layout_marginLeft="-12dp"
-                android:layout_marginRight="-12dp"
-                android:layout_width="0dp"
+                app:visible="@{cardData.mediaUrl != null}"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
                 android:scaleType="fitCenter"
                 app:srcFresco="@{cardData.mediaUrl}"
-                app:arFresco="@{cardData.mediaAspectRatio}"
-                app:layout_constraintTop_toBottomOf="@+id/avatar_barrier"
-                app:layout_constraintBottom_toTopOf="@id/supporting_text"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
-
-            <!--app:layout_constraintDimensionRatio="H,16:9"-->
+                app:arFresco="@{cardData.mediaAspectRatio}"/>
 
             <TextView
                 android:id="@+id/supporting_text"
-                app:formattedText="@{cardData.supportingText}"
-                app:textEntities='@{""}'
-                app:mediaEntityHolder="@{@id/supporting_text}"
-                app:removeLineBreaks="@{true}"
-                android:autoLink="web"
-                android:textIsSelectable="true"
-                android:visibility="@{TextUtils.isEmpty(cardData.supportingText) ? View.GONE : View.VISIBLE}"
-                android:layout_width="0dp"
+                app:visible="@{!TextUtils.isEmpty(cardData.supportingText)}"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingStart="4dp"
-                android:paddingEnd="4dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginBottom="12dp"
                 android:lineSpacingExtra="8dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                android:textColor="@color/moonGray"
+                android:textSize="13sp"
+                android:textColor="@color/lightSilver"
+                android:textIsSelectable="true"
                 android:ellipsize="end"
-                app:layout_constraintTop_toBottomOf="@+id/media_image"
-                app:layout_constraintBottom_toTopOf="@id/action_separator"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                android:autoLink="web"
+                app:textInteractionHandler="@{cardInteractionHandler}"
+                app:formattedText="@{cardData.supportingText}"
+                app:truncateText="@{!cardInteractionHandler.expanded}"
+                app:truncatedLength="@{250}"
+                app:removeLineBreaks="@{!cardInteractionHandler.expanded}"
+                />
 
             <View
                 android:id="@+id/action_separator"
+                app:visible='@{false}'
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/raisinBlack"
-                android:layout_marginTop="12dp"
-                android:layout_marginLeft="-12dp"
-                android:layout_marginRight="-12dp"
-                app:layout_constraintTop_toBottomOf="@+id/supporting_text"
-                app:layout_constraintBottom_toTopOf="@id/comments_count"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                />
 
-            <TextView
-                android:id="@+id/comments_count"
-                android:visibility='@{cardData.commentCountText != null ? View.VISIBLE : View.GONE}'
-                android:layout_width="wrap_content"
-                android:layout_height="24dp"
-                android:text='@{cardData.commentCountText}'
-                android:onClick="@{(view) -> cardInteractionHandler.onDisplayComments(view, cardData)}"
-                android:layout_marginLeft="8dp"
-                android:textColor='@{cardData.hasNewComment ? @color/moonGray : @color/midGray}'
-                android:gravity="center"
-                android:paddingBottom="3dp"
-                app:layout_constraintTop_toBottomOf="@+id/action_separator"
-                app:layout_constraintBottom_toTopOf="@id/comments_separator"
-                app:layout_constraintEnd_toEndOf="parent"/>
+            <RelativeLayout
+                android:id="@+id/action_area"
+                app:visible='@{cardInteractionHandler.hasActions}'
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                >
 
-            <ImageView
-                android:id="@+id/comments_button"
-                android:visibility='@{cardData.commentCountText != null ? View.VISIBLE : View.GONE}'
-                android:layout_width="wrap_content"
-                android:layout_height="24dp"
-                android:onClick="@{(view) -> cardInteractionHandler.onDisplayComments(view, cardData)}"
-                android:layout_marginLeft="8dp"
-                android:padding="4dp"
-                app:ico_icon="gmd-chat-bubble"
-                app:ico_size="16dp"
-                android:tint='@{cardData.hasNewComment() ? @color/moonGray : @color/midGray}'
-                app:ico_color="@color/midGray"
-                app:layout_constraintTop_toBottomOf="@+id/action_separator"
-                app:layout_constraintBottom_toTopOf="@id/comments_separator"
-                app:layout_constraintEnd_toStartOf="@id/comments_count"/>
+                <ImageView
+                    android:id="@+id/love_button"
+                    app:visible='@{cardData.loveCount != null}'
+                    android:layout_width="wrap_content"
+                    android:layout_height="28dp"
+                    android:padding="4dp"
+                    app:ico_size="20dp"
+                    app:ico_icon="gmd-favorite"
+                    android:tint='@{cardData.isLoved() == true ? @color/bostonUniversityRed : @color/midGray}'
+                    app:ico_color="@color/midGray"
+                    android:onClick="@{(view) -> cardInteractionHandler.onLove(view, cardData)}"
+                    android:layout_alignParentStart="true"
+                    />
 
-            <TextView
-                android:id="@+id/love_count"
-                android:visibility='@{cardData.loveCount != null ? View.VISIBLE : View.GONE}'
-                android:layout_width="wrap_content"
-                android:layout_height="24dp"
-                android:text='@{cardData.loveCount}'
-                android:onClick="@{(view) -> cardInteractionHandler.onDisplayComments(view, cardData)}"
-                android:layout_marginLeft="8dp"
-                android:layout_marginEnd="12dp"
-                android:textColor='@{cardData.isLoved() == true ? @color/moonGray : @color/midGray}'
-                android:gravity="center"
-                android:paddingBottom="3dp"
-                app:layout_constraintTop_toBottomOf="@+id/action_separator"
-                app:layout_constraintBottom_toTopOf="@id/comments_separator"
-                app:layout_constraintEnd_toStartOf="@id/comments_button"/>
+                <TextView
+                    android:id="@+id/love_count"
+                    app:visible='@{cardData.loveCount != null}'
+                    android:layout_width="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_height="28dp"
+                    android:gravity="center"
+                    android:textColor='@{cardData.isLoved() == true ? @color/lightSilver : @color/midGray}'
+                    android:text='@{cardData.loveCount}'
+                    android:onClick="@{(view) -> cardInteractionHandler.onLove(view, cardData)}"
+                    android:layout_toRightOf="@id/love_button"
+                    />
 
-            <ImageView
-                android:id="@+id/love_button"
-                android:visibility='@{cardData.loveCount != null ? View.VISIBLE : View.GONE}'
-                android:layout_width="wrap_content"
-                android:layout_height="24dp"
-                android:onClick="@{(view) -> cardInteractionHandler.onDisplayComments(view, cardData)}"
-                android:layout_marginLeft="8dp"
-                android:padding="4dp"
-                app:ico_icon="gmd-favorite"
-                app:ico_size="16dp"
-                android:tint='@{cardData.isLoved() == true ? @color/moonGray : @color/midGray}'
-                app:ico_color="@color/midGray"
-                app:layout_constraintTop_toBottomOf="@+id/action_separator"
-                app:layout_constraintBottom_toTopOf="@id/comments_separator"
-                app:layout_constraintEnd_toStartOf="@id/love_count"/>
+                <ImageView
+                    android:id="@+id/comments_button"
+                    app:visible='@{cardData.commentCountText != null}'
+                    android:layout_width="wrap_content"
+                    android:layout_height="28dp"
+                    android:layout_marginStart="4dp"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="4dp"
+                    android:paddingStart="4dp"
+                    android:paddingEnd="4dp"
+                    app:ico_size="18dp"
+                    app:ico_icon="gmd-chat-bubble"
+                    app:ico_color="@color/midGray"
+                    android:tint='@{cardData.hasNewComment() ? @color/lightSilver : @color/midGray}'
+                    android:onClick="@{(view) -> cardInteractionHandler.onDisplayComments(view, cardData)}"
+                    android:layout_toRightOf="@id/love_count"
+                    />
 
-            <ImageView
-                android:id="@+id/delete_button"
-                android:visibility='@{cardData.isDeletable() == true ? View.VISIBLE : View.GONE}'
-                android:layout_width="wrap_content"
-                android:layout_height="24dp"
-                android:onClick="@{(view) -> cardInteractionHandler.onDeleteCard(view, cardData)}"
-                android:layout_marginRight="8dp"
-                android:padding="4dp"
-                app:ico_icon="gmd-delete"
-                app:ico_size="16dp"
-                app:ico_color="@color/midGray"
-                app:layout_constraintTop_toBottomOf="@+id/action_separator"
-                app:layout_constraintBottom_toTopOf="@id/comments_separator"
-                app:layout_constraintStart_toStartOf="parent"/>
+                <TextView
+                    android:id="@+id/comments_count"
+                    app:visible='@{cardData.commentCountText != null}'
+                    android:layout_width="wrap_content"
+                    android:layout_height="28dp"
+                    android:layout_marginLeft="2dp"
+                    android:gravity="center"
+                    android:textColor='@{cardData.hasNewComment ? @color/lightSilver : @color/midGray}'
+                    android:text='@{cardData.commentCountText}'
+                    android:onClick="@{(view) -> cardInteractionHandler.onDisplayComments(view, cardData)}"
+                    android:layout_toRightOf="@id/comments_button"
+                    />
+
+                <ImageView
+                    android:id="@+id/expand_button"
+                    app:visible="@{cardInteractionHandler.expandable}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="28dp"
+                    android:padding="5dp"
+                    android:tint="@color/midGray"
+                    app:ico_icon_bind='@{cardInteractionHandler.expanded ? "gmd-expand-less" : "gmd-expand-more"}'
+                    app:ico_size_bind='@{18}'
+                    android:onClick="@{(view) -> cardInteractionHandler.onExpand()}"
+                    android:layout_alignParentEnd="true"
+                    />
+
+            </RelativeLayout>
 
             <View
                 android:id="@+id/comments_separator"
+                app:visible="@{cardData.comments.size() > 0 &amp;&amp; cardInteractionHandler.commentsDisplayed}"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/raisinBlack"
-                android:layout_marginTop="12dp"
                 android:layout_marginLeft="-12dp"
-                android:layout_marginRight="-12dp"
-                app:layout_constraintTop_toBottomOf="@+id/comments_button"
-                app:layout_constraintBottom_toTopOf="@id/comment_load_progress"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                android:layout_marginRight="-12dp"/>
 
-            <TextView
-                android:id="@+id/comment_load_progress"
-                android:visibility="@{cardData.getCommentCount() > 0 &amp;&amp; cardInteractionHandler.commentsDisplayed &amp;&amp; cardInteractionHandler.commentLoadInProgress ? View.VISIBLE : View.GONE}"
+            <RelativeLayout
+                android:id="@+id/comments_area"
+                app:visible="@{cardData.comments.size() > 0 &amp;&amp; cardInteractionHandler.commentsDisplayed}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="-12dp"
-                android:layout_marginRight="-12dp"
-                android:paddingTop="12dp"
-                android:gravity="center"
-                android:textColor="@color/midGray"
-                android:background="@color/nearBlack"
-                android:text="@string/comments_progress"
-                app:layout_constraintTop_toBottomOf="@+id/comments_separator"
-                app:layout_constraintBottom_toTopOf="@id/comment_load_more"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
-
-            <TextView
-                android:id="@+id/comment_load_more"
-                android:visibility="@{cardData.getCommentCount() > 0 &amp;&amp; cardInteractionHandler.commentsDisplayed &amp;&amp; !cardInteractionHandler.commentLoadInProgress? View.VISIBLE : View.GONE}"
-                android:onClick="@{(view) -> cardInteractionHandler.onGetMoreComments(view,cardData)}"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="-12dp"
-                android:layout_marginRight="-12dp"
-                android:paddingTop="12dp"
-                android:gravity="center"
-                android:textColor="@color/gray"
-                android:background="@color/nearBlack"
-                android:text="@string/comments_get_more"
-                app:layout_constraintTop_toBottomOf="@+id/comment_load_progress"
-                app:layout_constraintBottom_toTopOf="@id/comments_container"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
-
-            <LinearLayout
-                android:animateLayoutChanges="false"
-                android:visibility="@{cardData.comments.size() > 0 &amp;&amp; cardInteractionHandler.commentsDisplayed ? View.VISIBLE : View.GONE}"
-                android:id="@+id/comments_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/nearBlack"
                 android:layout_marginLeft="-12dp"
                 android:layout_marginRight="-12dp"
                 android:padding="12dp"
-                android:orientation="vertical"
-                app:comments="@{cardData.comments}"
-                app:maxCommentCount="@{cardInteractionHandler.commentCount}"
-                app:commentsDisplayed="@{cardInteractionHandler.commentsDisplayed}"
-                app:layout_constraintBottom_toTopOf="@id/new_comment_separator"
-                app:layout_constraintTop_toBottomOf="@+id/comment_load_more"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                android:clipToPadding="false"
+                android:background="@color/nearBlack"
+                >
+
+                <ProgressBar
+                    app:visible="@{cardInteractionHandler.commentLoadInProgress}"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:indeterminateTint="@color/silver_50"
+                    android:indeterminate="true"
+                    android:layout_centerInParent="true"
+                    />
+
+                <TextView
+                    android:id="@+id/more_comment_text"
+                    app:visible="@{cardData.comments.size() > 0 &amp;&amp; cardInteractionHandler.pagingComments}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:layout_marginTop="-4dp"
+                    android:layout_marginBottom="6dp"
+                    android:textColor="@color/gray"
+                    android:gravity="center"
+                    android:onClick="@{(view) -> cardInteractionHandler.onGetMoreComments(view,cardData)}"
+                    android:text="Show more comments"
+                    android:layout_alignParentTop="true"
+                    />
+\
+                <LinearLayout
+                    android:id="@+id/comments_container"
+                    app:visible="@{cardData.comments.size() > 0}"
+                    android:orientation="vertical"
+                    android:animateLayoutChanges="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:comments="@{cardData.comments}"
+                    app:maxCommentCount="@{cardInteractionHandler.commentCount}"
+                    app:commentsDisplayed="@{cardInteractionHandler.commentsDisplayed}"
+                    android:layout_below="@id/more_comment_text"
+                    />
+
+            </RelativeLayout>
 
             <View
                 android:id="@+id/new_comment_separator"
-                android:visibility="@{cardInteractionHandler.commentsDisplayed ? View.VISIBLE : View.GONE}"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/raisinBlack"
                 android:layout_marginLeft="-12dp"
                 android:layout_marginRight="-12dp"
-                app:layout_constraintTop_toBottomOf="@+id/comments_container"
-                app:layout_constraintBottom_toTopOf="@id/comment_edit"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                android:background="@color/raisinBlack"
+                />
 
             <!-- TODO Add fake focusable : https://stackoverflow.com/questions/1555109/stop-edittext-from-gaining-focus-at-activity-startup -->
 
             <EditText
                 android:id="@+id/comment_edit"
-                android:visibility="@{cardInteractionHandler.commentsDisplayed ? View.VISIBLE : View.GONE}"
-                android:layout_marginLeft="-12dp"
-                android:layout_marginRight="-12dp"
-                android:hint="Add your reply"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textColorHint="@color/midGray"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp"
-                android:inputType="textAutoCorrect"
-                android:imeOptions="actionDone"
-                android:background="@android:color/transparent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/silver"
-                app:layout_constraintTop_toBottomOf="@id/new_comment_separator"
-                app:layout_constraintBottom_toTopOf="@id/bottom_barrier"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="12dp"
+                android:padding="4dp"
+                android:background="@android:color/transparent"
+                android:textSize="13sp"
+                android:textColor="@color/lightSilver"
+                android:textColorHint="@color/midGray"
+                android:inputType="textAutoCorrect"
+                android:imeOptions="actionDone"
+                android:hint="Add your reply"
                 app:onSubmitHandler="@{cardInteractionHandler}"
                 app:onSubmitData="@{cardData}"
                 />
 
-            <android.support.constraint.Barrier
-                android:id="@+id/bottom_barrier"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:barrierDirection="bottom"
-                app:constraint_referenced_ids="comment_edit,new_comment_separator,comments_container,comment_load_progress,comments_separator,comments_button"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:visibility="invisible"
-                app:layout_constraintTop_toBottomOf="@id/bottom_barrier"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                />
-
-        </android.support.constraint.ConstraintLayout>
+        </LinearLayout>
 
     </android.support.v7.widget.CardView>
 

@@ -1,2 +1,16 @@
 <resources>
+    <string name="card_show_less">Show less</string>
+    <string name="card_show_more">Show more</string>
+
+    <string name="explore_action_like_created"> loved </string>
+    <string name="explore_action_picture_created">uploaded</string>
+    <string name="explore_action_writing_created">wrote</string>
+    <string name="explore_target_picture_plural">pictures</string>
+    <string name="explore_target_picture_singular">picture</string>
+    <string name="explore_target_writing_plural">posts</string>
+    <string name="explore_target_writing_singular">post</string>
+    <string name="explore_pointer_singular">this</string>
+    <string name="explore_pointer_plural">these</string>
+    <string name="explore_number_singular">a</string>
+
 </resources>

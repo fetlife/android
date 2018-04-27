@@ -9,6 +9,7 @@ import com.bitlove.fetlife.model.dataobject.entity.content.MemberEntity
 import com.bitlove.fetlife.model.dataobject.entity.content.RelationEntity
 import com.bitlove.fetlife.model.db.dao.BaseDao
 import com.bitlove.fetlife.logic.dataholder.AvatarViewDataHolder
+import com.bitlove.fetlife.model.db.FetLifeContentDatabase
 
 class Member() : AvatarViewDataHolder(), SyncObject<MemberEntity> {
 
@@ -55,8 +56,8 @@ class Member() : AvatarViewDataHolder(), SyncObject<MemberEntity> {
         return memberEntity
     }
 
-    override fun getDao(): BaseDao<MemberEntity> {
-        return getDataBase().memberDao()
+    override fun getDao(contentDb: FetLifeContentDatabase): BaseDao<MemberEntity> {
+        return contentDb.memberDao()
     }
 
     override fun getAvatarSubline(): String? {

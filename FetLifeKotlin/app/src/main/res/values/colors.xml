@@ -22,4 +22,7 @@
 
     <color name="silver_50">#80999999</color>
 
+    <color name="toolbar_color">#777</color>
+    <color name="toolbar_icon_color">#777</color>
+
 </resources>

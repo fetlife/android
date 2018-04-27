@@ -8,6 +8,7 @@ import com.bitlove.fetlife.model.dataobject.entity.content.ReactionEntity
 import com.bitlove.fetlife.model.db.dao.BaseDao
 import com.bitlove.fetlife.logic.dataholder.AvatarViewDataHolder
 import com.bitlove.fetlife.logic.dataholder.ReactionViewDataHolder
+import com.bitlove.fetlife.model.db.FetLifeContentDatabase
 
 class Reaction() : ReactionViewDataHolder(), SyncObject<ReactionEntity> {
 
@@ -49,8 +50,8 @@ class Reaction() : ReactionViewDataHolder(), SyncObject<ReactionEntity> {
         return reactionEntity
     }
 
-    override fun getDao(): BaseDao<ReactionEntity> {
-        return getDataBase().reactionDao()
+    override fun getDao(contentDb: FetLifeContentDatabase): BaseDao<ReactionEntity> {
+        return contentDb.reactionDao()
     }
 
 }

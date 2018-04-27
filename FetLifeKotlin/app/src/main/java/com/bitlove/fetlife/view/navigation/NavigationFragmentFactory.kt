@@ -41,13 +41,13 @@ class NavigationFragmentFactory {
         }
         return when (navigation) {
             R.id.navigation_search -> TurbolinksFragment.newInstance(R.id.navigation_search)
-            R.id.navigation_explore_friends_activity -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_FRIENDS_FEED)
-            R.id.navigation_explore_fresh_and_pervy -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_FRESH_AND_PERVY)
-            R.id.navigation_explore_kinky_and_popular -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_KINKY_AND_POPULAR)
-            R.id.navigation_explore_stuff_you_love -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_STUFF_YOU_LOVE)
-            R.id.navigation_conversations_inbox -> CardListFragment.newInstance(CardListViewModel.CardListType.CONVERSATIONS_INBOX)
-            R.id.navigation_conversations_all -> CardListFragment.newInstance(CardListViewModel.CardListType.CONVERSATIONS_ALL)
-            else -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_KINKY_AND_POPULAR)
+            R.id.navigation_explore_friends_activity -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_FRIENDS_FEED,getNavigationTitle(navigation))
+            R.id.navigation_explore_fresh_and_pervy -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_FRESH_AND_PERVY,getNavigationTitle(navigation))
+            R.id.navigation_explore_kinky_and_popular -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_KINKY_AND_POPULAR,getNavigationTitle(navigation))
+            R.id.navigation_explore_stuff_you_love -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_STUFF_YOU_LOVE,getNavigationTitle(navigation))
+            R.id.navigation_conversations_inbox -> CardListFragment.newInstance(CardListViewModel.CardListType.CONVERSATIONS_INBOX,getNavigationTitle(navigation))
+            R.id.navigation_conversations_all -> CardListFragment.newInstance(CardListViewModel.CardListType.CONVERSATIONS_ALL,getNavigationTitle(navigation))
+            else -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_KINKY_AND_POPULAR,getNavigationTitle(navigation))
         }
     }
 
@@ -61,7 +61,7 @@ class NavigationFragmentFactory {
             R.id.navigation_explore_kinky_and_popular -> "Kinky and Popular"
             R.id.navigation_explore_stuff_you_love -> "Stuff you Love"
             R.id.navigation_conversations -> "Messages"
-            null -> "Kinky and Popular"
+            null -> "Friends"
             R.id.navigation_conversations_inbox -> "Inbox"
             R.id.navigation_conversations_all -> "All"
             else -> "FetLife"

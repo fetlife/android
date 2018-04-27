@@ -15,4 +15,7 @@ abstract class ExploreEventDao : BaseDao<ExploreEventEntity> {
     @Query("DELETE FROM explore_events")
     abstract fun deleteAll()
 
+    @Query("SELECT * FROM explore_events WHERE dbId = :cardId")
+    abstract fun getEvent(cardId: String): LiveData<ExploreEvent>
+
 }

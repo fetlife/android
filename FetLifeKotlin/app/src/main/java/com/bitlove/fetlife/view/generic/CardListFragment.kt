@@ -15,10 +15,12 @@ class CardListFragment : BindingFragment<FragmentCardListBinding, CardListViewMo
 
     companion object {
         private const val ARG_CARD_LIST_TYPE = "ARG_CARD_LIST_TYPE"
-        fun newInstance(cardListType: CardListViewModel.CardListType) : CardListFragment {
+        private const val ARG_SCREEN_TITLE = "ARG_SCREEN_TITLE"
+        fun newInstance(cardListType: CardListViewModel.CardListType, screenTitle: String?) : CardListFragment {
             val fragment = CardListFragment()
             val bundle = Bundle()
             bundle.putSerializable(ARG_CARD_LIST_TYPE, cardListType)
+            bundle.putString(ARG_SCREEN_TITLE, screenTitle)
             fragment.arguments = bundle
             return fragment
         }
@@ -47,7 +49,7 @@ class CardListFragment : BindingFragment<FragmentCardListBinding, CardListViewMo
 
         card_list.workaroundItemFlickeringOnChange()
         //TODO: get NavigationCallBack from activity rather than use it itself
-        card_list.adapter = CardListAdapter(activity as NavigationCallback)
+        card_list.adapter = CardListAdapter(activity as NavigationCallback, arguments.getString(ARG_SCREEN_TITLE))
 
         //TODO remove forever and use state based
         viewModel!!.observerDataForever(cardListType,{

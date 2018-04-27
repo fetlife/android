@@ -1,35 +1,42 @@
 package com.bitlove.fetlife.model.resource.get
 
 import android.arch.lifecycle.LiveData
+import com.bitlove.fetlife.FetLifeApplication
+import com.bitlove.fetlife.getLoggedInUserId
+import com.bitlove.fetlife.model.db.FetLifeContentDatabase
 import com.bitlove.fetlife.model.resource.BaseResource
 import com.bitlove.fetlife.model.resource.ResourceResult
 import org.jetbrains.anko.coroutines.experimental.bg
 
-abstract class GetResource<ResourceType>(forceSync : Boolean) : BaseResource<ResourceType>() {
+abstract class GetResource<ResourceType>(forceSync : Boolean, userId : String?) : BaseResource<ResourceType>(userId) {
 
     private val forceSync = forceSync
     private var networkSyncChecked = false
 
-    override fun load() : ResourceResult<ResourceType> {
+    override fun execute() : ResourceResult<ResourceType> {
         loadInBackground()
-        return super.load()
+        return super.execute()
     }
 
     private fun loadInBackground() {
         bg {
-            val dbSource = loadFromDb()
-            loadResult.liveData.addSource(dbSource, {data ->
-                loadResult.liveData.value = data
-                //TODO(cleanup) implement with should sync
-                if (!networkSyncChecked && shouldSync(data, forceSync)) {
-                    networkSyncChecked = true
-                    syncWithNetwork(data)
-                }
-            })
+            val contentDb = getContentDatabaseWrapper().lockDb(userId)
+            if (contentDb != null) {
+                val dbSource = loadFromDb(contentDb)
+                loadResult.liveData.addSource(dbSource, {data ->
+                    loadResult.liveData.value = data
+                    //TODO(cleanup) implement with should sync
+                    if (!networkSyncChecked && shouldSync(data, forceSync)) {
+                        networkSyncChecked = true
+                        syncWithNetwork(data)
+                    }
+                })
+                getContentDatabaseWrapper().releaseDb()
+            }
         }
     }
 
-    abstract fun loadFromDb() : LiveData<ResourceType>
+    abstract fun loadFromDb(contentDb: FetLifeContentDatabase) : LiveData<ResourceType>
 
     abstract fun shouldSync(data: ResourceType?, forceSync: Boolean): Boolean
 

@@ -10,10 +10,11 @@ import com.bitlove.fetlife.model.db.dao.ContentDao
 import com.bitlove.fetlife.logic.dataholder.AvatarViewDataHolder
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.model.dataobject.SyncObject
+import com.bitlove.fetlife.model.db.FetLifeContentDatabase
 
 class Content : CardViewDataHolder(), SyncObject<ContentEntity> {
 
-    enum class TYPE {CONVERSATION, PICTURE}
+    enum class TYPE {CONVERSATION, PICTURE, WRITING}
 
     @Embedded lateinit var contentEntity: ContentEntity
 
@@ -27,7 +28,7 @@ class Content : CardViewDataHolder(), SyncObject<ContentEntity> {
     @Ignore private var loveList: List<Reaction>? = null
 
     override fun getTitle(): String? {
-        return contentEntity?.subject
+        return contentEntity?.subject?: contentEntity.title
     }
 
     override fun displayComments(): Boolean? {
@@ -53,13 +54,26 @@ class Content : CardViewDataHolder(), SyncObject<ContentEntity> {
         return contentEntity?.type
     }
 
+    override fun getServerType(): String {
+        return try {
+            val type = TYPE.valueOf(getType()!!)
+            when (type) {
+                TYPE.PICTURE -> "pictures"
+                TYPE.CONVERSATION -> "conversation"
+                TYPE.WRITING -> "writings"
+            }
+        } catch (t: Throwable) {
+            throw IllegalArgumentException(t)
+        }
+    }
+
     override fun getAvatar(): AvatarViewDataHolder? {
         val memberEntity = ownerSingleItemList?.firstOrNull() ?: return null
-        val member = Member(memberEntity)
-        if (contentEntity?.type == TYPE.CONVERSATION.toString()) {
-            member.subLine = contentEntity?.subject
-        }
-        return member
+        return Member(memberEntity)
+    }
+
+    override fun getThumbUrl(): String? {
+        return contentEntity?.pictureVariants?.medium?.url
     }
 
     override fun getMediaUrl(): String? {
@@ -129,8 +143,8 @@ class Content : CardViewDataHolder(), SyncObject<ContentEntity> {
         return contentEntity
     }
 
-    override fun getDao(): ContentDao {
-        return getDataBase().contentDao()
+    override fun getDao(contentDb: FetLifeContentDatabase): ContentDao {
+        return contentDb.contentDao()
     }
 
 }

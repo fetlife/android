@@ -2,10 +2,11 @@ package com.bitlove.fetlife.model.network.job.login
 
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.model.dataobject.entity.user.UserEntity
+import com.bitlove.fetlife.model.dataobject.wrapper.User
 import com.bitlove.fetlife.model.network.job.BaseJob
 import com.bitlove.fetlife.model.network.networkobject.AuthBody
 
-class LoginJob(private val username: String, private var password: String, private val rememberUser: Boolean): BaseJob(PRIORITY_LOGIN,false, TAG_LOGIN){
+class LoginJob(private val username: String, private var password: String, private val rememberUser: Boolean): BaseJob(PRIORITY_LOGIN,false, null, TAG_LOGIN){
 
     companion object {
         const val TAG_LOGIN = "TAG_LOGIN"
@@ -29,17 +30,24 @@ class LoginJob(private val username: String, private var password: String, priva
         val authHeader = "Bearer " + tokenResult!!.accessToken
         val refreshToken = tokenResult!!.refreshToken
 
-        //TODO: obfuscate
-        FetLifeApplication.instance.onUserLoggedIn(username, authHeader, refreshToken)
-
-        //TODO: notifications
-        val userEntity = UserEntity(System.currentTimeMillis(), username, if (rememberUser) getAuthHeader() else null, if (rememberUser) tokenResult.refreshToken else null, rememberUser, false)
-        FetLifeApplication.instance.fetLifeUserDatabase.userDao().insert(userEntity)
-
-        val meCall = getApi().getMe(getAuthHeader())
+        val meCall = getApi().getMe(authHeader)
         val meResult = meCall.execute()
         return if (meResult.isSuccessful) {
-            FetLifeApplication.instance.fetLifeContentDatabase.memberDao().insert(meResult.body()!!)
+            //TODO(cleanup): obfuscate
+
+            val memberEntity = meResult.body()!!
+            val userEntity = UserEntity(memberEntity.dbId, username, System.currentTimeMillis(), if (rememberUser) authHeader else null, if (rememberUser) tokenResult.refreshToken else null, rememberUser, false)
+
+            val user = User()
+            user.userEntity = userEntity
+            user.memberEntity = memberEntity
+
+            FetLifeApplication.instance.fetLifeUserDatabase.userDao().insert(userEntity)
+            FetLifeApplication.instance.onUserLoggedIn(user, authHeader, refreshToken)
+            val contentDbWrapper = FetLifeApplication.instance.fetLifeContentDatabaseWrapper
+            contentDbWrapper.lockDb(user.getLocalId())?.memberDao()?.insert(meResult.body()!!)
+            contentDbWrapper.releaseDb()
+
             true
         } else false
     }

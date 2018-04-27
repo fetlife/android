@@ -1,6 +1,7 @@
 package com.bitlove.fetlife.model.dataobject.entity.content
 
 import android.arch.persistence.room.*
+import android.text.TextUtils
 import com.bitlove.fetlife.model.dataobject.entity.reference.MemberRef
 import com.bitlove.fetlife.model.dataobject.entity.reference.PictureVariants
 import com.bitlove.fetlife.model.dataobject.entity.reference.ReactionRef
@@ -25,6 +26,7 @@ data class ContentEntity(@SerializedName("id") var networkId: String = "",
                          @SerializedName("created_at") var createdAt: String? = null,
                          @SerializedName("updated_at") var updatedAt: String? = null,
                          @SerializedName("subject") var subject: String? = null,
+                         @SerializedName("title") var title: String? = null,
                          @SerializedName("body") var body: String? = null,
                          @SerializedName("message_count") var messageCount: Int? = null,
                          @SerializedName("is_archived") var isArchived: Boolean? = false,
@@ -36,8 +38,9 @@ data class ContentEntity(@SerializedName("id") var networkId: String = "",
 
     @PrimaryKey var dbId: String = ""
         get() {
-            return "$type:$networkId"
+            //TODO modify this for local creation
+            return if (TextUtils.isEmpty(field)) "$type:$networkId" else field
         }
 
-    var memberRemoteId: String? = null
+    var remoteMemberId: String? = null
 }

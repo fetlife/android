@@ -1,6 +1,8 @@
 package com.bitlove.fetlife.model.dataobject.entity.content
 
 import android.arch.persistence.room.*
+import android.text.TextUtils
+import com.bitlove.fetlife.hash
 import com.bitlove.fetlife.model.dataobject.entity.reference.MemberRef
 import com.google.gson.annotations.SerializedName
 
@@ -32,7 +34,10 @@ data class ReactionEntity(
 
     @PrimaryKey var dbId: String = ""
         get() {
-            return "$type:$networkId"
+            if (TextUtils.isEmpty(field)) {
+                field = "$type:${createdAt?.hash()}:${body?.hash()}"
+            }
+            return field
         }
 
 }

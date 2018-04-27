@@ -19,13 +19,21 @@
             android:layout_above="@+id/navigation_bottom">
         </FrameLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@color/raisinBlack"
+            app:layout_anchor="@id/navigation_bottom"
+            app:layout_anchorGravity="top"
+            />
+
         <android.support.design.widget.BottomNavigationView
             android:id="@+id/navigation_bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/darkGray"
-            app:itemIconTint="@drawable/selector_silver_to_moon"
-            app:itemTextColor="@drawable/selector_silver_to_moon"
+            android:background="@color/black"
+            app:itemIconTint="@drawable/selector_bottom_navigation"
+            app:itemTextColor="@drawable/selector_bottom_navigation"
             android:layout_gravity="bottom"/>
 
         <android.support.design.widget.FloatingActionButton

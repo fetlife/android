@@ -3,6 +3,7 @@ package com.bitlove.fetlife.model.dataobject.entity.content
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
+import android.text.TextUtils
 import com.bitlove.fetlife.model.dataobject.entity.embedded.Avatar
 import com.google.gson.annotations.SerializedName
 
@@ -15,6 +16,6 @@ class MemberEntity(@SerializedName("id") var networkId: String = "",
     @PrimaryKey
     var dbId: String = ""
         get() {
-            return this::class.qualifiedName + ":" + networkId
+            return if (TextUtils.isEmpty(field)) this::class.qualifiedName + ":" + networkId else field
         }
 }
