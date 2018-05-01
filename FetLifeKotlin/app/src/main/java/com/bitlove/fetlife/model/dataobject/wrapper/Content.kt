@@ -10,9 +10,10 @@ import com.bitlove.fetlife.model.db.dao.ContentDao
 import com.bitlove.fetlife.logic.dataholder.AvatarViewDataHolder
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.model.dataobject.SyncObject
+import com.bitlove.fetlife.model.dataobject.entity.content.FavoriteEntity
 import com.bitlove.fetlife.model.db.FetLifeContentDatabase
 
-class Content : CardViewDataHolder(), SyncObject<ContentEntity> {
+class Content : CardViewDataHolder(), SyncObject<ContentEntity>, Favoritable {
 
     enum class TYPE {CONVERSATION, PICTURE, WRITING}
 
@@ -24,11 +25,18 @@ class Content : CardViewDataHolder(), SyncObject<ContentEntity> {
     @Relation(parentColumn = "dbId", entityColumn = "contentId", entity = ReactionEntity::class)
     var reactions: List<Reaction>? = null
 
+    @Relation(parentColumn = "dbId", entityColumn = "contentId", entity = FavoriteEntity::class)
+    var favorites: List<FavoriteEntity>? = null
+
     @Ignore private var commentList: List<Reaction>? = null
     @Ignore private var loveList: List<Reaction>? = null
 
+    override fun getAvatarTitle(): String? {
+        return contentEntity?.subject?: ""
+    }
+
     override fun getTitle(): String? {
-        return contentEntity?.subject?: contentEntity.title
+        return contentEntity.title
     }
 
     override fun displayComments(): Boolean? {
@@ -89,6 +97,10 @@ class Content : CardViewDataHolder(), SyncObject<ContentEntity> {
         }
     }
 
+    override fun getUrl(): String? {
+        return contentEntity?.url
+    }
+
     override fun isDeletable(): Boolean? {
         return when(contentEntity?.type) {
             TYPE.CONVERSATION.toString() -> true
@@ -123,6 +135,14 @@ class Content : CardViewDataHolder(), SyncObject<ContentEntity> {
 
     override fun isLoved(): Boolean? {
         return contentEntity?.loved
+    }
+
+    override fun isFavorite(): Boolean? {
+        return favorites?.firstOrNull() != null
+    }
+
+    override fun getFavoriteEntity(): FavoriteEntity? {
+        return favorites?.firstOrNull()
     }
 
     override fun getLoveCount(): String? {

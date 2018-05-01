@@ -20,6 +20,7 @@
         </FrameLayout>
 
         <View
+            android:id="@+id/navigation_bottom_separator"
             android:layout_width="match_parent"
             android:layout_height="5dp"
             android:background="@color/raisinBlack"

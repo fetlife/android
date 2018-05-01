@@ -7,6 +7,7 @@ import com.bitlove.fetlife.model.dataobject.wrapper.Content
 import com.bitlove.fetlife.model.dataobject.wrapper.Reaction
 import com.bitlove.fetlife.model.db.FetLifeContentDatabase
 import com.bitlove.fetlife.model.network.job.post.PostReactionJob
+import com.bitlove.fetlife.toServerTime
 
 class PostReactionResource(reaction: Reaction, val parent: Content, userId: String? = getLoggedInUserId()) : PostResource<Reaction>(reaction, userId) {
 
@@ -18,6 +19,7 @@ class PostReactionResource(reaction: Reaction, val parent: Content, userId: Stri
             //TODO(cleanup) check logged in state
             reactionEntity.memberId = FetLifeApplication.instance.loggedInUser!!.getLocalId()
             reactionEntity.type = Reaction.TYPE.COMMENT.toString()
+            reactionEntity.createdAt = System.currentTimeMillis().toServerTime()
             val reaction = Reaction()
             reaction.reactionEntity = reactionEntity
             return PostReactionResource(reaction, parent)
@@ -40,6 +42,7 @@ class PostReactionResource(reaction: Reaction, val parent: Content, userId: Stri
         val entity = reaction.getEntity()
         entity.contentId = parent.getLocalId()
         reaction.save(userId)
+        parent.save(userId)
     }
 
     override fun shouldSync(reaction: Reaction): Boolean {

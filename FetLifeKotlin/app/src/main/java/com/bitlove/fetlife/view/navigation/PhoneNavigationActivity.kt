@@ -18,6 +18,7 @@ import com.bitlove.fetlife.view.login.LoginActivity
 import com.bitlove.fetlife.view.widget.FloatingActionButtonBehavior
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.view.generic.ResourceActivity
+import com.bitlove.fetlife.view.widget.BottomNavigationSeparatorBehavior
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
 
@@ -30,7 +31,7 @@ open class PhoneNavigationActivity : ResourceActivity(), NavigationCallback {
 
         fun start(context: Context) {
             val intent = Intent(context, PhoneNavigationActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NO_ANIMATION
             context.startActivity(intent)
         }
     }
@@ -167,8 +168,12 @@ open class PhoneNavigationActivity : ResourceActivity(), NavigationCallback {
         navigation_bottom.disableShiftMode()
         navigation_bottom.selectedItemId = R.id.navigation_explore
 
-        val layoutParams = navigation_bottom.layoutParams as CoordinatorLayout.LayoutParams
-        layoutParams.behavior = BottomNavigationBehavior()
+        //TODO: merge layout behaviours together
+        val navLayoutParams = navigation_bottom.layoutParams as CoordinatorLayout.LayoutParams
+        navLayoutParams.behavior = BottomNavigationBehavior()
+        val navSepLayoutParams = navigation_bottom_separator.layoutParams as CoordinatorLayout.LayoutParams
+        navSepLayoutParams.behavior = BottomNavigationSeparatorBehavior()
+
 
         //TODO move this to a better place considering tablet navigation
         navigation_bottom.setOnNavigationItemSelectedListener({

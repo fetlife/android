@@ -47,11 +47,10 @@ class GridAutoFitLayoutManager : StaggeredGridLayoutManager {
         val width = width
         val height = height
         if (mColumnWidthChanged && mColumnWidth > 0 && width > 0 && height > 0) {
-            val totalSpace: Int
-            if (orientation == LinearLayoutManager.VERTICAL) {
-                totalSpace = width - paddingRight - paddingLeft
+            val totalSpace = if (orientation == LinearLayoutManager.VERTICAL) {
+                width - paddingRight - paddingLeft
             } else {
-                totalSpace = height - paddingTop - paddingBottom
+                height - paddingTop - paddingBottom
             }
             val spanCount = Math.max(1, totalSpace / mColumnWidth)
             async(UI) {
@@ -62,11 +61,11 @@ class GridAutoFitLayoutManager : StaggeredGridLayoutManager {
         super.onLayoutChildren(recycler, state)
     }
 
-    override fun requestChildRectangleOnScreen(parent: RecyclerView?, child: View?, rect: Rect?, immediate: Boolean): Boolean {
-        return false
-    }
-
-    override fun requestChildRectangleOnScreen(parent: RecyclerView?, child: View?, rect: Rect?, immediate: Boolean, focusedChildVisible: Boolean): Boolean {
-        return false
-    }
+//    override fun requestChildRectangleOnScreen(parent: RecyclerView?, child: View?, rect: Rect?, immediate: Boolean): Boolean {
+//        return false
+//    }
+//
+//    override fun requestChildRectangleOnScreen(parent: RecyclerView?, child: View?, rect: Rect?, immediate: Boolean, focusedChildVisible: Boolean): Boolean {
+//        return false
+//    }
 }

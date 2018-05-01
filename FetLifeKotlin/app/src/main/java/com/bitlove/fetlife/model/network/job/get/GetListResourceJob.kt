@@ -12,9 +12,10 @@ abstract class GetListResourceJob<T : DataEntity>(jobPriority: Int, doPersist: B
         //Workaround for different feed result
         val result = getCall().execute()
         return if (result.isSuccessful){
-            val contentDb = getDatabaseWrapper().lockDb(userId)
-            contentDb?.runInTransaction { saveToDb(contentDb, getResultBody(result)) }
-            getDatabaseWrapper().releaseDb()
+            getDatabaseWrapper().safeRun(userId, {
+                contentDb ->
+                saveToDb(contentDb, getResultBody(result))
+            },true)
             true
         } else {
             false

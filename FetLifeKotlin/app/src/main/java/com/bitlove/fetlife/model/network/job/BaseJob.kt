@@ -18,36 +18,30 @@ import kotlin.reflect.full.primaryConstructor
 abstract class BaseJob(jobPriority: Int, doPersist: Boolean, val userId: String?, vararg tags: String) : Job(createParams(jobPriority,doPersist,*tags)) {
     companion object {
 
-        val PRIORITY_LOGIN = 0
+        const val PRIORITY_LOGIN = 0
 
         //priority change cancel reason range
-        val PRIORITY_CHANGE_RANGE_LOW = 1111
-        val PRIORITY_CHANGE_RANGE_HIGH = 1999
+        const val PRIORITY_CHANGE_RANGE_LOW = 1111
+        const val PRIORITY_CHANGE_RANGE_HIGH = 1999
 
         //priorities
-        val PRIORITY_MODIFY_RESOURCE = 1111
-        val PRIORITY_GET_RESOURCE_FRONT = 1222
-        val PRIORITY_GET_RESOURCE_BACKGROUND = 1333
-        val PRIORITY_UPLOAD_MEDIA = 1555
+        const val PRIORITY_DELETE_RESOURCE = 11
+        const val PRIORITY_MODIFY_RESOURCE = 1111
+        const val PRIORITY_GET_RESOURCE_FRONT = 1222
+        const val PRIORITY_GET_RESOURCE_BACKGROUND = 1333
+        const val PRIORITY_UPLOAD_MEDIA = 1555
 
         //tags
-        val TAG_GET_RESOURCE = "TAG_GET_RESOURCE"
-        val TAG_SYNC_RESOURCE = "TAG_SYNC_RESOURCE"
+        const val TAG_GET_RESOURCE = "TAG_GET_RESOURCE"
+        const val TAG_SYNC_RESOURCE = "TAG_SYNC_RESOURCE"
+        const val TAG_DELETE_RESOURCE = "TAG_DELETE_RESOURCE"
     }
 
     open var progressTrackerId: String = UUID.randomUUID().toString()
     val progressTrackerLiveData : MediatorLiveData<ProgressTracker> = MediatorLiveData()
 
     init {
-        bg {
-            val jobProgressEntity = JobProgressEntity(progressTrackerId, ProgressTracker.STATE.NEW.toString())
-            val jobProgressDao = getDatabaseWrapper().lockDb(userId)?.jobProgressDao()
-            jobProgressDao?.insert(jobProgressEntity)
-            if (jobProgressDao != null) {
-                progressTrackerLiveData.addSource(jobProgressDao.getTracker(progressTrackerId),{data -> progressTrackerLiveData.value = data})
-            }
-            getDatabaseWrapper().releaseDb()
-        }
+        updateProgressState(ProgressTracker.STATE.NEW,null,true)
     }
 
     override fun shouldReRunOnThrowable(throwable: Throwable, runCount: Int, maxRunCount: Int): RetryConstraint {
@@ -86,12 +80,17 @@ abstract class BaseJob(jobPriority: Int, doPersist: Boolean, val userId: String?
         }
     }
 
-    private fun updateProgressState(state: ProgressTracker.STATE, message: String? = null) {
+    open fun updateProgressState(state: ProgressTracker.STATE, message: String? = null, addSource: Boolean = false) {
         bg {
             val jobProgressEntity = JobProgressEntity(progressTrackerId, state.toString(), message)
-            val jobProgressDao = getDatabaseWrapper().lockDb(userId)?.jobProgressDao()
-            jobProgressDao?.update(jobProgressEntity)
-            getDatabaseWrapper().releaseDb()
+            getDatabaseWrapper().safeRun(userId, {
+                contentDb ->
+                val jobProgressDao = contentDb.jobProgressDao()
+                if (addSource && jobProgressDao != null) {
+                    progressTrackerLiveData.addSource(jobProgressDao.getTracker(progressTrackerId),{data -> progressTrackerLiveData.value = data})
+                }
+                jobProgressDao?.insertOrUpdate(jobProgressEntity)
+            })
         }
     }
 

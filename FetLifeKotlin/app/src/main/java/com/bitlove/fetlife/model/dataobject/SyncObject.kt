@@ -18,22 +18,20 @@ interface SyncObject<T : DataEntity> {
 
     @Suppress("UNCHECKED_CAST")
     fun save(userId: String? = getLoggedInUserId()) {
-        val contentDb = getDataBaseWrapper().lockDb(userId)
-        if (contentDb != null) {
+        getDataBaseWrapper().safeRun(userId, {
+            contentDb ->
             val dao = getDao(contentDb)
             dao.insertOrUpdate(this.getEntity())
-            getDataBaseWrapper().releaseDb()
-        }
+        })
     }
 
     @Suppress("UNCHECKED_CAST")
     fun delete(userId: String? = getLoggedInUserId()) {
-        val contentDb = getDataBaseWrapper().lockDb(userId)
-        if (contentDb != null) {
+        getDataBaseWrapper().safeRun(userId, {
+            contentDb ->
             val dao = getDao(contentDb)
             dao.delete(getEntity())
-            getDataBaseWrapper().releaseDb()
-        }
+        })
     }
 
     fun getDataBaseWrapper() : FetLifeContentDatabaseWrapper {

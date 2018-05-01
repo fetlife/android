@@ -9,12 +9,13 @@ import com.bitlove.fetlife.model.dataobject.entity.content.MemberEntity
 import com.bitlove.fetlife.model.dataobject.entity.content.RelationEntity
 import com.bitlove.fetlife.model.db.dao.BaseDao
 import com.bitlove.fetlife.logic.dataholder.AvatarViewDataHolder
+import com.bitlove.fetlife.model.dataobject.entity.content.FavoriteEntity
 import com.bitlove.fetlife.model.db.FetLifeContentDatabase
 
-class Member() : AvatarViewDataHolder(), SyncObject<MemberEntity> {
+class Member() : AvatarViewDataHolder(), SyncObject<MemberEntity>, Favoritable {
 
-    @Ignore var subLine : String? = null
-    @Ignore var subLineExtra : String? = null
+    @Ignore private var subLine : String? = null
+    @Ignore private var subLineExtra : String? = null
 
     constructor(memberEntity: MemberEntity) : this() {
         this.memberEntity = memberEntity
@@ -27,6 +28,9 @@ class Member() : AvatarViewDataHolder(), SyncObject<MemberEntity> {
 
     @Relation(parentColumn = "dbId", entityColumn = "memberId", entity = RelationEntity::class)
     var relations: List<RelationEntity>? = null
+
+    @Relation(parentColumn = "dbId", entityColumn = "memberId", entity = FavoriteEntity::class)
+    var favorites: List<FavoriteEntity>? = null
 
     override fun getLocalId(): String? {
         return memberEntity?.dbId
@@ -67,4 +71,17 @@ class Member() : AvatarViewDataHolder(), SyncObject<MemberEntity> {
     override fun getAvatarSublineExtra(): String? {
         return subLineExtra
     }
+
+    override fun getUrl(): String? {
+        return memberEntity?.url
+    }
+
+    override fun isFavorite(): Boolean? {
+        return favorites?.firstOrNull() != null
+    }
+
+    override fun getFavoriteEntity(): FavoriteEntity? {
+        return favorites?.firstOrNull()
+    }
+
 }

@@ -30,13 +30,20 @@
         app:ico_size="20dp"
         android:title="@string/menu_item_groups"/>
     <item
+        android:id="@+id/navigation_favorites"
+        app:showAsAction="always"
+        app:ico_color="@color/gray"
+        app:ico_icon="gmd-star"
+        app:ico_size="20dp"
+        android:title="@string/menu_item_favorites"/>
+    <!--
+    <item
         android:id="@+id/navigation_events"
         app:showAsAction="always"
         app:ico_color="@color/gray"
         app:ico_icon="gmd-event"
         app:ico_size="20dp"
         android:title="@string/menu_item_events"/>
-    <!--
     <item
         android:id="@+id/navigation_people"
         app:showAsAction="always"

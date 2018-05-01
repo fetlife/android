@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProviders
 import android.arch.persistence.room.Room
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.databinding.DataBindingUtil
@@ -25,7 +26,9 @@ import android.os.Build
 import android.support.design.internal.BottomNavigationItemView
 import android.support.design.internal.BottomNavigationMenuView
 import android.support.design.widget.BottomNavigationView
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import com.bitlove.fetlife.model.dataobject.wrapper.User
 import com.bitlove.fetlife.model.db.FetLifeContentDatabaseWrapper
@@ -36,10 +39,14 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import java.net.URI
 import java.security.NoSuchAlgorithmException
+import org.joda.time.format.DateTimeFormatter
+import org.joda.time.format.DateTimeFormatterBuilder
+import org.joda.time.format.ISODateTimeFormat
 
 //TODO check out developer book: https://antonioleiva.com/kotlin-android-developers-book/
 //TODO check out warnings
 //TODO add privacy policy (crashlytics)
+//TODO cleanup progressTrackers
 class FetLifeApplication : Application() {
 
     companion object {
@@ -74,7 +81,7 @@ class FetLifeApplication : Application() {
         fetlifeService.refreshToken = refreshToken
         if (loggedInUser != user) {
             //TODO: close db
-            fetLifeContentDatabaseWrapper.init(user.getLocalId(),true)
+            fetLifeContentDatabaseWrapper.init(user.getLocalId())
         }
         loggedInUser = user
     }
@@ -88,8 +95,7 @@ class FetLifeApplication : Application() {
         bg {
             //TODO: cancel all jobs for the current user
             fetLifeUserDatabase.userDao().delete(userId)
-            fetLifeContentDatabaseWrapper.close(userId)
-            fetLifeContentDatabaseWrapper.releaseDb()
+            fetLifeContentDatabaseWrapper.release(userId)
         }
 
         loggedInUser = null
@@ -128,6 +134,13 @@ fun getLoggedInUserId() : String? {
 
 fun <DataBinding : ViewDataBinding> LayoutInflater.inflateBinding(@LayoutRes resId: Int, container: ViewGroup?, attachToRoot: Boolean = false) : DataBinding {
     return DataBindingUtil.inflate(this,resId,container,attachToRoot)
+}
+
+fun Fragment.closeKeyboard() {
+    if (view != null) {
+        val inputMethodManager = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager?.hideSoftInputFromWindow(view!!.windowToken, 0)
+    }
 }
 
 fun Class<out ViewModel>.getViewModel(activity: FragmentActivity) : ViewModel {
@@ -183,8 +196,8 @@ fun String.getBaseUrl() : String {
 }
 
 fun RecyclerView.workaroundItemFlickeringOnChange() {
-    this.itemAnimator = null
-//    this.itemAnimator.changeDuration = 0
+//    this.itemAnimator = null
+    this.itemAnimator.changeDuration = 0
 }
 
 @SuppressLint("RestrictedApi")
@@ -214,6 +227,14 @@ fun Context.getSafeColor(resId : Int): Int {
     }
 }
 
+fun String.shareExternal(context: Context) {
+    val sendIntent = Intent()
+    sendIntent.action = Intent.ACTION_SEND
+    sendIntent.putExtra(Intent.EXTRA_TEXT, this)
+    sendIntent.type = "text/plain"
+    context.startActivity(sendIntent)
+}
+
 fun String.hash(): String {
     try {
         // Create MD5 Hash
@@ -230,6 +251,33 @@ fun String.hash(): String {
         //TODO log
     }
     return this
+}
+
+fun String.parseServerTime() : Long {
+    return ISODateTimeFormat.dateTime().parseDateTime(this).millis
+}
+
+fun Long.toServerTime() : String {
+    //2017-01-24 16:52:33.074 +0200'
+
+    val dateTimeFormatter = DateTimeFormatterBuilder().
+            appendYear(4,4).
+            appendLiteral('-').
+            appendMonthOfYear(2).
+            appendLiteral('-').
+            appendDayOfMonth(2).
+            appendLiteral(' ').
+            appendHourOfDay(2).
+            appendLiteral(':').
+            appendMinuteOfHour(2).
+            appendLiteral(':').
+            appendSecondOfMinute(2).
+            appendLiteral('.').
+            appendMillisOfSecond(3).
+            appendLiteral(' ').
+            appendTimeZoneOffset(null,false,2,2).toFormatter();
+
+    return dateTimeFormatter.print(this)
 }
 
 fun SharedPreferences.putStrings(vararg strings: String?) {

@@ -1,5 +1,6 @@
 package com.bitlove.fetlife.view.generic
 
+import android.arch.lifecycle.LifecycleOwner
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -12,7 +13,7 @@ import com.bitlove.fetlife.model.dataobject.wrapper.Content
 import org.apache.commons.lang3.Conversion
 
 //TODO check generic DH + IH?, none?, DH?
-class CardListAdapter(private val navigationCallback: NavigationCallback, private val cardListTitle: String? = null) : RecyclerView.Adapter<CardViewHolder>(){
+class CardListAdapter(private val owner: LifecycleOwner, private val navigationCallback: NavigationCallback, private val cardListTitle: String? = null) : RecyclerView.Adapter<CardViewHolder>(){
 
     init {
         setHasStableIds(true)
@@ -42,9 +43,9 @@ class CardListAdapter(private val navigationCallback: NavigationCallback, privat
         val item = items[position]
         if (!interactionHandlers.containsKey(item.getLocalId())) {
             interactionHandlers[item.getLocalId()] = if ((item as? Content)?.getType() == Content.TYPE.CONVERSATION.toString())
-                CardViewInteractionHandler(items, position, false, items[position].displayComments() == true, navigationCallback, cardListTitle, 1, false)
+                CardViewInteractionHandler(owner, items, position, false, items[position].displayComments() == true, navigationCallback, cardListTitle, 1, false)
             else {
-                CardViewInteractionHandler(items, position, false, items[position].displayComments() == true, navigationCallback, cardListTitle)
+                CardViewInteractionHandler(owner, items, position, false, items[position].displayComments() == true, navigationCallback, cardListTitle)
             }
         }
         return interactionHandlers[item.getLocalId()]!!

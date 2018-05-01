@@ -12,10 +12,11 @@ import com.bitlove.fetlife.logic.dataholder.ReactionViewDataHolder
 import com.bitlove.fetlife.model.dataobject.SyncObject
 import com.bitlove.fetlife.model.dataobject.entity.content.ExploreEventEntity
 import com.bitlove.fetlife.model.dataobject.entity.content.ExploreStoryEntity
+import com.bitlove.fetlife.model.dataobject.entity.content.FavoriteEntity
 import com.bitlove.fetlife.model.db.FetLifeContentDatabase
 import kotlinx.coroutines.experimental.channels.actor
 
-class ExploreStory: CardViewDataHolder(), SyncObject<ExploreStoryEntity> {
+class ExploreStory: CardViewDataHolder(), SyncObject<ExploreStoryEntity>, Favoritable {
 
     enum class TYPE {FRESH_AND_PERVY, KINKY_AND_POPULAR, STUFF_YOU_LOVE, EXPLORE_FRIENDS}
 
@@ -34,7 +35,7 @@ class ExploreStory: CardViewDataHolder(), SyncObject<ExploreStoryEntity> {
     @Ignore private var genatedTitle : String? = null
     @Ignore private var genatedChildrenTitle : String? = null
 
-    override fun getTitle(): String? {
+    override fun getAvatarTitle(): String? {
         if (exploreEvents == null) {
             return null
         }
@@ -127,6 +128,22 @@ class ExploreStory: CardViewDataHolder(), SyncObject<ExploreStoryEntity> {
         }
     }
 
+    override fun isFavorite(): Boolean? {
+        return if (exploreEvents?.size == 1) {
+            exploreEvents!!.first().isFavorite()
+        } else {
+            null
+        }
+    }
+
+    override fun getFavoriteEntity(): FavoriteEntity? {
+        return if (exploreEvents?.size == 1) {
+            exploreEvents!!.first().getFavoriteEntity()
+        } else {
+            null
+        }
+    }
+
     override fun isDeletable(): Boolean? {
         return false
     }
@@ -142,6 +159,22 @@ class ExploreStory: CardViewDataHolder(), SyncObject<ExploreStoryEntity> {
     override fun getMediaAspectRatio(): Float? {
         return if (exploreEvents?.size == 1) {
             exploreEvents!!.first().getMediaAspectRatio()
+        } else {
+            null
+        }
+    }
+
+    override fun getUrl(): String? {
+        return if (exploreEvents?.size == 1) {
+            exploreEvents!!.first().getUrl()
+        } else {
+            null
+        }
+    }
+
+    override fun getTitle(): String? {
+        return if (exploreEvents?.size == 1) {
+            exploreEvents!!.first().getTitle()
         } else {
             null
         }

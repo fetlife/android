@@ -19,12 +19,12 @@ class CardListViewModelObject(private var cardListType : CardListViewModel.CardL
     }
 
     private fun loadCardList(forceLoad: Boolean, limit: Int, page: Int) {
-        if (currentCardSource != null) {
-            cardList.removeSource(currentCardSource!!)
-        }
-        if (currentProgressTrackerSource != null) {
-            progressTracker.removeSource(currentProgressTrackerSource!!)
-        }
+//        if (currentCardSource != null) {
+//            cardList.removeSource(currentCardSource!!)
+//        }
+//        if (currentProgressTrackerSource != null) {
+//            progressTracker.removeSource(currentProgressTrackerSource!!)
+//        }
 
         val dataSource = FetLifeApplication.instance.fetlifeDataSource
         val resourceResult = when (cardListType) {
@@ -34,6 +34,7 @@ class CardListViewModelObject(private var cardListType : CardListViewModel.CardL
             CardListViewModel.CardListType.EXPLORE_KINKY_AND_POPULAR -> dataSource.getKinkyAndPopularLoader(forceLoad,page,limit) as ResourceResult<List<CardViewDataHolder>>
             CardListViewModel.CardListType.EXPLORE_STUFF_YOU_LOVE -> dataSource.getStuffYouLoveLoader(forceLoad,page,limit) as ResourceResult<List<CardViewDataHolder>>
             CardListViewModel.CardListType.EXPLORE_FRIENDS_FEED -> dataSource.getFriendsFeedLoader(forceLoad,page,limit) as ResourceResult<List<CardViewDataHolder>>
+            CardListViewModel.CardListType.FAVORITES -> dataSource.getFavoritesLoader(forceLoad,page,limit) as ResourceResult<List<CardViewDataHolder>>
         }
 
         cardList.addSource(resourceResult.liveData, {data -> cardList.value = data})

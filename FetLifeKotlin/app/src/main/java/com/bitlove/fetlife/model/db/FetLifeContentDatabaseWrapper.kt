@@ -1,13 +1,19 @@
 package com.bitlove.fetlife.model.db
 
 import android.arch.persistence.room.Room
+import android.arch.persistence.room.Transaction
 import com.bitlove.fetlife.FetLifeApplication
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReentrantLock
 
 //TODO: consider implementing multi user support
-//TODO: cleanup. user intransaction like runnable to enforce release
 class FetLifeContentDatabaseWrapper {
+
+    companion object {
+        const val INIT_WAIT_TIME_SECONDS = 2L
+        const val EXECUTE_WAIT_TIME_SECONDS = 15L
+        const val RELEASE_WAIT_TIME_SECONDS = 120L
+    }
 
     private lateinit var userId: String
     private var keepOpen: Boolean = true
@@ -16,58 +22,65 @@ class FetLifeContentDatabaseWrapper {
     private var contentDb : FetLifeContentDatabase? = null
 
     fun init(userId : String, keepOpen : Boolean = true) {
-        lock.tryLock()
-        this.userId = userId
-        this.keepOpen = keepOpen
-        open(keepOpen)
-        lock.unlock()
-    }
-
-    fun tryLock() : Boolean{
-        return lock.tryLock(10,TimeUnit.SECONDS)
-    }
-
-    fun tryOpen(userId: String?, keepOpen: Boolean = false) : Boolean {
-        if (!lock.isHeldByCurrentThread) {
-            throw IllegalAccessError("Use Lock before access")
+        if (lock.tryLock(INIT_WAIT_TIME_SECONDS,TimeUnit.SECONDS)) {
+            try {
+                this.userId = userId
+                this.keepOpen = keepOpen
+                openDb()
+            } finally {
+                lock.unlock()
+            }
+        } else {
+            throw IllegalStateException()
         }
-        if (userId == null || userId != this.userId) return false
-        if (contentDb == null) {
-            open(keepOpen)
-        }
-        return contentDb != null
     }
 
-    fun lockDb(userId: String?) : FetLifeContentDatabase? {
-        if (!tryLock() || !tryOpen(userId)) {
-            releaseDb()
-            return null
+    fun release(userId: String) {
+        if (userId != this.userId) return
+        if (lock.tryLock(RELEASE_WAIT_TIME_SECONDS, TimeUnit.SECONDS)) {
+            try {
+                this.keepOpen = false
+                closeDb()
+            } finally {
+                lock.unlock()
+            }
+        } else {
+            throw IllegalStateException()
         }
-        return contentDb!!
     }
 
-    private fun open(keepOpen : Boolean) {
-        this.keepOpen = keepOpen
-        contentDb = Room.databaseBuilder(FetLifeApplication.instance, FetLifeContentDatabase::class.java, "fetlife_database_" + userId).build()
+    fun safeRun(userId: String?, runner: (FetLifeContentDatabase) -> Unit, runInTransaction: Boolean = false) : Boolean {
+        if (userId == null) throw IllegalArgumentException()
+        if (userId != this.userId) return false
+        if (!lock.tryLock(EXECUTE_WAIT_TIME_SECONDS, TimeUnit.SECONDS)) return false
+        try {
+            if (contentDb == null) {
+                openDb()
+            }
+            if (runInTransaction) {
+                contentDb!!.runInTransaction({runner.invoke(contentDb!!)})
+            } else {
+                runner.invoke(contentDb!!)
+            }
+            return true
+        } catch (t: Throwable) {
+            //TODO: log
+            return false
+        } finally {
+            if (!keepOpen) {
+                closeDb()
+            }
+            lock.unlock()
+        }
     }
 
-    fun close(userId: String) {
-        if (!lock.isHeldByCurrentThread) {
-            throw IllegalAccessError("Use Lock before access")
-        }
+    private fun closeDb() {
         contentDb?.close()
         contentDb = null
     }
 
-    fun releaseDb() {
-        if (!lock.isHeldByCurrentThread) {
-            return
-        }
-        if (!keepOpen && lock.holdCount == 1 && contentDb?.isOpen == true) {
-            contentDb?.close()
-            contentDb = null
-        }
-        lock.unlock()
+    private fun openDb() {
+        contentDb = Room.databaseBuilder(FetLifeApplication.instance, FetLifeContentDatabase::class.java, "fetlife_database_" + userId).build()
     }
 
 }

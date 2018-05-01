@@ -13,11 +13,10 @@ abstract class PostResourceJob<T : DataEntity>(open val dataObject: SyncObject<T
         return if (result.isSuccessful) {
             val resultBody = result.body() as? T
             if (resultBody != null) {
-                val contentDb = getDatabaseWrapper().lockDb(userId)
-                if (contentDb != null) {
+                getDatabaseWrapper().safeRun(userId, {
+                    contentDb ->
                     saveToDb(contentDb,resultBody)
-                    getDatabaseWrapper().releaseDb()
-                }
+                },true)
             }
             true
         } else {

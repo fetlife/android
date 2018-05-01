@@ -10,7 +10,7 @@ import com.bitlove.fetlife.model.dataobject.SyncObject
 import com.bitlove.fetlife.model.dataobject.entity.content.*
 import com.bitlove.fetlife.model.db.FetLifeContentDatabase
 
-class ExploreEvent : CardViewDataHolder(), SyncObject<ExploreEventEntity> {
+class ExploreEvent : CardViewDataHolder(), SyncObject<ExploreEventEntity>, Favoritable {
     @Embedded
     lateinit var exploreEventEntity: ExploreEventEntity
 
@@ -46,6 +46,18 @@ class ExploreEvent : CardViewDataHolder(), SyncObject<ExploreEventEntity> {
         return getChild()?.isLoved() ?: null
     }
 
+    override fun isFavorite(): Boolean? {
+        return getChild()?.isFavorite() ?: null
+    }
+
+    override fun getFavoriteEntity(): FavoriteEntity? {
+        return (getChild() as? Favoritable)?.getFavoriteEntity()
+    }
+
+    override fun getTitle(): String? {
+        return getChild()?.getTitle()
+    }
+
     override fun getSupportingText(): String? {
         return getChild()?.getSupportingText() ?: null
     }
@@ -76,6 +88,10 @@ class ExploreEvent : CardViewDataHolder(), SyncObject<ExploreEventEntity> {
 
     override fun getMediaAspectRatio(): Float? {
         return getChild()?.getMediaAspectRatio() ?: null
+    }
+
+    override fun getUrl(): String? {
+        return getChild()?.getUrl()
     }
 
     override fun getDao(contentDb: FetLifeContentDatabase): BaseDao<ExploreEventEntity> {

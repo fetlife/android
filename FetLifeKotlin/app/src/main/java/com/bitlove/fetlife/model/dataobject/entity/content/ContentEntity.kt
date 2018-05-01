@@ -30,6 +30,7 @@ data class ContentEntity(@SerializedName("id") var networkId: String = "",
                          @SerializedName("body") var body: String? = null,
                          @SerializedName("message_count") var messageCount: Int? = null,
                          @SerializedName("is_archived") var isArchived: Boolean? = false,
+                         @SerializedName("url") var url: String? = null,
                          @Embedded @SerializedName("variants") var pictureVariants: PictureVariants? = null,
                          @Ignore @SerializedName("last_message") var lastMessage: ReactionRef? = null
 ) : DataEntity {

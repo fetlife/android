@@ -14,11 +14,10 @@ abstract class PostResource<ResourceType>(val resource: ResourceType, userId: St
 
     private fun putInBackground(resource: ResourceType) {
         bg {
-            val contentDb = getContentDatabaseWrapper().lockDb(userId)
-            if (contentDb != null) {
+            getContentDatabaseWrapper().safeRun(userId, {
+                contentDb ->
                 saveToDb(contentDb, resource)
-                getContentDatabaseWrapper().releaseDb()
-            }
+            },true)
             if (shouldSync(resource)) {
                 syncWithNetwork(resource)
             }

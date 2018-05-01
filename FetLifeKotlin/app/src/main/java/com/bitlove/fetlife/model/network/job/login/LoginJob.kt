@@ -1,10 +1,13 @@
 package com.bitlove.fetlife.model.network.job.login
 
 import com.bitlove.fetlife.FetLifeApplication
+import com.bitlove.fetlife.model.dataobject.entity.technical.JobProgressEntity
 import com.bitlove.fetlife.model.dataobject.entity.user.UserEntity
+import com.bitlove.fetlife.model.dataobject.wrapper.ProgressTracker
 import com.bitlove.fetlife.model.dataobject.wrapper.User
 import com.bitlove.fetlife.model.network.job.BaseJob
 import com.bitlove.fetlife.model.network.networkobject.AuthBody
+import org.jetbrains.anko.coroutines.experimental.bg
 
 class LoginJob(private val username: String, private var password: String, private val rememberUser: Boolean): BaseJob(PRIORITY_LOGIN,false, null, TAG_LOGIN){
 
@@ -44,12 +47,23 @@ class LoginJob(private val username: String, private var password: String, priva
 
             FetLifeApplication.instance.fetLifeUserDatabase.userDao().insert(userEntity)
             FetLifeApplication.instance.onUserLoggedIn(user, authHeader, refreshToken)
-            val contentDbWrapper = FetLifeApplication.instance.fetLifeContentDatabaseWrapper
-            contentDbWrapper.lockDb(user.getLocalId())?.memberDao()?.insert(meResult.body()!!)
-            contentDbWrapper.releaseDb()
-
+            getDatabaseWrapper().safeRun(user.getLocalId(), {
+                contentDb ->
+                contentDb.memberDao().insertOrUpdate(meResult.body()!!)
+            })
             true
         } else false
+    }
+
+    override fun updateProgressState(state: ProgressTracker.STATE, message: String?, addSource: Boolean) {
+        bg {
+            val jobProgressEntity = JobProgressEntity(progressTrackerId, state.toString(), message)
+            val jobProgressDao = FetLifeApplication.instance.fetLifeUserDatabase.jobProgressDao()
+            if (addSource) {
+                progressTrackerLiveData.addSource(jobProgressDao.getTracker(progressTrackerId),{data -> progressTrackerLiveData.value = data})
+            }
+            jobProgressDao?.insertOrUpdate(jobProgressEntity)
+        }
     }
 
 }

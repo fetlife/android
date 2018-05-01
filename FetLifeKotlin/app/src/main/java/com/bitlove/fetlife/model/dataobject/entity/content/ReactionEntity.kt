@@ -4,6 +4,7 @@ import android.arch.persistence.room.*
 import android.text.TextUtils
 import com.bitlove.fetlife.hash
 import com.bitlove.fetlife.model.dataobject.entity.reference.MemberRef
+import com.bitlove.fetlife.parseServerTime
 import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "reactions",
@@ -36,6 +37,14 @@ data class ReactionEntity(
         get() {
             if (TextUtils.isEmpty(field)) {
                 field = "$type:${createdAt?.hash()}:${body?.hash()}"
+            }
+            return field
+        }
+
+    var createdAtTime: Long = 0L
+        get() {
+            if (field == 0L && !TextUtils.isEmpty(createdAt)) {
+                field = createdAt!!.parseServerTime()
             }
             return field
         }

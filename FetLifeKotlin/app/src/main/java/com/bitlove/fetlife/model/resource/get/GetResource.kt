@@ -20,8 +20,8 @@ abstract class GetResource<ResourceType>(forceSync : Boolean, userId : String?) 
 
     private fun loadInBackground() {
         bg {
-            val contentDb = getContentDatabaseWrapper().lockDb(userId)
-            if (contentDb != null) {
+            getContentDatabaseWrapper().safeRun(userId, {
+                contentDb ->
                 val dbSource = loadFromDb(contentDb)
                 loadResult.liveData.addSource(dbSource, {data ->
                     loadResult.liveData.value = data
@@ -31,8 +31,7 @@ abstract class GetResource<ResourceType>(forceSync : Boolean, userId : String?) 
                         syncWithNetwork(data)
                     }
                 })
-                getContentDatabaseWrapper().releaseDb()
-            }
+            })
         }
     }
 

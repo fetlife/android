@@ -1,13 +1,11 @@
 package com.bitlove.fetlife.logic.binding
 
 import android.databinding.BindingAdapter
-import android.view.View
-import android.view.ViewGroup
 import android.content.Context
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
 import android.text.Html
-import android.view.LayoutInflater
+import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.view.get
@@ -18,6 +16,7 @@ import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.logic.interactionhandler.CardViewInteractionHandler
 import com.bitlove.fetlife.logic.dataholder.ReactionViewDataHolder
 import com.bitlove.fetlife.view.generic.MediaCardAdapter
+import com.bitlove.fetlife.view.widget.ImageActivity
 import com.facebook.drawee.view.SimpleDraweeView
 import com.mikepenz.iconics.IconicsDrawable
 

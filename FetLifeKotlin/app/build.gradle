@@ -74,7 +74,10 @@ dependencies {
     implementation deps.iconics.views
     implementation deps.fresco.core
     implementation deps.fresco.pipeline
+    implementation deps.fresco.photoview
     implementation deps.font.material_google
+    implementation deps.joda_time
+
     implementation project(':turbolinks')
 
     // Android Testing Support Library's runner and rules

@@ -12,6 +12,7 @@ import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.logic.viewmodel.CardDetailViewModel
 import com.bitlove.fetlife.model.dataobject.wrapper.Content
 import com.bitlove.fetlife.model.dataobject.wrapper.ExploreEvent
+import com.bitlove.fetlife.model.dataobject.wrapper.Favorite
 import com.bitlove.fetlife.view.generic.CardSwipeFragment
 import com.bitlove.fetlife.view.generic.ResourceActivity
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
@@ -30,9 +31,10 @@ class PhoneCardActivity : ResourceActivity(), NavigationCallback {
             val cardTemplate = cardList.firstOrNull()?: return
             val intent = Intent(context, PhoneCardActivity::class.java)
             val cardType = when (cardTemplate) {
+                is Content -> CardDetailViewModel.CardType.CONTENT
                 is ExploreStory -> CardDetailViewModel.CardType.EXPLORE_STORY
                 is ExploreEvent -> CardDetailViewModel.CardType.EXPLORE_EVENT
-                is Content -> CardDetailViewModel.CardType.CONTENT
+                is Favorite -> CardDetailViewModel.CardType.FAVORITE
                 else -> throw IllegalArgumentException()
             }
             intent.putExtra(EXTRA_CARD_TYPE, cardType)

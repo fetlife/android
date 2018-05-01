@@ -10,22 +10,30 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
+import com.bitlove.fetlife.closeKeyboard
+import com.bitlove.fetlife.databinding.FragmentLoginBinding
+import com.bitlove.fetlife.logic.viewmodel.LoginViewModel
 import com.bitlove.fetlife.model.dataobject.wrapper.User
+import com.bitlove.fetlife.view.generic.BindingFragment
 import com.bitlove.fetlife.view.navigation.NavigationCallback
 import com.bitlove.fetlife.view.navigation.PhoneNavigationActivity
 import kotlinx.android.synthetic.main.fragment_login.*
+import org.jetbrains.anko.toast
 
-class LoginFragment : Fragment(), LifecycleOwner {
-
-    val lifecycleRegistry = LifecycleRegistry(this)
-
-    override fun getLifecycle(): Lifecycle {
-        return  lifecycleRegistry
-    }
+class LoginFragment : BindingFragment<FragmentLoginBinding, LoginViewModel>() {
 
     private var navigationCallBack: NavigationCallback? = null
+
+    override fun getViewModelClass(): Class<LoginViewModel>? {
+        return LoginViewModel::class.java
+    }
+
+    override fun getLayoutRes(): Int {
+        return R.layout.fragment_login
+    }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -37,36 +45,29 @@ class LoginFragment : Fragment(), LifecycleOwner {
         navigationCallBack = null
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.fragment_login, container, false)
-        return view
-    }
-
-    fun v() {
-
-        val userData = FetLifeApplication.instance.fetLifeUserDatabase.userDao().getLastLoggedInUser()
-        userData.observeForever(object : Observer<List<User>> {
-            override fun onChanged(users: List<User>?) {
-                userData.removeObserver(this)
-            }
-        })
-
-    }
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //TODO user observer instead of forever
+        if (viewModel == null) {
+            return
+        }
+
         login_button.setOnClickListener { view ->
             val timeStamp = System.currentTimeMillis()
             val username = username_field.text.toString()
-            val userData = FetLifeApplication.instance.fetlifeDataSource.login(username, password_field.text.toString(), login_remember.isChecked)
-            userData.liveData.observeForever {userList ->
-                val user = userList?.firstOrNull()
-                if (user?.getUserName() == username && user.getLastLoggedIn() > timeStamp) {
+            viewModel!!.login(username,password_field.text.toString(), login_remember.isChecked, this, {
+                progressTracker ->
+                if (!isAdded) {
+                    return@login
+                }
+                binding.progressTracker = progressTracker
+                if (progressTracker?.isFailed() == true) {
+                    //TODO: use appropriate error display
+                    toast(R.string.toast_login_failed)
+                } else if (progressTracker?.isFinished() == true) {
+                    closeKeyboard()
                     PhoneNavigationActivity.start(view.context)
                 }
-            }
+            })
         }
         login_recover_link.setOnClickListener { view -> navigationCallBack?.onNavigate(R.id.navigation_recover) }
         login_signup_link.setOnClickListener { view -> navigationCallBack?.onNavigate(R.id.navigation_signup) }

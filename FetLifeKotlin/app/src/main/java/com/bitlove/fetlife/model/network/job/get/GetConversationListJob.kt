@@ -22,7 +22,7 @@ class GetConversationListJob(userId : String?) : GetListResourceJob<ContentEntit
         for (content in resourceArray) {
             saveContentMember(content,memberDao)
             content.type = Content.TYPE.CONVERSATION.toString()
-            contentDao.insert(content)
+            contentDao.insertOrUpdate(content)
             saveLastMessage(content,reactionDao,memberDao)
         }
 //        contenDb.contentDao().insert(*resourceArray)

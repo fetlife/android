@@ -1,15 +1,16 @@
 package com.bitlove.fetlife.model
 
-import com.bitlove.fetlife.model.dataobject.entity.content.MemberEntity
-import com.bitlove.fetlife.model.dataobject.entity.content.ReactionEntity
+import com.bitlove.fetlife.FetLifeApplication
+import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.model.resource.get.*
 import com.bitlove.fetlife.model.resource.login.LoginResource
 import com.bitlove.fetlife.model.resource.post.PostReactionResource
-import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.model.dataobject.SyncObject
 import com.bitlove.fetlife.model.dataobject.wrapper.*
+import com.bitlove.fetlife.model.network.delete.DeleteReactionJob
 import com.bitlove.fetlife.model.resource.ResourceResult
-import java.util.*
+import com.bitlove.fetlife.model.resource.delete.DeleteReactionResource
+import com.bitlove.fetlife.model.resource.post.SetFavoriteResource
 
 class FetLifeDataSource {
 
@@ -33,6 +34,10 @@ class FetLifeDataSource {
         return GetExploreListResource(ExploreStory.TYPE.KINKY_AND_POPULAR,forceLoad, page, limit).loadResult
     }
 
+    fun getFavoritesLoader(forceLoad: Boolean, page: Int, limit: Int): ResourceResult<List<Favorite>> {
+        return GetFavoriteListResource(forceLoad,page,limit).loadResult
+    }
+
     fun getContentDetailLoader(contentId: String): ResourceResult<Content> {
         return GetContentResource(contentId,true).loadResult
     }
@@ -45,6 +50,10 @@ class FetLifeDataSource {
         return GetExploreEventResource(eventId, true).loadResult
     }
 
+    fun getFavoriteDetailLoader(favId: String): ResourceResult<Favorite> {
+        return GetFavoriteResource(favId, true).loadResult
+    }
+
     fun getCommentsLoader(cardData: SyncObject<*>, page: Int, limit: Int): ResourceResult<List<Reaction>> {
         return GetReactionListResource(Reaction.TYPE.COMMENT,cardData,true, page, limit).loadResult
     }
@@ -53,13 +62,20 @@ class FetLifeDataSource {
         return PostReactionResource.newPostLoveResource(content).loadResult
     }
 
+    fun removeLove(content: Content) : ResourceResult<Reaction> {
+        return DeleteReactionResource.newDeleteLoveResource(content).loadResult
+    }
+
+    fun setFavorite(cardData: Favoritable) : ResourceResult<Favoritable> {
+        return SetFavoriteResource(cardData).loadResult
+    }
+
     fun sendComment(comment: String, content: Content) : ResourceResult<Reaction> {
         return PostReactionResource.newPostCommentResource(comment,content).loadResult
     }
 
     fun login(userName: String, password: String, rememberUser: Boolean): ResourceResult<List<User>> {
-        //TODO solve add Source trigger problem
-        return LoginResource().login(userName,password,rememberUser)
+        return LoginResource(userName,password,rememberUser).loadResult
     }
 
 }

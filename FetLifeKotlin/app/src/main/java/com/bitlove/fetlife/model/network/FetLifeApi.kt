@@ -57,9 +57,9 @@ interface FetLifeApi {
     fun getStuffYouLove(@Header("Authorization") authHeader: String, @Query("marker") timeStamp: String?, @Query("limit") limit: Int?, @Query("page") page: Int?): Call<Array<ExploreStoryEntity>>
 
     @PUT("/api/v2/me/loves/{content_type}/{content_id}")
-    abstract fun putLove(@Header("Authorization") authHeader: String, @Path("content_id") contentId: String, @Path("content_type") contentType: String): Call<ResponseBody>
+    fun putLove(@Header("Authorization") authHeader: String, @Path("content_id") contentId: String, @Path("content_type") contentType: String): Call<ResponseBody>
 
     @DELETE("/api/v2/me/loves/{content_type}/{content_id}")
-    abstract fun deleteLove(@Header("Authorization") authHeader: String, @Path("content_id") contentId: String, @Path("content_type") contentType: String): Call<ResponseBody>
+    fun deleteLove(@Header("Authorization") authHeader: String, @Path("content_id") contentId: String, @Path("content_type") contentType: String): Call<ResponseBody>
 
 }

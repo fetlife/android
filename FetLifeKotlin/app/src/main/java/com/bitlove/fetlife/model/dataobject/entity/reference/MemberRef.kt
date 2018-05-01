@@ -7,6 +7,7 @@ import com.google.gson.annotations.SerializedName
 data class MemberRef(@SerializedName("id") var id: String = "",
                      @SerializedName("nickname") var nickname: String?  = "",
                      @SerializedName("meta_line") var metaInfo: String?,
+                     @SerializedName("url") var url: String?,
                      @SerializedName("avatar") var avatar: Avatar?) {
 
     fun asEntity(): MemberEntity {
@@ -14,6 +15,7 @@ data class MemberRef(@SerializedName("id") var id: String = "",
         entity.networkId = id
         entity.nickname = nickname
         entity.metaInfo = metaInfo
+        entity.url = url
         entity.avatar = avatar
         return entity
     }

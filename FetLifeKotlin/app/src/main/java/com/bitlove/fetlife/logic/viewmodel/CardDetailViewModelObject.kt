@@ -29,9 +29,10 @@ class CardDetailViewModelObject(private var cardType: CardDetailViewModel.CardTy
         val dataSource = FetLifeApplication.instance.fetlifeDataSource
         //TODO(cleanup) use resource instead
         val resourceResult = when (cardType) {
-            CardDetailViewModel.CardType.CONVERSATION,CardDetailViewModel.CardType.CONTENT -> dataSource.getContentDetailLoader(cardId) as ResourceResult<CardViewDataHolder>
+            CardDetailViewModel.CardType.CONTENT -> dataSource.getContentDetailLoader(cardId) as ResourceResult<CardViewDataHolder>
             CardDetailViewModel.CardType.EXPLORE_STORY -> dataSource.getExploreStoryDetailLoader(cardId) as ResourceResult<CardViewDataHolder>
             CardDetailViewModel.CardType.EXPLORE_EVENT -> dataSource.getExploreEventDetailLoader(cardId) as ResourceResult<CardViewDataHolder>
+            CardDetailViewModel.CardType.FAVORITE -> dataSource.getFavoriteDetailLoader(cardId) as ResourceResult<CardViewDataHolder>
             else -> {throw IllegalArgumentException()}
         }
 

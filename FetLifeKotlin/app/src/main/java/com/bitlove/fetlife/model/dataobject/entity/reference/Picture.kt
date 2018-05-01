@@ -22,6 +22,7 @@ data class Picture(
         contentEntity.type = Content.TYPE.PICTURE.toString()
         contentEntity.pictureVariants = variants
         contentEntity.body = body
+        contentEntity.url = url
         contentEntity.createdAt = createdAt
         contentEntity.loved = isLovedByMe
         contentEntity.commentCount = commentCount

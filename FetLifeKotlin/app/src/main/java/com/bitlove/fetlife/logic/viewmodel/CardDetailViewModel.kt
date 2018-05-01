@@ -1,17 +1,21 @@
 package com.bitlove.fetlife.logic.viewmodel
 
+import android.arch.lifecycle.LifecycleOwner
+import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.model.dataobject.wrapper.ProgressTracker
 
+//TODO: merge with CardDetailViewModel into super class
+//TODO: cleanup?: add observers att call and simplify?
 class CardDetailViewModel : ViewModel() {
 
     enum class CardType {
-        CONVERSATION,
         CONTENT,
         MEMBER,
         EXPLORE_STORY,
-        EXPLORE_EVENT
+        EXPLORE_EVENT,
+        FAVORITE
     }
 
     var viewModelObjects = HashMap<String, CardDetailViewModelObject>()
@@ -28,13 +32,21 @@ class CardDetailViewModel : ViewModel() {
         getViewModelObject(cardType, cardId).refresh(forceLoad)
     }
 
-    fun observeDataForever(cardType: CardType, cardId: String, observer: (CardViewDataHolder?) -> Unit) {
-        getViewModelObject(cardType, cardId).cardDetail.observeForever { data -> observer.invoke(data) }
+    fun observeData(cardType: CardType, cardId: String, owner: LifecycleOwner, observer: (CardViewDataHolder?) -> Unit) {
+        getViewModelObject(cardType, cardId).cardDetail.observe(owner, Observer{ data -> observer.invoke(data) })
     }
 
-    fun observeProgressForever(cardType: CardType, cardId: String, observer: (ProgressTracker?) -> Unit) {
-        getViewModelObject(cardType,cardId).progressTracker.observeForever{ tracker -> observer.invoke(tracker) }
+    fun observeProgress(cardType: CardType, cardId: String, owner: LifecycleOwner, observer: (ProgressTracker?) -> Unit) {
+        getViewModelObject(cardType,cardId).progressTracker.observe(owner, Observer{ tracker -> observer.invoke(tracker) })
     }
+
+//    fun observeDataForever(cardType: CardType, cardId: String, observer: (CardViewDataHolder?) -> Unit) {
+//        getViewModelObject(cardType, cardId).cardDetail.observeForever { data -> observer.invoke(data) }
+//    }
+//
+//    fun observeProgressForever(cardType: CardType, cardId: String, observer: (ProgressTracker?) -> Unit) {
+//        getViewModelObject(cardType,cardId).progressTracker.observeForever{ tracker -> observer.invoke(tracker) }
+//    }
 
     fun remove(cardType: CardType, cardId: String) {
         //TODO: remove live data observers

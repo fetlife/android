@@ -5,6 +5,7 @@ import android.app.Fragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.FragmentActivity
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.inTransaction
@@ -12,7 +13,7 @@ import com.bitlove.fetlife.view.navigation.NavigationCallback
 import com.bitlove.fetlife.view.navigation.PhoneNavigationActivity
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 
-class LoginActivity : Activity(), NavigationCallback {
+class LoginActivity : FragmentActivity(), NavigationCallback {
     companion object {
         const val STATE_KEY_NAVIGATION = "STATE_KEY_NAVIGATION"
         fun start(context: Context) {

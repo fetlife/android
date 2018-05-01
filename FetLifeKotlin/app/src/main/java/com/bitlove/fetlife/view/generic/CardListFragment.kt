@@ -1,5 +1,7 @@
 package com.bitlove.fetlife.view.generic
 
+import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleRegistry
 import android.os.Bundle
 import android.support.v7.util.DiffUtil
 import android.view.View
@@ -7,11 +9,12 @@ import com.bitlove.fetlife.R
 import com.bitlove.fetlife.databinding.FragmentCardListBinding
 import com.bitlove.fetlife.view.navigation.NavigationCallback
 import com.bitlove.fetlife.logic.dataholder.CardDiffUtilCallback
+import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.logic.viewmodel.CardListViewModel
 import com.bitlove.fetlife.workaroundItemFlickeringOnChange
 import kotlinx.android.synthetic.main.fragment_card_list.*
 
-class CardListFragment : BindingFragment<FragmentCardListBinding, CardListViewModel>() {
+class CardListFragment : BindingFragment<FragmentCardListBinding, CardListViewModel>(), NavigationCallback {
 
     companion object {
         private const val ARG_CARD_LIST_TYPE = "ARG_CARD_LIST_TYPE"
@@ -31,6 +34,26 @@ class CardListFragment : BindingFragment<FragmentCardListBinding, CardListViewMo
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         cardListType = arguments.getSerializable(ARG_CARD_LIST_TYPE) as CardListViewModel.CardListType
+
+        if (viewModel == null) {
+            return
+        }
+
+        //TODO remove forever and use state based
+        //TODO check why is it called several times
+        viewModel!!.observerData(cardListType,this,{
+            newCardList ->
+            if (card_list != null) {
+                val cardListAdapter = (card_list.adapter as CardListAdapter)
+                val diffResult = DiffUtil.calculateDiff(CardDiffUtilCallback(cardListAdapter.items, newCardList!!),true)
+                cardListAdapter.items = newCardList!!
+                diffResult.dispatchUpdatesTo(card_list.adapter)
+            }
+        })
+
+        viewModel!!.observerProgress(cardListType,this,{
+            tracker -> if (view != null) binding.progressTracker = tracker
+        })
     }
 
     override fun getViewModelClass(): Class<CardListViewModel>? {
@@ -43,28 +66,10 @@ class CardListFragment : BindingFragment<FragmentCardListBinding, CardListViewMo
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (viewModel == null) {
-            return
-        }
 
         card_list.workaroundItemFlickeringOnChange()
-        //TODO: get NavigationCallBack from activity rather than use it itself
-        card_list.adapter = CardListAdapter(activity as NavigationCallback, arguments.getString(ARG_SCREEN_TITLE))
-
-        //TODO remove forever and use state based
-        viewModel!!.observerDataForever(cardListType,{
-            newCardList ->
-            if (card_list != null) {
-                val cardListAdapter = (card_list.adapter as CardListAdapter)
-                val diffResult = DiffUtil.calculateDiff(CardDiffUtilCallback(cardListAdapter.items, newCardList!!),true)
-                cardListAdapter.items = newCardList!!
-                diffResult.dispatchUpdatesTo(card_list.adapter)
-            }
-        })
-
-        viewModel!!.observerProgressForever(cardListType,{
-            tracker -> binding.progressTracker = tracker
-        })
+        //TODO: check for memoryLeak owner/callback
+        card_list.adapter = CardListAdapter(this, this, arguments.getString(ARG_SCREEN_TITLE))
 
         swipe_refresh.setOnRefreshListener {
             viewModel!!.refresh(cardListType,true)
@@ -77,6 +82,26 @@ class CardListFragment : BindingFragment<FragmentCardListBinding, CardListViewMo
     override fun onDetach() {
         super.onDetach()
         viewModel!!.remove(cardListType)
+    }
+
+    override fun onOpenUrl(url: String): Boolean {
+        return (activity as? NavigationCallback)?.onOpenUrl(url)?:false
+    }
+
+    override fun onNavigate(actionId: Int?): Boolean {
+        return (activity as? NavigationCallback)?.onNavigate(actionId)?:false
+    }
+
+    override fun onChangeView(navigation: Int?) {
+        (activity as? NavigationCallback)?.onChangeView(navigation)
+    }
+
+    override fun onLayoutChange(layout: NavigationCallback.Layout?) {
+        (activity as? NavigationCallback)?.onLayoutChange(layout)
+    }
+
+    override fun onCardNavigate(cardList: List<CardViewDataHolder>, position: Int, screenTitle: String?) {
+        (activity as? NavigationCallback)?.onCardNavigate(cardList, position, screenTitle)
     }
 
 }

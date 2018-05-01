@@ -1,5 +1,7 @@
 package com.bitlove.fetlife.view.generic
 
+import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleRegistry
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.Toolbar
@@ -11,6 +13,10 @@ import com.bitlove.fetlife.logic.viewmodel.CardDetailViewModel
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.logic.interactionhandler.CardViewInteractionHandler
 import com.bitlove.fetlife.view.navigation.NavigationCallback
+import com.bitlove.fetlife.view.widget.ImageActivity
+import kotlinx.android.synthetic.main.fragment_card_list.*
+import kotlinx.android.synthetic.main.item_data_card.*
+import org.jetbrains.anko.imageURI
 
 class CardDetailFragment : BindingFragment<FragmentCardDetailBinding, CardDetailViewModel>() {
 
@@ -44,23 +50,29 @@ class CardDetailFragment : BindingFragment<FragmentCardDetailBinding, CardDetail
         super.onCreate(savedInstanceState)
         cardId = arguments.getString(ARG_CARD_ID)
         cardType = arguments.getSerializable(ARG_CARD_TYPE) as CardDetailViewModel.CardType
-    }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         if (viewModel == null) {
             return
         }
 
         //TODO remove forever and use state based
-        viewModel!!.observeDataForever(cardType, cardId, {
+        viewModel!!.observeData(cardType, cardId, this, {
             cardData ->
             if (cardData != null && cardViewInteractionHandler == null) {
-                cardViewInteractionHandler = CardViewInteractionHandler(cardData, true, true, activity as? NavigationCallback, cardData.getChildrenScreenTitle())
+                cardViewInteractionHandler = CardViewInteractionHandler(this, cardData, true, true, activity as? NavigationCallback, cardData.getChildrenScreenTitle())
             }
             binding.cardView!!.cardData = cardData
             binding.cardView!!.cardInteractionHandler = cardViewInteractionHandler
         })
+    }
+
+    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        swipe_refresh.setOnRefreshListener {
+            viewModel!!.refresh(cardType, cardId,true)
+            swipe_refresh.isRefreshing = false
+        }
 
         viewModel!!.refresh(cardType, cardId, savedInstanceState == null)
     }

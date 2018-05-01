@@ -21,7 +21,7 @@ abstract class ReactionDao : BaseDao<ReactionEntity> {
         insert(reaction)
     }
 
-    @Query("SELECT * FROM reactions WHERE contentId = :contentId")
+    @Query("SELECT * FROM reactions WHERE contentId = :contentId ORDER BY createdAtTime DESC")
     abstract fun getReactions(contentId: String): LiveData<List<Reaction>>
 
     @Query("SELECT * FROM reactions WHERE dbId = :dbId")

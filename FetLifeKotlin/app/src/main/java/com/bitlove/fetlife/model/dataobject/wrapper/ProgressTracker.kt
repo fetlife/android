@@ -25,6 +25,14 @@ class ProgressTracker {
         return if (jobProgressEntity.state == null) STATE.NEW else STATE.valueOf(jobProgressEntity!!.state!!)
     }
 
+    fun isFailed(): Boolean {
+        return getState() == STATE.FAILED
+    }
+
+    fun isFinished(): Boolean {
+        return getState() == STATE.FINISHED
+    }
+
     fun getMessage(): String? {
         return jobProgressEntity.message
     }

@@ -18,13 +18,14 @@ open class GetReactionListJob(val type: Reaction.TYPE, val parent: SyncObject<Co
 
     override fun saveToDb(contentDb: FetLifeContentDatabase, resourceArray: Array<ReactionEntity>) {
         val memberDao = contentDb.memberDao()
+        val reactionDao = contentDb.reactionDao()
         for ((i,reaction) in resourceArray.withIndex()) {
             //TODO(paging) : improve server oder
             reaction.contentId = parent.getLocalId()
             reaction.memberId = saveMember(reaction.memberRef, memberDao)
             reaction.type = Reaction.TYPE.COMMENT.toString()
+            reactionDao.insertOrUpdate(reaction)
         }
-        contentDb.reactionDao().insert(*resourceArray)
         parent.save()
     }
 

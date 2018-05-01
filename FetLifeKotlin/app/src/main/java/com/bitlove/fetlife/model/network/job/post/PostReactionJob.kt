@@ -17,11 +17,12 @@ class PostReactionJob(var reaction: SyncObject<ReactionEntity>, var parent: Sync
     }
 
     override fun saveToDb(contentDb: FetLifeContentDatabase, entity: ReactionEntity) {
-        entity.contentId = parent.getLocalId()
-        //TODO verify this, keeping local id
-        entity.dbId = reaction.getLocalId()!!
-        entity.type = reaction.getEntity().type
-        contentDb.reactionDao().update(entity)
+        val localEntity = reaction.getEntity()
+        entity.type = localEntity.type
+        entity.memberId = localEntity.memberId
+        entity.contentId = localEntity.contentId
+        reaction.delete()
+        contentDb.reactionDao().insertOrUpdate(entity)
     }
 
     override fun getCall(): Call<*> {

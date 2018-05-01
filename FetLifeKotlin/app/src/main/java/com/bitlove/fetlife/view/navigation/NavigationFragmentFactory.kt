@@ -28,6 +28,7 @@ class NavigationFragmentFactory {
         return when (navigation) {
             R.id.navigation_explore -> NavigationPagerAdapter(fragmentManager, layout, R.id.navigation_explore_friends_activity, R.id.navigation_explore_fresh_and_pervy, R.id.navigation_explore_kinky_and_popular, R.id.navigation_explore_stuff_you_love)
             R.id.navigation_conversations -> NavigationPagerAdapter(fragmentManager, layout, R.id.navigation_conversations_inbox, R.id.navigation_conversations_all)
+            R.id.navigation_favorites -> NavigationPagerAdapter(fragmentManager, layout, R.id.navigation_favorites)
             R.id.navigation_search -> NavigationPagerAdapter(fragmentManager, NavigationCallback.Layout.WEB, R.id.navigation_search)
             //TODO rely on default constant
             else -> NavigationPagerAdapter(fragmentManager, layout, R.id.navigation_explore_friends_activity, R.id.navigation_explore_fresh_and_pervy, R.id.navigation_explore_kinky_and_popular, R.id.navigation_explore_stuff_you_love)
@@ -47,6 +48,7 @@ class NavigationFragmentFactory {
             R.id.navigation_explore_stuff_you_love -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_STUFF_YOU_LOVE,getNavigationTitle(navigation))
             R.id.navigation_conversations_inbox -> CardListFragment.newInstance(CardListViewModel.CardListType.CONVERSATIONS_INBOX,getNavigationTitle(navigation))
             R.id.navigation_conversations_all -> CardListFragment.newInstance(CardListViewModel.CardListType.CONVERSATIONS_ALL,getNavigationTitle(navigation))
+            R.id.navigation_favorites -> CardListFragment.newInstance(CardListViewModel.CardListType.FAVORITES,getNavigationTitle(navigation))
             else -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_KINKY_AND_POPULAR,getNavigationTitle(navigation))
         }
     }
@@ -55,6 +57,7 @@ class NavigationFragmentFactory {
         return when (navigation) {
         //TODO use string resources
             R.id.navigation_search -> "Search"
+            R.id.navigation_favorites -> "Favorites"
             R.id.navigation_explore -> "Explore"
             R.id.navigation_explore_friends_activity -> "Friends"
             R.id.navigation_explore_fresh_and_pervy -> "Fresh and Pervy"

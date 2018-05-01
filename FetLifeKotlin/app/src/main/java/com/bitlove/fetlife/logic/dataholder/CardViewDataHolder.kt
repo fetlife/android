@@ -3,6 +3,7 @@ package com.bitlove.fetlife.logic.dataholder
 import android.arch.persistence.room.Ignore
 import com.bitlove.fetlife.getBaseUrl
 import com.bitlove.fetlife.hash
+import com.mikepenz.google_material_typeface_library.GoogleMaterial
 
 abstract class CardViewDataHolder {
 
@@ -15,6 +16,7 @@ abstract class CardViewDataHolder {
     open fun getRemoteId() : String? = null
 
     open fun getAvatar() : AvatarViewDataHolder? = null
+    open fun getAvatarTitle() : String? = null
 
     open fun getTitle() : String? = null
     open fun getSupportingText() : String? = null
@@ -35,12 +37,14 @@ abstract class CardViewDataHolder {
 
     open fun getChild() : CardViewDataHolder? = null
     open fun getChildren() : List<CardViewDataHolder>? = null
-    open fun getChildrenScreenTitle() : String? = getTitle()
+    open fun getChildrenScreenTitle() : String? = getAvatarTitle()
 
     open fun hasNewComment() : Boolean? = false
     //open fun hasNewLove() : Boolean? = false
     open fun getLoveCount() : String? = null
     open fun isLoved() : Boolean? = null
+
+    open fun isFavorite(): Boolean? = null
 
     open fun getComments() : List<ReactionViewDataHolder>? = null
     open fun getLoves() : List<ReactionViewDataHolder>? = null
@@ -48,6 +52,7 @@ abstract class CardViewDataHolder {
     open fun displayComments() : Boolean? = null
     open fun isDeletable() : Boolean? = false
 
+    open fun getUrl(): String? = null
 
     open fun isSame(other: CardViewDataHolder): Boolean {
         return this.getRemoteId() == other.getRemoteId() && this.getType() == this.getType()
@@ -61,14 +66,15 @@ abstract class CardViewDataHolder {
         if (cardHash == null) {
             cardHash = (
                     getAvatar()?.getContentHash() +
-                    getTitle() +
+                    getAvatarTitle() +
                     getSupportingText() +
                     getMediaUrl()?.getBaseUrl() +
                     getMediaAspectRatio() +
-                    getCommentCountText() +
+                    getCommentCount() +
                     hasNewComment() +
                     getLoveCount() +
                     isLoved() +
+                    isFavorite() +
                     getComments()?.size +
                     getLoves()?.size
             ).hash()

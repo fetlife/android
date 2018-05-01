@@ -20,6 +20,8 @@
     <color name="nearWhite">#f4f4f4</color>
     <color name="white">#fff</color>
 
+    <color name="golden">#daa520</color>
+
     <color name="silver_50">#80999999</color>
 
     <color name="toolbar_color">#777</color>

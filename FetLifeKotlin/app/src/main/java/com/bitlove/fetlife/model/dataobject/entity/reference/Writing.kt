@@ -10,6 +10,7 @@ data class Writing(
         @SerializedName("created_at") var createdAt: String = "",
         @SerializedName("title") var title: String? = null,
         @SerializedName("body") var body: String? = null,
+        @SerializedName("url") var url: String? = null,
         @SerializedName("comment_count") var commentCount: Int = 0,
         @SerializedName("love_count") var loveCount: Int = 0,
         @SerializedName("is_loved_by_me") var isLovedByMe: Boolean = false,
@@ -21,6 +22,7 @@ data class Writing(
         contentEntity.type = Content.TYPE.WRITING.toString()
         contentEntity.title = title
         contentEntity.body = body
+        contentEntity.url = url
         contentEntity.createdAt = createdAt
         contentEntity.loved = isLovedByMe
         contentEntity.commentCount = commentCount

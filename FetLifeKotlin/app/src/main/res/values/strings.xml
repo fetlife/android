@@ -12,5 +12,9 @@
     <string name="explore_pointer_singular">this</string>
     <string name="explore_pointer_plural">these</string>
     <string name="explore_number_singular">a</string>
+    <string name="login_button">Login to FetLife</string>
+    <string name="login_progress_button">Logging you In...</string>
+    <string name="toast_login_failed">Login failed, please check your credentials or try again later</string>
+    <string name="menu_item_favorites">Favorites</string>
 
 </resources>
