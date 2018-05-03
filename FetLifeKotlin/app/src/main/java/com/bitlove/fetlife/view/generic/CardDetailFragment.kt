@@ -61,6 +61,8 @@ class CardDetailFragment : BindingFragment<FragmentCardDetailBinding, CardDetail
             if (cardData != null && cardViewInteractionHandler == null) {
                 cardViewInteractionHandler = CardViewInteractionHandler(this, cardData, true, true, activity as? NavigationCallback, cardData.getChildrenScreenTitle())
             }
+            binding.cardData = cardData
+            binding.cardInteractionHandler = cardViewInteractionHandler
             binding.cardView!!.cardData = cardData
             binding.cardView!!.cardInteractionHandler = cardViewInteractionHandler
         })

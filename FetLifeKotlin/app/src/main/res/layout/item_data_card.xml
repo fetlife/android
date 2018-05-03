@@ -379,7 +379,7 @@
                     android:textColor="@color/gray"
                     android:gravity="center"
                     android:onClick="@{(view) -> cardInteractionHandler.onGetMoreComments(view,cardData)}"
-                    android:text="Show more comments"
+                    android:text="Show more"
                     android:layout_alignParentTop="true"
                     />
 \
@@ -387,7 +387,7 @@
                     android:id="@+id/comments_container"
                     app:visible="@{cardData.comments.size() > 0}"
                     android:orientation="vertical"
-                    android:animateLayoutChanges="true"
+                    android:animateLayoutChanges="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:comments="@{cardData.comments}"
@@ -417,6 +417,7 @@
 
             <EditText
                 android:id="@+id/comment_edit"
+                app:visible="@{cardData.commentCountText != null &amp;&amp; cardInteractionHandler.displayTextEdit}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="12dp"
@@ -427,7 +428,7 @@
                 android:textColorHint="@color/midGray"
                 android:inputType="textAutoCorrect"
                 android:imeOptions="actionDone"
-                android:hint="Add your reply"
+                android:hint="@string/hint_comment_edit"
                 app:onSubmitHandler="@{cardInteractionHandler}"
                 app:onSubmitData="@{cardData}"
                 />

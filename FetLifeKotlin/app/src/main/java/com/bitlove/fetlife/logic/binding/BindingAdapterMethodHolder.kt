@@ -1,5 +1,6 @@
 package com.bitlove.fetlife.logic.binding
 
+import android.app.Activity
 import android.databinding.BindingAdapter
 import android.content.Context
 import android.databinding.DataBindingUtil
@@ -80,7 +81,7 @@ fun setFormattedText(textView: TextView?, textInteractionHandler: CardViewIntera
     }
 
     var formattedString = if (removeLineBreaks == true) {
-        formattedText?.replace("\\s".toRegex()," ")
+        formattedText?.replace("\n"," ").replace("<br>".toRegex()," ")
     } else {
         formattedText
     }
@@ -93,6 +94,8 @@ fun setFormattedText(textView: TextView?, textInteractionHandler: CardViewIntera
     } else {
         formattedText
     }
+
+    formattedString = formattedString.replace("\n", "<br/>")
 
     //TODO Add Text entities to the appropriate view
     textView?.text = Html.fromHtml(formattedString)
@@ -134,6 +137,19 @@ fun bindSubmitComment(editText: EditText, onSubmitHandler: CardViewInteractionHa
         imm.hideSoftInputFromWindow(editText.windowToken, 0)
         true
     }
+}
+@BindingAdapter("onSubmitFor","onSubmitHandler","onSubmitData")
+fun bindSubmitComment(view: View, onSubmitFor: Int, onSubmitHandler: CardViewInteractionHandler?, onSubmitData: CardViewDataHolder?) {
+    if (onSubmitData == null || onSubmitHandler == null) {
+        return
+    }
+    view.setOnClickListener({
+        v ->
+        val editText = (v.context as Activity).findViewById<EditText>(onSubmitFor)
+        onSubmitHandler.onSendComment(editText,onSubmitData)
+        val imm = editText.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(editText.windowToken, 0)
+    })
 }
 
 //TODO: check out other list bindings:

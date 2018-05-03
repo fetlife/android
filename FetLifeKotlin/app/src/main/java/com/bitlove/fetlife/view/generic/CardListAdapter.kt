@@ -22,9 +22,7 @@ class CardListAdapter(private val owner: LifecycleOwner, private val navigationC
     var items : List<CardViewDataHolder> = ArrayList()
         set(value) {
             field = value
-            for (interactionHandler in interactionHandlers.values) {
-                interactionHandler.cardList = value
-            }
+            interactionHandlers.clear()
         }
     var interactionHandlers : HashMap<String?, CardViewInteractionHandler> = HashMap()
 
@@ -55,5 +53,6 @@ class CardListAdapter(private val owner: LifecycleOwner, private val navigationC
         val binding = ItemDataCardBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         return CardViewHolder(binding)
     }
+
 
 }

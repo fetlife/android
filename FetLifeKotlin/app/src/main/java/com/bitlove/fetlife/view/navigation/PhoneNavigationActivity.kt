@@ -40,14 +40,10 @@ open class PhoneNavigationActivity : ResourceActivity(), NavigationCallback {
     private var layout: NavigationCallback.Layout? = null
 
     private val navigationFragmentFactory = FetLifeApplication.instance.navigationFragmentFactory
+    private var savedInstanceState : Bundle? = null
 
     override fun onResourceCreate(savedInstanceState: Bundle?) {
-        if (FetLifeApplication.instance.loggedInUser == null) {
-            //TODO: move to start activity
-            startActivity(Intent(this,LoginActivity::class.java))
-            return
-        }
-
+        this.savedInstanceState = savedInstanceState
         setLayoutResource()
         setStateContentFragment(savedInstanceState)
         setTitle()
@@ -122,6 +118,10 @@ open class PhoneNavigationActivity : ResourceActivity(), NavigationCallback {
                 transaction
             }
         }
+    }
+
+    override fun onBackPressed() {
+        finish()
     }
 
     private fun setTitle() {

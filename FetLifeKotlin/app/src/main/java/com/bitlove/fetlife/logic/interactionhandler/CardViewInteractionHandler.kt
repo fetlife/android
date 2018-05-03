@@ -24,7 +24,7 @@ class CardViewInteractionHandler {
     companion object {
         private const val TRESHOLD_USER_INTERACTION = 100L
         private const val COLLAPSED_CHILDREN_COUNT = 6
-        private const val DETAIL_COMMENT_PAGE_COUNT = 7
+        private const val DETAIL_COMMENT_PAGE_COUNT = 20
         private const val LIST_COMMENT_PAGE_COUNT = 3
     }
 
@@ -49,8 +49,9 @@ class CardViewInteractionHandler {
     open var commentsDisplayed: ObservableField<Boolean?>
     open var commentCount: ObservableField<Int?>
     open var pagingComments: ObservableField<Boolean>
+    open var displayTextEdit: ObservableField<Boolean>
 
-    constructor(owner: LifecycleOwner, cardData: CardViewDataHolder, expandedByDefault: Boolean = false, displayComments: Boolean = true, navigationCallback: NavigationCallback? = null, cardListTitle: String? = null, commentPageCount: Int = DETAIL_COMMENT_PAGE_COUNT, commentsPaging: Boolean = true) {
+    constructor(owner: LifecycleOwner, cardData: CardViewDataHolder, expandedByDefault: Boolean = false, displayComments: Boolean = true, navigationCallback: NavigationCallback? = null, cardListTitle: String? = null, commentPageCount: Int = DETAIL_COMMENT_PAGE_COUNT, commentsPaging: Boolean = true, textEditDisplay : Boolean = false) {
         this.owner = owner
         this.cardData = cardData
         this.expandedByDefault = expandedByDefault
@@ -61,10 +62,11 @@ class CardViewInteractionHandler {
         commentsDisplayed = ObservableField(displayComments)
         expanded = ObservableField(expandedByDefault)
         pagingComments = ObservableField(commentsPaging)
+        displayTextEdit = ObservableField(textEditDisplay)
         if (cardData?.getCommentCountText() != null && displayComments && commentsPaging && cardData is SyncObject<*>) startCommentCall(cardData as SyncObject<*>)
     }
 
-    constructor(owner: LifecycleOwner, cardList: List<CardViewDataHolder>, position: Int, expandedByDefault: Boolean = false, displayComments: Boolean = false, navigationCallback: NavigationCallback? = null, cardListTitle: String? = null, commentPageCount: Int = LIST_COMMENT_PAGE_COUNT, commentsPaging: Boolean = true) {
+    constructor(owner: LifecycleOwner, cardList: List<CardViewDataHolder>, position: Int, expandedByDefault: Boolean = false, displayComments: Boolean = false, navigationCallback: NavigationCallback? = null, cardListTitle: String? = null, commentPageCount: Int = LIST_COMMENT_PAGE_COUNT, commentsPaging: Boolean = true, textEditDisplay : Boolean= true) {
         this.owner = owner
         this.cardData = cardList[position]
         this.expandedByDefault = expandedByDefault
@@ -77,6 +79,7 @@ class CardViewInteractionHandler {
         commentsDisplayed = ObservableField(cardData?.displayComments()?:false)
         expanded = ObservableField(expandedByDefault)
         pagingComments = ObservableField(commentsPaging)
+        displayTextEdit = ObservableField(textEditDisplay)
         if (cardData?.getCommentCountText() != null && displayComments && commentsPaging && cardData is SyncObject<*>) startCommentCall(cardData as SyncObject<*>)
     }
 
