@@ -1,11 +1,11 @@
 package com.bitlove.fetlife.view.generic
 
-import android.app.Fragment
-import android.app.FragmentManager
-import android.support.v13.app.FragmentStatePagerAdapter
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentStatePagerAdapter
 import com.bitlove.fetlife.logic.viewmodel.CardDetailViewModel
 
-class CardSwipeAdapter(private val cardType: CardDetailViewModel.CardType, var cardIds: List<String>, fragmentManager: FragmentManager) : FragmentStatePagerAdapter(fragmentManager) {
+class CardSwipeAdapter(private val cardType: CardDetailViewModel.CardType, var cardIds: List<String>, fragmentManager: FragmentManager?) : FragmentStatePagerAdapter(fragmentManager) {
 
     override fun getCount(): Int = cardIds.size
 

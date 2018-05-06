@@ -1,5 +1,6 @@
 package com.bitlove.fetlife.model.network.job
 
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import com.birbit.android.jobqueue.Job
 import com.birbit.android.jobqueue.Params
@@ -11,6 +12,7 @@ import com.bitlove.fetlife.model.dataobject.wrapper.ProgressTracker
 import com.bitlove.fetlife.model.db.FetLifeContentDatabase
 import com.bitlove.fetlife.model.db.FetLifeContentDatabaseWrapper
 import com.bitlove.fetlife.model.network.FetLifeApi
+import kotlinx.coroutines.experimental.launch
 import org.jetbrains.anko.coroutines.experimental.bg
 import java.util.*
 import kotlin.reflect.full.primaryConstructor
@@ -35,13 +37,16 @@ abstract class BaseJob(jobPriority: Int, doPersist: Boolean, val userId: String?
         const val TAG_GET_RESOURCE = "TAG_GET_RESOURCE"
         const val TAG_SYNC_RESOURCE = "TAG_SYNC_RESOURCE"
         const val TAG_DELETE_RESOURCE = "TAG_DELETE_RESOURCE"
+
+        const val FINISHED_DELAY = 50L
     }
 
     open var progressTrackerId: String = UUID.randomUUID().toString()
     val progressTrackerLiveData : MediatorLiveData<ProgressTracker> = MediatorLiveData()
+    open var lastTrackerSource : LiveData<ProgressTracker?>? = null
 
     init {
-        updateProgressState(ProgressTracker.STATE.NEW,null,true)
+        updateProgressState(ProgressTracker.STATE.NEW, 0L, null,true)
     }
 
     override fun shouldReRunOnThrowable(throwable: Throwable, runCount: Int, maxRunCount: Int): RetryConstraint {
@@ -51,10 +56,11 @@ abstract class BaseJob(jobPriority: Int, doPersist: Boolean, val userId: String?
     abstract fun onRunJob() : Boolean
 
     final override fun onRun() {
+        updateProgressState(ProgressTracker.STATE.IN_PROGRESS)
         if (onRunJob()) {
-            updateProgressState(ProgressTracker.STATE.FINISHED)
+            updateProgressState(ProgressTracker.STATE.FINISHED,FINISHED_DELAY)
         } else {
-            updateProgressState(ProgressTracker.STATE.FAILED,getJobMessage())
+            updateProgressState(ProgressTracker.STATE.FAILED,FINISHED_DELAY,getJobMessage())
         }
     }
 
@@ -80,14 +86,18 @@ abstract class BaseJob(jobPriority: Int, doPersist: Boolean, val userId: String?
         }
     }
 
-    open fun updateProgressState(state: ProgressTracker.STATE, message: String? = null, addSource: Boolean = false) {
+    open fun updateProgressState(state: ProgressTracker.STATE, delay: Long = 0, message: String? = null, addSource: Boolean = false) {
         bg {
+            //TODO: verify the need of this delay, verify the need of Anko (default kotlin my be more enhanced)
+            Thread.sleep(delay)
             val jobProgressEntity = JobProgressEntity(progressTrackerId, state.toString(), message)
             getDatabaseWrapper().safeRun(userId, {
                 contentDb ->
                 val jobProgressDao = contentDb.jobProgressDao()
                 if (addSource && jobProgressDao != null) {
-                    progressTrackerLiveData.addSource(jobProgressDao.getTracker(progressTrackerId),{data -> progressTrackerLiveData.value = data})
+                    if (lastTrackerSource != null) progressTrackerLiveData.removeSource(lastTrackerSource!!)
+                    lastTrackerSource = jobProgressDao.getTracker(progressTrackerId)
+                    progressTrackerLiveData.addSource(lastTrackerSource!!,{data -> progressTrackerLiveData.value = data})
                 }
                 jobProgressDao?.insertOrUpdate(jobProgressEntity)
             })

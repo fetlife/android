@@ -1,8 +1,8 @@
 package com.bitlove.fetlife.view.navigation
 
-import android.app.Fragment
 import android.content.Context
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.view.LayoutInflater
 import android.view.View
@@ -33,16 +33,16 @@ class NavigationContentFragment : Fragment() {
     private val navigationFragmentFactory = FetLifeApplication.instance.navigationFragmentFactory
     private var navigationCallback: NavigationCallback? = null
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater!!.inflate(R.layout.fragment_navigation_content,container,false)
-        val navigation = arguments.getInt(ARG_KEY_NAVIGATION)
-        val layout = arguments.getSerializable(ARG_KEY_LAYOUT) as? NavigationCallback.Layout
+        val navigation = arguments!!.getInt(ARG_KEY_NAVIGATION)
+        val layout = arguments!!.getSerializable(ARG_KEY_LAYOUT) as? NavigationCallback.Layout
 
         val adapter = navigationFragmentFactory.createNavigationFragmentAdapter(fragmentManager,navigation,layout)
 
         val viewPager = view.findViewById<SlideControlViewPager>(R.id.content_view_pager)
         viewPager.adapter = adapter
-        val selectedPosition = adapter.getPosition(arguments.getInt(ARG_KEY_CURRENT_ITEM))
+        val selectedPosition = adapter.getPosition(arguments!!.getInt(ARG_KEY_CURRENT_ITEM))
         if (selectedPosition >= 0) {
             viewPager.currentItem = selectedPosition
         }
@@ -67,7 +67,7 @@ class NavigationContentFragment : Fragment() {
     }
 
     fun getCurrentNavigation() : Int {
-        val viewPager = view.findViewById<SlideControlViewPager>(R.id.content_view_pager)
+        val viewPager = view!!.findViewById<SlideControlViewPager>(R.id.content_view_pager)
         val adapter = viewPager.adapter as NavigationPagerAdapter
         return adapter.getItemId(viewPager.currentItem)
 

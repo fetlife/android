@@ -33,6 +33,10 @@ class ProgressTracker {
         return getState() == STATE.FINISHED
     }
 
+    fun isExecuted() : Boolean {
+        return isFinished() || isFailed()
+    }
+
     fun getMessage(): String? {
         return jobProgressEntity.message
     }

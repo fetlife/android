@@ -1,5 +1,6 @@
 package com.bitlove.fetlife.model
 
+import android.arch.paging.PagedList
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.model.resource.get.*
@@ -14,28 +15,28 @@ import com.bitlove.fetlife.model.resource.post.SetFavoriteResource
 
 class FetLifeDataSource {
 
-    fun getConversationsLoader(forceLoad: Boolean, page: Int, limit: Int) : ResourceResult<List<Content>> {
-        return GetContentListResource(Content.TYPE.CONVERSATION, forceLoad, page, limit).loadResult
+    fun getConversationsLoader(forceLoad: Boolean, limit: Int) : ResourceResult<PagedList<Content>> {
+        return GetContentListResource(Content.TYPE.CONVERSATION, forceLoad, limit).loadResult
     }
 
-    fun getFriendsFeedLoader(forceLoad: Boolean, page: Int, limit: Int): ResourceResult<List<ExploreStory>> {
-        return GetExploreListResource(ExploreStory.TYPE.EXPLORE_FRIENDS,forceLoad, page, limit).loadResult
+    fun getFriendsFeedLoader(forceLoad: Boolean, limit: Int): ResourceResult<PagedList<ExploreStory>> {
+        return GetExploreListResource(ExploreStory.TYPE.EXPLORE_FRIENDS,forceLoad, limit).loadResult
     }
 
-    fun getStuffYouLoveLoader(forceLoad: Boolean, page: Int, limit: Int): ResourceResult<List<ExploreStory>> {
-        return GetExploreListResource(ExploreStory.TYPE.STUFF_YOU_LOVE,forceLoad, page, limit).loadResult
+    fun getStuffYouLoveLoader(forceLoad: Boolean, limit: Int): ResourceResult<PagedList<ExploreStory>> {
+        return GetExploreListResource(ExploreStory.TYPE.STUFF_YOU_LOVE,forceLoad, limit).loadResult
     }
 
-    fun getFreshAndPervyLoader(forceLoad: Boolean, page: Int, limit: Int): ResourceResult<List<ExploreStory>> {
-        return GetExploreListResource(ExploreStory.TYPE.FRESH_AND_PERVY,forceLoad, page, limit).loadResult
+    fun getFreshAndPervyLoader(forceLoad: Boolean, limit: Int): ResourceResult<PagedList<ExploreStory>> {
+        return GetExploreListResource(ExploreStory.TYPE.FRESH_AND_PERVY,forceLoad, limit).loadResult
     }
 
-    fun getKinkyAndPopularLoader(forceLoad: Boolean, page: Int, limit: Int): ResourceResult<List<ExploreStory>> {
-        return GetExploreListResource(ExploreStory.TYPE.KINKY_AND_POPULAR,forceLoad, page, limit).loadResult
+    fun getKinkyAndPopularLoader(forceLoad: Boolean, limit: Int): ResourceResult<PagedList<ExploreStory>> {
+        return GetExploreListResource(ExploreStory.TYPE.KINKY_AND_POPULAR,forceLoad, limit).loadResult
     }
 
-    fun getFavoritesLoader(forceLoad: Boolean, page: Int, limit: Int): ResourceResult<List<Favorite>> {
-        return GetFavoriteListResource(forceLoad,page,limit).loadResult
+    fun getFavoritesLoader(limit: Int): ResourceResult<PagedList<Favorite>> {
+        return GetFavoriteListResource(limit).loadResult
     }
 
     fun getContentDetailLoader(contentId: String): ResourceResult<Content> {

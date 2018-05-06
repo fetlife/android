@@ -1,7 +1,7 @@
 package com.bitlove.fetlife.view.navigation
 
-import android.app.Fragment
-import android.app.FragmentManager
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.logic.viewmodel.CardListViewModel
 import com.bitlove.fetlife.view.generic.CardListFragment
@@ -24,10 +24,10 @@ class NavigationFragmentFactory {
         }
     }
 
-    fun createNavigationFragmentAdapter(fragmentManager: FragmentManager, navigation: Int?, layout: NavigationCallback.Layout? = null) : NavigationPagerAdapter {
+    fun createNavigationFragmentAdapter(fragmentManager: FragmentManager?, navigation: Int?, layout: NavigationCallback.Layout? = null) : NavigationPagerAdapter {
         return when (navigation) {
             R.id.navigation_explore -> NavigationPagerAdapter(fragmentManager, layout, R.id.navigation_explore_friends_activity, R.id.navigation_explore_fresh_and_pervy, R.id.navigation_explore_kinky_and_popular, R.id.navigation_explore_stuff_you_love)
-            R.id.navigation_conversations -> NavigationPagerAdapter(fragmentManager, layout, R.id.navigation_conversations_inbox, R.id.navigation_conversations_all)
+            R.id.navigation_conversations -> NavigationPagerAdapter(fragmentManager, layout, R.id.navigation_conversations_inbox/*, R.id.navigation_conversations_all*/)
             R.id.navigation_favorites -> NavigationPagerAdapter(fragmentManager, layout, R.id.navigation_favorites)
             R.id.navigation_search -> NavigationPagerAdapter(fragmentManager, NavigationCallback.Layout.WEB, R.id.navigation_search)
             //TODO rely on default constant

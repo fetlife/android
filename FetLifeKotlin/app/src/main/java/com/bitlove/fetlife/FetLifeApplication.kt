@@ -2,8 +2,13 @@ package com.bitlove.fetlife
 
 import android.annotation.SuppressLint
 import android.app.*
+import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProviders
+import android.arch.paging.DataSource
+import android.arch.paging.LivePagedListBuilder
+import android.arch.paging.LivePagedListProvider
+import android.arch.paging.PagedList
 import android.arch.persistence.room.Room
 import android.content.Context
 import android.content.Intent
@@ -26,10 +31,14 @@ import android.os.Build
 import android.support.design.internal.BottomNavigationItemView
 import android.support.design.internal.BottomNavigationMenuView
 import android.support.design.widget.BottomNavigationView
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentTransaction
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
+import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.model.dataobject.wrapper.User
 import com.bitlove.fetlife.model.db.FetLifeContentDatabaseWrapper
 import com.bitlove.fetlife.model.db.FetLifeUserDatabase
@@ -132,6 +141,10 @@ fun getLoggedInUserId() : String? {
 //    return LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
 //}
 
+fun <DH> getLivePagesList(sourceFactory: DataSource.Factory<Int,DH>, pageSize: Int, boundaryCallback: PagedList.BoundaryCallback<DH>? = null): LiveData<PagedList<DH>> {
+    return LivePagedListBuilder<Int,DH>(sourceFactory,PagedList.Config.Builder().setPageSize(pageSize).setPrefetchDistance(pageSize).setEnablePlaceholders(true).build()).setBoundaryCallback(boundaryCallback).build()
+}
+
 fun <DataBinding : ViewDataBinding> LayoutInflater.inflateBinding(@LayoutRes resId: Int, container: ViewGroup?, attachToRoot: Boolean = false) : DataBinding {
     return DataBindingUtil.inflate(this,resId,container,attachToRoot)
 }
@@ -147,7 +160,7 @@ fun Class<out ViewModel>.getViewModel(activity: FragmentActivity) : ViewModel {
     return ViewModelProviders.of(activity).get(this)
 }
 
-inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> FragmentTransaction) {
+inline fun FragmentManager.inTransaction(func: android.support.v4.app.FragmentTransaction.() -> FragmentTransaction) {
     beginTransaction().func().commit()
 }
 
@@ -195,9 +208,13 @@ fun String.getBaseUrl() : String {
     }
 }
 
+fun String.countOccurance(subString: String) : Int {
+    return split(subString).size - 1
+}
+
 fun RecyclerView.workaroundItemFlickeringOnChange() {
-//    this.itemAnimator = null
-    this.itemAnimator.changeDuration = 0
+    this.itemAnimator = null
+//    this.itemAnimator.changeDuration = 0
 }
 
 @SuppressLint("RestrictedApi")

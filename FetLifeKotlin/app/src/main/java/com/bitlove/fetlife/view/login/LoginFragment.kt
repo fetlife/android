@@ -21,6 +21,7 @@ import com.bitlove.fetlife.view.generic.BindingFragment
 import com.bitlove.fetlife.view.navigation.NavigationCallback
 import com.bitlove.fetlife.view.navigation.PhoneNavigationActivity
 import kotlinx.android.synthetic.main.fragment_login.*
+import org.jetbrains.anko.support.v4.toast
 import org.jetbrains.anko.toast
 
 class LoginFragment : BindingFragment<FragmentLoginBinding, LoginViewModel>() {

@@ -1,8 +1,8 @@
 package com.bitlove.fetlife.view.responsive
 
-import android.app.Fragment
 import android.content.Context
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,14 +35,14 @@ class TurbolinksFragment : Fragment(), TurbolinksAdapter, TurbolinksSession.Prog
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        navigationId = arguments.getInt(ARGUMENT_KEY_NAVIGATION_ID)
+        navigationId = arguments!!.getInt(ARGUMENT_KEY_NAVIGATION_ID)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return inflater!!.inflate(R.layout.fragment_turbolinks,comments_container,false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val turbolinksSession = TurbolinksSession.getDefault(activity)
         //TODO turn off logging

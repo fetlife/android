@@ -48,8 +48,8 @@ class CardDetailFragment : BindingFragment<FragmentCardDetailBinding, CardDetail
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        cardId = arguments.getString(ARG_CARD_ID)
-        cardType = arguments.getSerializable(ARG_CARD_TYPE) as CardDetailViewModel.CardType
+        cardId = arguments!!.getString(ARG_CARD_ID)
+        cardType = arguments!!.getSerializable(ARG_CARD_TYPE) as CardDetailViewModel.CardType
 
         if (viewModel == null) {
             return
@@ -68,7 +68,7 @@ class CardDetailFragment : BindingFragment<FragmentCardDetailBinding, CardDetail
         })
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         swipe_refresh.setOnRefreshListener {

@@ -382,7 +382,7 @@
                     android:text="Show more"
                     android:layout_alignParentTop="true"
                     />
-\
+
                 <LinearLayout
                     android:id="@+id/comments_container"
                     app:visible="@{cardData.comments.size() > 0}"
@@ -391,6 +391,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:comments="@{cardData.comments}"
+                    app:commentInteractionHandler="@{cardInteractionHandler}"
                     app:maxCommentCount="@{cardInteractionHandler.commentCount}"
                     app:commentsDisplayed="@{cardInteractionHandler.commentsDisplayed}"
                     android:layout_below="@id/more_comment_text"

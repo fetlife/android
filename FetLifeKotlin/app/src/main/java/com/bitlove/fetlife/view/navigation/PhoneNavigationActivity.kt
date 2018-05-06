@@ -1,6 +1,5 @@
 package com.bitlove.fetlife.view.navigation
 
-import android.app.Fragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -11,6 +10,7 @@ import kotlinx.android.synthetic.main.activity_phone_navigation.*
 import kotlinx.android.synthetic.main.include_appbar.*
 import com.bitlove.fetlife.view.widget.BottomNavigationBehavior
 import android.support.design.widget.CoordinatorLayout
+import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.view.MenuItem
 import com.bitlove.fetlife.*
@@ -77,10 +77,10 @@ open class PhoneNavigationActivity : ResourceActivity(), NavigationCallback {
 
     override fun onLayoutChange(layout: NavigationCallback.Layout?) {
         this.layout = layout
-        val contentFragmet = fragmentManager.findFragmentById(R.id.content_fragment_container)
+        val contentFragment = supportFragmentManager.findFragmentById(R.id.content_fragment_container)
         var currentNavigation : Int? = null
-        if (contentFragmet!= null && contentFragmet is NavigationContentFragment) {
-            currentNavigation = contentFragmet.getCurrentNavigation()
+        if (contentFragment!= null && contentFragment is NavigationContentFragment) {
+            currentNavigation = contentFragment.getCurrentNavigation()
         }
         setContentFragment(navigationFragmentFactory.createFragment(navigation,layout,currentNavigation),false)
     }
@@ -110,7 +110,7 @@ open class PhoneNavigationActivity : ResourceActivity(), NavigationCallback {
     }
 
     private fun setContentFragment(fragment: Fragment, addToBackStack: Boolean = true) {
-        fragmentManager.inTransaction {
+        supportFragmentManager.inTransaction {
             val transaction = replace(R.id.content_fragment_container, fragment)
             if (addToBackStack) {
                 transaction.addToBackStack(null)

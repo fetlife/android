@@ -33,14 +33,15 @@ class CardViewInteractionHandler {
     private var lastUserInteraction: Long = 0L
     private var pageRequested = 1
 
-    private var cardData : CardViewDataHolder
     private var expandedByDefault : Boolean = false
     private var commentPageCount: Int
     private var navigationCallback: NavigationCallback? = null
     private var cardListTitle: String? = null
+    var cardData : CardViewDataHolder?
     var cardList: List<CardViewDataHolder>? = null
-    private var position: Int = -1
+    var position: Int = -1
 
+    //TODO cleanup with external list/card refresh
     open var expandable: ObservableField<Boolean?> = ObservableField(false)
     open var commentLoadInProgress: ObservableField<Boolean?> = ObservableField(false)
     open var childrenCardCount: ObservableField<Int?> = ObservableField(COLLAPSED_CHILDREN_COUNT)
@@ -50,8 +51,9 @@ class CardViewInteractionHandler {
     open var commentCount: ObservableField<Int?>
     open var pagingComments: ObservableField<Boolean>
     open var displayTextEdit: ObservableField<Boolean>
+    open var truncateComment: ObservableField<Boolean>
 
-    constructor(owner: LifecycleOwner, cardData: CardViewDataHolder, expandedByDefault: Boolean = false, displayComments: Boolean = true, navigationCallback: NavigationCallback? = null, cardListTitle: String? = null, commentPageCount: Int = DETAIL_COMMENT_PAGE_COUNT, commentsPaging: Boolean = true, textEditDisplay : Boolean = false) {
+    constructor(owner: LifecycleOwner, cardData: CardViewDataHolder, expandedByDefault: Boolean = false, displayComments: Boolean = true, navigationCallback: NavigationCallback? = null, cardListTitle: String? = null, commentPageCount: Int = DETAIL_COMMENT_PAGE_COUNT, commentsPaging: Boolean = true, textEditDisplay : Boolean = false, truncatedComments: Boolean = false) {
         this.owner = owner
         this.cardData = cardData
         this.expandedByDefault = expandedByDefault
@@ -63,10 +65,11 @@ class CardViewInteractionHandler {
         expanded = ObservableField(expandedByDefault)
         pagingComments = ObservableField(commentsPaging)
         displayTextEdit = ObservableField(textEditDisplay)
+        truncateComment = ObservableField(truncatedComments)
         if (cardData?.getCommentCountText() != null && displayComments && commentsPaging && cardData is SyncObject<*>) startCommentCall(cardData as SyncObject<*>)
     }
 
-    constructor(owner: LifecycleOwner, cardList: List<CardViewDataHolder>, position: Int, expandedByDefault: Boolean = false, displayComments: Boolean = false, navigationCallback: NavigationCallback? = null, cardListTitle: String? = null, commentPageCount: Int = LIST_COMMENT_PAGE_COUNT, commentsPaging: Boolean = true, textEditDisplay : Boolean= true) {
+    constructor(owner: LifecycleOwner, cardList: List<CardViewDataHolder>, position: Int, expandedByDefault: Boolean = false, displayComments: Boolean = false, navigationCallback: NavigationCallback? = null, cardListTitle: String? = null, commentPageCount: Int = LIST_COMMENT_PAGE_COUNT, commentsPaging: Boolean = true, textEditDisplay : Boolean = true, truncatedComments: Boolean = true) {
         this.owner = owner
         this.cardData = cardList[position]
         this.expandedByDefault = expandedByDefault
@@ -80,6 +83,7 @@ class CardViewInteractionHandler {
         expanded = ObservableField(expandedByDefault)
         pagingComments = ObservableField(commentsPaging)
         displayTextEdit = ObservableField(textEditDisplay)
+        truncateComment = ObservableField(truncatedComments)
         if (cardData?.getCommentCountText() != null && displayComments && commentsPaging && cardData is SyncObject<*>) startCommentCall(cardData as SyncObject<*>)
     }
 
@@ -119,14 +123,20 @@ class CardViewInteractionHandler {
     }
 
     private fun startCommentCall(cardData: SyncObject<*>) {
-        if (!checkInteractionTime()) return
         //TODO use lifecycle observe
         val resourceResult = FetLifeApplication.instance.fetlifeDataSource.getCommentsLoader(cardData, pageRequested, commentPageCount)
         resourceResult.liveData.observe(owner, Observer{
             bg{/*cardData.save()*/}
         })
         resourceResult.progressTracker.observe(owner, Observer
-                {progressTracker -> commentLoadInProgress.set(progressTracker != null && progressTracker.inProgress()) }
+                {progressTracker ->
+                    if (progressTracker == null) return@Observer
+                    commentLoadInProgress.set(progressTracker.inProgress())
+                    if (progressTracker.isExecuted()) {
+                        resourceResult.liveData.removeObservers(owner)
+                        resourceResult.progressTracker.removeObservers(owner)
+                    }
+                }
         )
         resourceResult.execute()
     }
@@ -141,6 +151,7 @@ class CardViewInteractionHandler {
     }
 
     open fun onMediaImageClick(view: View, cardData: CardViewDataHolder) {
+        if (!checkInteractionTime()) return
         if (cardData.getMediaUrl() == null) return
         ImageActivity.start(cardData.getMediaUrl()!!,view.context)
     }
@@ -191,6 +202,7 @@ class CardViewInteractionHandler {
     }
 
     open fun onDeleteCard(v: View, cardData: CardViewDataHolder) {
+        if (!checkInteractionTime()) return
         //TODO implement`
     }
 

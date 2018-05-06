@@ -10,7 +10,7 @@ class CardViewHolder(itemDataCardBinding: ItemDataCardBinding) : RecyclerView.Vi
 
     private var binding: ItemDataCardBinding = itemDataCardBinding
 
-    fun bindTo(cardViewDataHolder: CardViewDataHolder, interactionHandler: CardViewInteractionHandler) {
+    fun bindTo(cardViewDataHolder: CardViewDataHolder?, interactionHandler: CardViewInteractionHandler?) {
         binding.cardData = cardViewDataHolder
         binding.cardInteractionHandler = interactionHandler
 //        binding.executePendingBindings()

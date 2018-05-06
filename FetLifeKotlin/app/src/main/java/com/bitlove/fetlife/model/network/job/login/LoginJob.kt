@@ -55,12 +55,16 @@ class LoginJob(private val username: String, private var password: String, priva
         } else false
     }
 
-    override fun updateProgressState(state: ProgressTracker.STATE, message: String?, addSource: Boolean) {
+    override fun updateProgressState(state: ProgressTracker.STATE, delay: Long, message: String?, addSource: Boolean) {
         bg {
+            //TODO: verify the need of this delay, verify the need of Anko (default kotlin my be more enhanced)
+            Thread.sleep(delay)
             val jobProgressEntity = JobProgressEntity(progressTrackerId, state.toString(), message)
             val jobProgressDao = FetLifeApplication.instance.fetLifeUserDatabase.jobProgressDao()
             if (addSource) {
-                progressTrackerLiveData.addSource(jobProgressDao.getTracker(progressTrackerId),{data -> progressTrackerLiveData.value = data})
+                if (lastTrackerSource != null) progressTrackerLiveData.removeSource(lastTrackerSource!!)
+                lastTrackerSource = jobProgressDao.getTracker(progressTrackerId)
+                progressTrackerLiveData.addSource(lastTrackerSource!!,{data -> progressTrackerLiveData.value = data})
             }
             jobProgressDao?.insertOrUpdate(jobProgressEntity)
         }

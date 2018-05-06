@@ -9,7 +9,7 @@ import com.bitlove.fetlife.model.db.dao.MemberDao
 import com.bitlove.fetlife.model.db.dao.ReactionDao
 import retrofit2.Call
 
-class GetConversationListJob(userId : String?) : GetListResourceJob<ContentEntity>(PRIORITY_GET_RESOURCE_FRONT,false, userId, TAG_GET_CONVERSATIONS, TAG_GET_RESOURCE) {
+class GetConversationListJob(val limit: Int, val page: Int, val marker : String? = null, userId: String?) : GetListResourceJob<ContentEntity>(PRIORITY_GET_RESOURCE_FRONT,false, userId, TAG_GET_CONVERSATIONS, TAG_GET_RESOURCE) {
 
     companion object {
         const val TAG_GET_CONVERSATIONS = "TAG_GET_CONVERSATIONS"
@@ -51,6 +51,6 @@ class GetConversationListJob(userId : String?) : GetListResourceJob<ContentEntit
     }
 
     override fun getCall(): Call<Array<ContentEntity>> {
-        return FetLifeApplication.instance.fetlifeService.fetLifeApi.getConversations(FetLifeApplication.instance.fetlifeService.authHeader!!,null,25,1)
+        return FetLifeApplication.instance.fetlifeService.fetLifeApi.getConversations(FetLifeApplication.instance.fetlifeService.authHeader!!,null,limit,page)
     }
 }

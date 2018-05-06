@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.logic.viewmodel.CardDetailViewModel
-import com.bitlove.fetlife.logic.viewmodel.CardListViewModel
 
 import kotlinx.android.synthetic.main.fragment_card_swipe.*
 
@@ -31,9 +30,9 @@ class CardSwipeFragment : BindingFragment<ViewDataBinding, CardDetailViewModel>(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        cardType = arguments.getSerializable(ARG_CARD_TYPE) as CardDetailViewModel.CardType
-        cardIds = arguments.getStringArrayList(ARG_CARD_IDS)
-        selectedPosition = arguments.getInt(ARG_SELECTED_POSITION)
+        cardType = arguments!!.getSerializable(ARG_CARD_TYPE) as CardDetailViewModel.CardType
+        cardIds = arguments!!.getStringArrayList(ARG_CARD_IDS)
+        selectedPosition = arguments!!.getInt(ARG_SELECTED_POSITION)
     }
 
     override fun getLayoutRes(): Int {
@@ -44,7 +43,7 @@ class CardSwipeFragment : BindingFragment<ViewDataBinding, CardDetailViewModel>(
         return null
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val adapter = CardSwipeAdapter(cardType, cardIds, fragmentManager)
         card_view_pager.adapter = adapter

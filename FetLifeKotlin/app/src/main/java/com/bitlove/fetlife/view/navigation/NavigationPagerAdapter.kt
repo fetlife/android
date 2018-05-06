@@ -1,11 +1,11 @@
 package com.bitlove.fetlife.view.navigation
 
-import android.app.Fragment
-import android.app.FragmentManager
-import android.support.v13.app.FragmentStatePagerAdapter
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
+import android.support.v4.app.FragmentStatePagerAdapter
 import com.bitlove.fetlife.FetLifeApplication
 
-class NavigationPagerAdapter(fragmentManager: FragmentManager, val layout: NavigationCallback.Layout? = null, vararg navigationIds: Int) : FragmentStatePagerAdapter(fragmentManager) {
+class NavigationPagerAdapter(fragmentManager: FragmentManager?, val layout: NavigationCallback.Layout? = null, vararg navigationIds: Int) : FragmentStatePagerAdapter(fragmentManager) {
 
     private val navigationIds = navigationIds
     private val navigationFragmentFactory = FetLifeApplication.instance.navigationFragmentFactory

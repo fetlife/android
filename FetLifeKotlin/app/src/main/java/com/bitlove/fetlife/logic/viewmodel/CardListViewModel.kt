@@ -3,6 +3,7 @@ package com.bitlove.fetlife.logic.viewmodel
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModel
+import android.arch.paging.PagedList
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.model.dataobject.wrapper.ProgressTracker
 
@@ -11,7 +12,7 @@ import com.bitlove.fetlife.model.dataobject.wrapper.ProgressTracker
 class CardListViewModel : ViewModel() {
 
     companion object {
-        const val DEFAULT_PAGE_SIZE = 20
+        const val DEFAULT_PAGE_SIZE = 10
     }
 
     enum class CardListType {
@@ -34,7 +35,7 @@ class CardListViewModel : ViewModel() {
 //        getViewModelObject(cardListType).progressTracker.observeForever{ tracker -> observer.invoke(tracker) }
 //    }
 
-    fun observerData(cardListType: CardListType, owner: LifecycleOwner, observer: (List<CardViewDataHolder>?) -> Unit) {
+    fun observerData(cardListType: CardListType, owner: LifecycleOwner, observer: (PagedList<CardViewDataHolder>?) -> Unit) {
         getViewModelObject(cardListType).cardList.observe(owner, Observer {data -> observer.invoke(data)})
     }
 
@@ -49,8 +50,8 @@ class CardListViewModel : ViewModel() {
         return viewModelObjects[cardListType]!!
     }
 
-    open fun refresh(cardListType: CardListType, forceLoad: Boolean = false, limit: Int = DEFAULT_PAGE_SIZE, page: Int = 1) {
-        getViewModelObject(cardListType).refresh(forceLoad,limit,page)
+    open fun refresh(cardListType: CardListType, forceLoad: Boolean = false, limit: Int = DEFAULT_PAGE_SIZE) {
+        getViewModelObject(cardListType).refresh(forceLoad,limit)
     }
 
     fun remove(cardListType: CardListType) {

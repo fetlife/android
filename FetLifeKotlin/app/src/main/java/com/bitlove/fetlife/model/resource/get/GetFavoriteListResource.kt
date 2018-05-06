@@ -1,21 +1,20 @@
 package com.bitlove.fetlife.model.resource.get
 
-import android.arch.lifecycle.LiveData
-import com.bitlove.fetlife.FetLifeApplication
+import android.arch.paging.DataSource
 import com.bitlove.fetlife.getLoggedInUserId
 import com.bitlove.fetlife.model.dataobject.wrapper.Favorite
 import com.bitlove.fetlife.model.db.FetLifeContentDatabase
 
-class GetFavoriteListResource(forceLoad: Boolean, val page: Int, val limit: Int, userId : String? = getLoggedInUserId()) : GetResource<List<Favorite>>(forceLoad, userId) {
+class GetFavoriteListResource(val limit: Int, userId : String? = getLoggedInUserId()) : GetListResource<Favorite>(userId) {
 
-    override fun loadFromDb(contentDb: FetLifeContentDatabase): LiveData<List<Favorite>> {
+    override fun loadListFromDb(contentDb: FetLifeContentDatabase): DataSource.Factory<Int, Favorite> {
         return contentDb.favoriteDao().getFavorites()
     }
 
-    override fun shouldSync(data: List<Favorite>?, forceSync: Boolean): Boolean {
+    override fun shouldSyncWithNetwork(itemAtEnd: Favorite?, itemAndReached: Int): Boolean {
         return false
     }
 
-    override fun syncWithNetwork(data: List<Favorite>?) {}
+    override fun syncWithNetwork(itemAtEnd: Favorite?, itemAndReached: Int) {}
 
 }

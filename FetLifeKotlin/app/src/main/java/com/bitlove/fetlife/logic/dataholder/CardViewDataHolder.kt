@@ -1,11 +1,26 @@
 package com.bitlove.fetlife.logic.dataholder
 
 import android.arch.persistence.room.Ignore
+import android.support.v7.util.DiffUtil
 import com.bitlove.fetlife.getBaseUrl
 import com.bitlove.fetlife.hash
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 
 abstract class CardViewDataHolder {
+
+    companion object {
+        val DiffUtil = object : DiffUtil.ItemCallback<CardViewDataHolder>() {
+            override fun areItemsTheSame(oldItem: CardViewDataHolder, newItem: CardViewDataHolder): Boolean {
+                return oldItem.isSame(newItem)
+            }
+            override fun areContentsTheSame(oldItem: CardViewDataHolder, newItem: CardViewDataHolder): Boolean {
+                return oldItem.hasSameContent(newItem)
+            }
+            override fun getChangePayload(oldItem: CardViewDataHolder, newItem: CardViewDataHolder): Any? {
+                return oldItem.getDifference(newItem)
+            }
+        }
+    }
 
     @Ignore
     var cardHash: String? = null
@@ -80,6 +95,11 @@ abstract class CardViewDataHolder {
             ).hash()
         }
         return cardHash!!
+    }
+
+    open fun getDifference(otherItem: CardViewDataHolder): Any? {
+        //TODO: implement for better UI (performance)
+        return null
     }
 
 }

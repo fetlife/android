@@ -1,8 +1,8 @@
 package com.bitlove.fetlife.view.generic
 
-import android.app.Fragment
 import android.arch.lifecycle.LifecycleOwner
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import com.bitlove.fetlife.getViewModel
 

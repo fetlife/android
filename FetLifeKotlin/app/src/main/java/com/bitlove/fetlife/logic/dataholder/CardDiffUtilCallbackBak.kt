@@ -2,7 +2,7 @@ package com.bitlove.fetlife.logic.dataholder
 
 import android.support.v7.util.DiffUtil
 
-class CardDiffUtilCallback(private val oldList : List<CardViewDataHolder>, private val newList: List<CardViewDataHolder>) : DiffUtil.Callback() {
+class CardDiffUtilCallbackBak(private val oldList : List<CardViewDataHolder>, private val newList: List<CardViewDataHolder>) : DiffUtil.Callback() {
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return oldList[oldItemPosition].isSame(newList[newItemPosition])
