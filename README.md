@@ -4,7 +4,7 @@ Welcome to FetLife's open-source Android app!
 
 ### Features
 
-With offcial FetLife Android App you can...
+With official FetLife Android App you can...
 
 - browse your Activity Feed
 - chat with other Kinksters
@@ -43,7 +43,7 @@ To get the fastest response we suggest you to look first at [FetLife Android App
 
 If did not find a solution or you find a bug or you have a nice idea hot to improve please start by reading through the current list of [open issues](https://github.com/fetlife/fetlife-android/issues) and if you can't find anything about your bug or suggestion please [submit a new issue](https://github.com/fetlife/fetlife-android/issues/new).
 
-If you prefer not registering to GitHub you can still send your remark or question either to our cartakers (caretakers@fetlife.com) or directly to our Android developer (dreamlite@fetlife.com).
+If you prefer not registering to GitHub you can still send your remark or question either to our caretakers (caretakers@fetlife.com) or directly to our Android developer (dreamlite@fetlife.com).
 
 
 ### Want to Contribute
@@ -64,7 +64,7 @@ To get the code running just follow the following steps:
 
 Note: To protect our users for any malicious modification of the App, FetLife keeps its signature keys private.
 For you as a contributor it means you will only be able to build a debug (signed) version of the App. 
-Apps signed with debug keys are fully functional, but because of the signature clash they cannot be installed on top of and exisiting relelase version. To be able to run your debug version you have to remove your official FetLife App from your device first.
+Apps signed with debug keys are fully functional, but because of the signature clash they cannot be installed on top of and existing release version. To be able to run your debug version you have to remove your official FetLife App from your device first.
 
 Should you have any further questions about contributing to FetLife Android Open Source project feel free to [submit a new GitHib issue](https://github.com/fetlife/fetlife-android/issues/new) or get in contact with our Android Developer directly via dreamlite@fetlife.com.
 
