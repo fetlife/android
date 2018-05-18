@@ -27,14 +27,14 @@ class NavigationFragmentFactory {
 
     fun createNavigationFragmentAdapter(fragmentManager: FragmentManager?, navigation: Int?, layout: NavigationCallback.Layout? = null) : NavigationPagerAdapter {
         return when (navigation) {
-            R.id.navigation_explore -> NavigationPagerAdapter(fragmentManager, layout, R.id.navigation_explore_friends_activity, R.id., R.id.navigation_explore_fresh_and_pervy, R.id.navigation_explore_stuff_you_love)
+            R.id.navigation_explore -> NavigationPagerAdapter(fragmentManager, layout, R.id.navigation_explore_friends_activity, R.id.navigation_explore_kinky_and_popular, R.id.navigation_explore_fresh_and_pervy, R.id.navigation_explore_stuff_you_love)
             R.id.navigation_conversations -> NavigationPagerAdapter(fragmentManager, layout, R.id.navigation_conversations_inbox/*, R.id.navigation_conversations_all*/)
             R.id.navigation_favorites -> NavigationPagerAdapter(fragmentManager, layout, R.id.navigation_favorites)
             R.id.navigation_groups -> NavigationPagerAdapter(fragmentManager, layout, R.id.navigation_groups)
             R.id.navigation_notifications -> NavigationPagerAdapter(fragmentManager, NavigationCallback.Layout.WEB, R.id.navigation_notifications)
             R.id.navigation_search -> NavigationPagerAdapter(fragmentManager, NavigationCallback.Layout.WEB, R.id.navigation_search)
             //TODO rely on default constant
-            else -> NavigationPagerAdapter(fragmentManager, layout, R.id.navigation_explore_friends_activity, R.id.navigation_explore_fresh_and_pervy, R.id.navigation_explore_kinky_and_popular, R.id.navigation_explore_stuff_you_love)
+            else -> NavigationPagerAdapter(fragmentManager, layout, R.id.navigation_explore_friends_activity, R.id.navigation_explore_kinky_and_popular, R.id.navigation_explore_fresh_and_pervy, R.id.navigation_explore_stuff_you_love)
         }
     }
 
