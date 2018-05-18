@@ -19,7 +19,35 @@ class GetConversationListJob(val limit: Int, val page: Int, val marker : String?
         val memberDao = contentDb.memberDao()
         val reactionDao = contentDb.reactionDao()
         val contentDao = contentDb.contentDao()
+
+        //merge
+        //TODO: cleanup
+        var serverOrders = ArrayList<Int>()
+        var dbIds = ArrayList<String>()
+        for (i in (page-1)*limit until page*limit) {
+            serverOrders.add(i)
+        }
         for (content in resourceArray) {
+            content.type = Content.TYPE.CONVERSATION.toString()
+            dbIds.add(content.dbId)
+        }
+        var conflictedConversations = contentDao.getConflictedConversations(serverOrders,dbIds)
+        var shiftWith = 0; var shiftFrom = page*limit
+        for (conflictedConversation in conflictedConversations.reversed()) {
+            if (conflictedConversation.serverOrder == shiftFrom-1) {
+                shiftFrom--;shiftWith++
+            } else {
+                contentDao.delete(conflictedConversation)
+            }
+        }
+        if (shiftWith > 0) {
+            contentDao.shiftServerOrder(shiftFrom,shiftWith)
+        }
+        //mergeEnd
+        
+        var serverOrder = (page-1) * limit
+        for ((i,content) in resourceArray.withIndex()) {
+            content.serverOrder = serverOrder++
             saveContentMember(content,memberDao)
             content.type = Content.TYPE.CONVERSATION.toString()
             contentDao.insertOrUpdate(content)

@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.logic.viewmodel.CardListViewModel
 import com.bitlove.fetlife.view.generic.CardListFragment
+import com.bitlove.fetlife.view.generic.EmptyFragment
 import com.bitlove.fetlife.view.login.LoginFragment
 import com.bitlove.fetlife.view.responsive.TurbolinksFragment
 
@@ -26,9 +27,11 @@ class NavigationFragmentFactory {
 
     fun createNavigationFragmentAdapter(fragmentManager: FragmentManager?, navigation: Int?, layout: NavigationCallback.Layout? = null) : NavigationPagerAdapter {
         return when (navigation) {
-            R.id.navigation_explore -> NavigationPagerAdapter(fragmentManager, layout, R.id.navigation_explore_friends_activity, R.id.navigation_explore_fresh_and_pervy, R.id.navigation_explore_kinky_and_popular, R.id.navigation_explore_stuff_you_love)
+            R.id.navigation_explore -> NavigationPagerAdapter(fragmentManager, layout, R.id.navigation_explore_friends_activity, R.id., R.id.navigation_explore_fresh_and_pervy, R.id.navigation_explore_stuff_you_love)
             R.id.navigation_conversations -> NavigationPagerAdapter(fragmentManager, layout, R.id.navigation_conversations_inbox/*, R.id.navigation_conversations_all*/)
             R.id.navigation_favorites -> NavigationPagerAdapter(fragmentManager, layout, R.id.navigation_favorites)
+            R.id.navigation_groups -> NavigationPagerAdapter(fragmentManager, layout, R.id.navigation_groups)
+            R.id.navigation_notifications -> NavigationPagerAdapter(fragmentManager, NavigationCallback.Layout.WEB, R.id.navigation_notifications)
             R.id.navigation_search -> NavigationPagerAdapter(fragmentManager, NavigationCallback.Layout.WEB, R.id.navigation_search)
             //TODO rely on default constant
             else -> NavigationPagerAdapter(fragmentManager, layout, R.id.navigation_explore_friends_activity, R.id.navigation_explore_fresh_and_pervy, R.id.navigation_explore_kinky_and_popular, R.id.navigation_explore_stuff_you_love)
@@ -42,6 +45,8 @@ class NavigationFragmentFactory {
         }
         return when (navigation) {
             R.id.navigation_search -> TurbolinksFragment.newInstance(R.id.navigation_search)
+            R.id.navigation_notifications -> TurbolinksFragment.newInstance(R.id.navigation_notifications)
+            R.id.navigation_groups -> EmptyFragment.newInstance(R.id.navigation_groups.toString())
             R.id.navigation_explore_friends_activity -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_FRIENDS_FEED,getNavigationTitle(navigation))
             R.id.navigation_explore_fresh_and_pervy -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_FRESH_AND_PERVY,getNavigationTitle(navigation))
             R.id.navigation_explore_kinky_and_popular -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_KINKY_AND_POPULAR,getNavigationTitle(navigation))
@@ -59,6 +64,7 @@ class NavigationFragmentFactory {
             R.id.navigation_search -> "Search"
             R.id.navigation_favorites -> "Favorites"
             R.id.navigation_explore -> "Explore"
+            R.id.navigation_groups -> "Groups"
             R.id.navigation_explore_friends_activity -> "Friends"
             R.id.navigation_explore_fresh_and_pervy -> "Fresh and Pervy"
             R.id.navigation_explore_kinky_and_popular -> "Kinky and Popular"
@@ -74,6 +80,7 @@ class NavigationFragmentFactory {
     fun getNavigationUrl(navigationId: Int): String? {
         return when(navigationId) {
             R.id.navigation_search -> "/search"
+            R.id.navigation_notifications -> "/notifications"
             R.id.navigation_recover -> "/users/password/new"
             R.id.navigation_signup -> "/signup_step_profile"
             R.id.navigation_explore_friends_activity -> "/explore/following"

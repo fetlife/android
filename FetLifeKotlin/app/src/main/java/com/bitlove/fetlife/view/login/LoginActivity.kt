@@ -42,7 +42,9 @@ class LoginActivity : FragmentActivity(), NavigationCallback {
 
     private fun setStateContentFragment(savedInstanceState: Bundle?) {
         navigation = savedInstanceState?.getInt(LoginActivity.STATE_KEY_NAVIGATION) ?: R.id.navigation_login
-        setContentFragment(navigationFragmentFactory.createFragment(navigation),false)
+        if (savedInstanceState == null) {
+            setContentFragment(navigationFragmentFactory.createFragment(navigation),false)
+        }
     }
 
     private fun setContentFragment(fragment: Fragment, addToBackStack: Boolean = true) {

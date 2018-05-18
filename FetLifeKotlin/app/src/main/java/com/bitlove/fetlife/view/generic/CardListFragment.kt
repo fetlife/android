@@ -1,5 +1,6 @@
 package com.bitlove.fetlife.view.generic
 
+import android.arch.paging.PagedList
 import android.os.Bundle
 import android.view.View
 import com.bitlove.fetlife.R
@@ -7,6 +8,7 @@ import com.bitlove.fetlife.databinding.FragmentCardListBinding
 import com.bitlove.fetlife.view.navigation.NavigationCallback
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.logic.viewmodel.CardListViewModel
+import com.bitlove.fetlife.view.dialog.InformationDialog
 import com.bitlove.fetlife.workaroundItemFlickeringOnChange
 import kotlinx.android.synthetic.main.fragment_card_list.*
 
@@ -59,18 +61,41 @@ class CardListFragment : BindingFragment<FragmentCardListBinding, CardListViewMo
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        when(cardListType) {
+            CardListViewModel.CardListType.FAVORITES -> InformationDialog.show(activity!!,InformationDialog.InfoType.FAVORITES,"InformationDialog.InfoType.FAVORITES",true)
+            CardListViewModel.CardListType.EXPLORE_STUFF_YOU_LOVE,
+            CardListViewModel.CardListType.EXPLORE_FRIENDS_FEED,
+            CardListViewModel.CardListType.EXPLORE_KINKY_AND_POPULAR,
+            CardListViewModel.CardListType.EXPLORE_STUFF_YOU_LOVE -> InformationDialog.show(activity!!,InformationDialog.InfoType.EXPLORE,"InformationDialog.InfoType.EXPLORE",true)
+        }
+
         card_list.workaroundItemFlickeringOnChange()
         //TODO: check for memoryLeak owner/callback
         card_list.adapter = CardListAdapter(this, this, arguments!!.getString(ARG_SCREEN_TITLE))
 
         swipe_refresh.setOnRefreshListener {
-            //TODO: find a less flickering solution
-            (card_list.adapter as CardListAdapter).submitList(null)
+            val adapter = (card_list.adapter as CardListAdapter)
+//            val pagedList = adapter.currentList
+//            while (pagedList!!.size > 10) {
+//                pagedList.remove(pagedList!!.last())
+//            }
+            adapter.submitList(null)
+
             viewModel!!.refresh(cardListType,true)
             swipe_refresh.isRefreshing = false
         }
 
         viewModel!!.refresh(cardListType,savedInstanceState == null)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel!!.unfade(cardListType)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel!!.fade(cardListType)
     }
 
     override fun onDetach() {
@@ -94,8 +119,8 @@ class CardListFragment : BindingFragment<FragmentCardListBinding, CardListViewMo
         (activity as? NavigationCallback)?.onLayoutChange(layout)
     }
 
-    override fun onCardNavigate(cardList: List<CardViewDataHolder>, position: Int, screenTitle: String?) {
-        (activity as? NavigationCallback)?.onCardNavigate(cardList, position, screenTitle)
+    override fun onCardNavigate(cardList: List<CardViewDataHolder>, position: Int, screenTitle: String?, scrollToBottom: Boolean) {
+        (activity as? NavigationCallback)?.onCardNavigate(cardList, position, screenTitle, scrollToBottom)
     }
 
 }

@@ -61,11 +61,11 @@ class GridAutoFitLayoutManager : StaggeredGridLayoutManager {
         super.onLayoutChildren(recycler, state)
     }
 
-    override fun requestChildRectangleOnScreen(parent: RecyclerView?, child: View?, rect: Rect?, immediate: Boolean): Boolean {
-        return false
-    }
-
-    override fun requestChildRectangleOnScreen(parent: RecyclerView?, child: View?, rect: Rect?, immediate: Boolean, focusedChildVisible: Boolean): Boolean {
-        return false
-    }
+//    override fun requestChildRectangleOnScreen(parent: RecyclerView?, child: View?, rect: Rect?, immediate: Boolean): Boolean {
+//        return false
+//    }
+//
+//    override fun requestChildRectangleOnScreen(parent: RecyclerView?, child: View?, rect: Rect?, immediate: Boolean, focusedChildVisible: Boolean): Boolean {
+//        return false
+//    }
 }

@@ -41,9 +41,12 @@ import java.util.concurrent.TimeUnit
 
 class FetLifeService {
 
+    companion object {
+        const val BASE_URL : String = "https://app.fetlife.com"
+    }
+
     //TODO implement
 
-    val baseUrl : String = "https://app.fetlife.com"
     var authHeader : String? = null
     var refreshToken : String? = null
 
@@ -56,7 +59,7 @@ class FetLifeService {
                 .build()
 
         val retrofit = Retrofit.Builder()
-                .baseUrl("https://app.fetlife.com")
+                .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build()
@@ -110,7 +113,7 @@ class FetLifeService {
 //        mapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false)
 //        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
 //        fetLifeApi = Retrofit.Builder()
-//                .baseUrl(BASE_URL)
+//                .BASE_URL(BASE_URL)
 //                .client(client)
 //                .addConverterFactory(JacksonConverterFactory.create(mapper)).build()
 //                .create(FetLifeApi::class.java)
@@ -133,7 +136,7 @@ class FetLifeService {
 //        })
 //
 //        fetLifeMultipartUploadApi = Retrofit.Builder()
-//                .baseUrl(BASE_URL)
+//                .BASE_URL(BASE_URL)
 //                .client(uploadClient)
 //                .addConverterFactory(JacksonConverterFactory.create(mapper)).build()
 //                .create(FetLifeMultipartUploadApi::class.java)

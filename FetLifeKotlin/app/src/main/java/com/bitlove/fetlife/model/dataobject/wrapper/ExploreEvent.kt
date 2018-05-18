@@ -62,6 +62,10 @@ class ExploreEvent : CardViewDataHolder(), SyncObject<ExploreEventEntity>, Favor
         return getChild()?.getSupportingText() ?: null
     }
 
+    override fun getCreatedAt(): String? {
+        return getChild()?.getCreatedAt() ?: null
+    }
+
     override fun hasNewComment(): Boolean? {
         return getChild()?.hasNewComment() ?: null
     }
@@ -99,13 +103,13 @@ class ExploreEvent : CardViewDataHolder(), SyncObject<ExploreEventEntity>, Favor
     }
 
     override fun getChild() : CardViewDataHolder? {
-        if (contents?.isEmpty() == false) {
+        if (contents?.size == 1) {
             return  contents!!.first()
         }
-        if (reactions?.isEmpty() == false) {
+        if (reactions?.size == 1) {
             return  reactions!!.first()
         }
-        if (members?.isEmpty() == false) {
+        if (members?.size == 1) {
             return  members!!.first()
         }
         return null

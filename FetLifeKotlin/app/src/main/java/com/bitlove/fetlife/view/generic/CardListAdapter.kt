@@ -20,16 +20,9 @@ class CardListAdapter(private val owner: LifecycleOwner, private val navigationC
 
     var interactionHandlers : HashMap<String?, CardViewInteractionHandler> = HashMap()
 
-    override fun submitList(pagedList: PagedList<CardViewDataHolder>?) {
-        for (interactionHandler in interactionHandlers.values) {
-            if (pagedList == null ) {
-                continue
-            }
-            interactionHandler.cardList = pagedList
-            interactionHandler.cardData = interactionHandler.cardList!![interactionHandler.position]
-        }
-        super.submitList(pagedList)
-    }
+//    override fun submitList(pagedList: PagedList<CardViewDataHolder>?) {
+//        super.submitList(pagedList)
+//    }
 
     override fun onBindViewHolder(holder: CardViewHolder, position: Int) = holder.bindTo(getItem(position), getInteractionHandler(position))
 
@@ -41,6 +34,10 @@ class CardListAdapter(private val owner: LifecycleOwner, private val navigationC
             else {
                 CardViewInteractionHandler(owner, currentList!!.toList(), position, false, item.displayComments() == true, navigationCallback, cardListTitle)
             }
+        } else {
+            val interactionHandler = interactionHandlers[item.getLocalId()]!!
+            interactionHandler.cardList = currentList!!.toList()
+            interactionHandler.position = position
         }
         return interactionHandlers[item.getLocalId()]!!
     }

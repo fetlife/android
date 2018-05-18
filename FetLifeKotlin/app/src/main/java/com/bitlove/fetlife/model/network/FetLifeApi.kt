@@ -45,7 +45,7 @@ interface FetLifeApi {
     fun postComment(@Header("Authorization") authHeader: String, @Path("memberId") memberId: String?, @Path("entityType") entityType: String?, @Path("entityId") entityId: String?, @Field("body") body: String): Call<ReactionEntity>
 
     @GET("/api/v2/me/feed")
-    fun getFriendsFeed(@Header("Authorization") authHeader: String, @Query("until") timeStamp: String?, @Query("limit") limit: Int?, @Query("page") page: Int?): Call<Feed>
+    fun getFriendsFeed(@Header("Authorization") authHeader: String, @Query("marker") timeStamp: String?, @Query("limit") limit: Int?, @Query("page") page: Int?): Call<Feed>
 
     @GET("/api/v2/explore/fresh-and-pervy")
     fun getFreshAndPervy(@Header("Authorization") authHeader: String, @Query("until") timeStamp: String?, @Query("limit") limit: Int?, @Query("page") page: Int?): Call<Array<ExploreStoryEntity>>
@@ -54,7 +54,7 @@ interface FetLifeApi {
     fun getKinkyAndPopular(@Header("Authorization") authHeader: String, @Query("until") timeStamp: String?, @Query("limit") limit: Int?, @Query("page") page: Int?): Call<Array<ExploreStoryEntity>>
 
     @GET("/api/v2/explore/stuff-you-love")
-    fun getStuffYouLove(@Header("Authorization") authHeader: String, @Query("marker") timeStamp: String?, @Query("limit") limit: Int?, @Query("page") page: Int?): Call<Array<ExploreStoryEntity>>
+    fun getStuffYouLove(@Header("Authorization") authHeader: String, @Query("until") timeStamp: String?, @Query("limit") limit: Int?, @Query("page") page: Int?): Call<Array<ExploreStoryEntity>>
 
     @PUT("/api/v2/me/loves/{content_type}/{content_id}")
     fun putLove(@Header("Authorization") authHeader: String, @Path("content_id") contentId: String, @Path("content_type") contentType: String): Call<ResponseBody>

@@ -13,10 +13,19 @@ import com.bitlove.fetlife.model.db.dao.MemberDao
 import com.bitlove.fetlife.model.db.dao.ReactionDao
 import com.bitlove.fetlife.model.db.dao.RelationDao
 import com.bitlove.fetlife.model.network.networkobject.Feed
+import com.bitlove.fetlife.parseServerTime
 import retrofit2.Call
 import retrofit2.Response
 
-class GetExploreListJob(val type: ExploreStory.TYPE, val limit: Int, val page: Int, val marker : String? = null, userId: String?) : GetListResourceJob<ExploreStoryEntity>(PRIORITY_GET_RESOURCE_FRONT,false, userId, TAG_EXPLORE, TAG_GET_RESOURCE) {
+class GetExploreListJob(val type: ExploreStory.TYPE, val limit: Int, val page: Int, var marker : String? = null, userId: String?) : GetListResourceJob<ExploreStoryEntity>(PRIORITY_GET_RESOURCE_FRONT,false, userId, TAG_EXPLORE, TAG_GET_RESOURCE) {
+
+    init {
+        if (marker != null && page == 1) {
+            marker = null
+        } else if (marker != null) {
+            marker = (marker!!.parseServerTime() * 1000L).toString()
+        }
+    }
 
     companion object {
         //TODO separate tags
@@ -29,7 +38,8 @@ class GetExploreListJob(val type: ExploreStory.TYPE, val limit: Int, val page: I
             ExploreStory.TYPE.FRESH_AND_PERVY -> getApi().getFreshAndPervy(getAuthHeader(),marker,limit,page)
             ExploreStory.TYPE.STUFF_YOU_LOVE -> getApi().getStuffYouLove(getAuthHeader(),marker,limit,page)
             ExploreStory.TYPE.KINKY_AND_POPULAR -> getApi().getKinkyAndPopular(getAuthHeader(),marker,limit,page)
-            ExploreStory.TYPE.EXPLORE_FRIENDS -> getApi().getFriendsFeed(getAuthHeader(),marker,limit,page)
+            //TODO: user marker
+            ExploreStory.TYPE.EXPLORE_FRIENDS -> getApi().getFriendsFeed(getAuthHeader(),null,limit,page)
         }
     }
 
@@ -50,13 +60,45 @@ class GetExploreListJob(val type: ExploreStory.TYPE, val limit: Int, val page: I
         val reactionDao = contenDb.reactionDao()
         val relationDao = contenDb.relationDao()
         val contentDao = contenDb.contentDao()
-        for ((i,story) in resourceArray.withIndex()) {
-            if (!isSupported(story)) {
-                continue
-            }
+
+        //merge
+        //TODO: cleanup
+        var serverOrders = ArrayList<Int>()
+        var dbIds = ArrayList<String>()
+        for (i in (page-1)*limit until page*limit) {
+            serverOrders.add(i)
+        }
+        for (story in resourceArray) {
             story.type = type.toString()
             story.createdAt = story.events?.firstOrNull()?.target?.createdAt
-            //TODO: take care of page based ids in case of markers
+            dbIds.add(story.dbId)
+        }
+        var conflictedStories = exploreStoryDao.getConflictedEntities(type.toString(),serverOrders,dbIds)
+        var shiftWith = 0; var shiftFrom = page*limit
+        for (conflictedStory in conflictedStories.reversed()) {
+            if (conflictedStory.serverOrder == shiftFrom-1) {
+                shiftFrom--;shiftWith++
+            } else {
+                exploreStoryDao.delete(conflictedStory)
+            }
+        }
+        if (shiftWith > 0) {
+            exploreStoryDao.shiftServerOrder(type.toString(),shiftFrom,shiftWith)
+        }
+        //mergeEnd
+
+        //workaround
+        var lastStory : ExploreStoryEntity? = null
+        var serverOrder = (page-1) * limit
+        for ((i,story) in resourceArray.withIndex()) {
+            if (!isSupported(story)) {
+                serverOrder++
+                continue
+            }
+            lastStory = story
+            story.type = type.toString()
+            story.createdAt = story.events?.firstOrNull()?.target?.createdAt
+            story.serverOrder = serverOrder++
             exploreStoryDao.insertOrUpdate(story)
             for (event in story.events!!) {
                 event.type = type.toString()
@@ -67,6 +109,15 @@ class GetExploreListJob(val type: ExploreStory.TYPE, val limit: Int, val page: I
                 saveEventTargets(event,memberDao,contentDao,reactionDao,relationDao)
                 exploreEventDao.insertOrUpdate(event)
             }
+        }
+
+        if (lastStory == null) {
+            lastStory = exploreStoryDao.getLastStory(type.toString()).firstOrNull()
+        }
+
+        if (lastStory != null) {
+            lastStory?.serverOrder = serverOrder-1
+            exploreStoryDao.insertOrUpdate(lastStory)
         }
     }
 

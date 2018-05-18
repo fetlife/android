@@ -14,6 +14,7 @@ import org.jetbrains.anko.coroutines.experimental.bg
 import android.support.v4.content.ContextCompat.startActivity
 import android.content.Intent.ACTION_SEND
 import android.widget.ImageView
+import android.widget.ScrollView
 import com.bitlove.fetlife.model.dataobject.wrapper.*
 import com.bitlove.fetlife.shareExternal
 import com.bitlove.fetlife.view.widget.ImageActivity
@@ -87,17 +88,17 @@ class CardViewInteractionHandler {
         if (cardData?.getCommentCountText() != null && displayComments && commentsPaging && cardData is SyncObject<*>) startCommentCall(cardData as SyncObject<*>)
     }
 
-    open fun onOpenCard() {
+    open fun onOpenCard(scrollToComments: Boolean = false) {
         if (!checkInteractionTime()) return
         if (cardList != null) {
-            navigationCallback?.onCardNavigate(cardList!!, position, cardListTitle)
+            navigationCallback?.onCardNavigate(cardList!!, position, cardListTitle, scrollToComments)
         }
     }
 
     open fun onOpenChildrenCard(position: Int, cardData: CardViewDataHolder?) {
         if (!checkInteractionTime()) return
         if (cardData?.getChildren() != null) {
-            navigationCallback?.onCardNavigate(cardData.getChildren()!!, position, cardData!!.getChildrenScreenTitle())
+            navigationCallback?.onCardNavigate(cardData.getChildren()!!, position, cardData!!.getChildrenScreenTitle(), false)
         }
     }
 
@@ -156,7 +157,7 @@ class CardViewInteractionHandler {
         ImageActivity.start(cardData.getMediaUrl()!!,view.context)
     }
 
-    open fun onSendComment(view: View, cardData: CardViewDataHolder) {
+    open fun onSendComment(view: View, cardData: CardViewDataHolder, scrollToBottomViewId: Int?) {
         if (!checkInteractionTime()) return
         if (view is EditText) {
             val comment = view.text.toString()
@@ -172,7 +173,17 @@ class CardViewInteractionHandler {
                 else -> null
             } ?: return
 
-            FetLifeApplication.instance.fetlifeDataSource.sendComment(comment, content).execute()
+            val resourceResult = FetLifeApplication.instance.fetlifeDataSource.sendComment(comment, content)
+            resourceResult.progressTracker.observe(owner, Observer{progressTracker ->
+                if (progressTracker?.getState() == ProgressTracker.STATE.QUEUED) {
+                    if (view.isAttachedToWindow && scrollToBottomViewId != null) {
+                        var scrollView = view.rootView.findViewById<ScrollView>(scrollToBottomViewId)
+                        scrollView?.fullScroll(View.FOCUS_DOWN)
+                    }
+                    resourceResult.progressTracker.removeObservers(owner)
+                }
+            })
+            resourceResult.execute()
             view.setText("")
         }
     }

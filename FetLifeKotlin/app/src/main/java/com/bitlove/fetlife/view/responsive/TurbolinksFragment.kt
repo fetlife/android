@@ -1,8 +1,11 @@
 package com.bitlove.fetlife.view.responsive
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +13,10 @@ import android.webkit.WebView
 import com.bitlove.fetlife.R
 import com.basecamp.turbolinks.TurbolinksAdapter
 import com.basecamp.turbolinks.TurbolinksSession
+import com.basecamp.turbolinks.TurbolinksView
 import com.bitlove.fetlife.FetLifeApplication
+import com.bitlove.fetlife.model.network.FetLifeService
+import com.bitlove.fetlife.view.dialog.InformationDialog
 import com.bitlove.fetlife.view.navigation.NavigationFragmentFactory
 import kotlinx.android.synthetic.main.fragment_turbolinks.*
 import kotlinx.android.synthetic.main.item_data_card.*
@@ -55,7 +61,9 @@ class TurbolinksFragment : Fragment(), TurbolinksAdapter, TurbolinksSession.Prog
                 .addPageObserver(this)
                 .restoreWithCachedSnapshot(false)
                 .setPullToRefreshEnabled(false)
-                .visitWithAuthHeader(FetLifeApplication.instance.fetlifeService.baseUrl + navigationFragmentFactory.getNavigationUrl(navigationId!!), FetLifeApplication.instance.fetlifeService.authHeader)
+                .visitWithAuthHeader(FetLifeService.BASE_URL + navigationFragmentFactory.getNavigationUrl(navigationId!!), FetLifeApplication.instance.fetlifeService.authHeader)
+
+        if (savedInstanceState == null) InformationDialog.show(activity!!, InformationDialog.InfoType.WEB, navigationId.toString(), true)
     }
 
     override fun onAttach(context: Context?) {
@@ -72,18 +80,26 @@ class TurbolinksFragment : Fragment(), TurbolinksAdapter, TurbolinksSession.Prog
     }
 
     override fun onReceivedError(errorCode: Int) {
+        Log.e("TURBO",errorCode.toString())
     }
 
     override fun pageInvalidated() {
     }
 
     override fun requestFailedWithStatusCode(statusCode: Int) {
+        Log.e("TURBO",statusCode.toString())
     }
 
     override fun visitCompleted() {
     }
 
     override fun visitProposedToLocationWithAction(location: String?, action: String?) {
+        TurbolinksSession.getDefault(context)
+                .activity(activity)
+                .adapter(this)
+                .view(turbolinks_view)
+                .visitLocationWithAction(location, action)
+//                .visitWithAuthHeader(location,  FetLifeApplication.instance.fetlifeService.authHeader)
     }
 
     override fun showProgress() {
@@ -92,7 +108,15 @@ class TurbolinksFragment : Fragment(), TurbolinksAdapter, TurbolinksSession.Prog
     override fun hideProgress() {
     }
 
-    override fun shouldOverrideUrlLoading(view: WebView?, location: String?): Boolean {
+    override fun shouldOverrideUrlLoading(view: WebView, location: String): Boolean {
+        val uri = Uri.parse(location)
+        if (uri.host != FetLifeService.BASE_URL) {
+            val intent = Intent(Intent.ACTION_VIEW, uri)
+            startActivity(intent)
+            return true
+//        } else if (UrlUtil.handleInternal(this, uri)) {
+//            return true
+        }
         return false
     }
 

@@ -19,4 +19,6 @@ data class ExploreStoryEntity (
         }
     var type: String? = null
     var createdAt: String? = ""
+
+    var serverOrder: Int = 0
 }

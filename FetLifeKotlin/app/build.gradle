@@ -6,6 +6,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'io.fabric'
+
 android {
     compileSdkVersion build_versions.target_sdk
     buildToolsVersion build_versions.build_tools
@@ -15,12 +17,12 @@ android {
         minSdkVersion build_versions.min_sdk
         targetSdkVersion build_versions.target_sdk
         versionCode 1
-        versionName "1.0"
+        versionName "3.0.0-alpha1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         debug {
-            applicationIdSuffix ".debug"
+            applicationIdSuffix ".alpha"
             debuggable true
         }
         release {
@@ -41,6 +43,7 @@ android {
     }
 }
 
+
 dependencies {
     kapt deps.room.compiler
     kapt deps.databinding.compiler
@@ -48,7 +51,6 @@ dependencies {
     implementation deps.kotlin.stdlib
     implementation deps.kotlin.reflect
 
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation deps.constraint_layout
     implementation deps.google_play
     implementation deps.support.app_compat
@@ -78,21 +80,10 @@ dependencies {
     implementation deps.font.material_google
     implementation deps.joda_time
 
+    implementation(deps.crashlytics) {
+        transitive = true
+    }
+
     implementation project(':turbolinks')
 
-    // Android Testing Support Library's runner and rules
-    androidTestImplementation deps.atsl.runner
-    androidTestImplementation deps.atsl.rules
-    androidTestImplementation deps.arch_core.testing
-
-    androidTestImplementation deps.junit
-    androidTestImplementation deps.retrofit.mock
-    androidTestImplementation deps.arch_core.testing
-    androidTestImplementation deps.dexmaker
-    androidTestImplementation deps.mockito.core, { exclude group: 'net.bytebuddy' }
-
-    testImplementation deps.junit
-    testImplementation deps.retrofit.mock
-    testImplementation deps.arch_core.testing
-    testImplementation deps.mockito.core
 }

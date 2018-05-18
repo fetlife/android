@@ -108,6 +108,10 @@ class Content : CardViewDataHolder(), SyncObject<ContentEntity>, Favoritable {
         }
     }
 
+    override fun getCreatedAt(): String? {
+        return contentEntity?.createdAt
+    }
+
     override fun hasNewComment(): Boolean? {
         return contentEntity?.hasNewComments
     }

@@ -4,6 +4,7 @@ import android.arch.persistence.room.Ignore
 import android.support.v7.util.DiffUtil
 import com.bitlove.fetlife.getBaseUrl
 import com.bitlove.fetlife.hash
+import com.bitlove.fetlife.toUniqueLong
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 
 abstract class CardViewDataHolder {
@@ -50,6 +51,7 @@ abstract class CardViewDataHolder {
         }
     }
 
+    open fun getCreatedAt() : String? = null
     open fun getChild() : CardViewDataHolder? = null
     open fun getChildren() : List<CardViewDataHolder>? = null
     open fun getChildrenScreenTitle() : String? = getAvatarTitle()
@@ -100,6 +102,15 @@ abstract class CardViewDataHolder {
     open fun getDifference(otherItem: CardViewDataHolder): Any? {
         //TODO: implement for better UI (performance)
         return null
+    }
+
+    override fun equals(other: Any?): Boolean {
+        val otherData = other as? CardViewDataHolder?:return false
+        return isSame(otherData) && hasSameContent(other)
+    }
+
+    override fun hashCode(): Int {
+        return getRemoteId()?.toUniqueLong()?.toInt()?:0
     }
 
 }

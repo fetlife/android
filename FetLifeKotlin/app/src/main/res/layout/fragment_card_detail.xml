@@ -25,8 +25,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignBottom="@id/comment_edit"
-            android:layout_alignTop="@id/comment_edit"
+            android:layout_alignBottom="@id/comment_edit_anchored"
+            android:layout_alignTop="@id/comment_edit_anchored"
             android:orientation="vertical"
             android:background="@color/black"
             android:gravity="bottom"
@@ -43,16 +43,17 @@
                 app:ico_icon="gmd-send"
                 android:background="@color/black"
                 app:ico_color="@color/silver"
-                android:layout_alignBottom="@id/comment_edit"
-                app:onSubmitFor="@{@id/comment_edit}"
+                android:layout_alignBottom="@id/comment_edit_anchored"
+                app:onSubmitFor="@{@id/comment_edit_anchored}"
                 app:onSubmitHandler="@{cardInteractionHandler}"
                 app:onSubmitData="@{cardData}"
+                app:scrollWithData="@{@id/card_scroll}"
                 />
 
         </LinearLayout>
 
         <MultiAutoCompleteTextView
-            android:id="@+id/comment_edit"
+            android:id="@+id/comment_edit_anchored"
             app:visible="@{cardData.commentCountText != null}"
             android:background="@color/black"
             android:layout_width="match_parent"
@@ -75,7 +76,7 @@
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh"
-            android:layout_above="@id/comment_edit"
+            android:layout_above="@id/comment_edit_anchored"
             android:layout_alignParentTop="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -88,7 +89,8 @@
                 android:background="@color/raisinBlack"
                 android:scrollbars="vertical"
                 android:descendantFocusability="beforeDescendants"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                >
 
                 <include
                     android:id="@+id/card_view"

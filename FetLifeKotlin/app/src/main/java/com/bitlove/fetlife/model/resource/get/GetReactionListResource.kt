@@ -24,8 +24,6 @@ class GetReactionListResource(val type: Reaction.TYPE, val parent: SyncObject<*>
 
     override fun syncWithNetwork(data: List<Reaction>?) {
         val content = (parent as? Content) ?: (parent as? ExploreStory)?.getChild() as? Content ?: return
-        val job = GetReactionListJob(type,content,limit,page,sinceMarker,untilMarker,userId)
-        setProgressTracker(job.progressTrackerLiveData)
-        FetLifeApplication.instance.jobManager.addJobInBackground(job)
+        addJob(GetReactionListJob(type,content,limit,page,sinceMarker,untilMarker,userId))
     }
 }

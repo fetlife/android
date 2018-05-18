@@ -37,9 +37,7 @@ class DeleteReactionResource(reaction: Reaction, val parent: Content, userId: St
     }
 
     override fun syncWithNetwork(reaction: Reaction) {
-        val job = DeleteReactionJob(reaction, parent)
-        setProgressTracker(job.progressTrackerLiveData)
-        FetLifeApplication.instance.jobManager.addJobInBackground(job)
+        addJob(DeleteReactionJob(reaction, parent))
     }
 
 }

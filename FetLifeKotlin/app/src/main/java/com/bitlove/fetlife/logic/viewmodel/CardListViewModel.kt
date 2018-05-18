@@ -12,7 +12,7 @@ import com.bitlove.fetlife.model.dataobject.wrapper.ProgressTracker
 class CardListViewModel : ViewModel() {
 
     companion object {
-        const val DEFAULT_PAGE_SIZE = 10
+        const val DEFAULT_PAGE_SIZE = 15
     }
 
     enum class CardListType {
@@ -54,9 +54,18 @@ class CardListViewModel : ViewModel() {
         getViewModelObject(cardListType).refresh(forceLoad,limit)
     }
 
+    fun fade(cardListType: CardListType) {
+        getViewModelObject(cardListType).fade()
+    }
+
+    fun unfade(cardListType: CardListType) {
+        getViewModelObject(cardListType).unfade()
+    }
+
     fun remove(cardListType: CardListType) {
         //TODO: remove live data observers
-        viewModelObjects.remove(cardListType)
+        val viewModelObject = viewModelObjects.remove(cardListType)
+        viewModelObject?.release()
     }
 
 }

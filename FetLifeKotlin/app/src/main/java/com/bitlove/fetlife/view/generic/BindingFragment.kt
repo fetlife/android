@@ -26,8 +26,8 @@ abstract class BindingFragment<DataBinding : ViewDataBinding, ViewModel : androi
         return binding.root
     }
 
-    override fun getLifecycle(): Lifecycle {
-        return (activity as? LifecycleOwner)?.lifecycle?:lifecycleRegistry
-    }
+//    override fun getLifecycle(): Lifecycle {
+//        return (activity as? LifecycleOwner)?.lifecycle?:lifecycleRegistry
+//    }
 
 }

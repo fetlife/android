@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minWidth="300dp"
+    android:minHeight="50dp"
+    android:background="@color/nearBlack"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/dialog_title"
+        android:textColor="@color/bostonUniversityRed"
+        android:textSize="15sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:singleLine="true"
+        android:textAlignment="viewStart" />
+
+    <TextView
+        android:textColor="@color/gray"
+        android:id="@+id/dialog_message"
+        android:textSize="13sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/dialog_title"
+        android:layout_marginTop="10dp"
+        android:autoLink="all"
+        android:gravity="start"
+        android:textAlignment="viewStart" />
+
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/dialog_checkbox"
+        android:text="Don't show this message again"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:textColor="@color/silver"
+        android:layout_below="@+id/dialog_message"
+        android:layout_marginTop="5dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/dialog_button"
+        android:textColor="@color/silver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:padding="0dp"
+        android:layout_below="@+id/dialog_checkbox"
+        android:minHeight="1dp"
+        android:visibility="gone" />
+
+</RelativeLayout>

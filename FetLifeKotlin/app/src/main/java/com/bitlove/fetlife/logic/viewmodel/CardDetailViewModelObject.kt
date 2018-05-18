@@ -9,6 +9,7 @@ import com.bitlove.fetlife.model.resource.ResourceResult
 
 class CardDetailViewModelObject(private var cardType: CardDetailViewModel.CardType, private var cardId: String) {
 
+    private var resourceResult : ResourceResult<CardViewDataHolder>? = null
     var cardDetail = MediatorLiveData<CardViewDataHolder>()
     var progressTracker = MediatorLiveData<ProgressTracker>()
     var currentCardSource : LiveData<CardViewDataHolder>? = null
@@ -16,6 +17,19 @@ class CardDetailViewModelObject(private var cardType: CardDetailViewModel.CardTy
 
     open fun refresh(forceLoad: Boolean = false) {
         loadCardDetail(cardId, forceLoad)
+    }
+
+    open fun release() {
+        resourceResult?.cancel()
+        resourceResult = null
+    }
+
+    open fun fade() {
+        resourceResult?.reducedPriority()
+    }
+
+    open fun unfade() {
+        resourceResult?.normalPriority()
     }
 
     private fun loadCardDetail(cardId: String, forceLoad: Boolean) {
@@ -27,8 +41,10 @@ class CardDetailViewModelObject(private var cardType: CardDetailViewModel.CardTy
         }
 
         val dataSource = FetLifeApplication.instance.fetlifeDataSource
+
+        resourceResult?.cancel()
         //TODO(cleanup) use resource instead
-        val resourceResult = when (cardType) {
+        resourceResult = when (cardType) {
             CardDetailViewModel.CardType.CONTENT -> dataSource.getContentDetailLoader(cardId) as ResourceResult<CardViewDataHolder>
             CardDetailViewModel.CardType.EXPLORE_STORY -> dataSource.getExploreStoryDetailLoader(cardId) as ResourceResult<CardViewDataHolder>
             CardDetailViewModel.CardType.EXPLORE_EVENT -> dataSource.getExploreEventDetailLoader(cardId) as ResourceResult<CardViewDataHolder>
@@ -36,13 +52,13 @@ class CardDetailViewModelObject(private var cardType: CardDetailViewModel.CardTy
             else -> {throw IllegalArgumentException()}
         }
 
-        cardDetail.addSource(resourceResult.liveData, {data -> cardDetail.value = data})
-        currentCardSource = resourceResult.liveData
+        cardDetail.addSource(resourceResult!!.liveData, {data -> cardDetail.value = data})
+        currentCardSource = resourceResult!!.liveData
 
-        progressTracker.addSource(resourceResult.progressTracker, {data -> progressTracker.value = data})
-        currentProgressTrackerSource = resourceResult.progressTracker
+        progressTracker.addSource(resourceResult!!.progressTracker, {data -> progressTracker.value = data})
+        currentProgressTrackerSource = resourceResult!!.progressTracker
 
-        resourceResult.execute()
+        resourceResult!!.execute()
     }
 
 }

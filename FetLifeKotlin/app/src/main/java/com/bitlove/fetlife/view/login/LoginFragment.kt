@@ -17,6 +17,7 @@ import com.bitlove.fetlife.closeKeyboard
 import com.bitlove.fetlife.databinding.FragmentLoginBinding
 import com.bitlove.fetlife.logic.viewmodel.LoginViewModel
 import com.bitlove.fetlife.model.dataobject.wrapper.User
+import com.bitlove.fetlife.view.dialog.InformationDialog
 import com.bitlove.fetlife.view.generic.BindingFragment
 import com.bitlove.fetlife.view.navigation.NavigationCallback
 import com.bitlove.fetlife.view.navigation.PhoneNavigationActivity
@@ -50,6 +51,10 @@ class LoginFragment : BindingFragment<FragmentLoginBinding, LoginViewModel>() {
         super.onViewCreated(view, savedInstanceState)
         if (viewModel == null) {
             return
+        }
+
+        if (savedInstanceState == null) {
+            InformationDialog.show(activity!!,InformationDialog.InfoType.ALPHA_VERSION,InformationDialog.InfoType.ALPHA_VERSION.toString(),true)
         }
 
         login_button.setOnClickListener { view ->

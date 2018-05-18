@@ -11,10 +11,10 @@ class GetFavoriteListResource(val limit: Int, userId : String? = getLoggedInUser
         return contentDb.favoriteDao().getFavorites()
     }
 
-    override fun shouldSyncWithNetwork(itemAtEnd: Favorite?, itemAndReached: Int): Boolean {
+    override fun shouldSyncWithNetwork(item: Favorite?, frontItem: Boolean): Boolean {
         return false
     }
 
-    override fun syncWithNetwork(itemAtEnd: Favorite?, itemAndReached: Int) {}
+    override fun syncWithNetwork(item: Favorite?, frontItem: Boolean) {}
 
 }

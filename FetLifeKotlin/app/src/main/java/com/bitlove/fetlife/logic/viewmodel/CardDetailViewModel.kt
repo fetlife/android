@@ -48,9 +48,18 @@ class CardDetailViewModel : ViewModel() {
 //        getViewModelObject(cardType,cardId).progressTracker.observeForever{ tracker -> observer.invoke(tracker) }
 //    }
 
+    fun fade(cardType: CardType, cardId: String) {
+        getViewModelObject(cardType,cardId).fade()
+    }
+
+    fun unfade(cardType: CardType, cardId: String) {
+        getViewModelObject(cardType,cardId).unfade()
+    }
+
     fun remove(cardType: CardType, cardId: String) {
         //TODO: remove live data observers
-        viewModelObjects.remove(cardType.toString()+cardId)
+        val viewModelObject = viewModelObjects.remove(cardType.toString()+cardId)
+        viewModelObject?.release()
     }
 
 }

@@ -18,7 +18,7 @@
     <android.support.v7.widget.CardView
         style="@style/CardView"
         android:id="@+id/card_view"
-        android:onClick="@{(view) -> cardInteractionHandler.onOpenCard()}"
+        android:onClick="@{(view) -> cardInteractionHandler.onOpenCard(false)}"
         android:animateLayoutChanges="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -164,8 +164,15 @@
                 android:layout_marginEnd="4dp"
                 android:layout_marginBottom="12dp"
                 android:scaleType="fitCenter"
+                android:onClick="@{(view) -> cardInteractionHandler.onOpenCard(false)}"
+                app:failureImage="@mipmap/ic_launcher"
+                app:failureImageScaleType="center"
+                app:retryImageScaleType="center"
                 app:srcFresco="@{cardData.mediaUrl}"
-                app:arFresco="@{cardData.mediaAspectRatio}"/>
+                app:arFresco="@{cardData.mediaAspectRatio}"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
+                />
 
             <!-- android:onClick="@{(view) -> cardInteractionHandler.onMediaImageClick(view, cardData)}" -->
 
@@ -182,6 +189,9 @@
                 android:textColor="@color/bostonUniversityRed"
                 android:text="@{cardData.title}"
                 android:textIsSelectable="true"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
+                android:onClick="@{(view) -> cardInteractionHandler.onOpenCard(false)}"
                 android:ellipsize="end"
                 />
 
@@ -199,11 +209,14 @@
                 android:textIsSelectable="true"
                 android:ellipsize="end"
                 android:autoLink="web"
+                android:focusableInTouchMode="false"
+                android:focusable="false"
                 app:textInteractionHandler="@{cardInteractionHandler}"
                 app:formattedText="@{cardData.supportingText}"
                 app:truncateText="@{!cardInteractionHandler.expanded}"
                 app:truncatedLength="@{250}"
                 app:removeLineBreaks="@{!cardInteractionHandler.expanded}"
+                android:onClick="@{(view) -> cardInteractionHandler.onOpenCard(false)}"
                 />
 
             <View
@@ -234,6 +247,7 @@
                     app:ico_color="@color/midGray"
                     android:onClick="@{(view) -> cardInteractionHandler.onLove(view, cardData)}"
                     android:layout_alignParentStart="true"
+                    app:hitrectExtension="@{100}"
                     />
 
                 <TextView
@@ -248,6 +262,7 @@
                     android:text='@{cardData.loveCount}'
                     android:onClick="@{(view) -> cardInteractionHandler.onLove(view, cardData)}"
                     android:layout_toRightOf="@id/love_button"
+                    app:hitrectExtension="@{100}"
                     />
 
                 <ImageView
@@ -266,6 +281,7 @@
                     android:tint='@{cardData.hasNewComment() ? @color/lightSilver : @color/midGray}'
                     android:onClick="@{(view) -> cardInteractionHandler.onDisplayComments(view, cardData)}"
                     android:layout_toRightOf="@id/love_count"
+                    app:hitrectExtension="@{100}"
                     />
 
                 <TextView
@@ -280,6 +296,7 @@
                     android:text='@{cardData.commentCountText}'
                     android:onClick="@{(view) -> cardInteractionHandler.onDisplayComments(view, cardData)}"
                     android:layout_toRightOf="@id/comments_button"
+                    app:hitrectExtension="@{100}"
                     />
 
                 <ImageView
@@ -298,6 +315,7 @@
                     android:onClick="@{(view) -> cardInteractionHandler.onExpand()}"
                     android:layout_alignWithParentIfMissing="true"
                     android:layout_alignParentEnd="true"
+                    app:hitrectExtension="@{100}"
                     />
 
                 <ImageView
@@ -314,6 +332,7 @@
                     android:onClick="@{(view) -> cardInteractionHandler.onSetFavorite(view, cardData)}"
                     android:layout_toLeftOf="@id/expand_button"
                     android:layout_alignWithParentIfMissing="true"
+                    app:hitrectExtension="@{100}"
                     />
 
                 <ImageView
@@ -333,6 +352,7 @@
                     android:onClick="@{(view) -> cardInteractionHandler.onShareExternal(view, cardData)}"
                     android:layout_toLeftOf="@id/favorite_button"
                     android:layout_alignWithParentIfMissing="true"
+                    app:hitrectExtension="@{100}"
                     />
 
             </RelativeLayout>
@@ -344,7 +364,8 @@
                 android:layout_height="1dp"
                 android:background="@color/raisinBlack"
                 android:layout_marginLeft="-12dp"
-                android:layout_marginRight="-12dp"/>
+                android:layout_marginRight="-12dp"
+                />
 
             <RelativeLayout
                 android:id="@+id/comments_area"
@@ -357,6 +378,7 @@
                 android:padding="12dp"
                 android:clipToPadding="false"
                 android:background="@color/nearBlack"
+                android:onClick="@{(view) -> cardInteractionHandler.onOpenCard(true)}"
                 >
 
                 <ProgressBar
@@ -381,6 +403,7 @@
                     android:onClick="@{(view) -> cardInteractionHandler.onGetMoreComments(view,cardData)}"
                     android:text="Show more"
                     android:layout_alignParentTop="true"
+                    app:hitrectExtension="@{100}"
                     />
 
                 <LinearLayout
@@ -394,7 +417,11 @@
                     app:commentInteractionHandler="@{cardInteractionHandler}"
                     app:maxCommentCount="@{cardInteractionHandler.commentCount}"
                     app:commentsDisplayed="@{cardInteractionHandler.commentsDisplayed}"
+                    app:reuseBindings="@{!cardInteractionHandler.truncateComment}"
                     android:layout_below="@id/more_comment_text"
+                    android:onClick="@{(view) -> cardInteractionHandler.onOpenCard(true)}"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     />
 
             </RelativeLayout>

@@ -18,6 +18,6 @@ interface NavigationCallback {
     fun onNavigate(actionId: Int?): Boolean = false
     fun onChangeView(navigation: Int?) {}
     fun onLayoutChange(layout: Layout?) {}
-    fun onCardNavigate(cardList: List<CardViewDataHolder>, position: Int, screenTitle: String?) {}
+    fun onCardNavigate(cardList: List<CardViewDataHolder>, position: Int, screenTitle: String?, scrollToBottom: Boolean = false) {}
 
 }

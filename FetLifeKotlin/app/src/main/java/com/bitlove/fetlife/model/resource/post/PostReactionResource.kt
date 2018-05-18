@@ -50,9 +50,7 @@ class PostReactionResource(reaction: Reaction, val parent: Content, userId: Stri
     }
 
     override fun syncWithNetwork(reaction: Reaction) {
-        val job = PostReactionJob(reaction, parent)
-        setProgressTracker(job.progressTrackerLiveData)
-        FetLifeApplication.instance.jobManager.addJobInBackground(job)
+        addJob(PostReactionJob(reaction, parent))
     }
 
 }

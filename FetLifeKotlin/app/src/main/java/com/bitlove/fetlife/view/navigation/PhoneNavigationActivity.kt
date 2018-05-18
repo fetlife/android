@@ -69,10 +69,8 @@ open class PhoneNavigationActivity : ResourceActivity(), NavigationCallback {
         setTitle()
     }
 
-    override fun onCardNavigate(cardList: List<CardViewDataHolder>, position: Int, screenTitle: String?) {
-        if (cardList.firstOrNull() != null) {
-            PhoneCardActivity.start(this, cardList, position, screenTitle)
-        }
+    override fun onCardNavigate(cardList: List<CardViewDataHolder>, position: Int, screenTitle: String?, scrollToBottom: Boolean) {
+        PhoneCardActivity.start(this, cardList, position, screenTitle, scrollToBottom)
     }
 
     override fun onLayoutChange(layout: NavigationCallback.Layout?) {
@@ -105,8 +103,9 @@ open class PhoneNavigationActivity : ResourceActivity(), NavigationCallback {
         if (savedInstanceState != null) {
             navigation = savedInstanceState.getInt(STATE_KEY_NAVIGATION)
             layout = savedInstanceState.getSerializable(STATE_KEY_LAYOUT) as? NavigationCallback.Layout
+        } else {
+            setContentFragment(navigationFragmentFactory.createFragment(navigation),false)
         }
-        setContentFragment(navigationFragmentFactory.createFragment(navigation),false)
     }
 
     private fun setContentFragment(fragment: Fragment, addToBackStack: Boolean = true) {

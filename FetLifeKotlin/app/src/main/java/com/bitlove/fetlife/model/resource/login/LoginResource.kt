@@ -18,10 +18,8 @@ class LoginResource(private val username: String, private var password: String, 
         bg {
             val loginLiveData = FetLifeApplication.instance.fetLifeUserDatabase.userDao().getLastLoggedInUser()
             loadResult.liveData.addSource(loginLiveData, {data -> loadResult.liveData.value = data})
-            val job = LoginJob(username, password, rememberUser)
+            addJob(LoginJob(username, password, rememberUser))
             password = "0000000000000000"
-            setProgressTracker(job.progressTrackerLiveData)
-            FetLifeApplication.instance.jobManager.addJobInBackground(job)
         }
     }
 

@@ -6,6 +6,7 @@ buildscript {
     dependencies {
         classpath deps.android_gradle_plugin
         classpath deps.kotlin.plugin
+        classpath deps.fabric
     }
 }
 

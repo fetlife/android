@@ -5,6 +5,7 @@ import android.arch.lifecycle.MediatorLiveData
 import com.birbit.android.jobqueue.Job
 import com.birbit.android.jobqueue.Params
 import com.birbit.android.jobqueue.RetryConstraint
+import com.birbit.android.jobqueue.TagConstraint
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.getLoggedInUserId
 import com.bitlove.fetlife.model.dataobject.entity.technical.JobProgressEntity
@@ -17,7 +18,7 @@ import org.jetbrains.anko.coroutines.experimental.bg
 import java.util.*
 import kotlin.reflect.full.primaryConstructor
 
-abstract class BaseJob(jobPriority: Int, doPersist: Boolean, val userId: String?, vararg tags: String) : Job(createParams(jobPriority,doPersist,*tags)) {
+abstract class BaseJob(jobPriority: Int, doPersist: Boolean, val userId: String?, vararg tags: String, val uid: UUID = UUID.randomUUID()) : Job(createParams(jobPriority,doPersist,*tags,uid.toString())) {
     companion object {
 
         const val PRIORITY_LOGIN = 0
@@ -38,7 +39,7 @@ abstract class BaseJob(jobPriority: Int, doPersist: Boolean, val userId: String?
         const val TAG_SYNC_RESOURCE = "TAG_SYNC_RESOURCE"
         const val TAG_DELETE_RESOURCE = "TAG_DELETE_RESOURCE"
 
-        const val FINISHED_DELAY = 50L
+        const val FINISHED_DELAY = 200L
     }
 
     open var progressTrackerId: String = UUID.randomUUID().toString()

@@ -10,6 +10,7 @@ import com.bitlove.fetlife.model.resource.ResourceResult
 
 class CardListViewModelObject(private var cardListType : CardListViewModel.CardListType)  {
 
+    private var resourceResult : ResourceResult<PagedList<CardViewDataHolder>>? = null
     var cardList = MediatorLiveData<PagedList<CardViewDataHolder>>()
     var progressTracker = MediatorLiveData<ProgressTracker>()
     var currentCardSource : LiveData<PagedList<CardViewDataHolder>>? = null
@@ -17,6 +18,19 @@ class CardListViewModelObject(private var cardListType : CardListViewModel.CardL
 
     open fun refresh(forceLoad: Boolean = false, limit: Int) {
         loadCardList(forceLoad, limit)
+    }
+
+    open fun release() {
+        resourceResult?.cancel()
+        resourceResult = null
+    }
+
+    open fun fade() {
+        resourceResult?.reducedPriority()
+    }
+
+    open fun unfade() {
+        resourceResult?.normalPriority()
     }
 
     private fun loadCardList(forceLoad: Boolean, limit: Int) {
@@ -28,7 +42,8 @@ class CardListViewModelObject(private var cardListType : CardListViewModel.CardL
         }
 
         val dataSource = FetLifeApplication.instance.fetlifeDataSource
-        val resourceResult = when (cardListType) {
+        resourceResult?.cancel()
+        resourceResult = when (cardListType) {
             CardListViewModel.CardListType.CONVERSATIONS_ALL -> dataSource.getConversationsLoader(forceLoad,limit) as ResourceResult<PagedList<CardViewDataHolder>>
             CardListViewModel.CardListType.CONVERSATIONS_INBOX -> dataSource.getConversationsLoader(forceLoad,limit) as ResourceResult<PagedList<CardViewDataHolder>>
             CardListViewModel.CardListType.EXPLORE_FRESH_AND_PERVY -> dataSource.getFreshAndPervyLoader(forceLoad,limit) as ResourceResult<PagedList<CardViewDataHolder>>
@@ -38,13 +53,13 @@ class CardListViewModelObject(private var cardListType : CardListViewModel.CardL
             CardListViewModel.CardListType.FAVORITES -> dataSource.getFavoritesLoader(limit) as ResourceResult<PagedList<CardViewDataHolder>>
         }
 
-        cardList.addSource(resourceResult.liveData, {data -> cardList.value = data})
-        currentCardSource = resourceResult.liveData
+        cardList.addSource(resourceResult!!.liveData, {data -> cardList.value = data})
+        currentCardSource = resourceResult!!.liveData
 
-        progressTracker.addSource(resourceResult.progressTracker, {data -> progressTracker.value = data})
-        currentProgressTrackerSource = resourceResult.progressTracker
+        progressTracker.addSource(resourceResult!!.progressTracker, {data -> progressTracker.value = data})
+        currentProgressTrackerSource = resourceResult!!.progressTracker
 
-        resourceResult.execute()
+        resourceResult!!.execute()
     }
 
 }

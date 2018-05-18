@@ -29,34 +29,36 @@ abstract class GetListResource<ResourceType>(userId : String?, val pageSize: Int
     }
 
     private fun loadFromDb(contentDb: FetLifeContentDatabase) : LiveData<PagedList<ResourceType>> {
-        return getLivePagesList(loadListFromDb(contentDb),pageSize,object: PagedList.BoundaryCallback<ResourceType>() {
-            var itemEndReached = 0
-            var initialPageSynced = false
-            override fun onItemAtFrontLoaded(itemAtFront: ResourceType) {
-                if (!initialPageSynced && shouldSyncWithNetwork(itemAtFront,itemEndReached)) {
-                    syncWithNetwork(itemAtFront, itemEndReached)
-                }
-                initialPageSynced = true
-            }
-            //TODO: handle no item loaded, and handle
+        val pagedListLiveData = getLivePagesList(loadListFromDb(contentDb),pageSize,object: PagedList.BoundaryCallback<ResourceType>() {
+//            var initialPageSynced = false
+//            override fun onItemAtFrontLoaded(itemAtFront: ResourceType) {
+//                if (!initialPageSynced && shouldSyncWithNetwork(itemAtFront, true)) {
+//                    syncWithNetwork(itemAtFront, true)
+//                }
+//                initialPageSynced = true
+//            }
+//            //TODO: handle no item loaded, and handle
             override fun onItemAtEndLoaded(itemAtEnd: ResourceType) {
-                itemEndReached++
-                if (shouldSyncWithNetwork(itemAtEnd, itemEndReached)) {
-                    syncWithNetwork(itemAtEnd, itemEndReached)
+                if (shouldSyncWithNetwork(itemAtEnd)) {
+                    syncWithNetwork(itemAtEnd)
                 }
             }
-            override fun onZeroItemsLoaded() {
-                if (shouldSyncWithNetwork(null, itemEndReached)) {
-                    syncWithNetwork(null, itemEndReached)
-                }
-                initialPageSynced = true
-            }
+//            override fun onZeroItemsLoaded() {
+//                if (shouldSyncWithNetwork(null)) {
+//                    syncWithNetwork(null)
+//                }
+//                initialPageSynced = true
+//            }
         })
+        if (shouldSyncWithNetwork(null)) {
+            syncWithNetwork(null)
+        }
+        return pagedListLiveData
     }
 
-    abstract fun syncWithNetwork(itemAtEnd: ResourceType?, itemAndReached: Int)
+    abstract fun syncWithNetwork(item: ResourceType?, front: Boolean = false)
 
-    abstract fun shouldSyncWithNetwork(itemAtEnd: ResourceType?, itemAndReached: Int): Boolean
+    abstract fun shouldSyncWithNetwork(item: ResourceType?, front: Boolean = false): Boolean
 
     abstract fun loadListFromDb(contentDb: FetLifeContentDatabase) : DataSource.Factory<Int,ResourceType>
 }

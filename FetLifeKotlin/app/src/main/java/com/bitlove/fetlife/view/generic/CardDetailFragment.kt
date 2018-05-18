@@ -1,33 +1,28 @@
 package com.bitlove.fetlife.view.generic
 
-import android.arch.lifecycle.Lifecycle
-import android.arch.lifecycle.LifecycleRegistry
 import android.content.Context
 import android.os.Bundle
-import android.support.v7.widget.Toolbar
 import android.view.View
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.databinding.FragmentCardDetailBinding
-import com.bitlove.fetlife.databinding.ItemDataCardBinding
 import com.bitlove.fetlife.logic.viewmodel.CardDetailViewModel
-import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.logic.interactionhandler.CardViewInteractionHandler
 import com.bitlove.fetlife.view.navigation.NavigationCallback
-import com.bitlove.fetlife.view.widget.ImageActivity
-import kotlinx.android.synthetic.main.fragment_card_list.*
-import kotlinx.android.synthetic.main.item_data_card.*
-import org.jetbrains.anko.imageURI
+import kotlinx.android.synthetic.main.fragment_card_detail.*
 
 class CardDetailFragment : BindingFragment<FragmentCardDetailBinding, CardDetailViewModel>() {
 
     companion object {
         private const val ARG_CARD_TYPE = "ARG_CARD_TYPE"
         private const val ARG_CARD_ID = "ARG_CARD_ID"
-        fun newInstance(cardId: String, cardType: CardDetailViewModel.CardType) : CardDetailFragment {
+        private const val ARG_SCROLL2BOTTOM = "ARG_SCROLL2BOTTOM"
+
+        fun newInstance(cardId: String, cardType: CardDetailViewModel.CardType, scrollToBottom: Boolean = false) : CardDetailFragment {
             val fragment = CardDetailFragment()
             val bundle = Bundle()
             bundle.putString(ARG_CARD_ID, cardId)
             bundle.putSerializable(ARG_CARD_TYPE, cardType)
+            bundle.putBoolean(ARG_SCROLL2BOTTOM,scrollToBottom)
             fragment.arguments = bundle
             return fragment
         }
@@ -35,6 +30,7 @@ class CardDetailFragment : BindingFragment<FragmentCardDetailBinding, CardDetail
 
     private lateinit var cardId: String
     private lateinit var cardType: CardDetailViewModel.CardType
+    private var scrollToBottom: Boolean = false
 
     private var cardViewInteractionHandler: CardViewInteractionHandler? = null
 
@@ -50,6 +46,7 @@ class CardDetailFragment : BindingFragment<FragmentCardDetailBinding, CardDetail
         super.onCreate(savedInstanceState)
         cardId = arguments!!.getString(ARG_CARD_ID)
         cardType = arguments!!.getSerializable(ARG_CARD_TYPE) as CardDetailViewModel.CardType
+        scrollToBottom = arguments!!.getBoolean(ARG_SCROLL2BOTTOM)
 
         if (viewModel == null) {
             return
@@ -58,18 +55,29 @@ class CardDetailFragment : BindingFragment<FragmentCardDetailBinding, CardDetail
         //TODO remove forever and use state based
         viewModel!!.observeData(cardType, cardId, this, {
             cardData ->
-            if (cardData != null && cardViewInteractionHandler == null) {
-                cardViewInteractionHandler = CardViewInteractionHandler(this, cardData, true, true, activity as? NavigationCallback, cardData.getChildrenScreenTitle())
+            var childCardData = cardData?.getChild()?:cardData
+            if (childCardData != null && cardViewInteractionHandler == null) {
+                cardViewInteractionHandler = CardViewInteractionHandler(this, childCardData, true, true, activity as? NavigationCallback, childCardData?.getChildrenScreenTitle())
             }
-            binding.cardData = cardData
+            binding.cardData = childCardData
             binding.cardInteractionHandler = cardViewInteractionHandler
-            binding.cardView!!.cardData = cardData
+            binding.cardView!!.cardData = childCardData
             binding.cardView!!.cardInteractionHandler = cardViewInteractionHandler
+            //TODO: check if there is a less flickering option
+            if (cardData?.getComments()?.isEmpty() == false && scrollToBottom) {
+                scrollToBottom = false
+                card_scroll.isSmoothScrollingEnabled = false
+                card_scroll.postDelayed({card_scroll.fullScroll(View.FOCUS_DOWN)},42)
+            }
         })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        if (scrollToBottom) {
+            card_scroll.fullScroll(View.FOCUS_DOWN)
+        }
 
         swipe_refresh.setOnRefreshListener {
             viewModel!!.refresh(cardType, cardId,true)
@@ -81,6 +89,16 @@ class CardDetailFragment : BindingFragment<FragmentCardDetailBinding, CardDetail
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel!!.unfade(cardType,cardId)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel!!.fade(cardType,cardId)
     }
 
     override fun onDetach() {

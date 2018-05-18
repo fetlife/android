@@ -217,8 +217,16 @@ class ExploreStory: CardViewDataHolder(), SyncObject<ExploreStoryEntity>, Favori
     }
 
     override fun getChild(): CardViewDataHolder? {
-        return if (exploreEvents?.isEmpty() == false) {
+        return if (exploreEvents?.size == 1) {
             exploreEvents!!.first().getChild()
+        } else {
+            null
+        }
+    }
+
+    override fun getCreatedAt(): String? {
+        return if (exploreEvents?.isEmpty() == false) {
+            exploreEvents!!.first().getCreatedAt()
         } else {
             null
         }

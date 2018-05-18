@@ -20,6 +20,10 @@ class SlideControlViewPager(context: Context, attrs: AttributeSet) : ViewPager(c
         return if (this.slideEnabled) {
             super.onInterceptTouchEvent(event)
         } else false
-
     }
+
+    override fun setCurrentItem(item: Int) {
+        super.setCurrentItem(item, slideEnabled)
+    }
+
 }

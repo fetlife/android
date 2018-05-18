@@ -46,11 +46,14 @@ import com.bitlove.fetlife.view.navigation.NavigationFragmentFactory
 import com.bitlove.fetlife.view.widget.FrescoImageLoader
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.crashlytics.android.Crashlytics
+import io.fabric.sdk.android.Fabric
 import java.net.URI
 import java.security.NoSuchAlgorithmException
 import org.joda.time.format.DateTimeFormatter
 import org.joda.time.format.DateTimeFormatterBuilder
 import org.joda.time.format.ISODateTimeFormat
+
 
 //TODO check out developer book: https://antonioleiva.com/kotlin-android-developers-book/
 //TODO check out warnings
@@ -74,6 +77,8 @@ class FetLifeApplication : Application() {
         super.onCreate()
         instance = this
 
+        Fabric.with(this, Crashlytics())
+
         fetLifeUserDatabase = Room.databaseBuilder(this, FetLifeUserDatabase::class.java, "fetlife_user_database").build()
         fetLifeContentDatabaseWrapper = FetLifeContentDatabaseWrapper()
         fetlifeService = FetLifeService()
@@ -85,8 +90,8 @@ class FetLifeApplication : Application() {
 
     }
 
-    fun onUserLoggedIn(user: User, accessToken: String, refreshToken: String?) {
-        fetlifeService.authHeader = accessToken
+    fun onUserLoggedIn(user: User, authHeader: String, refreshToken: String?) {
+        fetlifeService.authHeader = authHeader
         fetlifeService.refreshToken = refreshToken
         if (loggedInUser != user) {
             //TODO: close db
@@ -295,6 +300,12 @@ fun Long.toServerTime() : String {
             appendTimeZoneOffset(null,false,2,2).toFormatter();
 
     return dateTimeFormatter.print(this)
+}
+
+fun SharedPreferences.putBoolean(name: String, value: Boolean) {
+    val editor = edit()
+    editor.putBoolean(name,value)
+    editor.apply()
 }
 
 fun SharedPreferences.putStrings(vararg strings: String?) {

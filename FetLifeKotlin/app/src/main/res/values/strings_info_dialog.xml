@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="info_dialog_alpha">
+You are using alpha1 version of the Official FetLife App 3.0.0
+\n\nThis means some of the core features are still missing and you might face unexpected behaviour, errors and crashes.
+\n\nIf you had any feedback, remarks or you just would like te report a bug, please feel free to get in contact with us via our Github page: https://github.com/fetlife/android or reach out directly to our Android developer via FetLife messaging (username: Dreamlite) or via email: krisztian@fetlife.com.
+\n\nThank you for using this App
+    </string>
+    <string name="info_dialog_not_implemented">
+This feature is being implemented and not available in this version.
+\n\nThank you for your understandings
+    </string>
+    <string name="info_dialog_web">
+This feature is going to reuse some part of the website as embedded screens.
+\nThis solution is still under implementation and proper interaction with other part of the App is not yet solved in this version
+\n\nThank you for your understandings
+    </string>
+    <string name="info_dialog_explore">
+In this alpha version explore section is still under implementation.\nIt means some of your explore section lists are not complete and some items might be missing.
+\n\nThank you for your understandings
+    </string>
+    <string name="info_dialog_favorites">
+Favorites is a new feature in the new version of the FetLife App.
+\nAny items, including posts, pictures, members, group discussions, etc can be added to your favorites list
+\n\nNote: favorite items are stored in your app locally and not backed up to FetLife servers. This also means that unlike loves they are not visible to any other users.
+    </string>
+</resources>

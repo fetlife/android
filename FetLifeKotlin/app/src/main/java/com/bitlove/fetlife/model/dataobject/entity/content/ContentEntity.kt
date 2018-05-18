@@ -44,4 +44,6 @@ data class ContentEntity(@SerializedName("id") var networkId: String = "",
         }
 
     var remoteMemberId: String? = null
+
+    var serverOrder: Int = Int.MAX_VALUE
 }

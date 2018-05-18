@@ -2,14 +2,21 @@ package com.bitlove.fetlife.view.widget
 
 import android.content.Context
 import android.net.Uri
+import com.bitlove.fetlife.FetLifeApplication
+import com.bitlove.fetlife.model.network.FetLifeService
 import com.facebook.cache.common.CacheKey
+import com.facebook.common.logging.FLog
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory
 import com.facebook.imagepipeline.cache.CacheKeyFactory
+import com.facebook.imagepipeline.listener.RequestListener
 import com.facebook.imagepipeline.request.ImageRequest
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import java.util.regex.Pattern
+import com.facebook.imagepipeline.listener.RequestLoggingListener
+
+
 
 //TODO consider removing and using glide
 class FrescoImageLoader {
@@ -29,7 +36,10 @@ class FrescoImageLoader {
                         chain.proceed(requestBuilder.build())
                     })
 
-            val imagePipelineConfig = OkHttpImagePipelineConfigFactory.newBuilder(applicationContext, okHttpClientBuilder.build()).setCacheKeyFactory(object : CacheKeyFactory {
+            val requestListeners = HashSet<RequestListener>()
+            requestListeners.add(RequestLoggingListener())
+
+            val imagePipelineConfig = OkHttpImagePipelineConfigFactory.newBuilder(applicationContext, okHttpClientBuilder.build()).setRequestListeners(requestListeners).setCacheKeyFactory(object : CacheKeyFactory {
                 override fun getBitmapCacheKey(request: ImageRequest?, callerContext: Any?): CacheKey {
                     val uri = request!!.sourceUri
                     return getCacheKey(uri)
@@ -65,6 +75,7 @@ class FrescoImageLoader {
 
                 }
             }).build()
+            FLog.setMinimumLoggingLevel(FLog.VERBOSE)
 
             Fresco.initialize(applicationContext, imagePipelineConfig)
         }
