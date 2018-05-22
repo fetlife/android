@@ -29,7 +29,12 @@
 
             <p><b><br/>Version History</b></p>
 
-            <p/>v2.14.5<br/>
+            <p/>v2.15.0<br/>
+                    <ul>
+                        <li>Smaller bug fixes</li>
+                    </ul>
+
+            <p/>v2.14.7<br/>
                     <ul>
                         <li>Fix for Video upload description issue</li>
                         <li>Improvement in opening Stacked group comment notifications</li>

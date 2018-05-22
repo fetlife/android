@@ -2389,7 +2389,7 @@ public class FetLifeApiIntentService extends IntentService {
                 int foundPos;
                 for (foundPos = lastConfirmedGroupPosition+1; foundPos < currentGroups.size(); foundPos++) {
                     GroupMembershipReference checkGroup = currentGroups.get(foundPos);
-\                    if (checkGroup!= null && retrievedGroupMembership.getId().equals(checkGroup.getId())) {
+                    if (checkGroup!= null && retrievedGroupMembership.getId().equals(checkGroup.getId())) {
                         break;
                     }
                 }
