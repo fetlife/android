@@ -17,5 +17,6 @@
     <string name="toast_login_failed">Login failed, please check your credentials or try again later</string>
     <string name="menu_item_favorites">Favorites</string>
     <string name="hint_comment_edit">What say you?</string>
+    <string name="menu_item_reset">Reset User Data</string>
 
 </resources>

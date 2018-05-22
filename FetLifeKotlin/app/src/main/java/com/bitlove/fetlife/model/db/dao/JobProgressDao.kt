@@ -12,4 +12,7 @@ abstract class JobProgressDao : BaseDao<JobProgressEntity> {
     @Query("SELECT * FROM job_progress WHERE id = :id")
     abstract fun getTracker(id: String): LiveData<ProgressTracker?>
 
+    @Query("DELETE FROM job_progress")
+    abstract fun deleteAll()
+
 }

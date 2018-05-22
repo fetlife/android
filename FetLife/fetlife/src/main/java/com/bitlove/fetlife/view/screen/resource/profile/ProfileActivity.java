@@ -60,7 +60,7 @@ public class ProfileActivity extends ResourceActivity implements AppBarLayout.On
             return;
         }
         Intent intent = new Intent(context, ProfileActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION|Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(EXTRA_MEMBERID,memberId);
         context.startActivity(intent);
     }

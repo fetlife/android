@@ -22,7 +22,7 @@ class EmptyFragment: Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return View(container!!.context)
+        return if (container != null) View(container?.context) else null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

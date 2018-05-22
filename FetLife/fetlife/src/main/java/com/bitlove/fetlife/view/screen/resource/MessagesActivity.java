@@ -469,6 +469,9 @@ public class MessagesActivity extends ResourceActivity
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNewMessageSendFailed(MessageSendFailedEvent messageSendFailedEvent) {
         if (conversationId.equals(messageSendFailedEvent.getConversationId())) {
+            if (messageSendFailedEvent.isForbidden()) {
+                showToast(getString(R.string.message_member_forbidden));
+            }
             messagesAdapter.refresh();
         }
     }

@@ -46,7 +46,7 @@ class LoginJob(private val username: String, private var password: String, priva
             user.memberEntity = memberEntity
 
             FetLifeApplication.instance.fetLifeUserDatabase.userDao().insert(userEntity)
-            FetLifeApplication.instance.onUserLoggedIn(user, tokenResult!!.accessToken!!, refreshToken)
+            FetLifeApplication.instance.onUserLoggedIn(user, authHeader, refreshToken)
             getDatabaseWrapper().safeRun(user.getLocalId(), {
                 contentDb ->
                 contentDb.memberDao().insertOrUpdate(meResult.body()!!)

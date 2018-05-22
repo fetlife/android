@@ -21,6 +21,7 @@ import com.bitlove.fetlife.view.generic.ResourceActivity
 import com.bitlove.fetlife.view.widget.BottomNavigationSeparatorBehavior
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import com.mikepenz.iconics.IconicsDrawable
+import org.jetbrains.anko.coroutines.experimental.bg
 
 //TODO: move away navigation callback from being a context object
 open class PhoneNavigationActivity : ResourceActivity(), NavigationCallback {
@@ -144,6 +145,22 @@ open class PhoneNavigationActivity : ResourceActivity(), NavigationCallback {
 
         navigation_view.setNavigationItemSelectedListener { menuItem ->
             if (menuItem.itemId == R.id.navigation_logout) {
+                //TODO: ask about notification registration
+                //TODO: ask about clear local content
+                FetLifeApplication.instance.onUserLoggedOut()
+                LoginActivity.start(this)
+                true
+            } else if (menuItem.itemId == R.id.navigation_reset) {
+                bg {
+                    FetLifeApplication.instance.fetLifeContentDatabaseWrapper.safeRun(getLoggedInUserId(),{
+                        contentDb ->
+                        contentDb.memberDao().deleteAll()
+                        contentDb.exploreStoryDao().deleteAll()
+                        contentDb.jobProgressDao().deleteAll()
+                    })
+                    FetLifeApplication.instance.fetLifeUserDatabase.jobProgressDao().deleteAll()
+                    FetLifeApplication.instance.fetLifeUserDatabase.userDao().delete(getLoggedInUserId()!!)
+                }
                 //TODO: ask about notification registration
                 //TODO: ask about clear local content
                 FetLifeApplication.instance.onUserLoggedOut()

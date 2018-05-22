@@ -16,4 +16,12 @@
         app:ico_icon="gmd-add-alert"
         app:ico_size="24dp"
         android:title="@string/menu_item_logout"/>
+
+    <item
+        android:id="@+id/navigation_reset"
+        app:showAsAction="always"
+        app:ico_color="@color/silver"
+        app:ico_icon="gmd-add-alert"
+        app:ico_size="24dp"
+        android:title="@string/menu_item_reset"/>
 </menu>

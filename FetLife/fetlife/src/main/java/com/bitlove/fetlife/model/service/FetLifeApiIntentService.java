@@ -360,7 +360,6 @@ public class FetLifeApiIntentService extends IntentService {
 
         //Check for network state
         if (NetworkUtil.getConnectivityStatus(this) == NetworkUtil.NETWORK_STATUS_NOT_CONNECTED) {
-            Crashlytics.logException(new Exception("EXTRA LOG Connection failed due to no network connection"));
             sendConnectionFailedNotification(action, params);
             return;
         }
@@ -542,7 +541,7 @@ public class FetLifeApiIntentService extends IntentService {
 
             if (result == Integer.MIN_VALUE) {
                 //If the call failed notify all subscribers about
-                Crashlytics.logException(new Exception("EXTRA LOG Load failed with response code: " + action + ";" + lastResponseCode));
+//                Crashlytics.logException(new Exception("EXTRA LOG Load failed with response code: " + action + ";" + lastResponseCode));
                 sendLoadFailedNotification(action, params);
             } else if (action != ACTION_APICALL_LOGON_USER && (lastResponseCode == 401)) {
                 //If the result is failed due to Authentication or Authorization issue, let's try to refreshUi the token as it is most probably expired
@@ -561,7 +560,7 @@ public class FetLifeApiIntentService extends IntentService {
             }
         } catch (IOException ioe) {
             //If the call failed notify all subscribers about
-            Crashlytics.logException(new Exception("EXTRA LOG Connection failed with exception",ioe));
+//            Crashlytics.logException(new Exception("EXTRA LOG Connection failed with exception",ioe));
             sendConnectionFailedNotification(action, params);
         } catch (SQLiteDiskIOException | InvalidDBConfiguration | SQLiteReadOnlyDatabaseException | IllegalStateException idb) {
             //db might have been closed due probably to user logout, check it and let
@@ -768,6 +767,11 @@ public class FetLifeApiIntentService extends IntentService {
             getFetLifeApplication().getEventBus().post(new NewConversationEvent(localConversationId, serverConversationId));
             return true;
         } else {
+            int reason = getFetLifeApplication().getFetLifeService().getLastResponseCode();
+            startMessage.setPending(false);
+            startMessage.setFailed(true);
+            startMessage.save();
+            getFetLifeApplication().getEventBus().post(new MessageSendFailedEvent(startMessage.getConversationId(), reason == 403));
             return false;
         }
     }
@@ -805,6 +809,7 @@ public class FetLifeApiIntentService extends IntentService {
             getFetLifeApplication().getEventBus().post(new MessageSendSucceededEvent(conversationId));
             return true;
         } else {
+            int reason = getFetLifeApplication().getFetLifeService().getLastResponseCode();
             //If the call failed make the pending message to a failed message
             //Note if the post is failed due to connection issue an exception will be thrown, so here we make the assumption the failure is permanent.
             //TODO check the result code and based on that send the message permanently failed or keep it still pending
@@ -812,7 +817,7 @@ public class FetLifeApiIntentService extends IntentService {
             pendingMessage.setPending(false);
             pendingMessage.setFailed(true);
             pendingMessage.save();
-            getFetLifeApplication().getEventBus().post(new MessageSendFailedEvent(conversationId));
+            getFetLifeApplication().getEventBus().post(new MessageSendFailedEvent(conversationId, reason == 403));
             return false;
         }
     }
@@ -1819,9 +1824,9 @@ public class FetLifeApiIntentService extends IntentService {
         if (relationsResponse.isSuccess()) {
             final List<Event> foundEvents = relationsResponse.body();
             getFetLifeApplication().getEventBus().post(new EventsByLocationRetrievedEvent(searchBounds,page,foundEvents));
-            Crashlytics.logException(new Exception("EXTRA LOG event search request succeeded"));
+//            Crashlytics.logException(new Exception("EXTRA LOG event search request succeeded"));
         } else {
-            Crashlytics.logException(new Exception("EXTRA LOG event search request failed:" + getFetLifeApplication().getFetLifeService().getLastResponseCode()));
+//            Crashlytics.logException(new Exception("EXTRA LOG event search request failed:" + getFetLifeApplication().getFetLifeService().getLastResponseCode()));
             getFetLifeApplication().getEventBus().post(new EventsByLocationRetrieveFailedEvent(searchBounds,page));
         }
         return Integer.MAX_VALUE;
@@ -2378,11 +2383,13 @@ public class FetLifeApiIntentService extends IntentService {
             int newItemCount = 0, deletedItemCount = 0;
 
             for (GroupMembership retrievedGroupMembership : retrievedGroupMemberships) {
-
+                if (retrievedGroupMembership.getGroup() == null) {
+                    continue;
+                }
                 int foundPos;
                 for (foundPos = lastConfirmedGroupPosition+1; foundPos < currentGroups.size(); foundPos++) {
                     GroupMembershipReference checkGroup = currentGroups.get(foundPos);
-                    if (retrievedGroupMembership.getId().equals(checkGroup.getId())) {
+\                    if (checkGroup!= null && retrievedGroupMembership.getId().equals(checkGroup.getId())) {
                         break;
                     }
                 }
