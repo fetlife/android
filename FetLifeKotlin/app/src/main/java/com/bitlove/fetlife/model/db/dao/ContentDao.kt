@@ -15,8 +15,11 @@ abstract class ContentDao : BaseDao<ContentEntity> {
     @Query("SELECT * FROM contents WHERE dbId = :dbId")
     abstract fun getContent(dbId: String): LiveData<Content>
 
-    @Query("SELECT * FROM contents WHERE type = 'CONVERSATION' ORDER BY updatedAt DESC")
+    @Query("SELECT * FROM contents WHERE type = 'CONVERSATION' ORDER BY serverOrder")
     abstract fun getConversations(): DataSource.Factory<Int,Content>
+
+    @Query("SELECT * FROM contents WHERE type = 'CONVERSATION' ORDER BY serverOrder")
+    abstract fun getConversationsServerOrder(): List<ContentEntity>
 
     @Query("SELECT * FROM contents WHERE memberId = :memberId")
     abstract fun getMemberContent(memberId: String):  DataSource.Factory<Int,Content>

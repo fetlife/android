@@ -79,7 +79,7 @@ class CardListFragment : BindingFragment<FragmentCardListBinding, CardListViewMo
 //            while (pagedList!!.size > 10) {
 //                pagedList.remove(pagedList!!.last())
 //            }
-            adapter.submitList(null)
+            adapter.currentList?.dataSource?.invalidate()
 
             viewModel!!.refresh(cardListType,true)
             swipe_refresh.isRefreshing = false

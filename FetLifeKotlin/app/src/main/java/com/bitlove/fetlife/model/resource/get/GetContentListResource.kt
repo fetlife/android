@@ -21,21 +21,12 @@ class GetContentListResource(val type: Content.TYPE, val forceLoad: Boolean, val
         }
     }
 
-    override fun shouldSyncWithNetwork(item: Content?, frontItem: Boolean): Boolean {
-        return forceLoad || item == null
-    }
-
-    override fun syncWithNetwork(item: Content?, frontItem: Boolean) {
-        bg {
-            var serverOrder = 0L
-            if (item != null) {
-                getContentDatabaseWrapper().safeRun(userId,{contentDb->
-                    serverOrder = contentDb.contentDao().getContentServerOrder(item!!.getLocalId()!!)
-                })
-            }
+    override fun syncWithNetwork(page: Int?, item: Content?) {
+        if (forceLoad) {
+            val pageToRequest = page?:(((item?.getEntity()?.serverOrder?:0)+1)/limit)+1
             val job = when (type) {
                 Content.TYPE.CONVERSATION -> {
-                    GetConversationListJob(limit,(((serverOrder+1)/pageSize)+1).toInt(),item?.getCreatedAt(),userId)
+                    GetConversationListJob(limit,pageToRequest,item,userId)
                 }
                 else -> {throw NotImplementedError()}
             }

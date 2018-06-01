@@ -80,7 +80,7 @@ class FetLifeContentDatabaseWrapper {
     }
 
     private fun openDb() {
-        contentDb = Room.databaseBuilder(FetLifeApplication.instance, FetLifeContentDatabase::class.java, "fetlife_database_" + userId).build()
+        contentDb = Room.databaseBuilder(FetLifeApplication.instance, FetLifeContentDatabase::class.java, "fetlife_database_" + userId).fallbackToDestructiveMigration().build()
     }
 
 }

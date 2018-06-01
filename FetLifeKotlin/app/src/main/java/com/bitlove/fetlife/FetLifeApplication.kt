@@ -79,7 +79,7 @@ class FetLifeApplication : Application() {
 
         Fabric.with(this, Crashlytics())
 
-        fetLifeUserDatabase = Room.databaseBuilder(this, FetLifeUserDatabase::class.java, "fetlife_user_database").build()
+        fetLifeUserDatabase = Room.databaseBuilder(this, FetLifeUserDatabase::class.java, "fetlife_user_database").fallbackToDestructiveMigration().build()
         fetLifeContentDatabaseWrapper = FetLifeContentDatabaseWrapper()
         fetlifeService = FetLifeService()
         fetlifeDataSource = FetLifeDataSource()
@@ -147,7 +147,7 @@ fun getLoggedInUserId() : String? {
 //}
 
 fun <DH> getLivePagesList(sourceFactory: DataSource.Factory<Int,DH>, pageSize: Int, boundaryCallback: PagedList.BoundaryCallback<DH>? = null): LiveData<PagedList<DH>> {
-    return LivePagedListBuilder<Int,DH>(sourceFactory,PagedList.Config.Builder().setPageSize(pageSize).setPrefetchDistance(pageSize).setEnablePlaceholders(true).build()).setBoundaryCallback(boundaryCallback).build()
+    return LivePagedListBuilder<Int,DH>(sourceFactory,PagedList.Config.Builder().setPageSize(pageSize).setPrefetchDistance(pageSize).setInitialLoadSizeHint(pageSize).setEnablePlaceholders(true).build()).setBoundaryCallback(boundaryCallback).build()
 }
 
 fun <DataBinding : ViewDataBinding> LayoutInflater.inflateBinding(@LayoutRes resId: Int, container: ViewGroup?, attachToRoot: Boolean = false) : DataBinding {

@@ -68,6 +68,7 @@ abstract class CardViewDataHolder {
 
     open fun displayComments() : Boolean? = null
     open fun isDeletable() : Boolean? = false
+    open fun isPlaceholder() : Boolean = false
 
     open fun getUrl(): String? = null
 

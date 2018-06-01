@@ -1,5 +1,6 @@
 package com.bitlove.fetlife.model.network.job.get
 
+import android.util.Log
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.model.dataobject.entity.content.ContentEntity
 import com.bitlove.fetlife.model.dataobject.wrapper.Content
@@ -7,9 +8,10 @@ import com.bitlove.fetlife.model.dataobject.wrapper.Reaction
 import com.bitlove.fetlife.model.db.FetLifeContentDatabase
 import com.bitlove.fetlife.model.db.dao.MemberDao
 import com.bitlove.fetlife.model.db.dao.ReactionDao
+import org.apache.commons.lang3.Conversion
 import retrofit2.Call
 
-class GetConversationListJob(val limit: Int, val page: Int, val marker : String? = null, userId: String?) : GetListResourceJob<ContentEntity>(PRIORITY_GET_RESOURCE_FRONT,false, userId, TAG_GET_CONVERSATIONS, TAG_GET_RESOURCE) {
+class GetConversationListJob(val limit: Int, val page: Int?, val marker : Content? = null, userId: String?) : GetListResourceJob<ContentEntity>(PRIORITY_GET_RESOURCE_FRONT,false, userId, TAG_GET_CONVERSATIONS, TAG_GET_RESOURCE) {
 
     companion object {
         const val TAG_GET_CONVERSATIONS = "TAG_GET_CONVERSATIONS"
@@ -24,7 +26,8 @@ class GetConversationListJob(val limit: Int, val page: Int, val marker : String?
         //TODO: cleanup
         var serverOrders = ArrayList<Int>()
         var dbIds = ArrayList<String>()
-        for (i in (page-1)*limit until page*limit) {
+        var startServerOrder = if (marker != null) marker!!.getEntity().serverOrder+1 else (page!!-1)*limit
+        for (i in startServerOrder until startServerOrder + limit) {
             serverOrders.add(i)
         }
         for (content in resourceArray) {
@@ -32,7 +35,7 @@ class GetConversationListJob(val limit: Int, val page: Int, val marker : String?
             dbIds.add(content.dbId)
         }
         var conflictedConversations = contentDao.getConflictedConversations(serverOrders,dbIds)
-        var shiftWith = 0; var shiftFrom = page*limit
+        var shiftWith = 0; var shiftFrom = startServerOrder + limit
         for (conflictedConversation in conflictedConversations.reversed()) {
             if (conflictedConversation.serverOrder == shiftFrom-1) {
                 shiftFrom--;shiftWith++
@@ -44,8 +47,19 @@ class GetConversationListJob(val limit: Int, val page: Int, val marker : String?
             contentDao.shiftServerOrder(shiftFrom,shiftWith)
         }
         //mergeEnd
-        
-        var serverOrder = (page-1) * limit
+
+        Log.e("ZZZ","page: " + page.toString())
+        Log.e("ZZZ","marker: " + marker)
+
+        var serverOrderCheck = contentDao.getConversationsServerOrder()
+        var log = "count: " + serverOrderCheck.size + " //// "
+        for (so in serverOrderCheck) {
+            log += so.dbId + "-" + so.serverOrder + ", "
+        }
+
+        Log.e("ZZZ",log)
+
+        var serverOrder = startServerOrder
         for ((i,content) in resourceArray.withIndex()) {
             content.serverOrder = serverOrder++
             saveContentMember(content,memberDao)
@@ -54,6 +68,14 @@ class GetConversationListJob(val limit: Int, val page: Int, val marker : String?
             saveLastMessage(content,reactionDao,memberDao)
         }
 //        contenDb.contentDao().insert(*resourceArray)
+
+        serverOrderCheck = contentDao.getConversationsServerOrder()
+        log = "count: " + serverOrderCheck.size + " //// "
+        for (so in serverOrderCheck) {
+            log += so.dbId + "-" + so.serverOrder + ", "
+        }
+        Log.e("ZZZ",log)
+
     }
 
     private fun saveLastMessage(content: ContentEntity, reactionDao: ReactionDao, memberDao: MemberDao) {
@@ -79,6 +101,7 @@ class GetConversationListJob(val limit: Int, val page: Int, val marker : String?
     }
 
     override fun getCall(): Call<Array<ContentEntity>> {
+        Log.e("XXX",page.toString())
         return FetLifeApplication.instance.fetlifeService.fetLifeApi.getConversations(FetLifeApplication.instance.fetlifeService.authHeader!!,null,limit,page)
     }
 }

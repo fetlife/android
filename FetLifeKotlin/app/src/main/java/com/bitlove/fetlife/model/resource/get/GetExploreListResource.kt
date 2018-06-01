@@ -16,22 +16,10 @@ class GetExploreListResource(val type: ExploreStory.TYPE, val forceLoad: Boolean
         return contentDb.exploreStoryDao().getStories(type.toString())
     }
 
-    override fun shouldSyncWithNetwork(item: ExploreStory?, frontItem: Boolean): Boolean {
-        return forceLoad || item == null
-    }
-
-    override fun syncWithNetwork(item: ExploreStory?, frontItem: Boolean) {
-        bg {
-            var serverOrder = 0L
-
-            if (item != null && !frontItem) {
-                getContentDatabaseWrapper().safeRun(userId,{contentDb->
-                    serverOrder = contentDb.exploreStoryDao().getStoryServerOrder(item!!.getLocalId()!!)
-                    //TODO: remove this after proper explore item handling
-                    serverOrder = serverOrder/pageSize*pageSize+pageSize-1
-                })
-            }
-            addJob(GetExploreListJob(type,limit,(((serverOrder+1)/pageSize)+1).toInt(),item?.getCreatedAt(),userId))
+    override fun syncWithNetwork(page: Int?, item: ExploreStory?) {
+        if (forceLoad) {
+            val pageToRequest = page?:(((item?.getEntity()?.serverOrder?:0)+1)/limit)+1
+            addJob(GetExploreListJob(type,limit,pageToRequest,item,userId))
         }
     }
 }

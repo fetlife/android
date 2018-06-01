@@ -14,6 +14,9 @@ abstract class ExploreEventDao : BaseDao<ExploreEventEntity> {
     @Query("SELECT * FROM explore_events")
     abstract fun getEvents(): DataSource.Factory<Int,ExploreEvent>
 
+    @Query("DELETE FROM explore_events WHERE ownerId=:storyId AND dbId NOT IN (:eventIds)")
+    abstract fun deleteObsoleteEvents(storyId: String, eventIds: List<String>)
+
     @Query("DELETE FROM explore_events")
     abstract fun deleteAll()
 
