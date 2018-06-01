@@ -2,6 +2,7 @@ package com.bitlove.fetlife.model.api;
 
 import android.content.Context;
 
+import com.bitlove.fetlife.BuildConfig;
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
 import com.crashlytics.android.Crashlytics;
@@ -72,7 +73,7 @@ public class FetLifeService {
                 Response response = chain.proceed(request);
                 //response.body().string();
                 lastResponseCode = response.code();
-                if (lastResponseCode > 299) {
+                if (BuildConfig.DEBUG && lastResponseCode > 299) {
                     BufferedSource source = response.body().source();
                     Buffer bufferedCopy = source.buffer().clone();
 //                    Crashlytics.log("EXTRA LOG Failed request response" + "\n" + response.body().string());

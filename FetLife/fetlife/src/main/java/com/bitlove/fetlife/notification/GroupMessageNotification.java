@@ -82,7 +82,11 @@ public class GroupMessageNotification extends OneSignalNotification {
                 toBeCollapsedNotification.delete();
             }
         }
-        notificationHistoryItem.save();
+        try {
+            notificationHistoryItem.save();
+        } catch (Throwable t) {
+            Crashlytics.logException(t);
+        }
     }
 
     private String getInnerLaunchUrl() {
