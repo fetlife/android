@@ -6,7 +6,7 @@ import com.bitlove.fetlife.model.dataobject.entity.content.*
 import com.bitlove.fetlife.model.dataobject.entity.technical.JobProgressEntity
 import com.bitlove.fetlife.model.db.dao.*
 
-@Database(entities = arrayOf(ContentEntity::class, EventEntity::class, ExploreEventEntity::class, ExploreStoryEntity::class, GroupEntity::class, MemberEntity::class, ReactionEntity::class, RelationEntity::class, JobProgressEntity::class, FavoriteEntity::class), version = 2)
+@Database(entities = arrayOf(ContentEntity::class, EventEntity::class, ExploreEventEntity::class, ExploreStoryEntity::class, GroupEntity::class, MemberEntity::class, ReactionEntity::class, RelationEntity::class, JobProgressEntity::class, FavoriteEntity::class), version = 5)
 //TODO: db result merging with server order using in dbid
 abstract class FetLifeContentDatabase : RoomDatabase() {
     abstract fun contentDao(): ContentDao

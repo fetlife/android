@@ -30,6 +30,7 @@ abstract class CardViewDataHolder {
     open fun getLocalId() : String? = null
     open fun getType() : String? = null
     open fun getRemoteId() : String? = null
+    open fun getRemoteOrder() : Int? = null
 
     open fun getAvatar() : AvatarViewDataHolder? = null
     open fun getAvatarTitle() : String? = null

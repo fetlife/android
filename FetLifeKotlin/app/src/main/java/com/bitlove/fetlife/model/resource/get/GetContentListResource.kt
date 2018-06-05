@@ -23,10 +23,9 @@ class GetContentListResource(val type: Content.TYPE, val forceLoad: Boolean, val
 
     override fun syncWithNetwork(page: Int?, item: Content?) {
         if (forceLoad) {
-            val pageToRequest = page?:(((item?.getEntity()?.serverOrder?:0)+1)/limit)+1
             val job = when (type) {
                 Content.TYPE.CONVERSATION -> {
-                    GetConversationListJob(limit,pageToRequest,item,userId)
+                    GetConversationListJob(limit,page,userId)
                 }
                 else -> {throw NotImplementedError()}
             }

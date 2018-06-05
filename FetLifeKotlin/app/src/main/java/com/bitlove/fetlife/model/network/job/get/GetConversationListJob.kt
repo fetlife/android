@@ -11,7 +11,7 @@ import com.bitlove.fetlife.model.db.dao.ReactionDao
 import org.apache.commons.lang3.Conversion
 import retrofit2.Call
 
-class GetConversationListJob(val limit: Int, val page: Int?, val marker : Content? = null, userId: String?) : GetListResourceJob<ContentEntity>(PRIORITY_GET_RESOURCE_FRONT,false, userId, TAG_GET_CONVERSATIONS, TAG_GET_RESOURCE) {
+class GetConversationListJob(val limit: Int, val page: Int?, userId: String?) : GetListResourceJob<ContentEntity>(PRIORITY_GET_RESOURCE_FRONT,false, userId, TAG_GET_CONVERSATIONS, TAG_GET_RESOURCE) {
 
     companion object {
         const val TAG_GET_CONVERSATIONS = "TAG_GET_CONVERSATIONS"
@@ -22,60 +22,33 @@ class GetConversationListJob(val limit: Int, val page: Int?, val marker : Conten
         val reactionDao = contentDb.reactionDao()
         val contentDao = contentDb.contentDao()
 
-        //merge
-        //TODO: cleanup
-        var serverOrders = ArrayList<Int>()
-        var dbIds = ArrayList<String>()
-        var startServerOrder = if (marker != null) marker!!.getEntity().serverOrder+1 else (page!!-1)*limit
-        for (i in startServerOrder until startServerOrder + limit) {
-            serverOrders.add(i)
-        }
-        for (content in resourceArray) {
-            content.type = Content.TYPE.CONVERSATION.toString()
-            dbIds.add(content.dbId)
-        }
-        var conflictedConversations = contentDao.getConflictedConversations(serverOrders,dbIds)
-        var shiftWith = 0; var shiftFrom = startServerOrder + limit
-        for (conflictedConversation in conflictedConversations.reversed()) {
-            if (conflictedConversation.serverOrder == shiftFrom-1) {
-                shiftFrom--;shiftWith++
-            } else {
-                contentDao.delete(conflictedConversation)
-            }
-        }
-        if (shiftWith > 0) {
-            contentDao.shiftServerOrder(shiftFrom,shiftWith)
-        }
-        //mergeEnd
-
-        Log.e("ZZZ","page: " + page.toString())
-        Log.e("ZZZ","marker: " + marker)
-
-        var serverOrderCheck = contentDao.getConversationsServerOrder()
-        var log = "count: " + serverOrderCheck.size + " //// "
-        for (so in serverOrderCheck) {
-            log += so.dbId + "-" + so.serverOrder + ", "
-        }
-
-        Log.e("ZZZ",log)
+        var startServerOrder = (page!!-1)*limit
 
         var serverOrder = startServerOrder
-        for ((i,content) in resourceArray.withIndex()) {
-            content.serverOrder = serverOrder++
-            saveContentMember(content,memberDao)
-            content.type = Content.TYPE.CONVERSATION.toString()
-            contentDao.insertOrUpdate(content)
-            saveLastMessage(content,reactionDao,memberDao)
-        }
-//        contenDb.contentDao().insert(*resourceArray)
+        for (conversation in resourceArray) {
 
-        serverOrderCheck = contentDao.getConversationsServerOrder()
-        log = "count: " + serverOrderCheck.size + " //// "
-        for (so in serverOrderCheck) {
-            log += so.dbId + "-" + so.serverOrder + ", "
-        }
-        Log.e("ZZZ",log)
+            conversation.type = Content.TYPE.CONVERSATION.toString()
 
+            val found = contentDao.getEntity(conversation.dbId)
+            if (found != null) {
+                val foundServerOrder = found.serverOrder
+                if (foundServerOrder < serverOrder) {
+                    serverOrder = foundServerOrder
+                } else {
+                    for (i in serverOrder until foundServerOrder) {
+                        contentDao.deleteWithServerOrder(i)
+                    }
+                    contentDao.shiftServerOrder(Content.TYPE.CONVERSATION.toString(),foundServerOrder,serverOrder-foundServerOrder)
+                }
+            } else {
+                contentDao.shiftServerOrder(Content.TYPE.CONVERSATION.toString(),serverOrder,1)
+            }
+
+            conversation.serverOrder = serverOrder++
+            saveContentMember(conversation,memberDao)
+            contentDao.insertOrUpdate(conversation)
+            saveLastMessage(conversation,reactionDao,memberDao)
+        }
     }
 
     private fun saveLastMessage(content: ContentEntity, reactionDao: ReactionDao, memberDao: MemberDao) {
@@ -101,7 +74,7 @@ class GetConversationListJob(val limit: Int, val page: Int?, val marker : Conten
     }
 
     override fun getCall(): Call<Array<ContentEntity>> {
-        Log.e("XXX",page.toString())
+//        Log.e("XXX",page.toString())
         return FetLifeApplication.instance.fetlifeService.fetLifeApi.getConversations(FetLifeApplication.instance.fetlifeService.authHeader!!,null,limit,page)
     }
 }

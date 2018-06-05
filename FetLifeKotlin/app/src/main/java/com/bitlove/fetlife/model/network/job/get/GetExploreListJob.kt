@@ -1,5 +1,6 @@
 package com.bitlove.fetlife.model.network.job.get
 
+import android.util.Log
 import com.bitlove.fetlife.getLoggedInUserId
 import com.bitlove.fetlife.model.dataobject.entity.content.ContentEntity
 import com.bitlove.fetlife.model.dataobject.entity.content.ExploreEventEntity
@@ -37,11 +38,20 @@ class GetExploreListJob(val type: ExploreStory.TYPE, val limit: Int, val page: I
     //Workaround * for Feed vs Story Array
     override fun getCall(): Call<*> {
         return when(type) {
-            ExploreStory.TYPE.FRESH_AND_PERVY -> getApi().getFreshAndPervy(getAuthHeader(),markerTimeStamp,limit,page)
-            ExploreStory.TYPE.STUFF_YOU_LOVE -> getApi().getStuffYouLove(getAuthHeader(),markerTimeStamp,limit,page)
-            ExploreStory.TYPE.KINKY_AND_POPULAR -> getApi().getKinkyAndPopular(getAuthHeader(),markerTimeStamp,limit,page)
+            ExploreStory.TYPE.FRESH_AND_PERVY -> getApi().getFreshAndPervy(getAuthHeader(),if (isMarkerSupported()) markerTimeStamp else null,limit,page)
+            ExploreStory.TYPE.STUFF_YOU_LOVE -> getApi().getStuffYouLove(getAuthHeader(),if (isMarkerSupported()) markerTimeStamp else null,limit,page)
+            ExploreStory.TYPE.KINKY_AND_POPULAR -> getApi().getKinkyAndPopular(getAuthHeader(),if (isMarkerSupported()) markerTimeStamp else null,limit,page)
+            ExploreStory.TYPE.EXPLORE_FRIENDS -> getApi().getFriendsFeed(getAuthHeader(),if (isMarkerSupported()) markerTimeStamp else null,limit,page)
+        }
+    }
+
+    fun isMarkerSupported() : Boolean {
+        return when(type) {
+            ExploreStory.TYPE.FRESH_AND_PERVY -> true
+            ExploreStory.TYPE.STUFF_YOU_LOVE -> false
+            ExploreStory.TYPE.KINKY_AND_POPULAR -> false
             //TODO: user marker
-            ExploreStory.TYPE.EXPLORE_FRIENDS -> getApi().getFriendsFeed(getAuthHeader(),null,limit,page)
+            ExploreStory.TYPE.EXPLORE_FRIENDS -> false
         }
     }
 
@@ -63,48 +73,53 @@ class GetExploreListJob(val type: ExploreStory.TYPE, val limit: Int, val page: I
         val relationDao = contenDb.relationDao()
         val contentDao = contenDb.contentDao()
 
-        //merge
-        //TODO: cleanup
-        var serverOrders = ArrayList<Int>()
-        var dbIds = ArrayList<String>()
+        var transIndex = 0
+        val transMap = HashMap<String,Int>()
 
-        var startServerOrder = if (marker != null) marker!!.getEntity().serverOrder+1 else (page!!-1)*limit
-        for (i in startServerOrder until startServerOrder + limit) {
-            serverOrders.add(i)
-        }
-        for ((i,story) in resourceArray.withIndex()) {
-            story.type = type.toString()
-            story.createdAt = story.events?.firstOrNull()?.target?.createdAt
-            dbIds.add(story.dbId)
-        }
-        var conflictedStories = exploreStoryDao.getConflictedEntities(type.toString(),serverOrders,dbIds)
-        var shiftWith = 0; var shiftFrom = startServerOrder + limit
-        for (conflictedStory in conflictedStories.reversed()) {
-            if (conflictedStory.serverOrder == shiftFrom-1) {
-                shiftFrom--;shiftWith++
-            } else {
-                exploreStoryDao.delete(conflictedStory)
-            }
-        }
-        if (shiftWith > 0) {
-            exploreStoryDao.shiftServerOrder(type.toString(),shiftFrom,shiftWith)
-        }
-        //mergeEnd
+//        Log.e("*****DBCONTENT*****",type.toString())
+//        var entities = exploreStoryDao.getEntities(type.toString())
+//        for (entity in entities) {
+//            Log.e("*",transIndex.toString() + " : " + entity.serverOrder)
+//            transMap.put(entity.dbId,transIndex++)
+//        }
+//        Log.e("*****","*")
+//        Log.e("*****Arrived*****","*")
+//        for ((i,entity) in resourceArray.withIndex()) {
+//            entity.type = type.toString()
+//            entity.createdAt = entity.events?.firstOrNull()?.target?.createdAt
+//            val index = transMap[entity.dbId]?:-1
+//            Log.e("*",index.toString() + " : " + i)
+//        }
+//        Log.e("*****","*")
 
-        //workaround
-//        var lastStory : ExploreStoryEntity? = null
+        var startServerOrder = if (isMarkerSupported() && marker != null) marker!!.getEntity().serverOrder+1 else (page!!-1)*limit
+
+//        Log.e("**Call**",page.toString() + " - " + startServerOrder)
 
         var serverOrder = startServerOrder
-        for ((i,story) in resourceArray.withIndex()) {
-//            lastStory = story
+        for (story in resourceArray) {
+
             story.type = type.toString()
             story.createdAt = story.events?.firstOrNull()?.target?.createdAt
+            story.supported = isSupported(story)
+
+            val foundStory = exploreStoryDao.getEntity(story.dbId)
+            if (foundStory != null) {
+                val foundServerOrder = foundStory.serverOrder
+                if (foundServerOrder < serverOrder) {
+                    serverOrder = foundServerOrder
+                } else {
+                    for (i in serverOrder until foundServerOrder) {
+                        exploreStoryDao.deleteWithServerOrder(i)
+                    }
+                    exploreStoryDao.shiftServerOrder(type.toString(),foundServerOrder,serverOrder-foundServerOrder)
+                }
+            } else {
+                exploreStoryDao.shiftServerOrder(type.toString(),serverOrder,1)
+            }
+
             story.serverOrder = serverOrder++
             exploreStoryDao.insertOrUpdate(story)
-
-            if (!isSupported(story)) {
-                continue
-            }
 
             val eventIds = ArrayList<String>()
             for (event in story.events!!) {
@@ -119,14 +134,14 @@ class GetExploreListJob(val type: ExploreStory.TYPE, val limit: Int, val page: I
             exploreEventDao.deleteObsoleteEvents(story.dbId,eventIds)
         }
 
-//        if (lastStory == null) {
-//            lastStory = exploreStoryDao.getLastStory(type.toString()).firstOrNull()
+//        Log.e("*****NEW CONTENT*****",type.toString())
+//        entities = exploreStoryDao.getEntities(type.toString())
+//        for (entity in entities) {
+//            val index = transMap[entity.dbId]?:transIndex++
+//            Log.e("*",index.toString() + " : " + entity.serverOrder)
 //        }
-//
-//        if (lastStory != null) {
-//            lastStory?.serverOrder = serverOrder-1
-//            exploreStoryDao.insertOrUpdate(lastStory)
-//        }
+//        Log.e("***** ----- *****","****")
+
     }
 
     private fun isSupported(story: ExploreStoryEntity): Boolean {

@@ -2,10 +2,11 @@ package com.bitlove.fetlife.model.resource.get
 
 import android.arch.lifecycle.LiveData
 import android.arch.paging.DataSource
+import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import android.util.Log
-import com.bitlove.fetlife.getLivePagesList
-import com.bitlove.fetlife.model.dataobject.wrapper.Content
+import com.bitlove.fetlife.model.dataobject.entity.content.ExploreStoryEntity
+import com.bitlove.fetlife.model.dataobject.wrapper.ExploreStory
 import com.bitlove.fetlife.model.db.FetLifeContentDatabase
 import com.bitlove.fetlife.model.resource.BaseResource
 import com.bitlove.fetlife.model.resource.ResourceResult
@@ -13,31 +14,10 @@ import org.jetbrains.anko.coroutines.experimental.bg
 
 abstract class GetListResource<ResourceType>(userId : String?, val pageSize: Int = 15) : BaseResource<PagedList<ResourceType>>(userId) {
 
-    inner class ListResourcePagingCallback : PagedList.Callback() {
-        var data: PagedList<ResourceType>? = null
-        private var pageRequested = 0
-
-        override fun onChanged(position: Int, count: Int) {
-            if ((position/count) >= pageRequested) {
-                pageRequested = (position/count)+1
-                val item = if (data == null || position <= count) null else data!![position-count-1]
-                syncWithNetwork(pageRequested, item)
-            }
-        }
-
-        override fun onRemoved(position: Int, count: Int) {}
-        override fun onInserted(position: Int, count: Int) {
-            if ((position/count) >= pageRequested) {
-                pageRequested = (position/count)+1
-                val item = if (data == null || position <= count) null else data!![position-count-1]
-                syncWithNetwork(pageRequested, item)
-            }
-        }
-    }
-
-    private val pagedListCallback = ListResourcePagingCallback()
+    private var pageSynced: Int = 0
 
     override fun execute() : ResourceResult<PagedList<ResourceType>> {
+        pageSynced = 0
         loadInBackground()
         return super.execute()
     }
@@ -46,36 +26,41 @@ abstract class GetListResource<ResourceType>(userId : String?, val pageSize: Int
         bg {
             getContentDatabaseWrapper().safeRun(userId, {
                 contentDb ->
-                val dbSource = loadFromDb(contentDb)
+                val dbSource = initLoad(contentDb)
                 loadResult.liveData.addSource(dbSource, {data ->
-                    pagedListCallback.data = data
-                    data?.addWeakCallback(null,pagedListCallback)
+                    if (pageSynced == 1) {
+                        syncWithNetwork(2, getItemAtPosition(pageSize-1))
+                        pageSynced = 2
+
+                    }
+//                    pagedListCallback.data = data
+//                    data?.addWeakCallback(null,pagedListCallback)
+
+//                    Log.e("*****DBDATA*****",(this@GetListResource as? GetExploreListResource)?.type?.toString()?:"no")
+//                    for (entity in data!!) {
+//                        Log.e("*",(entity as? ExploreStory)?.getEntity()?.serverOrder?.toString()?:"-1")
+//                    }
+
                     loadResult.liveData.value = data
                 })
             })
         }
     }
 
-    private fun loadFromDb(contentDb: FetLifeContentDatabase) : LiveData<PagedList<ResourceType>> {
-        val pagedListLiveData = getLivePagesList(loadListFromDb(contentDb),pageSize,object: PagedList.BoundaryCallback<ResourceType>() {
-            var initialPageSynced = false
-            override fun onItemAtFrontLoaded(itemAtFront: ResourceType) {
-                if (!initialPageSynced) {
-                    syncWithNetwork(1, null)
-                }
-                initialPageSynced = true
-            }
-            override fun onItemAtEndLoaded(itemAtEnd: ResourceType) {
-                syncWithNetwork(null, itemAtEnd)
-            }
-            override fun onZeroItemsLoaded() {
-                if (!initialPageSynced) {
-                    syncWithNetwork(1, null)
-                }
-                initialPageSynced = true
-            }
-        })
-        return pagedListLiveData
+    override fun loadMore(): ResourceResult<PagedList<ResourceType>> {
+        syncWithNetwork(pageSynced+1, getItemAtPosition((pageSynced * pageSize) -1))
+        pageSynced++
+        return super.loadMore()
+    }
+
+    open fun getItemAtPosition(position: Int) : ResourceType? {
+        return loadResult.liveData.value?.getOrNull(position)
+    }
+
+    private fun initLoad(contentDb: FetLifeContentDatabase) : LiveData<PagedList<ResourceType>> {
+        syncWithNetwork(1, null)
+        pageSynced = 1
+        return LivePagedListBuilder<Int,ResourceType>(loadListFromDb(contentDb),PagedList.Config.Builder().setPageSize(pageSize).setPrefetchDistance(pageSize).setInitialLoadSizeHint(pageSize).setEnablePlaceholders(true).build()).build()
     }
 
     abstract fun syncWithNetwork(page: Int?, item: ResourceType?)

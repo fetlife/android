@@ -21,4 +21,5 @@ data class ExploreStoryEntity (
     var createdAt: String? = ""
 
     var serverOrder: Int = 0
+    var supported: Boolean = true
 }

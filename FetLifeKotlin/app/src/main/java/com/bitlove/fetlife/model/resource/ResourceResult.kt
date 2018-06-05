@@ -8,6 +8,7 @@ abstract class ResourceResult<ResourceType> {
     var progressTracker: MediatorLiveData<ProgressTracker> = MediatorLiveData()
 
     abstract fun execute() : ResourceResult<ResourceType>
+    abstract fun loadMore() : ResourceResult<ResourceType>
     abstract fun cancel()
     abstract fun reducedPriority() : Boolean
     abstract fun normalPriority() : Boolean

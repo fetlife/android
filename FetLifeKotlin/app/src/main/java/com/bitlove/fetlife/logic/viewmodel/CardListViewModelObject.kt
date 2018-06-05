@@ -20,6 +20,10 @@ class CardListViewModelObject(private var cardListType : CardListViewModel.CardL
         loadCardList(forceLoad, limit)
     }
 
+    open fun loadMore() {
+        resourceResult?.loadMore()
+    }
+
     open fun release() {
         resourceResult?.cancel()
         resourceResult = null

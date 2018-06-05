@@ -18,8 +18,26 @@ class GetExploreListResource(val type: ExploreStory.TYPE, val forceLoad: Boolean
 
     override fun syncWithNetwork(page: Int?, item: ExploreStory?) {
         if (forceLoad) {
-            val pageToRequest = page?:(((item?.getEntity()?.serverOrder?:0)+1)/limit)+1
+            var serverOrder = item?.getEntity()?.serverOrder?:((page!!-1)*pageSize-1)
+            serverOrder++
+
+            val leftOver = serverOrder % pageSize
+            if (leftOver != 0) {
+                serverOrder += pageSize-leftOver
+            }
+
+            val pageToRequest = (serverOrder/limit)+1
             addJob(GetExploreListJob(type,limit,pageToRequest,item,userId))
         }
+    }
+
+    override fun getItemAtPosition(position: Int): ExploreStory? {
+        val data = loadResult.liveData.value?:return null
+        for (item in data.reversed()) {
+            if (position >= item?.getEntity()?.serverOrder?: Int.MAX_VALUE) {
+                return item
+            }
+        }
+        return null
     }
 }

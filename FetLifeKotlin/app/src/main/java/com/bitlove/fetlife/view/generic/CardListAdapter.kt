@@ -8,7 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import com.bitlove.fetlife.R
 import com.bitlove.fetlife.databinding.ItemDataCardBinding
+import com.bitlove.fetlife.getSafeColor
 import com.bitlove.fetlife.view.navigation.NavigationCallback
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.logic.interactionhandler.CardViewInteractionHandler
@@ -17,8 +19,14 @@ import com.bitlove.fetlife.model.dataobject.wrapper.Content
 //TODO check generic DH + IH?, none?, DH?
 class CardListAdapter(private val owner: LifecycleOwner, private val navigationCallback: NavigationCallback, private val cardListTitle: String? = null) : PagedListAdapter<CardViewDataHolder,CardViewHolder>(CardViewDataHolder.DiffUtil){
 
-    val defaultViewType = 0
-    val placeholderviewType = 10
+    interface CardDisplayListener {
+        fun onCardDisplayed(position: Int, card: CardViewDataHolder?)
+    }
+
+    private val defaultViewType = 0
+    private val placeholderviewType = 10
+
+    var cardDisplayListener : CardDisplayListener? = null
 
 //    init {
 //        setHasStableIds(true)
@@ -30,7 +38,11 @@ class CardListAdapter(private val owner: LifecycleOwner, private val navigationC
 //        super.submitList(pagedList)
 //    }
 
-    override fun onBindViewHolder(holder: CardViewHolder, position: Int) = holder.bindTo(getItem(position), getInteractionHandler(position))
+    override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
+        val item = getItem(position)
+        cardDisplayListener?.onCardDisplayed(position, item)
+        return holder.bindTo(item, getInteractionHandler(position))
+    }
 
     private fun getInteractionHandler(position: Int): CardViewInteractionHandler? {
         val item = getItem(position) ?: return null
@@ -55,7 +67,12 @@ class CardListAdapter(private val owner: LifecycleOwner, private val navigationC
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
         if (viewType == placeholderviewType) {
-            return CardViewHolder(null, LinearLayout(parent.context))
+            val itemView = LinearLayout(parent.context)
+            val layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,300)
+            itemView.layoutParams = layoutParams
+            //itemView.visibility = View.INVISIBLE
+            itemView.setBackgroundColor(parent.context.getSafeColor(R.color.bostonUniversityRed))
+            return CardViewHolder(null, itemView)
         }
         val binding = ItemDataCardBinding.inflate(LayoutInflater.from(parent.context),parent,false)
         return CardViewHolder(binding)

@@ -1,6 +1,5 @@
 package com.bitlove.fetlife.view.generic
 
-import android.arch.paging.PagedList
 import android.os.Bundle
 import android.view.View
 import com.bitlove.fetlife.R
@@ -8,13 +7,19 @@ import com.bitlove.fetlife.databinding.FragmentCardListBinding
 import com.bitlove.fetlife.view.navigation.NavigationCallback
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.logic.viewmodel.CardListViewModel
+import com.bitlove.fetlife.model.dataobject.wrapper.ExploreStory
 import com.bitlove.fetlife.view.dialog.InformationDialog
 import com.bitlove.fetlife.workaroundItemFlickeringOnChange
 import kotlinx.android.synthetic.main.fragment_card_list.*
 
 class CardListFragment : BindingFragment<FragmentCardListBinding, CardListViewModel>(), NavigationCallback {
 
+    private var pageSynced = 0
+
     companion object {
+        const val DEFAULT_PAGE_SIZE = 15
+        private const val STATE_PAGE_REQUESTED = "STATE_PAGE_REQUESTED"
+
         private const val ARG_CARD_LIST_TYPE = "ARG_CARD_LIST_TYPE"
         private const val ARG_SCREEN_TITLE = "ARG_SCREEN_TITLE"
         fun newInstance(cardListType: CardListViewModel.CardListType, screenTitle: String?) : CardListFragment {
@@ -58,6 +63,11 @@ class CardListFragment : BindingFragment<FragmentCardListBinding, CardListViewMo
         return R.layout.fragment_card_list
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(STATE_PAGE_REQUESTED,pageSynced)
+        super.onSaveInstanceState(outState)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -71,7 +81,16 @@ class CardListFragment : BindingFragment<FragmentCardListBinding, CardListViewMo
 
         card_list.workaroundItemFlickeringOnChange()
         //TODO: check for memoryLeak owner/callback
-        card_list.adapter = CardListAdapter(this, this, arguments!!.getString(ARG_SCREEN_TITLE))
+        val cardListAdapter = CardListAdapter(this, this, arguments!!.getString(ARG_SCREEN_TITLE))
+        cardListAdapter.cardDisplayListener = object : CardListAdapter.CardDisplayListener {
+            override fun onCardDisplayed(position: Int, card: CardViewDataHolder?) {
+                if (card?.getRemoteOrder()?:position >= (pageSynced-1) * DEFAULT_PAGE_SIZE -1) {
+                    viewModel!!.loadMore(cardListType)
+                    pageSynced++
+                }
+            }
+        }
+        card_list.adapter = cardListAdapter
 
         swipe_refresh.setOnRefreshListener {
             val adapter = (card_list.adapter as CardListAdapter)
@@ -81,11 +100,13 @@ class CardListFragment : BindingFragment<FragmentCardListBinding, CardListViewMo
 //            }
             adapter.currentList?.dataSource?.invalidate()
 
-            viewModel!!.refresh(cardListType,true)
+            pageSynced = 2
+            viewModel!!.refresh(cardListType,true, DEFAULT_PAGE_SIZE)
             swipe_refresh.isRefreshing = false
         }
 
-        viewModel!!.refresh(cardListType,savedInstanceState == null)
+        pageSynced = savedInstanceState?.getInt(STATE_PAGE_REQUESTED)?:2
+        viewModel!!.refresh(cardListType,savedInstanceState == null, DEFAULT_PAGE_SIZE)
     }
 
     override fun onStart() {

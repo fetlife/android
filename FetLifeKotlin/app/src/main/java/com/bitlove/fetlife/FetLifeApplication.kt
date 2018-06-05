@@ -145,10 +145,10 @@ fun getLoggedInUserId() : String? {
 //fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false): View {
 //    return LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
 //}
-
-fun <DH> getLivePagesList(sourceFactory: DataSource.Factory<Int,DH>, pageSize: Int, boundaryCallback: PagedList.BoundaryCallback<DH>? = null): LiveData<PagedList<DH>> {
-    return LivePagedListBuilder<Int,DH>(sourceFactory,PagedList.Config.Builder().setPageSize(pageSize).setPrefetchDistance(pageSize).setInitialLoadSizeHint(pageSize).setEnablePlaceholders(true).build()).setBoundaryCallback(boundaryCallback).build()
-}
+//
+//fun <DH> getLivePagesList(sourceFactory: DataSource.Factory<Int,DH>, pageSize: Int, boundaryCallback: PagedList.BoundaryCallback<DH>? = null): LiveData<PagedList<DH>> {
+//    return LivePagedListBuilder<Int,DH>(sourceFactory,PagedList.Config.Builder().setPageSize(pageSize).setPrefetchDistance(pageSize).setInitialLoadSizeHint(pageSize).setEnablePlaceholders(true).build()).setBoundaryCallback(boundaryCallback).build()
+//}
 
 fun <DataBinding : ViewDataBinding> LayoutInflater.inflateBinding(@LayoutRes resId: Int, container: ViewGroup?, attachToRoot: Boolean = false) : DataBinding {
     return DataBindingUtil.inflate(this,resId,container,attachToRoot)

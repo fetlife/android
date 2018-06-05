@@ -11,10 +11,6 @@ import com.bitlove.fetlife.model.dataobject.wrapper.ProgressTracker
 //TODO: cleanup?: add observers att call and simplify?
 class CardListViewModel : ViewModel() {
 
-    companion object {
-        const val DEFAULT_PAGE_SIZE = 15
-    }
-
     enum class CardListType {
         CONVERSATIONS_INBOX,
         CONVERSATIONS_ALL,
@@ -50,8 +46,12 @@ class CardListViewModel : ViewModel() {
         return viewModelObjects[cardListType]!!
     }
 
-    open fun refresh(cardListType: CardListType, forceLoad: Boolean = false, limit: Int = DEFAULT_PAGE_SIZE) {
+    open fun refresh(cardListType: CardListType, forceLoad: Boolean = false, limit: Int) {
         getViewModelObject(cardListType).refresh(forceLoad,limit)
+    }
+
+    open fun loadMore(cardListType: CardListType) {
+        getViewModelObject(cardListType).loadMore()
     }
 
     fun fade(cardListType: CardListType) {

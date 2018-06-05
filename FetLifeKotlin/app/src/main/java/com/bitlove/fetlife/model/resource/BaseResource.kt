@@ -20,6 +20,7 @@ abstract class BaseResource<ResourceType>(val userId : String?) {
     open var loadResult = object : ResourceResult<ResourceType>(){
         override fun execute(): ResourceResult<ResourceType> = this@BaseResource.execute()
         override fun cancel() = this@BaseResource.cancel()
+        override fun loadMore() = this@BaseResource.loadMore()
         //TODO: implement change priority
         override fun reducedPriority(): Boolean = this@BaseResource.reducePriority()
         override fun normalPriority(): Boolean = this@BaseResource.increasePriority()
@@ -38,6 +39,8 @@ abstract class BaseResource<ResourceType>(val userId : String?) {
     }
 
     open fun execute() : ResourceResult<ResourceType> = loadResult
+    open fun loadMore(): ResourceResult<ResourceType> = loadResult
+
     //TODO: move into BaseJob code / cancel + priorities
     open fun cancel() {
         bg {

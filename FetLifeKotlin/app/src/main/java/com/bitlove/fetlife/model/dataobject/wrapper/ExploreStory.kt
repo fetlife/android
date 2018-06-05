@@ -212,6 +212,10 @@ class ExploreStory: CardViewDataHolder(), SyncObject<ExploreStoryEntity>, Favori
         return exploreStoryEntity?.dbId
     }
 
+    override fun getRemoteOrder(): Int? {
+        return exploreStoryEntity?.serverOrder
+    }
+
     override fun getType(): String? {
         return exploreStoryEntity.type
     }
