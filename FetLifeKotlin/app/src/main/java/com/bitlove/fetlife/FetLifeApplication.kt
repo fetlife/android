@@ -128,8 +128,8 @@ class FetLifeApplication : Application() {
 
 }
 
-fun getLoggedInUserId() : String? {
-    return FetLifeApplication.instance.loggedInUser?.getLocalId()
+fun getLoggedInUser() : User? {
+    return FetLifeApplication.instance.loggedInUser
 }
 
 //Extension functions

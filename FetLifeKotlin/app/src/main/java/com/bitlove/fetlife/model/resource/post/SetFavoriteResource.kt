@@ -1,7 +1,7 @@
 package com.bitlove.fetlife.model.resource.post
 
 import com.bitlove.fetlife.FetLifeApplication
-import com.bitlove.fetlife.getLoggedInUserId
+import com.bitlove.fetlife.getLoggedInUser
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.model.dataobject.SyncObject
 import com.bitlove.fetlife.model.dataobject.entity.content.FavoriteEntity
@@ -13,7 +13,7 @@ import com.bitlove.fetlife.model.dataobject.wrapper.Reaction
 import com.bitlove.fetlife.model.db.FetLifeContentDatabase
 import com.bitlove.fetlife.model.network.job.post.PostReactionJob
 
-class SetFavoriteResource(favoritable: Favoritable, userId: String? = getLoggedInUserId()) : PostResource<Favoritable>(favoritable, userId) {
+class SetFavoriteResource(favoritable: Favoritable, userId: String? = getLoggedInUser()?.getLocalId()) : PostResource<Favoritable>(favoritable, userId) {
 
     override fun saveToDb(contentDb: FetLifeContentDatabase, favoritable: Favoritable) {
         val data = favoritable?.getChild()?: favoritable

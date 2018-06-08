@@ -108,6 +108,7 @@ public class Rsvp {
     public enum RsvpStatus {
         YES,
         MAYBE,
+        BANNED,
         NO;
 
         @Override

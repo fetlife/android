@@ -49,7 +49,11 @@ class LoginJob(private val username: String, private var password: String, priva
             FetLifeApplication.instance.onUserLoggedIn(user, authHeader, refreshToken)
             getDatabaseWrapper().safeRun(user.getLocalId(), {
                 contentDb ->
-                contentDb.memberDao().insertOrUpdate(meResult.body()!!)
+                val userBody = meResult.body()!!
+                if (userBody.isSupporter != true) {
+                    contentDb.exploreStoryDao().deleteAll()
+                }
+                contentDb.memberDao().insertOrUpdate(userBody)
             })
             true
         } else false

@@ -26,7 +26,7 @@ class Content : CardViewDataHolder(), SyncObject<ContentEntity>, Favoritable {
     var reactions: List<Reaction>? = null
 
     @Relation(parentColumn = "dbId", entityColumn = "contentId", entity = FavoriteEntity::class)
-    var favorites: List<FavoriteEntity>? = null
+    var favoriteSingleItem: List<FavoriteEntity>? = null
 
     @Ignore private var commentList: List<Reaction>? = null
     @Ignore private var loveList: List<Reaction>? = null
@@ -142,11 +142,11 @@ class Content : CardViewDataHolder(), SyncObject<ContentEntity>, Favoritable {
     }
 
     override fun isFavorite(): Boolean? {
-        return favorites?.firstOrNull() != null
+        return favoriteSingleItem?.firstOrNull() != null
     }
 
     override fun getFavoriteEntity(): FavoriteEntity? {
-        return favorites?.firstOrNull()
+        return favoriteSingleItem?.firstOrNull()
     }
 
     override fun getLoveCount(): String? {

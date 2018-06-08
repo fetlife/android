@@ -1,9 +1,6 @@
 package com.bitlove.fetlife.model.network
 
-import com.bitlove.fetlife.model.dataobject.entity.content.ContentEntity
-import com.bitlove.fetlife.model.dataobject.entity.content.ExploreStoryEntity
-import com.bitlove.fetlife.model.dataobject.entity.content.MemberEntity
-import com.bitlove.fetlife.model.dataobject.entity.content.ReactionEntity
+import com.bitlove.fetlife.model.dataobject.entity.content.*
 import com.bitlove.fetlife.model.dataobject.wrapper.Reaction
 import com.bitlove.fetlife.model.network.networkobject.AuthBody
 import com.bitlove.fetlife.model.network.networkobject.Feed
@@ -61,5 +58,8 @@ interface FetLifeApi {
 
     @DELETE("/api/v2/me/loves/{content_type}/{content_id}")
     fun deleteLove(@Header("Authorization") authHeader: String, @Path("content_id") contentId: String, @Path("content_type") contentType: String): Call<ResponseBody>
+
+    @GET("/api/v2/members/{member_id}/memberships")
+    fun getGroups(@Header("Authorization") authHeader: String, @Path("member_id") memberId: String?, @Query("limit") limit: Int, @Query("page") page: Int?): Call<Array<RelationEntity>>
 
 }

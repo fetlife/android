@@ -13,6 +13,7 @@ class CardDetailViewModel : ViewModel() {
     enum class CardType {
         CONTENT,
         MEMBER,
+        GROUP,
         EXPLORE_STORY,
         EXPLORE_EVENT,
         FAVORITE

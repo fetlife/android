@@ -36,7 +36,7 @@ class GetConversationListJob(val limit: Int, val page: Int?, userId: String?) : 
                     serverOrder = foundServerOrder
                 } else {
                     for (i in serverOrder until foundServerOrder) {
-                        contentDao.deleteWithServerOrder(i)
+                        contentDao.deleteWithServerOrder(Content.TYPE.CONVERSATION.toString(),i)
                     }
                     contentDao.shiftServerOrder(Content.TYPE.CONVERSATION.toString(),foundServerOrder,serverOrder-foundServerOrder)
                 }

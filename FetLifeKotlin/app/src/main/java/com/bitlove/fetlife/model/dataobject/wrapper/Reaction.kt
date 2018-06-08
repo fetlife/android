@@ -22,7 +22,7 @@ class Reaction() : ReactionViewDataHolder(), SyncObject<ReactionEntity> {
 
     @Relation(parentColumn = "memberId", entityColumn = "dbId", entity = MemberEntity::class)
     var creatorSingleItemList: List<MemberEntity>? = null
-//    @Relation(parentColumn = "contentId", entityColumn = "dbId", entity = ContentEntity::class)
+//    @Relation(parentColumn = "groupId", entityColumn = "dbId", entity = ContentEntity::class)
 //    var contentSingleItemList: List<ContentEntity>? = null
 
     override fun getLocalId(): String? {

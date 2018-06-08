@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData
 import com.birbit.android.jobqueue.JobManager
 import com.birbit.android.jobqueue.TagConstraint
 import com.bitlove.fetlife.FetLifeApplication
-import com.bitlove.fetlife.getLoggedInUserId
 import com.bitlove.fetlife.model.dataobject.wrapper.ProgressTracker
 import com.bitlove.fetlife.model.db.FetLifeContentDatabaseWrapper
 import com.bitlove.fetlife.model.network.job.BaseJob

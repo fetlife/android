@@ -24,6 +24,7 @@ import com.google.gson.annotations.SerializedName
 ))
 data class ReactionEntity(
         @SerializedName("id") var networkId: String = "",
+        @SerializedName("group_id") var groupId: String? = "",
         @SerializedName("content_id") var contentId: String? = "",
         @SerializedName("member_id") var memberId: String? = "",
         @Ignore @SerializedName("member") var memberRef: MemberRef? = null,
@@ -49,4 +50,5 @@ data class ReactionEntity(
             return field
         }
 
+    var serverOrder = 0
 }

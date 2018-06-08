@@ -15,6 +15,10 @@ import com.bitlove.fetlife.model.resource.post.SetFavoriteResource
 
 class FetLifeDataSource {
 
+    fun getGroupsLoader(forceLoad: Boolean, limit: Int) : ResourceResult<PagedList<Relation>> {
+        return GetGroupListResource(forceLoad, limit).loadResult
+    }
+
     fun getConversationsLoader(forceLoad: Boolean, limit: Int) : ResourceResult<PagedList<Content>> {
         return GetContentListResource(Content.TYPE.CONVERSATION, forceLoad, limit).loadResult
     }
@@ -37,6 +41,10 @@ class FetLifeDataSource {
 
     fun getFavoritesLoader(limit: Int): ResourceResult<PagedList<Favorite>> {
         return GetFavoriteListResource(limit).loadResult
+    }
+
+    fun getGroupDetailLoader(groupId: String): ResourceResult<Relation> {
+        return GetGroupResource(groupId,true).loadResult
     }
 
     fun getContentDetailLoader(contentId: String): ResourceResult<Content> {

@@ -21,8 +21,8 @@ abstract class ExploreStoryDao : BaseDao<ExploreStoryEntity> {
     @Query("DELETE FROM explore_stories")
     abstract fun deleteAll()
 
-    @Query("DELETE FROM explore_stories WHERE serverOrder = :serverOrder")
-    abstract fun deleteWithServerOrder(serverOrder: Int)
+    @Query("DELETE FROM explore_stories WHERE type=:type AND serverOrder = :serverOrder")
+    abstract fun deleteWithServerOrder(type: String, serverOrder: Int)
 
     @Query("SELECT * FROM explore_stories WHERE type=:type ORDER BY serverOrder")
     abstract fun getEntities(type: String): List<ExploreStoryEntity>

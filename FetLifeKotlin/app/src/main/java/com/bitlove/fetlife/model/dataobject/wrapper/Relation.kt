@@ -3,30 +3,29 @@ package com.bitlove.fetlife.model.dataobject.wrapper
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Relation
 import com.bitlove.fetlife.logic.dataholder.AvatarViewDataHolder
-import com.bitlove.fetlife.model.db.dao.BaseDao
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.logic.dataholder.ReactionViewDataHolder
 import com.bitlove.fetlife.model.dataobject.SyncObject
 import com.bitlove.fetlife.model.dataobject.entity.content.*
 import com.bitlove.fetlife.model.db.FetLifeContentDatabase
+import com.bitlove.fetlife.model.db.dao.BaseDao
 
-class Favorite : CardViewDataHolder(), SyncObject<FavoriteEntity>, Favoritable {
+class Relation : CardViewDataHolder(), SyncObject<RelationEntity>, Favoritable {
 
     @Embedded
-    lateinit var embeddedEntity: FavoriteEntity
+    lateinit var relationEntity: RelationEntity
 
-    @Relation(parentColumn = "groupId", entityColumn = "dbId", entity = ContentEntity::class)
-    var contents: List<Content>? = null
+    @Relation(parentColumn = "groupId", entityColumn = "dbId", entity = GroupEntity::class)
+    var singleGroupList: List<Group>? = null
 
     @Relation(parentColumn = "memberId", entityColumn = "dbId", entity = MemberEntity::class)
-    var members: List<Member>? = null
+    var singleMemberList: List<Member>? = null
+
+    @Relation(parentColumn = "relatedMemberId", entityColumn = "dbId", entity = MemberEntity::class)
+    var singleTargetMemberList: List<Member>? = null
 
     override fun getAvatar(): AvatarViewDataHolder? {
-        return getChild()?.getAvatar()
-    }
-
-    override fun getAvatarTitle(): String? {
-        return getChild()?.getAvatarTitle()
+        return null
     }
 
     override fun getType(): String? {
@@ -34,11 +33,11 @@ class Favorite : CardViewDataHolder(), SyncObject<FavoriteEntity>, Favoritable {
     }
 
     override fun getLocalId(): String? {
-        return embeddedEntity.dbId
+        return relationEntity.dbId
     }
 
     override fun getRemoteId(): String? {
-        return getChild()?.getRemoteId()
+        return relationEntity.dbId
     }
 
     override fun isLoved(): Boolean? {
@@ -59,6 +58,10 @@ class Favorite : CardViewDataHolder(), SyncObject<FavoriteEntity>, Favoritable {
 
     override fun getSupportingText(): String? {
         return getChild()?.getSupportingText() ?: null
+    }
+
+    override fun getCreatedAt(): String? {
+        return getChild()?.getCreatedAt() ?: null
     }
 
     override fun hasNewComment(): Boolean? {
@@ -90,25 +93,26 @@ class Favorite : CardViewDataHolder(), SyncObject<FavoriteEntity>, Favoritable {
     }
 
     override fun getUrl(): String? {
-        return getChild()?.getMediaUrl() ?: null
+        return getChild()?.getUrl()
+    }
+
+    override fun getDao(contentDb: FetLifeContentDatabase): BaseDao<RelationEntity> {
+        return contentDb.relationDao()
     }
 
     override fun getChild() : CardViewDataHolder? {
-        if (contents?.isEmpty() == false) {
-            return  contents!!.first()
-        }
-        if (members?.isEmpty() == false) {
-            return  members!!.first()
+        if (singleGroupList?.size == 1) {
+            return  singleGroupList!!.first()
+        } else if (singleTargetMemberList?.size == 1) {
+            return  singleTargetMemberList!!.first()
         }
         return null
     }
 
-    override fun getEntity(): FavoriteEntity {
-        return embeddedEntity
+    override fun getEntity(): RelationEntity {
+        return relationEntity
     }
 
-    override fun getDao(contentDb: FetLifeContentDatabase): BaseDao<FavoriteEntity> {
-        return contentDb.favoriteDao()
-    }
+
 
 }

@@ -54,6 +54,7 @@ class CardListViewModelObject(private var cardListType : CardListViewModel.CardL
             CardListViewModel.CardListType.EXPLORE_KINKY_AND_POPULAR -> dataSource.getKinkyAndPopularLoader(forceLoad,limit) as ResourceResult<PagedList<CardViewDataHolder>>
             CardListViewModel.CardListType.EXPLORE_STUFF_YOU_LOVE -> dataSource.getStuffYouLoveLoader(forceLoad,limit) as ResourceResult<PagedList<CardViewDataHolder>>
             CardListViewModel.CardListType.EXPLORE_FRIENDS_FEED -> dataSource.getFriendsFeedLoader(forceLoad,limit) as ResourceResult<PagedList<CardViewDataHolder>>
+            CardListViewModel.CardListType.GROUPS -> dataSource.getGroupsLoader(forceLoad,limit) as ResourceResult<PagedList<CardViewDataHolder>>
             CardListViewModel.CardListType.FAVORITES -> dataSource.getFavoritesLoader(limit) as ResourceResult<PagedList<CardViewDataHolder>>
         }
 

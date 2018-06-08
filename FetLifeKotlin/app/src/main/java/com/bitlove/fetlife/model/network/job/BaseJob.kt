@@ -7,7 +7,6 @@ import com.birbit.android.jobqueue.Params
 import com.birbit.android.jobqueue.RetryConstraint
 import com.birbit.android.jobqueue.TagConstraint
 import com.bitlove.fetlife.FetLifeApplication
-import com.bitlove.fetlife.getLoggedInUserId
 import com.bitlove.fetlife.model.dataobject.entity.technical.JobProgressEntity
 import com.bitlove.fetlife.model.dataobject.wrapper.ProgressTracker
 import com.bitlove.fetlife.model.db.FetLifeContentDatabase

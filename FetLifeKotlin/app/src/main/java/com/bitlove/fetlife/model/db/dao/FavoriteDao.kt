@@ -11,10 +11,10 @@ import com.bitlove.fetlife.model.dataobject.wrapper.Favorite
 @Dao
 abstract class FavoriteDao : BaseDao<FavoriteEntity> {
 
-    @Query("SELECT * FROM favorites")
+    @Query("SELECT * FROM favoriteSingleItem")
     abstract fun getFavorites(): DataSource.Factory<Int,Favorite>
 
-    @Query("SELECT * FROM favorites WHERE dbId = :dbId ORDER BY createdAt DESC")
+    @Query("SELECT * FROM favoriteSingleItem WHERE dbId = :dbId ORDER BY createdAt DESC")
     abstract fun getFavorite(dbId: String): LiveData<Favorite>
 
 }

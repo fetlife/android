@@ -30,8 +30,8 @@ abstract class ContentDao : BaseDao<ContentEntity> {
     @Query("DELETE FROM contents")
     abstract fun deleteAll()
 
-    @Query("DELETE FROM contents WHERE serverOrder = :serverOrder")
-    abstract fun deleteWithServerOrder(serverOrder: Int)
+    @Query("DELETE FROM contents WHERE type = :type AND serverOrder = :serverOrder")
+    abstract fun deleteWithServerOrder(type: String, serverOrder: Int)
 
     @Query("UPDATE contents SET serverOrder = serverOrder + :shiftWith WHERE type = :type AND serverOrder >= :shiftFrom")
     abstract fun shiftServerOrder(type: String, shiftFrom: Int, shiftWith: Int)

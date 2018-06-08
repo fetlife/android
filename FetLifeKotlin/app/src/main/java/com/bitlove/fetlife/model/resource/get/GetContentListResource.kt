@@ -2,7 +2,7 @@ package com.bitlove.fetlife.model.resource.get
 
 import android.arch.paging.DataSource
 import com.bitlove.fetlife.FetLifeApplication
-import com.bitlove.fetlife.getLoggedInUserId
+import com.bitlove.fetlife.getLoggedInUser
 import com.bitlove.fetlife.model.dataobject.wrapper.Content
 import com.bitlove.fetlife.model.db.FetLifeContentDatabase
 import com.bitlove.fetlife.model.network.job.get.GetConversationListJob
@@ -12,7 +12,7 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.async
 import org.jetbrains.anko.coroutines.experimental.bg
 
-class GetContentListResource(val type: Content.TYPE, val forceLoad: Boolean, val limit: Int, userId : String? = getLoggedInUserId()) : GetListResource<Content>(userId, limit) {
+class GetContentListResource(val type: Content.TYPE, val forceLoad: Boolean, val limit: Int, userId : String? = getLoggedInUser()?.getLocalId()) : GetListResource<Content>(userId, limit) {
 
     override fun loadListFromDb(contentDb: FetLifeContentDatabase): DataSource.Factory<Int, Content> {
         return when (type) {

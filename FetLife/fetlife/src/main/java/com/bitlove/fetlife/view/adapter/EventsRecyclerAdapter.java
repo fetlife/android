@@ -62,7 +62,7 @@ public class EventsRecyclerAdapter extends ResourceListRecyclerAdapter<Event, Ev
                     return;
                 }
             }
-            List<EventReference> eventReferences = new Select().from(EventReference.class).where(EventReference_Table.userId.is(memberId)).orderBy(OrderBy.fromProperty(EventReference_Table.id).ascending().collate(Collate.NOCASE)).queryList();
+            List<EventReference> eventReferences = new Select().from(EventReference.class).where(EventReference_Table.userId.is(memberId)).and(EventReference_Table.rsvpStatus.isNot(Rsvp.RsvpStatus.BANNED)).orderBy(OrderBy.fromProperty(EventReference_Table.id).ascending().collate(Collate.NOCASE)).queryList();
             List<String> eventIds = new ArrayList<>();
             statusMap = new HashMap<String,Rsvp.RsvpStatus>();
             for (EventReference eventReference : eventReferences) {

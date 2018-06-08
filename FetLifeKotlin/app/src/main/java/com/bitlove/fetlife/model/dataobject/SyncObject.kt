@@ -1,7 +1,7 @@
 package com.bitlove.fetlife.model.dataobject
 
 import com.bitlove.fetlife.FetLifeApplication
-import com.bitlove.fetlife.getLoggedInUserId
+import com.bitlove.fetlife.getLoggedInUser
 import com.bitlove.fetlife.model.dataobject.entity.content.DataEntity
 import com.bitlove.fetlife.model.db.FetLifeContentDatabase
 import com.bitlove.fetlife.model.db.FetLifeContentDatabaseWrapper
@@ -17,7 +17,7 @@ interface SyncObject<T : DataEntity> {
     open fun getEntity() : T
 
     @Suppress("UNCHECKED_CAST")
-    fun save(userId: String? = getLoggedInUserId()) {
+    fun save(userId: String? = getLoggedInUser()?.getLocalId()) {
         getDataBaseWrapper().safeRun(userId, {
             contentDb ->
             val dao = getDao(contentDb)
@@ -26,7 +26,7 @@ interface SyncObject<T : DataEntity> {
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun delete(userId: String? = getLoggedInUserId()) {
+    fun delete(userId: String? = getLoggedInUser()?.getLocalId()) {
         getDataBaseWrapper().safeRun(userId, {
             contentDb ->
             val dao = getDao(contentDb)

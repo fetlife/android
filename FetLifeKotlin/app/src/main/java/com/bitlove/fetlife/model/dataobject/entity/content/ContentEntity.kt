@@ -14,10 +14,17 @@ import com.google.gson.annotations.SerializedName
                 parentColumns = arrayOf("dbId"),
                 childColumns = arrayOf("memberId"),
                 onDelete = ForeignKey.CASCADE,
+                onUpdate = ForeignKey.RESTRICT),
+        ForeignKey(
+                entity = GroupEntity::class,
+                parentColumns = arrayOf("dbId"),
+                childColumns = arrayOf("groupId"),
+                onDelete = ForeignKey.CASCADE,
                 onUpdate = ForeignKey.RESTRICT)
 ))
 data class ContentEntity(@SerializedName("id") var networkId: String = "",
                          @SerializedName("member_id") var memberId: String? = null,
+                         @SerializedName("group_id") var groupId: String? = null,
                          @Ignore @SerializedName("member") var memberRef: MemberRef? = null,
                          @SerializedName("has_new_messages") var hasNewComments: Boolean? = false,
                          @SerializedName("is_loved_by_me") var loved: Boolean? = false,

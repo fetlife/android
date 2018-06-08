@@ -30,7 +30,7 @@ class Member() : AvatarViewDataHolder(), SyncObject<MemberEntity>, Favoritable {
     var relations: List<RelationEntity>? = null
 
     @Relation(parentColumn = "dbId", entityColumn = "memberId", entity = FavoriteEntity::class)
-    var favorites: List<FavoriteEntity>? = null
+    var favoriteSingleItem: List<FavoriteEntity>? = null
 
     override fun getLocalId(): String? {
         return memberEntity?.dbId
@@ -77,11 +77,11 @@ class Member() : AvatarViewDataHolder(), SyncObject<MemberEntity>, Favoritable {
     }
 
     override fun isFavorite(): Boolean? {
-        return favorites?.firstOrNull() != null
+        return favoriteSingleItem?.firstOrNull() != null
     }
 
     override fun getFavoriteEntity(): FavoriteEntity? {
-        return favorites?.firstOrNull()
+        return favoriteSingleItem?.firstOrNull()
     }
 
 }

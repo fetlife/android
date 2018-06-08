@@ -2,7 +2,6 @@ package com.bitlove.fetlife.model.resource.get
 
 import android.arch.lifecycle.LiveData
 import com.bitlove.fetlife.FetLifeApplication
-import com.bitlove.fetlife.getLoggedInUserId
 import com.bitlove.fetlife.model.db.FetLifeContentDatabase
 import com.bitlove.fetlife.model.resource.BaseResource
 import com.bitlove.fetlife.model.resource.ResourceResult

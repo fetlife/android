@@ -12,6 +12,7 @@ class MemberEntity(@SerializedName("id") var networkId: String = "",
                    @SerializedName("nickname") var nickname: String?  = "",
                    @SerializedName("meta_line") var metaInfo: String? = null,
                    @SerializedName("url") var url: String? = null,
+                   @SerializedName("is_supporter") var isSupporter: Boolean? = null,
                    @Embedded @SerializedName("avatar") var avatar: Avatar? = null) : DataEntity {
 
     @PrimaryKey

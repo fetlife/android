@@ -48,6 +48,7 @@ class CardDetailViewModelObject(private var cardType: CardDetailViewModel.CardTy
             CardDetailViewModel.CardType.CONTENT -> dataSource.getContentDetailLoader(cardId) as ResourceResult<CardViewDataHolder>
             CardDetailViewModel.CardType.EXPLORE_STORY -> dataSource.getExploreStoryDetailLoader(cardId) as ResourceResult<CardViewDataHolder>
             CardDetailViewModel.CardType.EXPLORE_EVENT -> dataSource.getExploreEventDetailLoader(cardId) as ResourceResult<CardViewDataHolder>
+            CardDetailViewModel.CardType.GROUP -> dataSource.getGroupDetailLoader(cardId) as ResourceResult<CardViewDataHolder>
             CardDetailViewModel.CardType.FAVORITE -> dataSource.getFavoriteDetailLoader(cardId) as ResourceResult<CardViewDataHolder>
             else -> {throw IllegalArgumentException()}
         }

@@ -152,14 +152,14 @@ open class PhoneNavigationActivity : ResourceActivity(), NavigationCallback {
                 true
             } else if (menuItem.itemId == R.id.navigation_reset) {
                 bg {
-                    FetLifeApplication.instance.fetLifeContentDatabaseWrapper.safeRun(getLoggedInUserId(),{
+                    FetLifeApplication.instance.fetLifeContentDatabaseWrapper.safeRun(getLoggedInUser()?.getLocalId(),{
                         contentDb ->
                         contentDb.memberDao().deleteAll()
                         contentDb.exploreStoryDao().deleteAll()
                         contentDb.jobProgressDao().deleteAll()
                     })
                     FetLifeApplication.instance.fetLifeUserDatabase.jobProgressDao().deleteAll()
-                    FetLifeApplication.instance.fetLifeUserDatabase.userDao().delete(getLoggedInUserId()!!)
+                    FetLifeApplication.instance.fetLifeUserDatabase.userDao().delete(getLoggedInUser()?.getLocalId()!!)
                 }
                 //TODO: ask about notification registration
                 //TODO: ask about clear local content

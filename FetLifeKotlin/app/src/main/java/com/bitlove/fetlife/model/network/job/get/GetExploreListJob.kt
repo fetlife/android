@@ -1,7 +1,6 @@
 package com.bitlove.fetlife.model.network.job.get
 
 import android.util.Log
-import com.bitlove.fetlife.getLoggedInUserId
 import com.bitlove.fetlife.model.dataobject.entity.content.ContentEntity
 import com.bitlove.fetlife.model.dataobject.entity.content.ExploreEventEntity
 import com.bitlove.fetlife.model.dataobject.entity.content.ExploreStoryEntity
@@ -110,7 +109,7 @@ class GetExploreListJob(val type: ExploreStory.TYPE, val limit: Int, val page: I
                     serverOrder = foundServerOrder
                 } else {
                     for (i in serverOrder until foundServerOrder) {
-                        exploreStoryDao.deleteWithServerOrder(i)
+                        exploreStoryDao.deleteWithServerOrder(type.toString(),i)
                     }
                     exploreStoryDao.shiftServerOrder(type.toString(),foundServerOrder,serverOrder-foundServerOrder)
                 }

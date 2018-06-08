@@ -1,7 +1,7 @@
 package com.bitlove.fetlife.model.resource.post
 
 import com.bitlove.fetlife.FetLifeApplication
-import com.bitlove.fetlife.getLoggedInUserId
+import com.bitlove.fetlife.getLoggedInUser
 import com.bitlove.fetlife.model.dataobject.entity.content.ReactionEntity
 import com.bitlove.fetlife.model.dataobject.wrapper.Content
 import com.bitlove.fetlife.model.dataobject.wrapper.Reaction
@@ -9,7 +9,7 @@ import com.bitlove.fetlife.model.db.FetLifeContentDatabase
 import com.bitlove.fetlife.model.network.job.post.PostReactionJob
 import com.bitlove.fetlife.toServerTime
 
-class PostReactionResource(reaction: Reaction, val parent: Content, userId: String? = getLoggedInUserId()) : PostResource<Reaction>(reaction, userId) {
+class PostReactionResource(reaction: Reaction, val parent: Content, userId: String? = getLoggedInUser()?.getLocalId()) : PostResource<Reaction>(reaction, userId) {
 
     companion object {
         fun newPostCommentResource(body: String, parent: Content) : PostReactionResource {

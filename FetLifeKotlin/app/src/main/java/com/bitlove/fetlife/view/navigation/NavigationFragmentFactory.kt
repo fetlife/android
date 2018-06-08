@@ -46,7 +46,7 @@ class NavigationFragmentFactory {
         return when (navigation) {
             R.id.navigation_search -> TurbolinksFragment.newInstance(R.id.navigation_search)
             R.id.navigation_notifications -> TurbolinksFragment.newInstance(R.id.navigation_notifications)
-            R.id.navigation_groups -> EmptyFragment.newInstance(R.id.navigation_groups.toString())
+            R.id.navigation_groups -> CardListFragment.newInstance(CardListViewModel.CardListType.GROUPS,getNavigationTitle(navigation))
             R.id.navigation_explore_friends_activity -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_FRIENDS_FEED,getNavigationTitle(navigation))
             R.id.navigation_explore_fresh_and_pervy -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_FRESH_AND_PERVY,getNavigationTitle(navigation))
             R.id.navigation_explore_kinky_and_popular -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_KINKY_AND_POPULAR,getNavigationTitle(navigation))

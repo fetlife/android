@@ -5,7 +5,8 @@ import android.arch.persistence.room.Ignore
 import com.bitlove.fetlife.model.dataobject.entity.content.MemberEntity
 import com.bitlove.fetlife.model.dataobject.entity.user.UserEntity
 
-class User {
+class
+User {
 
     @Embedded lateinit var userEntity: UserEntity
     @Ignore lateinit var memberEntity: MemberEntity

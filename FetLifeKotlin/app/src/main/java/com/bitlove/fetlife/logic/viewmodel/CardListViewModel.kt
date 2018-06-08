@@ -18,6 +18,7 @@ class CardListViewModel : ViewModel() {
         EXPLORE_FRESH_AND_PERVY,
         EXPLORE_KINKY_AND_POPULAR,
         EXPLORE_FRIENDS_FEED,
+        GROUPS,
         FAVORITES
     }
 
