@@ -14,35 +14,29 @@ import java.util.*
         ForeignKey(
                 entity = MemberEntity::class,
                 parentColumns = arrayOf("dbId"),
-                childColumns = arrayOf("relatedMemberId"),
-                onDelete = ForeignKey.CASCADE),
+                childColumns = arrayOf("memberId"),
+                onDelete = ForeignKey.CASCADE,
+                onUpdate = ForeignKey.RESTRICT),
         ForeignKey(
                 entity = MemberEntity::class,
                 parentColumns = arrayOf("dbId"),
-                childColumns = arrayOf("memberId"),
-                onDelete = ForeignKey.NO_ACTION,
-                onUpdate = ForeignKey.NO_ACTION),
+                childColumns = arrayOf("relatedMemberId"),
+                onDelete = ForeignKey.CASCADE,
+                onUpdate = ForeignKey.RESTRICT),
         ForeignKey(
                 entity = GroupEntity::class,
                 parentColumns = arrayOf("dbId"),
                 childColumns = arrayOf("groupId"),
-                onDelete = ForeignKey.NO_ACTION,
-                onUpdate = ForeignKey.NO_ACTION),
-        ForeignKey(
-                entity = EventEntity::class,
-                parentColumns = arrayOf("dbId"),
-                childColumns = arrayOf("eventId"),
                 onDelete = ForeignKey.CASCADE,
                 onUpdate = ForeignKey.RESTRICT)
 ))
 data class RelationEntity(
-        @SerializedName("related_member_id") var relatedMemberId: String = "",
-        @SerializedName("relations") var relations: String = "",
         @SerializedName("member_id") var memberId: String = "",
         @Ignore @SerializedName("member") var memberRef: MemberRef? = null,
         @SerializedName("group_id") var groupId: String? = null,
         @Ignore @SerializedName("group") var groupRef: GroupEntity? = null,
-        @SerializedName("event_id") var eventId: String? = null,
+        @SerializedName("related_member_id") var relatedMemberId: String? = null,
+        @SerializedName("relations") var relations: String = "",
         @SerializedName("last_visited_at") var visitedAt: String? = "",
         @SerializedName("created_at") var createdAt: String? = ""
 ) : DataEntity {

@@ -49,7 +49,7 @@ abstract class ResourceActivity : AppCompatActivity() {
                         FetLifeApplication.instance.fetLifeContentDatabaseWrapper.safeRun(userId, {
                             contentDb ->
                             val memberDao = contentDb.memberDao()
-                            memberEntity = memberDao?.getMemberEntity(userId)
+                            memberEntity = memberDao?.getEntity(userId)
                         })
                         if (memberEntity == null) {
                             LoginActivity.start(this)

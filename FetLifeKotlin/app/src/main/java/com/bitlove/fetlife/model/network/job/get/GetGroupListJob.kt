@@ -50,20 +50,34 @@ class GetGroupListJob(val limit: Int, val page: Int?, val memberId: String?, use
 
             groupRelation.serverOrder = serverOrder++
             try {
+                Log.e("JJJ","saving relation " + groupRelation.dbId)
+                val member = memberDao.getEntity(groupRelation.memberId)
+                Log.e("JJJ","is member exist " + (member != null).toString())
+                val group = groupDao.getEntity(groupRelation.groupId!!)
+                Log.e("JJJ","is group exist " + (group != null).toString())
                 relationDao.insertOrUpdate(groupRelation)
-
+                Log.e("JJJ","saving succeed")
+                val relation = relationDao.getEntity(groupRelation.dbId!!)
+                Log.e("JJJ","is relation exist " + (relation != null).toString())
+                Log.e("JJJ","saving succeed: " + relationDao.getGroupRelationEntities().size)
             } catch (throwable : Throwable) {
-
+                Log.e("JJJ","saving failed", throwable)
             }
         }
     }
 
     private fun saveGroupMember(groupRelation: RelationEntity, memberDao: MemberDao) {
+        Log.e("JJJ","saving member " + groupRelation.memberRef?.nickname)
         val memberRef = groupRelation.memberRef
         if (memberRef != null) {
             val memberId = memberDao.update(memberRef)
             groupRelation.memberId = memberId
         }
+        Log.e("JJJ","with id " + groupRelation.memberId)
+        var member = memberDao.getEntity(groupRelation.memberId)
+        Log.e("JJJ","is member exist " + (member != null).toString())
+        member = memberDao.getEntity(groupRelation.memberId)
+        Log.e("JJJ","is member exist " + (member != null).toString())
     }
 
     private fun saveGroup(groupRelation: RelationEntity, groupDao: GroupDao) {
@@ -74,6 +88,10 @@ class GetGroupListJob(val limit: Int, val page: Int?, val memberId: String?, use
             groupRelation.groupId = groupRef.dbId
             Log.e("JJJ","with id " + groupRef.dbId)
         }
+        var group = groupDao.getEntity(groupRelation.groupId!!)
+        Log.e("JJJ","is group exist " + (group != null).toString())
+        group = groupDao.getEntity(groupRelation.groupId!!)
+        Log.e("JJJ","is group exist " + (group != null).toString())
     }
 
     override fun getCall(): Call<Array<RelationEntity>> {

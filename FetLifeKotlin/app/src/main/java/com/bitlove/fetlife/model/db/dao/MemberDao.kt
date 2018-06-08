@@ -20,7 +20,7 @@ abstract class MemberDao : BaseDao<MemberEntity> {
     @Transaction
     open fun update(memberReference: MemberRef) : String {
         val referenceEntity = memberReference.asEntity()
-        val currentMember = getMemberEntity(referenceEntity.dbId)
+        val currentMember = getEntity(referenceEntity.dbId)
         if (currentMember != null) {
             update(memberReference.asEntity(currentMember))
         } else {
@@ -30,6 +30,6 @@ abstract class MemberDao : BaseDao<MemberEntity> {
     }
 
     @Query("SELECT * FROM members WHERE dbId = :dbId")
-    abstract fun getMemberEntity(dbId: String): MemberEntity?
+    abstract fun getEntity(dbId: String): MemberEntity?
 
 }

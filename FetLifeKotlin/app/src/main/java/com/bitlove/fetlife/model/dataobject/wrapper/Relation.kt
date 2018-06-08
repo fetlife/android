@@ -21,8 +21,8 @@ class Relation : CardViewDataHolder(), SyncObject<RelationEntity>, Favoritable {
     @Relation(parentColumn = "memberId", entityColumn = "dbId", entity = MemberEntity::class)
     var singleMemberList: List<Member>? = null
 
-    @Relation(parentColumn = "relatedMemberId", entityColumn = "dbId", entity = MemberEntity::class)
-    var singleTargetMemberList: List<Member>? = null
+//    @Relation(parentColumn = "relatedMemberId", entityColumn = "dbId", entity = MemberEntity::class)
+//    var singleTargetMemberList: List<Member>? = null
 
     override fun getAvatar(): AvatarViewDataHolder? {
         return null
@@ -103,8 +103,8 @@ class Relation : CardViewDataHolder(), SyncObject<RelationEntity>, Favoritable {
     override fun getChild() : CardViewDataHolder? {
         if (singleGroupList?.size == 1) {
             return  singleGroupList!!.first()
-        } else if (singleTargetMemberList?.size == 1) {
-            return  singleTargetMemberList!!.first()
+//        } else if (singleTargetMemberList?.size == 1) {
+//            return  singleTargetMemberList!!.first()
         }
         return null
     }

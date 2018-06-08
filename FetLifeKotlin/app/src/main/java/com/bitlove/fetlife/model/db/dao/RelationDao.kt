@@ -13,6 +13,9 @@ abstract class RelationDao : BaseDao<RelationEntity> {
     @Query("SELECT * FROM relations")
     abstract fun getGroupRelations(): DataSource.Factory<Int, Relation>
 
+    @Query("SELECT * FROM relations")
+    abstract fun getGroupRelationEntities(): List<RelationEntity>
+
 //    @Query("SELECT * FROM relations WHERE memberId=:memberId AND groupId IS NOT NULL ORDER BY serverOrder")
 //    abstract fun getGroupRelations(memberId: String): DataSource.Factory<Int, Relation>
 
