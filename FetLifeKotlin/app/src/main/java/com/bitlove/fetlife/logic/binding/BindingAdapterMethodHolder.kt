@@ -31,6 +31,7 @@ import android.util.Log
 import android.util.TypedValue
 import com.bitlove.fetlife.getSafeColor
 import com.facebook.drawee.backends.pipeline.Fresco
+import com.facebook.drawee.drawable.ScalingUtils
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
 import org.jetbrains.anko.db.INTEGER
 
@@ -201,8 +202,10 @@ fun setIcon(view: ImageView, refText: String, sizeDp: Int) {
 @BindingAdapter("srcFresco")
 fun setFrescoSrc(imageView: SimpleDraweeView, srcFresco: String?) {
     val context = imageView.context
-    val retryDrawable = IconicsDrawable(context).icon(GoogleMaterial.Icon.gmd_refresh).color(context.getSafeColor(R.color.silver)).sizeDp(42)
-    imageView.hierarchy.setRetryImage(retryDrawable)
+    val retryDrawable = IconicsDrawable(context).icon(GoogleMaterial.Icon.gmd_refresh).color(context.getSafeColor(R.color.silver_50)).sizeDp(42)
+    val placeHolderDrawable = IconicsDrawable(context).icon(GoogleMaterial.Icon.gmd_timer).color(context.getSafeColor(R.color.nearBlack)).sizeDp(42)
+    imageView.hierarchy.setRetryImage(retryDrawable, ScalingUtils.ScaleType.CENTER_INSIDE)
+    imageView.hierarchy.setPlaceholderImage(placeHolderDrawable, ScalingUtils.ScaleType.CENTER_INSIDE)
     imageView.controller = Fresco.newDraweeControllerBuilder()
             .setTapToRetryEnabled(true)
             .setUri(srcFresco)
