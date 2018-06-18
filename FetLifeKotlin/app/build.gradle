@@ -79,6 +79,8 @@ dependencies {
     implementation deps.fresco.photoview
     implementation deps.font.material_google
     implementation deps.joda_time
+    implementation deps.stetho
+    implementation deps.prettytime
 
     implementation(deps.crashlytics) {
         transitive = true

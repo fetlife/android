@@ -14,9 +14,6 @@ import com.bitlove.fetlife.model.db.FetLifeContentDatabase
 
 class Member() : AvatarViewDataHolder(), SyncObject<MemberEntity>, Favoritable {
 
-    @Ignore private var subLine : String? = null
-    @Ignore private var subLineExtra : String? = null
-
     constructor(memberEntity: MemberEntity) : this() {
         this.memberEntity = memberEntity
     }
@@ -62,14 +59,6 @@ class Member() : AvatarViewDataHolder(), SyncObject<MemberEntity>, Favoritable {
 
     override fun getDao(contentDb: FetLifeContentDatabase): BaseDao<MemberEntity> {
         return contentDb.memberDao()
-    }
-
-    override fun getAvatarSubline(): String? {
-        return subLine
-    }
-
-    override fun getAvatarSublineExtra(): String? {
-        return subLineExtra
     }
 
     override fun getUrl(): String? {

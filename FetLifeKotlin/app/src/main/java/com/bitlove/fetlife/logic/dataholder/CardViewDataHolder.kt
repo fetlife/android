@@ -34,6 +34,7 @@ abstract class CardViewDataHolder {
 
     open fun getAvatar() : AvatarViewDataHolder? = null
     open fun getAvatarTitle() : String? = null
+    open fun getAvatarSubTitle() : String? = null
 
     open fun getTitle() : String? = null
     open fun getSupportingText() : String? = null

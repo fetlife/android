@@ -20,9 +20,25 @@
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:paddingStart="8dp"
-        android:paddingEnd="8dp">
+        android:paddingEnd="8dp"
+        android:onClick="@{(view) -> commentInteractionHandler.onOpenCard(true)}"
+        >
 
-        <com.facebook.drawee.view.SimpleDraweeView 
+        <TextView
+            android:id="@+id/comment_time"
+            android:visibility="@{commentData.time != null ? View.VISIBLE : View.INVISIBLE}"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:gravity="top|right"
+            android:padding="4dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            android:textColor="@color/gray"
+            android:text="@{commentData.time}"
+            />
+
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/avatar_image"
             android:visibility="@{commentData.avatar.avatarUrl != null ? View.VISIBLE : View.INVISIBLE}"
             android:layout_width="48dp"
@@ -33,7 +49,8 @@
             android:focusable="false"
             android:focusableInTouchMode="false"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"/>
+            android:layout_alignParentTop="true"
+            />
 
         <TextView
             android:id="@+id/avatar_name"
@@ -48,9 +65,9 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/avatar_image"
             android:layout_toRightOf="@id/avatar_image"
+            android:layout_toLeftOf="@+id/comment_time"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:layout_alignParentEnd="true"
             />
 
         <!--app:textEntities='@{""}'-->
@@ -73,8 +90,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/avatar_image"
+            android:layout_toLeftOf="@+id/comment_time"
             android:layout_below="@id/avatar_name"
-            android:layout_alignParentEnd="true"/>
+            android:onClick="@{(view) -> commentInteractionHandler.onOpenCard(true)}"
+            />
 
     </RelativeLayout>
 

@@ -9,6 +9,7 @@ abstract class ReactionViewDataHolder : CardViewDataHolder() {
     private var reactionHash : String? = null
 
     open fun getText() : String? = null
+    open fun getTime() : String? = null
 
     override fun getContentHash() : String {
         if (reactionHash == null) {

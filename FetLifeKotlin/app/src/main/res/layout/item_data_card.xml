@@ -121,20 +121,34 @@
                     />
 
                 <TextView
+                    android:id="@+id/avatar_subtitle_text_separator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:visible="@{cardData.avatarSubTitle != null &amp;&amp; cardData.avatarTitle != null}"
+                    android:gravity="center"
+                    android:layout_toRightOf="@id/avatar_subtitle_text"
+                    android:layout_below="@id/avatar_title_text"
+                    android:layout_marginLeft="4dp"
+                    android:textSize="13sp"
+                    android:textColor="@color/gray"
+                    android:text="-"
+                    />
+
+                <TextView
                     android:id="@+id/avatar_subtitle_meta_text"
-                    app:visible="@{cardData.avatar.avatarSublineExtra != null}"
+                    app:visible="@{cardData.avatarSubTitle != null}"
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
                     android:layout_marginLeft="4dp"
                     android:gravity="top"
-                    android:layout_toRightOf="@id/avatar_subtitle_text"
+                    android:layout_toRightOf="@id/avatar_subtitle_text_separator"
                     android:layout_below="@id/avatar_title_meta_text"
                     android:textSize="13sp"
                     android:textColor="@color/gray"
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:textIsSelectable="true"
-                    android:text="@{cardData.avatar.avatarSublineExtra}"
+                    android:text="@{cardData.avatarSubTitle}"
                     />
 
             </RelativeLayout>
@@ -231,7 +245,7 @@
                 app:visible='@{cardInteractionHandler.hasActions}'
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="12dp"
+                android:padding="12dp"
                 >
 
                 <ImageView
@@ -246,7 +260,7 @@
                     app:ico_color="@color/midGray"
                     android:onClick="@{(view) -> cardInteractionHandler.onLove(view, cardData)}"
                     android:layout_alignParentStart="true"
-                    app:hitrectExtension="@{100}"
+                    app:hitrectExtension="@{42}"
                     />
 
                 <TextView
@@ -261,7 +275,7 @@
                     android:text='@{cardData.loveCount}'
                     android:onClick="@{(view) -> cardInteractionHandler.onLove(view, cardData)}"
                     android:layout_toRightOf="@id/love_button"
-                    app:hitrectExtension="@{100}"
+                    app:hitrectExtension="@{42}"
                     />
 
                 <ImageView
@@ -280,7 +294,7 @@
                     android:tint='@{cardData.hasNewComment() ? @color/lightSilver : @color/midGray}'
                     android:onClick="@{(view) -> cardInteractionHandler.onDisplayComments(view, cardData)}"
                     android:layout_toRightOf="@id/love_count"
-                    app:hitrectExtension="@{100}"
+                    app:hitrectExtension="@{42}"
                     />
 
                 <TextView
@@ -295,7 +309,7 @@
                     android:text='@{cardData.commentCountText}'
                     android:onClick="@{(view) -> cardInteractionHandler.onDisplayComments(view, cardData)}"
                     android:layout_toRightOf="@id/comments_button"
-                    app:hitrectExtension="@{100}"
+                    app:hitrectExtension="@{42}"
                     />
 
                 <ImageView
@@ -314,7 +328,7 @@
                     android:onClick="@{(view) -> cardInteractionHandler.onExpand()}"
                     android:layout_alignWithParentIfMissing="true"
                     android:layout_alignParentEnd="true"
-                    app:hitrectExtension="@{100}"
+                    app:hitrectExtension="@{42}"
                     />
 
                 <ImageView
@@ -331,7 +345,7 @@
                     android:onClick="@{(view) -> cardInteractionHandler.onSetFavorite(view, cardData)}"
                     android:layout_toLeftOf="@id/expand_button"
                     android:layout_alignWithParentIfMissing="true"
-                    app:hitrectExtension="@{100}"
+                    app:hitrectExtension="@{42}"
                     />
 
                 <ImageView
@@ -351,7 +365,7 @@
                     android:onClick="@{(view) -> cardInteractionHandler.onShareExternal(view, cardData)}"
                     android:layout_toLeftOf="@id/favorite_button"
                     android:layout_alignWithParentIfMissing="true"
-                    app:hitrectExtension="@{100}"
+                    app:hitrectExtension="@{42}"
                     />
 
             </RelativeLayout>

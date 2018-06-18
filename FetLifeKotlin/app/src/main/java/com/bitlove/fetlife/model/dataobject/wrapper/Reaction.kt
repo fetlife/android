@@ -9,6 +9,9 @@ import com.bitlove.fetlife.model.db.dao.BaseDao
 import com.bitlove.fetlife.logic.dataholder.AvatarViewDataHolder
 import com.bitlove.fetlife.logic.dataholder.ReactionViewDataHolder
 import com.bitlove.fetlife.model.db.FetLifeContentDatabase
+import com.bitlove.fetlife.parseServerTime
+import org.ocpsoft.prettytime.PrettyTime
+import java.util.*
 
 class Reaction() : ReactionViewDataHolder(), SyncObject<ReactionEntity> {
 
@@ -44,6 +47,12 @@ class Reaction() : ReactionViewDataHolder(), SyncObject<ReactionEntity> {
 
     override fun getText(): String? {
         return reactionEntity?.body
+    }
+
+    override fun getTime(): String? {
+        val time = reactionEntity.createdAt?.parseServerTime()?:return ""
+        val p = PrettyTime(Locale.getDefault())
+        return p.format(Date(time))
     }
 
     override fun getEntity(): ReactionEntity {

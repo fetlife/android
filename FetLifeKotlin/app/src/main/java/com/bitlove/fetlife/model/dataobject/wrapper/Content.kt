@@ -3,6 +3,7 @@ package com.bitlove.fetlife.model.dataobject.wrapper
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.Relation
+import android.text.TextUtils
 import com.bitlove.fetlife.model.dataobject.entity.content.ContentEntity
 import com.bitlove.fetlife.model.dataobject.entity.content.MemberEntity
 import com.bitlove.fetlife.model.dataobject.entity.content.ReactionEntity
@@ -12,6 +13,9 @@ import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.model.dataobject.SyncObject
 import com.bitlove.fetlife.model.dataobject.entity.content.FavoriteEntity
 import com.bitlove.fetlife.model.db.FetLifeContentDatabase
+import com.bitlove.fetlife.parseServerTime
+import org.ocpsoft.prettytime.PrettyTime
+import java.util.*
 
 class Content : CardViewDataHolder(), SyncObject<ContentEntity>, Favoritable {
 
@@ -32,7 +36,25 @@ class Content : CardViewDataHolder(), SyncObject<ContentEntity>, Favoritable {
     @Ignore private var loveList: List<Reaction>? = null
 
     override fun getAvatarTitle(): String? {
-        return contentEntity?.subject?: ""
+        return if (contentEntity?.subject?.isEmpty() == false) {
+            contentEntity?.subject
+        } else {
+            getPrettyCreatedAt()
+        }
+    }
+
+    override fun getAvatarSubTitle(): String? {
+        return if (contentEntity?.subject?.isEmpty() == false) {
+            getPrettyCreatedAt()
+        } else {
+            ""
+        }
+    }
+
+    private fun getPrettyCreatedAt() : String {
+        val time = contentEntity.createdAt?.parseServerTime()?:return ""
+        val p = PrettyTime(Locale.getDefault())
+        return p.format(Date(time))
     }
 
     override fun getTitle(): String? {

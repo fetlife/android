@@ -41,6 +41,8 @@ versions.font_material_iconic = "2.2.0.4@aar"
 versions.joda_time = "2.9.1"
 versions.fabric = "1.+"
 versions.crashlytics = "2.9.2@aar"
+versions.stetho = "1.4.2"
+versions.prettytime = "4.0.1.Final"
 def deps = [:]
 
 def support = [:]
@@ -149,6 +151,8 @@ deps.job_queue = "com.birbit:android-priority-jobqueue:$versions.job_queue"
 deps.joda_time = "joda-time:joda-time:$versions.joda_time"
 deps.fabric = "io.fabric.tools:gradle:$versions.fabric"
 deps.crashlytics = "com.crashlytics.sdk.android:crashlytics:$versions.crashlytics"
+deps.stetho = "com.facebook.stetho:stetho:$versions.stetho"
+deps.prettytime ="org.ocpsoft.prettytime:prettytime:$versions.prettytime"
 ext.deps = deps
 
 def build_versions = [:]

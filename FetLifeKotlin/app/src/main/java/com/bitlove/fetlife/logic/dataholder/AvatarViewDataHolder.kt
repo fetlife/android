@@ -12,12 +12,10 @@ abstract class AvatarViewDataHolder : CardViewDataHolder() {
     open fun getAvatarUrl() : String? = null
     open fun getAvatarName() : String? = null
     open fun getAvatarMeta() : String? = ""
-    open fun getAvatarSubline() : String? = null
-    open fun getAvatarSublineExtra() : String? = ""
 
     override fun getContentHash() : String {
         if (avatarHash == null) {
-            avatarHash = super.getContentHash() + (getAvatarName() + getAvatarUrl()?.getBaseUrl() + getAvatarMeta() + getAvatarSubline() + getAvatarSublineExtra()).hash()
+            avatarHash = super.getContentHash() + (getAvatarName() + getAvatarUrl()?.getBaseUrl() + getAvatarMeta()).hash()
         }
         return avatarHash!!
     }

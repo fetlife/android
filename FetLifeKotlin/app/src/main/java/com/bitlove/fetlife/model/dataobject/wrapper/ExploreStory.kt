@@ -14,7 +14,10 @@ import com.bitlove.fetlife.model.dataobject.entity.content.ExploreEventEntity
 import com.bitlove.fetlife.model.dataobject.entity.content.ExploreStoryEntity
 import com.bitlove.fetlife.model.dataobject.entity.content.FavoriteEntity
 import com.bitlove.fetlife.model.db.FetLifeContentDatabase
-import kotlinx.coroutines.experimental.channels.actor
+import com.bitlove.fetlife.parseServerTime
+import org.ocpsoft.prettytime.PrettyTime
+import java.util.*
+
 
 class ExploreStory: CardViewDataHolder(), SyncObject<ExploreStoryEntity>, Favoritable {
 
@@ -32,31 +35,38 @@ class ExploreStory: CardViewDataHolder(), SyncObject<ExploreStoryEntity>, Favori
     @Relation(parentColumn = "dbId", entityColumn = "storyId", entity = ExploreEventEntity::class)
     var exploreEvents: List<ExploreEvent>? = null
 
-    @Ignore private var genatedTitle : String? = null
-    @Ignore private var genatedChildrenTitle : String? = null
+    @Ignore private var generatedTitle : String? = null
+    @Ignore private var generatedSubTitle : String? = null
+    @Ignore private var generatedChildrenTitle : String? = null
 
     override fun getAvatarTitle(): String? {
         if (exploreEvents == null) {
             return null
         }
 
-        if (genatedTitle == null) {
-            genatedTitle = generateTitle(false)
+        if (generatedTitle == null) {
+            generatedTitle = generateTitle(false)
         }
 
-        return genatedTitle
+        return generatedTitle
     }
 
-    override fun getChildrenScreenTitle(): String? {
+    override fun getAvatarSubTitle(): String? {
         if (exploreEvents == null) {
             return null
         }
 
-        if (genatedChildrenTitle == null) {
-            genatedChildrenTitle = generateTitle(true)
+        if (generatedSubTitle == null) {
+            generatedSubTitle = generateSubTitle()
         }
 
-        return genatedChildrenTitle
+        return generatedSubTitle
+    }
+
+    private fun generateSubTitle() : String {
+        val time = exploreStoryEntity.createdAt?.parseServerTime()?:return ""
+        val p = PrettyTime(Locale.getDefault())
+        return p.format(Date(time))
     }
 
     private fun generateTitle(childrenTitle: Boolean) : String {
@@ -81,6 +91,18 @@ class ExploreStory: CardViewDataHolder(), SyncObject<ExploreStoryEntity>, Favori
         }
 
         return (if(childrenTitle) "$nickname " else "") + actionString + " " + (if(childrenTitle) "$pointerString " else "") + (if (exploreEvents!!.size == 1) singularNumberString else exploreEvents!!.size) + " " + targetString
+    }
+
+    override fun getChildrenScreenTitle(): String? {
+        if (exploreEvents == null) {
+            return null
+        }
+
+        if (generatedChildrenTitle == null) {
+            generatedChildrenTitle = generateTitle(true)
+        }
+
+        return generatedChildrenTitle
     }
 
     override fun getChildren(): List<CardViewDataHolder>? {
