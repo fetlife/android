@@ -30,6 +30,7 @@ import android.text.StaticLayout
 import android.util.Log
 import android.util.TypedValue
 import com.bitlove.fetlife.getSafeColor
+import com.bitlove.fetlife.view.widget.TouchDelegateComposite
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.drawee.drawable.ScalingUtils
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
@@ -220,6 +221,11 @@ fun setFrescoAr(simpleDraweeView: SimpleDraweeView, arFresco: Float?) {
 @BindingAdapter("hitrectExtension")
 fun setHitRect(view: View, hitrectExtension: Int) {
     val parent = view.parent as View
+    var touchDelegate = parent.touchDelegate as? TouchDelegateComposite
+    if (touchDelegate == null) {
+        touchDelegate = TouchDelegateComposite(view)
+        parent.touchDelegate = touchDelegate
+    }
     parent.post({
         val rect = Rect()
         view.getHitRect(rect)
@@ -228,7 +234,7 @@ fun setHitRect(view: View, hitrectExtension: Int) {
         rect.bottom += hitrectExtension
         rect.right += hitrectExtension
 
-        parent.touchDelegate = TouchDelegate(rect,view)
+        touchDelegate.addDelegate(TouchDelegate(rect,view))
     })
 }
 

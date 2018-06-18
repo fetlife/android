@@ -67,7 +67,7 @@ class CardDetailFragment : BindingFragment<FragmentCardDetailBinding, CardDetail
             if (cardData?.getComments()?.isEmpty() == false && scrollToBottom) {
                 scrollToBottom = false
                 card_scroll.isSmoothScrollingEnabled = false
-                card_scroll.postDelayed({card_scroll.fullScroll(View.FOCUS_DOWN)},42)
+                card_scroll.postDelayed({card_scroll.fullScroll(View.FOCUS_DOWN);card_scroll.isSmoothScrollingEnabled = true},100)
             }
         })
     }

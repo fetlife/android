@@ -91,7 +91,7 @@ class CardViewInteractionHandler {
     open fun onOpenCard(scrollToComments: Boolean = false) {
         if (!checkInteractionTime()) return
         if (cardList != null) {
-            navigationCallback?.onCardNavigate(cardList!!, position, cardListTitle, scrollToComments)
+            navigationCallback?.onCardNavigate(cardList!!, position, cardListTitle, scrollToComments || pagingComments.get() == false)
         }
     }
 
@@ -144,6 +144,7 @@ class CardViewInteractionHandler {
 
     open fun onGetMoreComments(view: View, cardData: CardViewDataHolder) {
         if (!checkInteractionTime()) return
+        if (view.visibility != View.VISIBLE) return
         if (cardData is SyncObject<*>) {
             pageRequested++
             commentCount.set(pageRequested*commentPageCount)
