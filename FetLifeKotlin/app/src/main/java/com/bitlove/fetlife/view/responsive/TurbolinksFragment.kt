@@ -20,6 +20,9 @@ import com.bitlove.fetlife.view.dialog.InformationDialog
 import com.bitlove.fetlife.view.navigation.NavigationFragmentFactory
 import kotlinx.android.synthetic.main.fragment_turbolinks.*
 import kotlinx.android.synthetic.main.item_data_card.*
+import android.webkit.WebSettings
+import org.apache.commons.lang3.ClassUtils.getPackageName
+
 
 //TODO: check this: https://stackoverflow.com/questions/24658428/swiperefreshlayout-webview-when-scroll-position-is-at-top
 class TurbolinksFragment : Fragment(), TurbolinksAdapter, TurbolinksSession.ProgressObserver, TurbolinksSession.PageObserver {
@@ -53,6 +56,8 @@ class TurbolinksFragment : Fragment(), TurbolinksAdapter, TurbolinksSession.Prog
         val turbolinksSession = TurbolinksSession.getDefault(activity)
         //TODO turn off logging
         TurbolinksSession.setDebugLoggingEnabled(true)
+
+//        enableHTML5AppCache(TurbolinksSession.getDefault(context).webView)
 
         turbolinksSession.activity(activity)
                 .adapter(this)
@@ -119,5 +124,21 @@ class TurbolinksFragment : Fragment(), TurbolinksAdapter, TurbolinksSession.Prog
         }
         return false
     }
+
+//    private fun enableHTML5AppCache(webView: WebView) {
+//
+//        webView.getSettings().setDomStorageEnabled(true)
+//
+//        // Set cache size to 8 mb by default. should be more than enough
+//        webView.getSettings().setAppCacheMaxSize(1024 * 1024 * 8)
+//
+//        // This next one is crazy. It's the DEFAULT location for your app's cache
+//        // But it didn't work for me without this line
+//        webView.getSettings().setAppCachePath("/data/data/" + activity!!.getPackageName() + "/cache")
+//        webView.getSettings().setAllowFileAccess(true)
+//        webView.getSettings().setAppCacheEnabled(true)
+//
+//        webView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT)
+//    }
 
 }
