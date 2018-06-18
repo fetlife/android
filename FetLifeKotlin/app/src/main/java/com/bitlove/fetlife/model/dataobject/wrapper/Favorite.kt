@@ -15,7 +15,7 @@ class Favorite : CardViewDataHolder(), SyncObject<FavoriteEntity>, Favoritable {
     @Embedded
     lateinit var embeddedEntity: FavoriteEntity
 
-    @Relation(parentColumn = "groupId", entityColumn = "dbId", entity = ContentEntity::class)
+    @Relation(parentColumn = "contentId", entityColumn = "dbId", entity = ContentEntity::class)
     var contents: List<Content>? = null
 
     @Relation(parentColumn = "memberId", entityColumn = "dbId", entity = MemberEntity::class)
