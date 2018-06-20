@@ -29,8 +29,9 @@
 
             <p><b><br/>Version History</b></p>
 
-            <p/>v2.15.2<br/>
+            <p/>v2.15.4<br/>
                     <ul>
+                        <li>Fixes for logout issue</li>
                         <li>Crash fixes</li>
                     </ul>
 

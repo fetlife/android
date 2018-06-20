@@ -73,12 +73,12 @@ public class FetLifeService {
                 Response response = chain.proceed(request);
                 //response.body().string();
                 lastResponseCode = response.code();
-                if (BuildConfig.DEBUG && lastResponseCode > 299) {
-                    BufferedSource source = response.body().source();
-                    Buffer bufferedCopy = source.buffer().clone();
-//                    Crashlytics.log("EXTRA LOG Failed request response" + "\n" + response.body().string());
-                    return new Response.Builder().body(ResponseBody.create(response.body().contentType(), response.body().contentLength(), bufferedCopy)).build();
-                }
+//                if (BuildConfig.DEBUG && lastResponseCode > 299) {
+//                    BufferedSource source = response.body().source();
+//                    Buffer bufferedCopy = source.buffer().clone();
+////                    Crashlytics.log("EXTRA LOG Failed request response" + "\n" + response.body().string());
+//                    return new Response.Builder().body(ResponseBody.create(response.body().contentType(), response.body().contentLength(), bufferedCopy)).build();
+//                }
                 return response;
             }
         });

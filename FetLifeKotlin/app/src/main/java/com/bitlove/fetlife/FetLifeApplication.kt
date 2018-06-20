@@ -2,13 +2,8 @@ package com.bitlove.fetlife
 
 import android.annotation.SuppressLint
 import android.app.*
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProviders
-import android.arch.paging.DataSource
-import android.arch.paging.LivePagedListBuilder
-import android.arch.paging.LivePagedListProvider
-import android.arch.paging.PagedList
 import android.arch.persistence.room.Room
 import android.content.Context
 import android.content.Intent
@@ -34,11 +29,9 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
-import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
-import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.model.dataobject.wrapper.User
 import com.bitlove.fetlife.model.db.FetLifeContentDatabaseWrapper
 import com.bitlove.fetlife.model.db.FetLifeUserDatabase
@@ -50,7 +43,6 @@ import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
 import java.net.URI
 import java.security.NoSuchAlgorithmException
-import org.joda.time.format.DateTimeFormatter
 import org.joda.time.format.DateTimeFormatterBuilder
 import org.joda.time.format.ISODateTimeFormat
 
@@ -109,7 +101,7 @@ class FetLifeApplication : Application() {
         bg {
             //TODO: cancel all jobs for the current user
             fetLifeUserDatabase.userDao().delete(userId)
-            fetLifeContentDatabaseWrapper.release(userId)
+            fetLifeContentDatabaseWrapper.safeRelease(userId)
         }
 
         loggedInUser = null
