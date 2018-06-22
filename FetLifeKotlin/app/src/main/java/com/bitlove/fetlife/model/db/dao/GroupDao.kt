@@ -16,7 +16,7 @@ import com.bitlove.fetlife.model.dataobject.wrapper.Member
 abstract class GroupDao : BaseDao<GroupEntity> {
 
     @Query("SELECT * FROM groups WHERE dbId = :dbId")
-    abstract fun getEntity(dbId: String): MemberEntity?
+    abstract fun getEntity(dbId: String): GroupEntity?
 
     @Query("DELETE FROM groups")
     abstract fun deleteAll()

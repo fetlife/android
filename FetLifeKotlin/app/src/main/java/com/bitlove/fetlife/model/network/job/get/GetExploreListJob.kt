@@ -65,6 +65,7 @@ class GetExploreListJob(val type: ExploreStory.TYPE, val limit: Int, val page: I
     }
 
     override fun saveToDb(contenDb: FetLifeContentDatabase, resourceArray: Array<ExploreStoryEntity>) {
+        Log.e("LLL","ExpList Save Started " + type.toString())
         val exploreStoryDao = contenDb.exploreStoryDao()
         val exploreEventDao = contenDb.exploreEventDao()
         val memberDao = contenDb.memberDao()
@@ -140,6 +141,8 @@ class GetExploreListJob(val type: ExploreStory.TYPE, val limit: Int, val page: I
 //            Log.e("*",index.toString() + " : " + entity.serverOrder)
 //        }
 //        Log.e("***** ----- *****","****")
+
+        Log.e("LLL","ExpList Save Finished")
 
     }
 

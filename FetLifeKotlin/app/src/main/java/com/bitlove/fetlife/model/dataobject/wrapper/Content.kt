@@ -19,7 +19,7 @@ import java.util.*
 
 class Content : CardViewDataHolder(), SyncObject<ContentEntity>, Favoritable {
 
-    enum class TYPE {CONVERSATION, PICTURE, WRITING}
+    enum class TYPE {GROUP_DISCUSSION, CONVERSATION, PICTURE, WRITING}
 
     @Embedded lateinit var contentEntity: ContentEntity
 
@@ -91,6 +91,7 @@ class Content : CardViewDataHolder(), SyncObject<ContentEntity>, Favoritable {
                 TYPE.PICTURE -> "pictures"
                 TYPE.CONVERSATION -> "conversation"
                 TYPE.WRITING -> "writings"
+                TYPE.GROUP_DISCUSSION -> "group_posts"
             }
         } catch (t: Throwable) {
             throw IllegalArgumentException(t)

@@ -25,6 +25,11 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
+            android:name=".view.navigation.PhoneCardListActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
             android:name=".view.navigation.PhoneNavigationActivity"
             android:label="@string/title_activity_conversations"
             android:theme="@style/AppTheme.NoActionBar"

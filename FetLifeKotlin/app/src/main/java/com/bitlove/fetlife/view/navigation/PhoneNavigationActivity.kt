@@ -17,6 +17,7 @@ import com.bitlove.fetlife.*
 import com.bitlove.fetlife.view.login.LoginActivity
 import com.bitlove.fetlife.view.widget.FloatingActionButtonBehavior
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
+import com.bitlove.fetlife.model.dataobject.wrapper.Group
 import com.bitlove.fetlife.view.generic.ResourceActivity
 import com.bitlove.fetlife.view.widget.BottomNavigationSeparatorBehavior
 import com.mikepenz.google_material_typeface_library.GoogleMaterial
@@ -37,11 +38,11 @@ open class PhoneNavigationActivity : ResourceActivity(), NavigationCallback {
         }
     }
 
-    private var navigation: Int? = null
-    private var layout: NavigationCallback.Layout? = null
+    open var navigation: Int? = null
+    open var layout: NavigationCallback.Layout? = null
 
-    private val navigationFragmentFactory = FetLifeApplication.instance.navigationFragmentFactory
-    private var savedInstanceState : Bundle? = null
+    open val navigationFragmentFactory = FetLifeApplication.instance.navigationFragmentFactory
+    open var savedInstanceState : Bundle? = null
 
     override fun onResourceCreate(savedInstanceState: Bundle?) {
         this.savedInstanceState = savedInstanceState
@@ -71,7 +72,12 @@ open class PhoneNavigationActivity : ResourceActivity(), NavigationCallback {
     }
 
     override fun onCardNavigate(cardList: List<CardViewDataHolder>, position: Int, screenTitle: String?, scrollToBottom: Boolean) {
-        PhoneCardActivity.start(this, cardList, position, screenTitle, scrollToBottom)
+        val innerCard = cardList[position].getChild()
+        when(innerCard) {
+            //TODO: make disucssion list also swipeable
+            is Group -> PhoneCardListActivity.start(this, innerCard)
+            else -> PhoneCardActivity.start(this, cardList, position, screenTitle, scrollToBottom)
+        }
     }
 
     override fun onLayoutChange(layout: NavigationCallback.Layout?) {
@@ -100,16 +106,20 @@ open class PhoneNavigationActivity : ResourceActivity(), NavigationCallback {
         setSupportActionBar(toolbar)
     }
 
-    private fun setStateContentFragment(savedInstanceState: Bundle?) {
+    open fun setStateContentFragment(savedInstanceState: Bundle?) {
         if (savedInstanceState != null) {
             navigation = savedInstanceState.getInt(STATE_KEY_NAVIGATION)
             layout = savedInstanceState.getSerializable(STATE_KEY_LAYOUT) as? NavigationCallback.Layout
         } else {
-            setContentFragment(navigationFragmentFactory.createFragment(navigation),false)
+            setContentFragment(createFragment(),false)
         }
     }
 
-    private fun setContentFragment(fragment: Fragment, addToBackStack: Boolean = true) {
+    open fun createFragment(): Fragment {
+        return navigationFragmentFactory.createFragment(navigation)
+    }
+
+    open fun setContentFragment(fragment: Fragment, addToBackStack: Boolean = true) {
         supportFragmentManager.inTransaction {
             val transaction = replace(R.id.content_fragment_container, fragment)
             if (addToBackStack) {
@@ -124,7 +134,7 @@ open class PhoneNavigationActivity : ResourceActivity(), NavigationCallback {
         finish()
     }
 
-    private fun setTitle() {
+    open fun setTitle() {
         super.setTitle(navigationFragmentFactory.getNavigationTitle(navigation))
     }
 
@@ -197,7 +207,7 @@ open class PhoneNavigationActivity : ResourceActivity(), NavigationCallback {
         })
     }
 
-    private fun setFloatingActionButton() {
+    open fun setFloatingActionButton() {
         val layoutParams = button_floating.layoutParams as CoordinatorLayout.LayoutParams
         layoutParams.behavior = FloatingActionButtonBehavior()
     }

@@ -21,11 +21,14 @@ class CardListFragment : BindingFragment<FragmentCardListBinding, CardListViewMo
         private const val STATE_PAGE_REQUESTED = "STATE_PAGE_REQUESTED"
 
         private const val ARG_CARD_LIST_TYPE = "ARG_CARD_LIST_TYPE"
+        private const val ARG_PARENT_CARD_ID = "ARG_PARENT_CARD_ID"
         private const val ARG_SCREEN_TITLE = "ARG_SCREEN_TITLE"
-        fun newInstance(cardListType: CardListViewModel.CardListType, screenTitle: String?) : CardListFragment {
+
+        fun newInstance(cardListType: CardListViewModel.CardListType, parentCardId : String?, screenTitle: String?) : CardListFragment {
             val fragment = CardListFragment()
             val bundle = Bundle()
             bundle.putSerializable(ARG_CARD_LIST_TYPE, cardListType)
+            bundle.putString(ARG_PARENT_CARD_ID, parentCardId)
             bundle.putString(ARG_SCREEN_TITLE, screenTitle)
             fragment.arguments = bundle
             return fragment
@@ -33,10 +36,12 @@ class CardListFragment : BindingFragment<FragmentCardListBinding, CardListViewMo
     }
 
     private lateinit var cardListType: CardListViewModel.CardListType
+    private var parentCardId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         cardListType = arguments!!.getSerializable(ARG_CARD_LIST_TYPE) as CardListViewModel.CardListType
+        parentCardId = arguments!!.getString(ARG_PARENT_CARD_ID)
 
         if (viewModel == null) {
             return
@@ -48,11 +53,11 @@ class CardListFragment : BindingFragment<FragmentCardListBinding, CardListViewMo
             newCardList ->
             val cardListAdapter = (card_list?.adapter as? CardListAdapter)
             cardListAdapter?.submitList(newCardList!!)
-        })
+        },parentCardId)
 
         viewModel!!.observerProgress(cardListType,this,{
             tracker -> if (view != null) binding.progressTracker = tracker
-        })
+        },parentCardId)
     }
 
     override fun getViewModelClass(): Class<CardListViewModel>? {
@@ -85,7 +90,7 @@ class CardListFragment : BindingFragment<FragmentCardListBinding, CardListViewMo
         cardListAdapter.cardDisplayListener = object : CardListAdapter.CardDisplayListener {
             override fun onCardDisplayed(position: Int, card: CardViewDataHolder?) {
                 if (card?.getRemoteOrder()?:position >= (pageSynced-1) * DEFAULT_PAGE_SIZE -1) {
-                    viewModel!!.loadMore(cardListType)
+                    viewModel!!.loadMore(cardListType, parentCardId)
                     pageSynced++
                 }
             }
@@ -101,27 +106,27 @@ class CardListFragment : BindingFragment<FragmentCardListBinding, CardListViewMo
             adapter.currentList?.dataSource?.invalidate()
 
             pageSynced = 2
-            viewModel!!.refresh(cardListType,true, DEFAULT_PAGE_SIZE)
+            viewModel!!.refresh(cardListType, parentCardId,true, DEFAULT_PAGE_SIZE)
             swipe_refresh.isRefreshing = false
         }
 
         pageSynced = savedInstanceState?.getInt(STATE_PAGE_REQUESTED)?:2
-        viewModel!!.refresh(cardListType,savedInstanceState == null, DEFAULT_PAGE_SIZE)
+        viewModel!!.refresh(cardListType, parentCardId,savedInstanceState == null, DEFAULT_PAGE_SIZE)
     }
 
     override fun onStart() {
         super.onStart()
-        viewModel!!.unfade(cardListType)
+        viewModel!!.unfade(cardListType, parentCardId)
     }
 
     override fun onStop() {
         super.onStop()
-        viewModel!!.fade(cardListType)
+        viewModel!!.fade(cardListType, parentCardId)
     }
 
     override fun onDetach() {
         super.onDetach()
-        viewModel!!.remove(cardListType)
+        viewModel!!.remove(cardListType, parentCardId)
     }
 
     override fun onOpenUrl(url: String): Boolean {

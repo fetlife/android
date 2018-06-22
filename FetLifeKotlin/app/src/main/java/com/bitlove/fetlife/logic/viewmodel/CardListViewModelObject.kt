@@ -3,12 +3,13 @@ package com.bitlove.fetlife.logic.viewmodel
 import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MediatorLiveData
 import android.arch.paging.PagedList
+import android.util.Log
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.logic.dataholder.CardViewDataHolder
 import com.bitlove.fetlife.model.dataobject.wrapper.ProgressTracker
 import com.bitlove.fetlife.model.resource.ResourceResult
 
-class CardListViewModelObject(private var cardListType : CardListViewModel.CardListType)  {
+class CardListViewModelObject(private var cardListType : CardListViewModel.CardListType, private val parentId: String? = null)  {
 
     private var resourceResult : ResourceResult<PagedList<CardViewDataHolder>>? = null
     var cardList = MediatorLiveData<PagedList<CardViewDataHolder>>()
@@ -56,9 +57,12 @@ class CardListViewModelObject(private var cardListType : CardListViewModel.CardL
             CardListViewModel.CardListType.EXPLORE_FRIENDS_FEED -> dataSource.getFriendsFeedLoader(forceLoad,limit) as ResourceResult<PagedList<CardViewDataHolder>>
             CardListViewModel.CardListType.GROUPS -> dataSource.getGroupsLoader(forceLoad,limit) as ResourceResult<PagedList<CardViewDataHolder>>
             CardListViewModel.CardListType.FAVORITES -> dataSource.getFavoritesLoader(limit) as ResourceResult<PagedList<CardViewDataHolder>>
+            CardListViewModel.CardListType.GROUPS_DISCUSSIONS -> dataSource.getGroupDiscussionsLoader(parentId!!,forceLoad,limit) as ResourceResult<PagedList<CardViewDataHolder>>
         }
 
-        cardList.addSource(resourceResult!!.liveData, {data -> cardList.value = data})
+        cardList.addSource(resourceResult!!.liveData, {
+            data -> cardList.value = data;Log.e("LLL","Change Notification Arrived: " + cardListType.toString())
+        })
         currentCardSource = resourceResult!!.liveData
 
         progressTracker.addSource(resourceResult!!.progressTracker, {data -> progressTracker.value = data})

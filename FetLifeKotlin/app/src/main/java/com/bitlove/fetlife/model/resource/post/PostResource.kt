@@ -13,11 +13,11 @@ abstract class PostResource<ResourceType>(val resource: ResourceType, userId: St
     }
 
     private fun putInBackground(resource: ResourceType) {
+        getContentDatabaseWrapper().safeRun(userId, {
+            contentDb ->
+            saveToDb(contentDb, resource)
+        },false)
         bg {
-            getContentDatabaseWrapper().safeRun(userId, {
-                contentDb ->
-                saveToDb(contentDb, resource)
-            },true)
             if (shouldSync(resource)) {
                 syncWithNetwork(resource)
             }

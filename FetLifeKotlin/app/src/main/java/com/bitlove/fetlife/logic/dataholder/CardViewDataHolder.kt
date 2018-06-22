@@ -53,6 +53,9 @@ abstract class CardViewDataHolder {
         }
     }
 
+    open fun getMemberCount() : String? = null
+    open fun isMember() : Boolean? = null
+
     open fun getCreatedAt() : String? = null
     open fun getChild() : CardViewDataHolder? = null
     open fun getChildren() : List<CardViewDataHolder>? = null

@@ -213,6 +213,10 @@ class CardViewInteractionHandler {
         }
     }
 
+    open fun onMembership(v: View, cardData: CardViewDataHolder) {
+
+    }
+
     open fun onDeleteCard(v: View, cardData: CardViewDataHolder) {
         if (!checkInteractionTime()) return
         //TODO implement`
@@ -226,6 +230,5 @@ class CardViewInteractionHandler {
         lastUserInteraction = currentTime
         return true
     }
-
 
 }

@@ -68,6 +68,14 @@ class Relation : CardViewDataHolder(), SyncObject<RelationEntity>, Favoritable {
         return getChild()?.hasNewComment() ?: null
     }
 
+    override fun getMemberCount(): String? {
+        return getChild()?.getMemberCount()
+    }
+
+    override fun isMember(): Boolean? {
+        return getChild()?.isMember()
+    }
+
     override fun getLoveCount(): String? {
         return getChild()?.getLoveCount() ?: null
     }

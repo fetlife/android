@@ -1,5 +1,6 @@
 package com.bitlove.fetlife.model.resource.delete
 
+import android.util.Log
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.getLoggedInUser
 import com.bitlove.fetlife.model.dataobject.entity.content.ReactionEntity
@@ -23,13 +24,15 @@ class DeleteReactionResource(reaction: Reaction, val parent: Content, userId: St
     }
 
     override fun removeFromDb(contentDb: FetLifeContentDatabase, reaction: Reaction) {
+        Log.e("LLL","Delete Save Started")
         if (reaction.getType() == Reaction.TYPE.LOVE.toString()) {
             parent.contentEntity.loved = false
-            parent.save(userId)
+            parent.save(contentDb)
         }
         val entity = reaction.getEntity()
         entity.contentId = parent.getLocalId()
-        reaction.delete(userId)
+        reaction.delete(contentDb)
+        Log.e("LLL","Delete Save Finished")
     }
 
     override fun shouldSync(reaction: Reaction): Boolean {

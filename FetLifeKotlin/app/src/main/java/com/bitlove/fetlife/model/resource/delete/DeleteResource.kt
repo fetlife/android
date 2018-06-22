@@ -13,11 +13,11 @@ abstract class DeleteResource<ResourceType>(val resource: ResourceType, userId: 
     }
 
     private fun removeInBackground(resource: ResourceType) {
+        getContentDatabaseWrapper().safeRun(userId, {
+            contentDb ->
+            removeFromDb(contentDb, resource)
+        },false)
         bg {
-            getContentDatabaseWrapper().safeRun(userId, {
-                contentDb ->
-                removeFromDb(contentDb, resource)
-            },true)
             if (shouldSync(resource)) {
                 syncWithNetwork(resource)
             }

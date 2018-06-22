@@ -249,6 +249,39 @@
                 >
 
                 <ImageView
+                    android:id="@+id/member_button"
+                    app:visible='@{cardData.memberCount != null}'
+                    android:layout_width="wrap_content"
+                    android:layout_height="28dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="0dp"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+                    app:ico_size="24dp"
+                    app:ico_icon="gmd-people"
+                    android:tint='@{cardData.isMember() == true ? @color/lightSilver : @color/midGray}'
+                    app:ico_color="@color/midGray"
+                    android:onClick="@{(view) -> cardInteractionHandler.onMembership(view, cardData)}"
+                    android:layout_alignParentStart="true"
+                    app:hitrectExtension="@{42}"
+                    />
+
+                <TextView
+                    android:id="@+id/member_count"
+                    app:visible='@{cardData.memberCount != null}'
+                    android:layout_width="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_height="28dp"
+                    android:gravity="center"
+                    android:textColor='@{cardData.isMember() == true ? @color/lightSilver : @color/midGray}'
+                    android:text='@{cardData.memberCount}'
+                    android:onClick="@{(view) -> cardInteractionHandler.onMembership(view, cardData)}"
+                    android:layout_toRightOf="@id/member_button"
+                    app:hitrectExtension="@{42}"
+                    />
+
+                <ImageView
                     android:id="@+id/love_button"
                     app:visible='@{cardData.loveCount != null}'
                     android:layout_width="wrap_content"
@@ -259,7 +292,7 @@
                     android:tint='@{cardData.isLoved() == true ? @color/bostonUniversityRed : @color/midGray}'
                     app:ico_color="@color/midGray"
                     android:onClick="@{(view) -> cardInteractionHandler.onLove(view, cardData)}"
-                    android:layout_alignParentStart="true"
+                    android:layout_toRightOf="@id/member_count"
                     app:hitrectExtension="@{42}"
                     />
 

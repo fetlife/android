@@ -5,6 +5,7 @@ import com.bitlove.fetlife.model.dataobject.entity.content.ContentEntity
 import com.bitlove.fetlife.model.dataobject.entity.content.ReactionEntity
 import com.bitlove.fetlife.model.dataobject.entity.reference.MemberRef
 import com.bitlove.fetlife.model.dataobject.wrapper.Content
+import com.bitlove.fetlife.model.dataobject.wrapper.Group
 import com.bitlove.fetlife.model.dataobject.wrapper.Reaction
 import com.bitlove.fetlife.model.db.FetLifeContentDatabase
 import com.bitlove.fetlife.model.db.dao.MemberDao
@@ -26,7 +27,7 @@ open class GetReactionListJob(val type: Reaction.TYPE, val parent: SyncObject<Co
             reaction.type = Reaction.TYPE.COMMENT.toString()
             reactionDao.insertOrUpdate(reaction)
         }
-        parent.save()
+        parent.save(contentDb)
     }
 
     private fun saveMember(memberRef: MemberRef?, memberDao: MemberDao) : String? {
@@ -43,6 +44,8 @@ open class GetReactionListJob(val type: Reaction.TYPE, val parent: SyncObject<Co
             Reaction.TYPE.COMMENT -> {
                 if (parent is Content && parent.getType() == Content.TYPE.CONVERSATION.toString()) {
                     getApi().getMessages(getAuthHeader(),parent.getRemoteId(),sinceMarker,unilMarker,limit,page)
+                } else if (parent is Content && parent.getType() == Content.TYPE.GROUP_DISCUSSION.toString()) {
+                    getApi().getGroupMessages(getAuthHeader(),parent.getEntity().parentNetworkId!!,parent.getRemoteId()!!,limit,page)
                 } else {
                     getApi().getComments(getAuthHeader(),parent.getEntity().remoteMemberId,parent.getServerType(),parent.getRemoteId(),sinceMarker,unilMarker,limit,page)
                 }

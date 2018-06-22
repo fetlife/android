@@ -33,6 +33,22 @@ class Group() : AvatarViewDataHolder(), SyncObject<GroupEntity>, Favoritable {
         return groupEntity?.networkId
     }
 
+    override fun getTitle(): String? {
+        return groupEntity?.name
+    }
+
+    override fun getSupportingText(): String? {
+        return groupEntity?.description
+    }
+
+    override fun getMemberCount(): String? {
+        return groupEntity?.memberCount.toString()
+    }
+
+    override fun isMember(): Boolean? {
+        return groupEntity.memberOfGroup
+    }
+
     override fun getType(): String? {
         return Group::class.simpleName
     }

@@ -1,5 +1,6 @@
 package com.bitlove.fetlife.model.resource.post
 
+import android.util.Log
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.getLoggedInUser
 import com.bitlove.fetlife.model.dataobject.entity.content.ReactionEntity
@@ -35,14 +36,15 @@ class PostReactionResource(reaction: Reaction, val parent: Content, userId: Stri
     }
 
     override fun saveToDb(contentDb: FetLifeContentDatabase, reaction: Reaction) {
+        Log.e("LLL","Post Save Started")
         if (reaction.getType() == Reaction.TYPE.LOVE.toString()) {
             parent.contentEntity.loved = true
-            parent.save(userId)
+            parent.save(contentDb)
         }
         val entity = reaction.getEntity()
         entity.contentId = parent.getLocalId()
-        reaction.save(userId)
-        parent.save(userId)
+        reaction.save(contentDb)
+        Log.e("LLL","Post Save Finished")
     }
 
     override fun shouldSync(reaction: Reaction): Boolean {

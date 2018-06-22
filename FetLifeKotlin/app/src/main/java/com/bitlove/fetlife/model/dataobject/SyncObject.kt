@@ -17,22 +17,34 @@ interface SyncObject<T : DataEntity> {
     open fun getEntity() : T
 
     @Suppress("UNCHECKED_CAST")
-    fun save(userId: String? = getLoggedInUser()?.getLocalId()) {
-        getDataBaseWrapper().safeRun(userId, {
-            contentDb ->
-            val dao = getDao(contentDb)
-            dao.insertOrUpdate(this.getEntity())
-        })
+    fun save(contentDb: FetLifeContentDatabase) {
+        val dao = getDao(contentDb)
+        dao.insertOrUpdate(getEntity())
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun delete(userId: String? = getLoggedInUser()?.getLocalId()) {
-        getDataBaseWrapper().safeRun(userId, {
-            contentDb ->
-            val dao = getDao(contentDb)
-            dao.delete(getEntity())
-        })
+    fun delete(contentDb: FetLifeContentDatabase) {
+        val dao = getDao(contentDb)
+        dao.delete(getEntity())
     }
+
+//    @Suppress("UNCHECKED_CAST")
+//    fun save(userId: String? = getLoggedInUser()?.getLocalId()) {
+//        getDataBaseWrapper().safeRun(userId, {
+//            contentDb ->
+//            val dao = getDao(contentDb)
+//            dao.insertOrUpdate(this.getEntity())
+//        })
+//    }
+//
+//    @Suppress("UNCHECKED_CAST")
+//    fun delete(userId: String? = getLoggedInUser()?.getLocalId()) {
+//        getDataBaseWrapper().safeRun(userId, {
+//            contentDb ->
+//            val dao = getDao(contentDb)
+//            dao.delete(getEntity())
+//        })
+//    }
 
     fun getDataBaseWrapper() : FetLifeContentDatabaseWrapper {
         return FetLifeApplication.instance.fetLifeContentDatabaseWrapper

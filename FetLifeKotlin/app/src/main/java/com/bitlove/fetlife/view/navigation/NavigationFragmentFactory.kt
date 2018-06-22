@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.logic.viewmodel.CardListViewModel
+import com.bitlove.fetlife.logic.viewmodel.CardListViewModelObject
 import com.bitlove.fetlife.view.generic.CardListFragment
 import com.bitlove.fetlife.view.generic.EmptyFragment
 import com.bitlove.fetlife.view.login.LoginFragment
@@ -46,15 +47,15 @@ class NavigationFragmentFactory {
         return when (navigation) {
             R.id.navigation_search -> TurbolinksFragment.newInstance(R.id.navigation_search)
             R.id.navigation_notifications -> TurbolinksFragment.newInstance(R.id.navigation_notifications)
-            R.id.navigation_groups -> CardListFragment.newInstance(CardListViewModel.CardListType.GROUPS,getNavigationTitle(navigation))
-            R.id.navigation_explore_friends_activity -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_FRIENDS_FEED,getNavigationTitle(navigation))
-            R.id.navigation_explore_fresh_and_pervy -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_FRESH_AND_PERVY,getNavigationTitle(navigation))
-            R.id.navigation_explore_kinky_and_popular -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_KINKY_AND_POPULAR,getNavigationTitle(navigation))
-            R.id.navigation_explore_stuff_you_love -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_STUFF_YOU_LOVE,getNavigationTitle(navigation))
-            R.id.navigation_conversations_inbox -> CardListFragment.newInstance(CardListViewModel.CardListType.CONVERSATIONS_INBOX,getNavigationTitle(navigation))
-            R.id.navigation_conversations_all -> CardListFragment.newInstance(CardListViewModel.CardListType.CONVERSATIONS_ALL,getNavigationTitle(navigation))
-            R.id.navigation_favorites -> CardListFragment.newInstance(CardListViewModel.CardListType.FAVORITES,getNavigationTitle(navigation))
-            else -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_KINKY_AND_POPULAR,getNavigationTitle(navigation))
+            R.id.navigation_groups -> CardListFragment.newInstance(CardListViewModel.CardListType.GROUPS,null,getNavigationTitle(navigation))
+            R.id.navigation_explore_friends_activity -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_FRIENDS_FEED,null,getNavigationTitle(navigation))
+            R.id.navigation_explore_fresh_and_pervy -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_FRESH_AND_PERVY,null,getNavigationTitle(navigation))
+            R.id.navigation_explore_kinky_and_popular -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_KINKY_AND_POPULAR,null,getNavigationTitle(navigation))
+            R.id.navigation_explore_stuff_you_love -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_STUFF_YOU_LOVE,null,getNavigationTitle(navigation))
+            R.id.navigation_conversations_inbox -> CardListFragment.newInstance(CardListViewModel.CardListType.CONVERSATIONS_INBOX,null,getNavigationTitle(navigation))
+            R.id.navigation_conversations_all -> CardListFragment.newInstance(CardListViewModel.CardListType.CONVERSATIONS_ALL,null,getNavigationTitle(navigation))
+            R.id.navigation_favorites -> CardListFragment.newInstance(CardListViewModel.CardListType.FAVORITES,null,getNavigationTitle(navigation))
+            else -> CardListFragment.newInstance(CardListViewModel.CardListType.EXPLORE_KINKY_AND_POPULAR,null,getNavigationTitle(navigation))
         }
     }
 

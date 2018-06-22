@@ -19,10 +19,11 @@ class CardListViewModel : ViewModel() {
         EXPLORE_KINKY_AND_POPULAR,
         EXPLORE_FRIENDS_FEED,
         GROUPS,
+        GROUPS_DISCUSSIONS,
         FAVORITES
     }
 
-    var viewModelObjects = HashMap<CardListType, CardListViewModelObject>()
+    var viewModelObjects = HashMap<String, CardListViewModelObject>()
 
 //    fun observerDataForever(cardListType: CardListType, observer: (List<CardViewDataHolder>?) -> Unit) {
 //        getViewModelObject(cardListType).cardList.observeForever { data -> observer.invoke(data) }
@@ -32,40 +33,40 @@ class CardListViewModel : ViewModel() {
 //        getViewModelObject(cardListType).progressTracker.observeForever{ tracker -> observer.invoke(tracker) }
 //    }
 
-    fun observerData(cardListType: CardListType, owner: LifecycleOwner, observer: (PagedList<CardViewDataHolder>?) -> Unit) {
-        getViewModelObject(cardListType).cardList.observe(owner, Observer {data -> observer.invoke(data)})
+    fun observerData(cardListType: CardListType, owner: LifecycleOwner, observer: (PagedList<CardViewDataHolder>?) -> Unit, parentId: String?) {
+        getViewModelObject(cardListType, parentId).cardList.observe(owner, Observer {data -> observer.invoke(data)})
     }
 
-    fun observerProgress(cardListType: CardListType, owner: LifecycleOwner, observer: (ProgressTracker?) -> Unit) {
-        getViewModelObject(cardListType).progressTracker.observe(owner, Observer { tracker -> observer.invoke(tracker) })
+    fun observerProgress(cardListType: CardListType, owner: LifecycleOwner, observer: (ProgressTracker?) -> Unit, parentId: String?) {
+        getViewModelObject(cardListType, parentId).progressTracker.observe(owner, Observer { tracker -> observer.invoke(tracker) })
     }
 
-    private fun getViewModelObject(cardListType: CardListType) : CardListViewModelObject {
-        if (!viewModelObjects.containsKey(cardListType)) {
-            viewModelObjects[cardListType] = CardListViewModelObject(cardListType)
+    private fun getViewModelObject(cardListType: CardListType, parentId: String?) : CardListViewModelObject {
+        if (!viewModelObjects.containsKey(cardListType.toString() + parentId)) {
+            viewModelObjects[cardListType.toString()+parentId] = CardListViewModelObject(cardListType,parentId)
         }
-        return viewModelObjects[cardListType]!!
+        return viewModelObjects[cardListType.toString()+parentId]!!
     }
 
-    open fun refresh(cardListType: CardListType, forceLoad: Boolean = false, limit: Int) {
-        getViewModelObject(cardListType).refresh(forceLoad,limit)
+    open fun refresh(cardListType: CardListType, parentId: String?, forceLoad: Boolean = false, limit: Int) {
+        getViewModelObject(cardListType,parentId).refresh(forceLoad,limit)
     }
 
-    open fun loadMore(cardListType: CardListType) {
-        getViewModelObject(cardListType).loadMore()
+    open fun loadMore(cardListType: CardListType, parentId: String?) {
+        getViewModelObject(cardListType,parentId).loadMore()
     }
 
-    fun fade(cardListType: CardListType) {
-        getViewModelObject(cardListType).fade()
+    fun fade(cardListType: CardListType, parentId: String?) {
+        getViewModelObject(cardListType,parentId).fade()
     }
 
-    fun unfade(cardListType: CardListType) {
-        getViewModelObject(cardListType).unfade()
+    fun unfade(cardListType: CardListType, parentId: String?) {
+        getViewModelObject(cardListType,parentId).unfade()
     }
 
-    fun remove(cardListType: CardListType) {
+    fun remove(cardListType: CardListType, parentId: String?) {
         //TODO: remove live data observers
-        val viewModelObject = viewModelObjects.remove(cardListType)
+        val viewModelObject = viewModelObjects.remove(cardListType.toString()+parentId)
         viewModelObject?.release()
     }
 

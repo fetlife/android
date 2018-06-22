@@ -21,7 +21,7 @@ class PostReactionJob(var reaction: SyncObject<ReactionEntity>, var parent: Sync
         entity.type = localEntity.type
         entity.memberId = localEntity.memberId
         entity.contentId = localEntity.contentId
-        reaction.delete()
+        reaction.delete(contentDb)
         contentDb.reactionDao().insertOrUpdate(entity)
     }
 
@@ -31,6 +31,8 @@ class PostReactionJob(var reaction: SyncObject<ReactionEntity>, var parent: Sync
             Reaction.TYPE.COMMENT.toString() -> {
                 when (parentEntity.type) {
                     Content.TYPE.CONVERSATION.toString() -> getApi().postMessage(getAuthHeader(), parent.getRemoteId()!!, reaction.getEntity().body!!)
+                //TODO(GROUP): post Group post
+                    Content.TYPE.GROUP_DISCUSSION.toString() -> getApi().postMessage(getAuthHeader(), parent.getRemoteId()!!, reaction.getEntity().body!!)
                     else -> getApi().postComment(getAuthHeader(), parentEntity.remoteMemberId, parent.getServerType(), parentEntity.networkId, reaction.getEntity().body!!)
                 }
             }

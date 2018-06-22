@@ -24,6 +24,12 @@ interface FetLifeApi {
     @GET("/api/v2/me/conversations")
     fun getConversations(@Header("Authorization") authHeader: String, @Query("order_by") orderBy: String?, @Query("limit") limit: Int?, @Query("page") page: Int?): Call<Array<ContentEntity>>
 
+    @GET("/api/v2/groups/{groupId}/posts/{groupPostId}/comments")
+    fun getGroupMessages(@Header("Authorization") authHeader: String, @Path("groupId") groupId: String, @Path("groupPostId") groupPostId: String, @Query("limit") limit: Int, @Query("page") page: Int): Call<Array<ReactionEntity>>
+
+    @GET("/api/v2/groups/{groupId}/posts")
+    fun getGroupDiscussions(@Header("Authorization") authHeader: String, @Path("groupId") groupId: String, @Query("limit") limit: Int?, @Query("page") page: Int?): Call<Array<ContentEntity>>
+
     @GET("/api/v2/me/conversations/{conversationId}")
     fun getConversation(@Header("Authorization") authHeader: String, @Path("conversationId") conversationId: String): Call<ContentEntity>
 

@@ -23,6 +23,10 @@ class FetLifeDataSource {
         return GetContentListResource(Content.TYPE.CONVERSATION, forceLoad, limit).loadResult
     }
 
+    fun getGroupDiscussionsLoader(groupId: String, forceLoad: Boolean, limit: Int) : ResourceResult<PagedList<Content>> {
+        return GetGroupDiscussionListResource(forceLoad, limit, groupId).loadResult
+    }
+
     fun getFriendsFeedLoader(forceLoad: Boolean, limit: Int): ResourceResult<PagedList<ExploreStory>> {
         return GetExploreListResource(ExploreStory.TYPE.EXPLORE_FRIENDS,forceLoad, limit).loadResult
     }
@@ -43,6 +47,7 @@ class FetLifeDataSource {
         return GetFavoriteListResource(limit).loadResult
     }
 
+    //TODO(GROUP): remove/modify
     fun getGroupDetailLoader(groupId: String): ResourceResult<Relation> {
         return GetGroupResource(groupId,true).loadResult
     }

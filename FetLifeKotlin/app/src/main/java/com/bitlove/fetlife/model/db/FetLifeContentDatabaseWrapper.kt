@@ -65,11 +65,12 @@ class FetLifeContentDatabaseWrapper {
             if (contentDb == null) {
                 openDb()
             }
-            if (runInTransaction) {
-                contentDb!!.runInTransaction({runner.invoke(contentDb!!)})
-            } else {
+//TODO: check if there is an option to avoid blocking transactiions
+//            if (runInTransaction) {
+//                contentDb!!.runInTransaction({runner.invoke(contentDb!!)})
+//            } else {
                 runner.invoke(contentDb!!)
-            }
+//            }
             return true
         } catch (t: Throwable) {
             //TODO: log
@@ -92,7 +93,7 @@ class FetLifeContentDatabaseWrapper {
     }
 
     private fun openDb() {
-        contentDb = Room.databaseBuilder(FetLifeApplication.instance, FetLifeContentDatabase::class.java, "fetlife_database_" + userId).fallbackToDestructiveMigration().build()
+        contentDb = Room.databaseBuilder(FetLifeApplication.instance, FetLifeContentDatabase::class.java, "fetlife_database_" + userId).fallbackToDestructiveMigration().allowMainThreadQueries().build()
     }
 
 }

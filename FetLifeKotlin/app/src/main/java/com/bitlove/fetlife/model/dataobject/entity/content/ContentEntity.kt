@@ -23,6 +23,7 @@ import com.google.gson.annotations.SerializedName
                 onUpdate = ForeignKey.RESTRICT)
 ))
 data class ContentEntity(@SerializedName("id") var networkId: String = "",
+                         @SerializedName("parent_id") var parentNetworkId: String? = null,
                          @SerializedName("member_id") var memberId: String? = null,
                          @SerializedName("group_id") var groupId: String? = null,
                          @Ignore @SerializedName("member") var memberRef: MemberRef? = null,

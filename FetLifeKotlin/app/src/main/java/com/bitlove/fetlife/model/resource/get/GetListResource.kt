@@ -22,7 +22,7 @@ abstract class GetListResource<ResourceType>(userId : String?, val pageSize: Int
         return super.execute()
     }
 
-    private fun loadInBackground() {
+    open fun loadInBackground() {
         bg {
             getContentDatabaseWrapper().safeRun(userId, {
                 contentDb ->
