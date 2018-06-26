@@ -35,4 +35,6 @@
     <color name="color_accept">#32CD32</color>
     <color name="color_reject">#cd0000</color>
 
+    <color name="app_icon_background">#000000</color>
+
 </resources>
