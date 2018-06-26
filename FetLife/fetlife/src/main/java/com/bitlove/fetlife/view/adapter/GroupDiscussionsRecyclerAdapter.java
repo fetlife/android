@@ -81,6 +81,7 @@ public class GroupDiscussionsRecyclerAdapter extends ResourceListRecyclerAdapter
         String groupDiscussionBody = groupPost.getBody();
         String descPreview = groupDiscussionBody.substring(0,Math.min(MAX_BODY_LENGTH,groupDiscussionBody.length())).trim();
 
+        //TODO(MARKDOWN): here
         groupDiscussionViewHolder.messageText.setText(descPreview);
         groupDiscussionViewHolder.dateText.setText(SimpleDateFormat.getDateTimeInstance().format(groupPost.getDate()));
 

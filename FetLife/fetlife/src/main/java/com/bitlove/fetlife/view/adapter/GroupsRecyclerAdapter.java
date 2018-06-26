@@ -105,6 +105,7 @@ public class GroupsRecyclerAdapter extends ResourceListRecyclerAdapter<Group, Gr
         String description = group.getDescription();
         String descPreview = description.substring(0,Math.min(MAX_DESC_LENGTH,description.length())).trim();
 
+        //TODO(MARKDOWN): here
         holder.groupDescription.setText(descPreview);
         holder.groupDescription.setVisibility(TextUtils.isEmpty(description) ? View.GONE : View.VISIBLE);
         String memberCount = holder.itemView.getContext().getString((group.getMemberCount() == 1 ? R.string.text_group_member_count : R.string.text_group_members_count),group.getMemberCount());

@@ -40,6 +40,7 @@ public class GroupInfoFragment extends LoadFragment {
             return;
         }
         GroupInfoEnum groupInfoEnum = (GroupInfoEnum) getArguments().getSerializable(ARG_GROUP_INFO_ENUM);
+        //TODO(MARKDOWN): here
         descriptionTextView.setText(groupInfoEnum == GroupInfoEnum.RULES ? group.getRules() : group.getDescription());
     }
 

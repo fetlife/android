@@ -185,6 +185,7 @@ public class FeedAdapterBinder {
             TextView itemSingleText = (TextView) itemView.findViewById(R.id.feed_innerlist_single_text);
             itemSingleText.setText(itemTextText);
             TextView itemText = (TextView) itemView.findViewById(R.id.feed_innerlist_upper);
+            //TODO(MARKDOWN): here
             itemText.setText(itemTextText);
             TextView timeText = (TextView) itemView.findViewById(R.id.feed_innerlist_caption);
             timeText.setText(itemTimeText);

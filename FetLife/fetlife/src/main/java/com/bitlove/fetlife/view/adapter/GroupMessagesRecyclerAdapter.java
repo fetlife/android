@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bitlove.fetlife.FetLifeApplication;
@@ -24,7 +23,6 @@ import com.bitlove.fetlife.model.pojos.fetlife.dbjson.GroupComment_Table;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.GroupPost;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.GroupPost_Table;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
-import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Message;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Picture;
 import com.bitlove.fetlife.model.pojos.fetlife.json.FeedEvent;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Mention;
@@ -169,7 +167,8 @@ public class GroupMessagesRecyclerAdapter extends RecyclerView.Adapter<GroupMess
             messageEntities = new MessageEntities();
         }
 
-        CharSequence messageBody = StringUtil.parseHtml(groupMessage.getBody().trim());
+        CharSequence messageBody = StringUtil.parseMarkedHtml(groupMessage.getBody().trim());
+        //TODO(MARKDOWN): here
         SpannableString spannedBody = new SpannableString(messageBody);
 
         List<Mention> mentions = messageEntities.getMentions();

@@ -16,8 +16,6 @@ import com.bitlove.fetlife.util.DateUtil;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-import br.tiagohm.markdownview.MarkdownView;
-
 public class EventInfoFragment extends LoadFragment {
 
     private static final String ARG_EVENT_ID = "ARG_EVENT_ID";
@@ -69,7 +67,7 @@ public class EventInfoFragment extends LoadFragment {
         dresscodeTextView.setText(event.getDressCode());
         costTextView.setText(event.getCost());
         descriptionTextView.setText(event.getDescription());
-//        descriptionTextView.loadMarkdown(event.getDescription());
+        //TODO(MARKDOWN): here
 //        descriptionTextView.setBackgroundColor(0);
     }
 

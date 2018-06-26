@@ -30,6 +30,7 @@ public class AboutFragment extends LoadFragment {
         if (member == null) {
             return;
         }
+        //TODO(MARKDOWN): here
         aboutTextView.setText(member.getAbout());
     }
 
