@@ -65,10 +65,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
+            <com.bitlove.fetlife.view.widget.WorkaroundTextView
                 android:id="@+id/message_text"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:singleLine="false"
+                android:textIsSelectable="true"
+                android:textColorLink="@color/text_color_link"
+                android:textAppearance="@style/MessageText"/>
 
         </LinearLayout>
 

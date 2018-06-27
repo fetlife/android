@@ -96,7 +96,6 @@ public class WritingActivity extends ResourceActivity implements AppBarLayout.On
     private void setWritingDetails(final Writing writing) {
         setTitle(writing.getTitle());
         TextView body = (TextView) findViewById(R.id.text_writing_body);
-        //TODO(MARKDOWN): here
         body.setText(StringUtil.parseMarkedHtml(writing.getBody()));
 
         findViewById(R.id.writing_menu_icon_love_container).setVisibility(writing.isDetailLoaded() ? View.VISIBLE : View.INVISIBLE);

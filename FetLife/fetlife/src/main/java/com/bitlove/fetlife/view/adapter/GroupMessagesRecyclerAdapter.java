@@ -167,32 +167,7 @@ public class GroupMessagesRecyclerAdapter extends RecyclerView.Adapter<GroupMess
             messageEntities = new MessageEntities();
         }
 
-        CharSequence messageBody = StringUtil.parseMarkedHtml(groupMessage.getBody().trim());
-        //TODO(MARKDOWN): here
-        SpannableString spannedBody = new SpannableString(messageBody);
-
-        List<Mention> mentions = messageEntities.getMentions();
-        for (final Mention mention : mentions) {
-            ClickableSpan clickableSpan = new ClickableSpan() {
-                public static final long CLICK_OFFSET = 500;
-                private long lastClick = 0;
-                @Override
-                public void onClick(View textView) {
-                    if (System.currentTimeMillis() - lastClick > CLICK_OFFSET) {
-                        mention.getMember().mergeSave();
-                        ProfileActivity.startActivity(textView.getContext(),mention.getMember().getId());
-                    }
-                    lastClick = System.currentTimeMillis();
-                }
-            };
-            int endPosition = mention.getOffset() + mention.getLength();
-            if (spannedBody.length() >= endPosition) {
-                spannedBody.setSpan(clickableSpan, mention.getOffset(), endPosition, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            } else {
-                Crashlytics.log("Mention body:" + spannedBody + " mention: " + mention.getOffset() + "," + mention.getLength());
-                Crashlytics.logException(new Exception("Invalid mention position"));
-            }
-        }
+        CharSequence messageBody = StringUtil.parseMarkedHtmlWithMentions(groupMessage.getBody().trim(),messageEntities.getMentions());
 
         List<Picture> pictures = messageEntities.getPictures();
         if (pictures.isEmpty()) {
@@ -249,7 +224,7 @@ public class GroupMessagesRecyclerAdapter extends RecyclerView.Adapter<GroupMess
         messageViewHolder.topText.setVisibility(View.VISIBLE);
         messageViewHolder.messageTextContainer.setVisibility(View.VISIBLE);
 
-        messageViewHolder.messageText.setText(spannedBody);
+        messageViewHolder.messageText.setText(messageBody);
 //        messageViewHolder.subText.setText(groupMessage.getSenderNickname() + messageViewHolder.subMessageSeparator + SimpleDateFormat.getDateTimeInstance().format(new Date(groupMessage.getDate())));
         messageViewHolder.topText.setText(groupMessage.getSenderNickname());
         messageViewHolder.subText.setText(SimpleDateFormat.getDateTimeInstance().format(new Date(groupMessage.getDate())));

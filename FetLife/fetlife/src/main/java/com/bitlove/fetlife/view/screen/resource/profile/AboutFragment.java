@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
+import com.bitlove.fetlife.util.StringUtil;
 import com.bitlove.fetlife.view.screen.resource.LoadFragment;
 
 public class AboutFragment extends LoadFragment {
@@ -30,8 +31,7 @@ public class AboutFragment extends LoadFragment {
         if (member == null) {
             return;
         }
-        //TODO(MARKDOWN): here
-        aboutTextView.setText(member.getAbout());
+        aboutTextView.setText(StringUtil.parseMarkedHtml(member.getAbout()));
     }
 
     @Nullable

@@ -76,7 +76,6 @@ public class StatusesRecyclerAdapter extends RecyclerView.Adapter<StatusViewHold
     @Override
     public void onBindViewHolder(StatusViewHolder holder, int position) {
         Status status = itemList.get(position);
-        //TODO(MARKDOWN): here
         holder.statusText.setText(StringUtil.parseMarkedHtml(status.getBody()));
         holder.statusDate.setText(SimpleDateFormat.getDateTimeInstance().format(new Date(status.getDate())));
     }

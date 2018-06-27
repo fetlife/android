@@ -112,31 +112,7 @@ public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessageViewHol
             messageEntities = new MessageEntities();
         }
 
-        CharSequence messageBody = StringUtil.parseMarkedHtml(message.getBody().trim());
-//        SpannableString spannedBody = new SpannableString(messageBody);
-//
-//        List<Mention> mentions = messageEntities.getMentions();
-//        for (final Mention mention : mentions) {
-//            ClickableSpan clickableSpan = new ClickableSpan() {
-//                public static final long CLICK_OFFSET = 500;
-//                private long lastClick = 0;
-//                @Override
-//                public void onClick(View textView) {
-//                    if (System.currentTimeMillis() - lastClick > CLICK_OFFSET) {
-//                        mention.getMember().mergeSave();
-//                        ProfileActivity.startActivity(FetLifeApplication.getInstance(),mention.getMember().getId());
-//                    }
-//                    lastClick = System.currentTimeMillis();
-//                }
-//            };
-//            int endPosition = mention.getOffset() + mention.getLength();
-//            if (spannedBody.length() >= endPosition) {
-//                spannedBody.setSpan(clickableSpan, mention.getOffset(), endPosition, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//            } else {
-//                Crashlytics.log("Mention body:" + spannedBody + " mention: " + mention.getOffset() + "," + mention.getLength());
-//                Crashlytics.logException(new Exception("Invalid mention position"));
-//            }
-//        }
+        CharSequence messageBody = StringUtil.parseMarkedHtmlWithMentions(message.getBody().trim(),messageEntities.getMentions());
 
         List<Picture> pictures = messageEntities.getPictures();
         if (pictures.isEmpty()) {
@@ -194,8 +170,6 @@ public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessageViewHol
 //        textView.setHighlightColor(Color.TRANSPARENT);
 
         messageViewHolder.messageText.setText(messageBody);
-        BetterLinkMovementMethod.linkifyHtml(Linkify.WEB_URLS,messageViewHolder.messageText);
-//        messageViewHolder.messageText.setText(spannedBody);
 //        messageViewHolder.subText.setText(message.getSenderNickname() + messageViewHolder.subMessageSeparator + SimpleDateFormat.getDateTimeInstance().format(new Date(message.getDate())));
         messageViewHolder.topText.setText(message.getSenderNickname());
         messageViewHolder.subText.setText(SimpleDateFormat.getDateTimeInstance().format(new Date(message.getDate())));
@@ -260,7 +234,7 @@ class MessageViewHolder extends RecyclerView.ViewHolder {
         messsageAligner = itemView.findViewById(R.id.message_aligner);
         messageContainer = itemView.findViewById(R.id.message_container);
         messageText = (TextView) itemView.findViewById(R.id.message_text);
-        //messageText.setMovementMethod(LinkMovementMethod.getInstance());
+        messageText.setMovementMethod(LinkMovementMethod.getInstance());
         subText = (TextView) itemView.findViewById(R.id.message_sub);
         topText = (TextView) itemView.findViewById(R.id.message_top);
 
