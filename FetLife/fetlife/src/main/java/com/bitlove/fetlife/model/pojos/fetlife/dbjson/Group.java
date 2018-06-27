@@ -130,7 +130,7 @@ public class Group extends BaseModel {
 
     @JsonProperty("description")
     public void setDescription(String description) {
-        this.description = StringUtil.parseHtml(description).toString();
+        this.description = StringUtil.parseMarkedHtml(description).toString();
     }
 
     @JsonProperty("id")

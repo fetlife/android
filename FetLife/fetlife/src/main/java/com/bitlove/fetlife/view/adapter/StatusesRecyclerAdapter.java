@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.model.pojos.fetlife.db.StatusReference;
 import com.bitlove.fetlife.model.pojos.fetlife.db.StatusReference_Table;
-import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Picture_Table;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Status;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Status_Table;
 import com.bitlove.fetlife.util.ServerIdUtil;
@@ -77,7 +76,7 @@ public class StatusesRecyclerAdapter extends RecyclerView.Adapter<StatusViewHold
     @Override
     public void onBindViewHolder(StatusViewHolder holder, int position) {
         Status status = itemList.get(position);
-        holder.statusText.setText(StringUtil.parseHtml(status.getBody()));
+        holder.statusText.setText(StringUtil.parseMarkedHtml(status.getBody()));
         holder.statusDate.setText(SimpleDateFormat.getDateTimeInstance().format(new Date(status.getDate())));
     }
 

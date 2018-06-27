@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Group;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
+import com.bitlove.fetlife.util.StringUtil;
 import com.bitlove.fetlife.view.screen.resource.LoadFragment;
 
 public class GroupInfoFragment extends LoadFragment {
@@ -40,7 +41,8 @@ public class GroupInfoFragment extends LoadFragment {
             return;
         }
         GroupInfoEnum groupInfoEnum = (GroupInfoEnum) getArguments().getSerializable(ARG_GROUP_INFO_ENUM);
-        descriptionTextView.setText(groupInfoEnum == GroupInfoEnum.RULES ? group.getRules() : group.getDescription());
+        String descText = groupInfoEnum == GroupInfoEnum.RULES ? group.getRules() : group.getDescription();
+        descriptionTextView.setText(StringUtil.parseMarkedHtml(descText));
     }
 
     @Nullable

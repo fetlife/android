@@ -14,6 +14,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.json.FeedEvent;
 import com.bitlove.fetlife.model.pojos.fetlife.json.PeopleInto;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Story;
 import com.bitlove.fetlife.util.DateUtil;
+import com.bitlove.fetlife.util.StringUtil;
 import com.crashlytics.android.Crashlytics;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -600,9 +601,9 @@ public class FeedItemResourceHelper {
         }
     }
 
-    public String getFormattedText(String text) {
+    public CharSequence getFormattedText(String text) {
         try {
-            return Html.fromHtml(text).toString();
+            return StringUtil.parseMarkedHtml(text);
         } catch (Throwable t) {
             return text;
         }

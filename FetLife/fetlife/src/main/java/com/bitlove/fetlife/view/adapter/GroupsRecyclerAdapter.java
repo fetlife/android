@@ -17,6 +17,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.db.GroupReference_Table;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Group;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Group_Table;
 import com.bitlove.fetlife.util.ServerIdUtil;
+import com.bitlove.fetlife.util.StringUtil;
 import com.raizlabs.android.dbflow.annotation.Collate;
 import com.raizlabs.android.dbflow.sql.language.OrderBy;
 import com.raizlabs.android.dbflow.sql.language.Select;
@@ -103,6 +104,7 @@ public class GroupsRecyclerAdapter extends ResourceListRecyclerAdapter<Group, Gr
         });
         holder.groupName.setText(group.getName());
         String description = group.getDescription();
+        description = StringUtil.parseMarkedHtml(description).toString();
         String descPreview = description.substring(0,Math.min(MAX_DESC_LENGTH,description.length())).trim();
 
         holder.groupDescription.setText(descPreview);

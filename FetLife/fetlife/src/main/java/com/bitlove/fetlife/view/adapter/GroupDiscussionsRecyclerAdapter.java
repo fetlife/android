@@ -15,6 +15,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.dbjson.GroupPost;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.GroupPost_Table;
 import com.bitlove.fetlife.util.DateUtil;
 import com.bitlove.fetlife.util.ServerIdUtil;
+import com.bitlove.fetlife.util.StringUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
@@ -79,6 +80,7 @@ public class GroupDiscussionsRecyclerAdapter extends ResourceListRecyclerAdapter
 
         groupDiscussionViewHolder.headerText.setText(groupPost.getTitle());
         String groupDiscussionBody = groupPost.getBody();
+        groupDiscussionBody = StringUtil.parseMarkedHtml(groupDiscussionBody).toString();
         String descPreview = groupDiscussionBody.substring(0,Math.min(MAX_BODY_LENGTH,groupDiscussionBody.length())).trim();
 
         groupDiscussionViewHolder.messageText.setText(descPreview);

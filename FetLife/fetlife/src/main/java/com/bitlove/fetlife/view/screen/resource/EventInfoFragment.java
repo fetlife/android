@@ -12,11 +12,10 @@ import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Event;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.util.DateUtil;
+import com.bitlove.fetlife.util.StringUtil;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-
-import br.tiagohm.markdownview.MarkdownView;
 
 public class EventInfoFragment extends LoadFragment {
 
@@ -68,8 +67,7 @@ public class EventInfoFragment extends LoadFragment {
         dateTextView.setText(startDateTime + DATE_INTERVAL_SEPARATOR + endDateTime);
         dresscodeTextView.setText(event.getDressCode());
         costTextView.setText(event.getCost());
-        descriptionTextView.setText(event.getDescription());
-//        descriptionTextView.loadMarkdown(event.getDescription());
+        descriptionTextView.setText(StringUtil.parseMarkedHtml(event.getDescription()));
 //        descriptionTextView.setBackgroundColor(0);
     }
 

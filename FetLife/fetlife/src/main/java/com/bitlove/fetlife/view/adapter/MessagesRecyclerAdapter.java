@@ -5,21 +5,20 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.text.util.Linkify;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
-import com.bitlove.fetlife.model.api.FetLifeApi;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Conversation;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Conversation_Table;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
@@ -35,8 +34,6 @@ import com.bitlove.fetlife.util.StringUtil;
 import com.bitlove.fetlife.util.UrlUtil;
 import com.bitlove.fetlife.view.adapter.feed.FeedItemResourceHelper;
 import com.bitlove.fetlife.view.adapter.feed.FeedRecyclerAdapter;
-import com.bitlove.fetlife.view.screen.resource.ConversationsActivity;
-import com.bitlove.fetlife.view.screen.resource.PictureShareActivity;
 import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity;
 import com.bitlove.fetlife.view.widget.AutoAlignGridView;
 import com.crashlytics.android.Crashlytics;
@@ -44,13 +41,12 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import me.saket.bettermovementmethod.BetterLinkMovementMethod;
 
 public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessageViewHolder> {
 
@@ -101,6 +97,8 @@ public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessageViewHol
         return new MessageViewHolder(itemView);
     }
 
+    private SpannableStringBuilder spanBuilder = null;
+
     @Override
     public void onBindViewHolder(MessageViewHolder messageViewHolder, int position) {
         Message message = itemList.get(position);
@@ -114,31 +112,7 @@ public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessageViewHol
             messageEntities = new MessageEntities();
         }
 
-        CharSequence messageBody = StringUtil.parseHtml(message.getBody().trim());
-        SpannableString spannedBody = new SpannableString(messageBody);
-
-        List<Mention> mentions = messageEntities.getMentions();
-        for (final Mention mention : mentions) {
-            ClickableSpan clickableSpan = new ClickableSpan() {
-                public static final long CLICK_OFFSET = 500;
-                private long lastClick = 0;
-                @Override
-                public void onClick(View textView) {
-                    if (System.currentTimeMillis() - lastClick > CLICK_OFFSET) {
-                        mention.getMember().mergeSave();
-                        ProfileActivity.startActivity(FetLifeApplication.getInstance(),mention.getMember().getId());
-                    }
-                    lastClick = System.currentTimeMillis();
-                }
-            };
-            int endPosition = mention.getOffset() + mention.getLength();
-            if (spannedBody.length() >= endPosition) {
-                spannedBody.setSpan(clickableSpan, mention.getOffset(), endPosition, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            } else {
-                Crashlytics.log("Mention body:" + spannedBody + " mention: " + mention.getOffset() + "," + mention.getLength());
-                Crashlytics.logException(new Exception("Invalid mention position"));
-            }
-        }
+        CharSequence messageBody = StringUtil.parseMarkedHtmlWithMentions(message.getBody().trim(),messageEntities.getMentions());
 
         List<Picture> pictures = messageEntities.getPictures();
         if (pictures.isEmpty()) {
@@ -195,7 +169,7 @@ public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessageViewHol
 //        textView.setMovementMethod(LinkMovementMethod.getInstance());
 //        textView.setHighlightColor(Color.TRANSPARENT);
 
-        messageViewHolder.messageText.setText(spannedBody);
+        messageViewHolder.messageText.setText(messageBody);
 //        messageViewHolder.subText.setText(message.getSenderNickname() + messageViewHolder.subMessageSeparator + SimpleDateFormat.getDateTimeInstance().format(new Date(message.getDate())));
         messageViewHolder.topText.setText(message.getSenderNickname());
         messageViewHolder.subText.setText(SimpleDateFormat.getDateTimeInstance().format(new Date(message.getDate())));
