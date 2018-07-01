@@ -8,6 +8,7 @@ import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.resource.EventActivity;
 import com.bitlove.fetlife.view.screen.resource.WritingActivity;
 import com.bitlove.fetlife.view.screen.resource.groups.GroupActivity;
+import com.bitlove.fetlife.view.screen.resource.groups.GroupMessagesActivity;
 import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity;
 
 import java.util.List;
@@ -28,6 +29,9 @@ public class UrlUtil {
             if (urlSegments.size()<3) {
                 GroupActivity.startActivity(baseActivity,ServerIdUtil.prefixServerId(uri.getLastPathSegment()),null,false);
                 return true;
+            } else if (urlSegments.size() == 4) {
+                GroupMessagesActivity.startActivity(baseActivity,ServerIdUtil.prefixServerId(urlSegments.get(1)),ServerIdUtil.prefixServerId(urlSegments.get(3)),null, null,true);
+                return true;
             }
         }
         if ("events".equals(urlSegments.get(0))) {
@@ -45,10 +49,13 @@ public class UrlUtil {
                 return false;
             }
             if ("pictures".equals(urlSegments.get(2))) {
-                return true;
+                return false;
             }
             if ("videos".equals(urlSegments.get(2))) {
-                return true;
+                return false;
+            }
+            if ("statuses".equals(urlSegments.get(2))) {
+                return false;
             }
             if ("posts".equals(urlSegments.get(2))) {
                 WritingActivity.startActivity(baseActivity,ServerIdUtil.prefixServerId(urlSegments.get(3)),ServerIdUtil.prefixServerId(urlSegments.get(1)));

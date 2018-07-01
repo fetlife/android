@@ -38,7 +38,7 @@
     <string name="title_activity_friends_new_conversation">Neue Unterhaltung</string>
     <string name="title_activity_friendrequests">Freundschaftsanfragen</string>
     <string name="title_activity_about">Über diese App</string>
-    <string name="title_activity_notificationhistory">Benachrichtigungen</string>
+    <string name="title_activity_notifications">Benachrichtigungen</string>
     <string name="title_intent_choose_media_upload">Wähle Medien-App</string>
     <string name="title_media_picture_upload_confirmation">Füge Dein Bild hinzu</string>
     <string name="title_media_video_upload_confirmation">Füge dein Video hinzu</string>

@@ -361,6 +361,7 @@ public class TurbolinksSession implements TurbolinksScrollUpCallback {
         if (!turbolinksIsReady && !coldBootInProgress) {
             TurbolinksLog.d("Cold booting: " + location);
             Map<String,String> headers = new HashMap<>();
+            headers.put("X-Fetlife-Webview","1");
             headers.put("Authorization",token);
             webView.loadUrl(location,headers);
         }

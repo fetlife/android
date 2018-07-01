@@ -27,10 +27,8 @@ import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.resource.ConversationsActivity;
 import com.bitlove.fetlife.view.screen.resource.EventsActivity;
 import com.bitlove.fetlife.view.screen.resource.FeedActivity;
-import com.bitlove.fetlife.view.screen.resource.FriendRequestsActivity;
 import com.bitlove.fetlife.view.screen.resource.ExploreActivity;
 import com.bitlove.fetlife.view.screen.resource.groups.GroupsActivity;
-import com.bitlove.fetlife.view.screen.resource.NotificationHistoryActivity;
 import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity;
 import com.bitlove.fetlife.view.screen.resource.members.MembersActivity;
 import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity;
@@ -188,7 +186,7 @@ public class MenuActivityComponent extends ActivityComponent {
         } else if (id == R.id.nav_members) {
             MembersActivity.startActivity(menuActivity, false);
         } else if (id == R.id.nav_friendrequests) {
-            FriendRequestsActivity.startActivity(menuActivity, false);
+            TurboLinksViewActivity.startActivity(menuActivity,"requests",menuActivity.getString(R.string.title_activity_friendrequests));
         } else if (id == R.id.nav_introduce) {
             logEvent("nav_introduce");
             AddNfcFriendActivity.startActivity(menuActivity);
@@ -197,7 +195,7 @@ public class MenuActivityComponent extends ActivityComponent {
         } else if (id == R.id.nav_relnotes) {
             ReleaseNotesActivity.startActivity(menuActivity);
         } else if (id == R.id.nav_notifications) {
-            NotificationHistoryActivity.startActivity(menuActivity, false);
+            TurboLinksViewActivity.startActivity(menuActivity,"notifications",menuActivity.getString(R.string.title_activity_notifications));
         } else if (id == R.id.nav_upload_pic) {
             logEvent("nav_upload_pic");
             if (isStoragePermissionGranted()) {

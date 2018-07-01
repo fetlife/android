@@ -1428,8 +1428,8 @@ public class FetLifeApiIntentService extends IntentService {
 
     private int retrieveGroupMessages(Member user, String... params) throws IOException {
 
-        final String groupId = params[0];
-        final String groupDiscussionId = params[1];
+        final String groupId = getLocalId(params[0]);
+        final String groupDiscussionId = getLocalId(params[1]);
 
         final int limit = getIntFromParams(params, 2, 25);
         final int page = getIntFromParams(params, 3, 1);
@@ -1742,7 +1742,7 @@ public class FetLifeApiIntentService extends IntentService {
     }
 
     private int getGroup(String... params) throws IOException {
-        String groupId = params[0];
+        String groupId = getLocalId(params[0]);
         Call<Group> getGroupCall = getFetLifeApi().getGroup(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), groupId);
         Response<Group> getGroupResponse = getGroupCall.execute();
         if (getGroupResponse.isSuccess()) {

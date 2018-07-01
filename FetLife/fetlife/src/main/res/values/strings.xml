@@ -330,7 +330,7 @@
     <string name="title_activity_friends_new_conversation">New Conversation</string>
     <string name="title_activity_friendrequests">Friend Requests</string>
     <string name="title_activity_about">About This App</string>
-    <string name="title_activity_notificationhistory">Notifications</string>
+    <string name="title_activity_notifications">Notifications</string>
     <string name="title_intent_choose_media_upload">Select Media App</string>
     <string name="title_media_picture_upload_confirmation">Add your picture</string>
     <string name="title_media_video_upload_confirmation">Add your video</string>
