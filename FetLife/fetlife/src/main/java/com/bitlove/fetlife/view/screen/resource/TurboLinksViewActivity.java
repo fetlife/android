@@ -15,16 +15,29 @@ import com.basecamp.turbolinks.TurbolinksSession;
 import com.basecamp.turbolinks.TurbolinksView;
 import com.bitlove.fetlife.BuildConfig;
 import com.bitlove.fetlife.R;
+import com.bitlove.fetlife.event.ServiceCallFailedEvent;
+import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
+import com.bitlove.fetlife.event.ServiceCallStartedEvent;
 import com.bitlove.fetlife.model.api.FetLifeService;
+import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Event;
+import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Picture;
+import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.util.UrlUtil;
 import com.bitlove.fetlife.view.screen.BaseActivity;
+import com.bitlove.fetlife.view.screen.component.ActivityComponent;
 import com.bitlove.fetlife.view.screen.component.MenuActivityComponent;
 import com.bitlove.fetlife.view.screen.standalone.LoginActivity;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
+import com.facebook.common.util.UriUtil;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class TurboLinksViewActivity extends ResourceActivity implements TurbolinksAdapter, MenuActivityComponent.MenuActivityCallBack, TurbolinksSession.ProgressObserver, TurbolinksSession.PageObserver {
 
@@ -39,6 +52,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
     private static final String EXTRA_PAGE_TITLE = "EXTRA_PAGE_TITLE";
 
     private TurbolinksView turbolinksView;
+    private Set<String> requestedMediaIds = new HashSet<>();
 
     public static void startActivity(BaseActivity menuActivity, String pageUrl, String title) {
         Intent intent = new Intent(menuActivity,TurboLinksViewActivity.class);
@@ -199,18 +213,23 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         String pageUrl = getIntent().getStringExtra(EXTRA_PAGE_URL);
         String baseLocation = FetLifeService.BASE_URL + "/" + pageUrl;
 
+        String mediaId = null;
         if (!location.startsWith(baseLocation)) {
             Integer expectedTitleResourceId = supportedBaseUrls.get(location);
             if (expectedTitleResourceId != null) {
                 TurboLinksViewActivity.startActivity(this,location,getString(expectedTitleResourceId));
                 return;
+            } else if ((mediaId = UrlUtil.isMediaRequested(this,Uri.parse(location))) != null){
+                requestedMediaIds.add(mediaId);
+                return;
             } else if (UrlUtil.handleInternal(this,Uri.parse(location))){
                 return;
             } else {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(location));
-                startActivity(intent);
+                UrlUtil.openUrl(this,UrlUtil.removeAppIds(location));
                 return;
             }
+        } else {
+            location = UrlUtil.removeAppIds(location);
         }
 
         TurbolinksView turbolinksView = (TurbolinksView) findViewById(R.id.turbolinks_view);
@@ -245,8 +264,42 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         return super.onKeyDown(keyCode, event);
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onResourceListCallStarted(ServiceCallStartedEvent serviceCallStartedEvent) {
+        if (isRelatedCall(serviceCallStartedEvent.getServiceCallAction(), serviceCallStartedEvent.getParams())) {
+            showProgress();
+        }
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void callFinished(ServiceCallFinishedEvent serviceCallFinishedEvent) {
+        if (isRelatedCall(serviceCallFinishedEvent.getServiceCallAction(), serviceCallFinishedEvent.getParams())) {
+            requestedMediaIds.remove(serviceCallFinishedEvent.getParams()[1]);
+            if (!isRelatedCall(FetLifeApiIntentService.getActionInProgress(), FetLifeApiIntentService.getInProgressActionParams())) {
+                dismissProgress();
+            }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void callFailed(ServiceCallFailedEvent serviceCallFailedEvent) {
+        if (isRelatedCall(serviceCallFailedEvent.getServiceCallAction(), serviceCallFailedEvent.getParams())) {
+            requestedMediaIds.remove(serviceCallFailedEvent.getParams()[1]);
+            dismissProgress();
+        }
+    }
+
+    private boolean isRelatedCall(String serviceCallAction, String[] params) {
+        if (params != null && params.length > 1 && !requestedMediaIds.contains(params[1])) {
+            return false;
+        }
+        if (FetLifeApiIntentService.ACTION_APICALL_MEMBER_PICTURE.equals(serviceCallAction)) {
+            return true;
+        }
+        if (FetLifeApiIntentService.ACTION_APICALL_MEMBER_VIDEO.equals(serviceCallAction)) {
+            return true;
+        }
+        return false;
+    }
+
 }

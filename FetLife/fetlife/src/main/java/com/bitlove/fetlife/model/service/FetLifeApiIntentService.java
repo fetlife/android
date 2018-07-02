@@ -164,6 +164,8 @@ public class FetLifeApiIntentService extends IntentService {
     public static final String ACTION_APICALL_MEMBER_GROUPS = "com.bitlove.fetlife.action.apicall.member_groups";
     public static final String ACTION_APICALL_MEMBER_PICTURES = "com.bitlove.fetlife.action.apicall.member_pictures";
     public static final String ACTION_APICALL_MEMBER_VIDEOS = "com.bitlove.fetlife.action.apicall.member_videos";
+    public static final String ACTION_APICALL_MEMBER_PICTURE = "com.bitlove.fetlife.action.apicall.member_picture";
+    public static final String ACTION_APICALL_MEMBER_VIDEO = "com.bitlove.fetlife.action.apicall.member_video";
     public static final String ACTION_APICALL_CONVERSATIONS = "com.bitlove.fetlife.action.apicall.conversations";
     public static final String ACTION_APICALL_FEED = "com.bitlove.fetlife.action.apicall.feed";
     public static final String ACTION_APICALL_EXPLORE = "com.bitlove.fetlife.action.apicall.explore";
@@ -412,6 +414,12 @@ public class FetLifeApiIntentService extends IntentService {
                     break;
                 case ACTION_APICALL_MEMBER_VIDEOS:
                     result = retrieveMemberVideos(params);
+                    break;
+                case ACTION_APICALL_MEMBER_PICTURE:
+                    result = getPicture(params);
+                    break;
+                case ACTION_APICALL_MEMBER_VIDEO:
+                    result = getVideo(params);
                     break;
                 case ACTION_APICALL_MEMBER_STATUSES:
                     result = retrieveMemberStatuses(params);
@@ -1739,6 +1747,39 @@ public class FetLifeApiIntentService extends IntentService {
             return Integer.MIN_VALUE;
         }
 
+    }
+    private int getPicture(String... params) throws IOException {
+        String memberId = getLocalId(params[0]);
+        String pictureId = getLocalId(params[1]);
+        if (pictureId == null || memberId == null) {
+            return Integer.MIN_VALUE;
+        }
+        Call<Picture> getPictureCall = getFetLifeApi().getMemberPicture(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), memberId, pictureId);
+        Response<Picture> getPictureResponse = getPictureCall.execute();
+        if (getPictureResponse.isSuccess()) {
+            Picture picture = getPictureResponse.body();
+            picture.save();
+            return 1;
+        } else {
+            return Integer.MIN_VALUE;
+        }
+    }
+
+    private int getVideo(String... params) throws IOException {
+        String memberId = getLocalId(params[0]);
+        String videoId = getLocalId(params[1]);
+        if (videoId == null || memberId == null) {
+            return Integer.MIN_VALUE;
+        }
+        Call<Video> getVideoCall = getFetLifeApi().getMemberVideo(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), memberId, videoId);
+        Response<Video> getVideoResponse = getVideoCall.execute();
+        if (getVideoResponse.isSuccess()) {
+            Video video = getVideoResponse.body();
+            video.save();
+            return 1;
+        } else {
+            return Integer.MIN_VALUE;
+        }
     }
 
     private int getGroup(String... params) throws IOException {
