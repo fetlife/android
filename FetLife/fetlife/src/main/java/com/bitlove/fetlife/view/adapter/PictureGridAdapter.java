@@ -1,9 +1,7 @@
 package com.bitlove.fetlife.view.adapter;
 
-import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +13,7 @@ import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Picture;
 import com.bitlove.fetlife.model.pojos.fetlife.json.FeedEvent;
+import com.bitlove.fetlife.util.PictureUtil;
 import com.bitlove.fetlife.util.ViewUtil;
 import com.bitlove.fetlife.view.adapter.feed.FeedItemResourceHelper;
 import com.bitlove.fetlife.view.adapter.feed.FeedRecyclerAdapter;
@@ -25,71 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PictureGridAdapter extends BaseAdapter {
-
-    private static final int OVERLAY_HITREC_PADDING = 200;
-
-    public static void setOverlayContent(View overlay, final Picture picture, final FeedRecyclerAdapter.OnFeedItemClickListener onItemClickListener) {
-
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                picture.setLastViewedAt(System.currentTimeMillis());
-                picture.save();
-            }
-        });
-
-        TextView imageDescription = (TextView) overlay.findViewById(R.id.feedImageOverlayDescription);
-        TextView imageMeta = (TextView) overlay.findViewById(R.id.feedImageOverlayMeta);
-        TextView imageName = (TextView) overlay.findViewById(R.id.feedImageOverlayName);
-
-        final ImageView imageLove = (ImageView) overlay.findViewById(R.id.feedImageLove);
-        ViewUtil.increaseTouchArea(imageLove,OVERLAY_HITREC_PADDING);
-
-        boolean isLoved = picture.isLovedByMe();
-        imageLove.setImageResource(isLoved ? R.drawable.ic_loved : R.drawable.ic_love);
-        imageLove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ImageView imageLove = (ImageView) v;
-                boolean isLoved = picture.isLovedByMe();
-                boolean newIsLoved = !isLoved;
-                imageLove.setImageResource(newIsLoved ? R.drawable.ic_loved : R.drawable.ic_love);
-                Picture.startLoveCallWithObserver(FetLifeApplication.getInstance(), picture, newIsLoved);
-                picture.setLovedByMe(newIsLoved);
-                picture.save();
-            }
-        });
-
-        View imageVisit = overlay.findViewById(R.id.feedImageVisit);
-        ViewUtil.increaseTouchArea(imageVisit,OVERLAY_HITREC_PADDING);
-        imageVisit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onItemClickListener.onVisitItem(picture, picture.getUrl());
-            }
-        });
-
-        ImageView imageShare = overlay.findViewById(R.id.feedImageShare);
-        imageShare.setColorFilter(picture.isOnShareList() ? overlay.getContext().getResources().getColor(R.color.text_color_primary) : overlay.getContext().getResources().getColor(R.color.text_color_secondary));
-        ViewUtil.increaseTouchArea(imageShare,OVERLAY_HITREC_PADDING);
-        imageShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onItemClickListener.onShareItem(picture, picture.getUrl());
-                ((ImageView)v).setColorFilter(picture.isOnShareList() ? v.getContext().getResources().getColor(R.color.text_color_primary) : v.getContext().getResources().getColor(R.color.text_color_secondary));
-            }
-        });
-
-        imageName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onItemClickListener.onMemberClick(picture.getMember());
-            }
-        });
-        imageDescription.setText(Picture.getFormattedBody(picture.getBody()));
-        imageMeta.setText(picture.getMember().getMetaInfo());
-        imageName.setText(picture.getMember().getNickname());
-    }
 
     private final FeedRecyclerAdapter.OnFeedItemClickListener onItemClickListener;
     private final FeedItemResourceHelper feedItemResourceHelper;
@@ -167,12 +101,12 @@ public class PictureGridAdapter extends BaseAdapter {
                 public void onClick(View v) {
                     LayoutInflater inflater = LayoutInflater.from(v.getContext());
                     final View overlay = inflater.inflate(R.layout.overlay_feed_imageswipe, null);
-                    setOverlayContent(overlay, getItem(position), onItemClickListener);
+                    PictureUtil.setOverlayContent(overlay, getItem(position), onItemClickListener);
 
                     new ImageViewer.Builder(v.getContext(), displayLinks).setStartPosition(position).setOverlayView(overlay).setImageChangeListener(new ImageViewer.OnImageChangeListener() {
                         @Override
                         public void onImageChange(int position) {
-                            setOverlayContent(overlay, getItem(position), onItemClickListener);
+                            PictureUtil.setOverlayContent(overlay, getItem(position), onItemClickListener);
                         }
                     }).show();
                 }

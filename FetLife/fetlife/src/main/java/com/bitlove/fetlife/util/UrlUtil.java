@@ -106,7 +106,8 @@ public class UrlUtil {
     public static String removeAppIds(String url) {
         try {
             URI uri = new URI(url);
-            String[] queryParams = uri.getQuery().split("&");
+            String query = uri.getQuery();
+            String[] queryParams = query != null ? query.split("&"): new String[0];
             String newQueryParams = "";
             for (String queryParam : queryParams) {
                 if (!queryParam.startsWith(QUERY_API_IDS)) {

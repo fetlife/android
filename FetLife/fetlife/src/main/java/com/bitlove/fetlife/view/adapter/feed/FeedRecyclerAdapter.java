@@ -16,6 +16,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Picture;
 import com.bitlove.fetlife.model.pojos.fetlife.json.FeedEvent;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Story;
+import com.bitlove.fetlife.util.PictureUtil;
 import com.bitlove.fetlife.util.ServerIdUtil;
 import com.bitlove.fetlife.view.adapter.ResourceListRecyclerAdapter;
 import com.bitlove.fetlife.view.adapter.SwipeableViewHolder;
@@ -29,14 +30,10 @@ public class FeedRecyclerAdapter extends ResourceListRecyclerAdapter<Story, Feed
 
     protected String memberId;
 
-    public interface OnFeedItemClickListener {
-        void onMemberClick(Member member);
+    public interface OnFeedItemClickListener extends PictureUtil.OnPictureOverlayClickListener {
         void onFeedInnerItemClick(Story.FeedStoryType feedStoryType, String url, FeedEvent feedEvent, FeedItemResourceHelper feedItemResourceHelper);
         void onFeedImageClick(Story.FeedStoryType feedStoryType, String url, FeedEvent feedEvent, Member targetMember);
         void onFeedImageLongClick(Story.FeedStoryType feedStoryType, String url, FeedEvent feedEvent, Member targetMember);
-
-        void onShareItem(Object object, String url);
-        void onVisitItem(Object object, String url);
     }
 
     protected final FetLifeApplication fetLifeApplication;

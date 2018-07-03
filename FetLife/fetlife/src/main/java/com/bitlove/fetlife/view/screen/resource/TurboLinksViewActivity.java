@@ -1,11 +1,13 @@
 package com.bitlove.fetlife.view.screen.resource;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
@@ -20,16 +22,26 @@ import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
 import com.bitlove.fetlife.event.ServiceCallStartedEvent;
 import com.bitlove.fetlife.model.api.FetLifeService;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Event;
+import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Picture;
+import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Video;
+import com.bitlove.fetlife.model.pojos.fetlife.json.FeedEvent;
+import com.bitlove.fetlife.model.pojos.fetlife.json.Story;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
+import com.bitlove.fetlife.util.PictureUtil;
+import com.bitlove.fetlife.util.ServerIdUtil;
 import com.bitlove.fetlife.util.UrlUtil;
+import com.bitlove.fetlife.view.adapter.feed.FeedItemResourceHelper;
+import com.bitlove.fetlife.view.adapter.feed.FeedRecyclerAdapter;
 import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.component.ActivityComponent;
 import com.bitlove.fetlife.view.screen.component.MenuActivityComponent;
+import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity;
 import com.bitlove.fetlife.view.screen.standalone.LoginActivity;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.common.util.UriUtil;
+import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -100,9 +112,21 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
     }
 
     @Override
-    protected void onResourceCreate(Bundle savedInstanceState) {
+    protected void onResourceStart() {
+    }
 
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    @Override
+    protected void onResourceCreate(Bundle savedInstanceState) {
+        init();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    private void init() {
+        //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
 //
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -139,7 +163,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
                         .addProgressObserver(TurboLinksViewActivity.this)
                         .addPageObserver(TurboLinksViewActivity.this)
                         .restoreWithCachedSnapshot(false)
-                        .setPullToRefreshEnabled(false)
+                        .setPullToRefreshEnabled(true)
                         .visitWithAuthHeader(location, FetLifeService.AUTH_HEADER_PREFIX + accessToken);
 
             }
@@ -148,19 +172,19 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
 
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String location) {
+        String mediaId = null;
         Uri uri = Uri.parse(location);
         if (!uri.getHost().equals(FetLifeService.HOST_NAME)) {
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);
             return true;
+        } else if ((mediaId = UrlUtil.isMediaRequested(this,Uri.parse(location))) != null){
+            requestedMediaIds.add(mediaId);
+            return true;
         } else if (UrlUtil.handleInternal(this,uri)) {
             return true;
         }
         return false;
-    }
-
-    @Override
-    protected void onResourceStart() {
     }
 
     @Override
@@ -274,11 +298,58 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void callFinished(ServiceCallFinishedEvent serviceCallFinishedEvent) {
         if (isRelatedCall(serviceCallFinishedEvent.getServiceCallAction(), serviceCallFinishedEvent.getParams())) {
-            requestedMediaIds.remove(serviceCallFinishedEvent.getParams()[1]);
+            String mediaId = serviceCallFinishedEvent.getParams()[1];
+            requestedMediaIds.remove(mediaId);
+
+            if (ServerIdUtil.isServerId(mediaId)) {
+                mediaId = ServerIdUtil.getLocalId(mediaId);
+            }
+
+            if (serviceCallFinishedEvent.getServiceCallAction() == FetLifeApiIntentService.ACTION_APICALL_MEMBER_PICTURE) {
+                showPicture(mediaId);
+            } else if (serviceCallFinishedEvent.getServiceCallAction() == FetLifeApiIntentService.ACTION_APICALL_MEMBER_VIDEO) {
+                showVideo(mediaId);
+            }
+
             if (!isRelatedCall(FetLifeApiIntentService.getActionInProgress(), FetLifeApiIntentService.getInProgressActionParams())) {
                 dismissProgress();
             }
         }
+    }
+
+    private void showVideo(String mediaId) {
+        Video video = Video.loadVideo(mediaId);
+        Uri uri = Uri.parse(video.getVideoUrl());
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        intent.setDataAndType(uri, "video/*");
+        startActivity(intent);
+    }
+
+    private void showPicture(String mediaId) {
+        Picture picture = Picture.loadPicture(mediaId);
+        LayoutInflater inflater = LayoutInflater.from(this);
+        final View overlay = inflater.inflate(R.layout.overlay_feed_imageswipe, null);
+        final PictureUtil.OnPictureOverlayClickListener onPictureOverlayClickListener = new PictureUtil.OnPictureOverlayClickListener() {
+            @Override
+            public void onMemberClick(Member member) {
+                member.mergeSave();
+                ProfileActivity.startActivity(TurboLinksViewActivity.this,member.getId());
+            }
+            @Override
+            public void onVisitPicture(Picture picture, String url) {
+                UrlUtil.openUrl(TurboLinksViewActivity.this,url);
+            }
+            @Override
+            public void onSharePicture(Picture picture, String url) {
+                if (picture.isOnShareList()) {
+                    Picture.unsharePicture(picture);
+                } else {
+                    Picture.sharePicture(picture);
+                }
+            }
+        };
+        PictureUtil.setOverlayContent(overlay, picture, onPictureOverlayClickListener);
+        new ImageViewer.Builder(this, new String[]{picture.getDisplayUrl()}).setStartPosition(0).setOverlayView(overlay).show();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

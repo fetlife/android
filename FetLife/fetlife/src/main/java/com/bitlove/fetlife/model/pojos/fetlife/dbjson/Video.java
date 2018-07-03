@@ -8,10 +8,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 @Table(database = FetLifeDatabase.class)
 public class Video extends BaseModel {
+
+    public static Video loadVideo(String videoId) {
+        Video video = new Select().from(Video.class).where(Video_Table.id.is(videoId)).querySingle();
+        if (video == null) {
+            return null;
+        }
+        return video;
+    }
 
 
     //Db and Json

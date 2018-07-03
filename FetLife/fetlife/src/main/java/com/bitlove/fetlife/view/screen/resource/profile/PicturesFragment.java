@@ -12,12 +12,13 @@ import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Picture;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
+import com.bitlove.fetlife.util.PictureUtil;
 import com.bitlove.fetlife.util.UrlUtil;
 import com.bitlove.fetlife.view.adapter.PicturesRecyclerAdapter;
 import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.resource.LoadFragment;
 
-public class PicturesFragment extends LoadFragment implements PicturesRecyclerAdapter.OnPictureClickListener {
+public class PicturesFragment extends LoadFragment implements PictureUtil.OnPictureOverlayClickListener {
 
     private static final int PICTURE_GRID_COLUMN_COUNT = 3;
     public static int PAGE_COUNT = 24;
@@ -60,7 +61,7 @@ public class PicturesFragment extends LoadFragment implements PicturesRecyclerAd
     }
 
     @Override
-    public void onShareItem(Picture picture, String url) {
+    public void onSharePicture(Picture picture, String url) {
         if (picture.isOnShareList()) {
             Picture.unsharePicture(picture);
         } else {
@@ -69,7 +70,7 @@ public class PicturesFragment extends LoadFragment implements PicturesRecyclerAd
     }
 
     @Override
-    public void onVisitItem(Picture picture, String url) {
+    public void onVisitPicture(Picture picture, String url) {
         UrlUtil.openUrl(getActivity(),url);
     }
 
