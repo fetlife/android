@@ -65,7 +65,7 @@ public class FetLifeService {
                 return hostname.endsWith(HOST_NAME);
             }
         });
-        client.setSslSocketFactory(context.getSocketFactory());
+//        client.setSslSocketFactory(context.getSocketFactory());
         client.interceptors().add(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {

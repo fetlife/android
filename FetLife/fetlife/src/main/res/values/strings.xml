@@ -29,6 +29,11 @@
 
             <p><b><br/>Version History</b></p>
 
+            <p/>v2.15.5<br/>
+                    <ul>
+                        <li>Hot fix for connectivity issues</li>
+                    </ul>
+
             <p/>v2.15.4<br/>
                     <ul>
                         <li>Fixes for logout issue</li>
