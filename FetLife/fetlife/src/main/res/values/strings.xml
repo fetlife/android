@@ -29,6 +29,12 @@
 
             <p><b><br/>Version History</b></p>
 
+            <p/>v2.15.6<br/>
+                    <ul>
+                        <li>Responsive Notifications</li>
+                        <li>Responsive Friend Requests</li>
+                    </ul>
+
             <p/>v2.15.4<br/>
                     <ul>
                         <li>Fixes for logout issue</li>

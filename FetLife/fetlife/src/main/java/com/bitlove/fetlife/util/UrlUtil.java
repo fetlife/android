@@ -36,26 +36,26 @@ public class UrlUtil {
         String[] apiIds = apiIdsParam != null ? apiIdsParam.split(",") : new String[0];
         if ("groups".equals(urlSegments.get(0))) {
             if (urlSegments.size()<3) {
-                String groupId = apiIds.length == 1 ? apiIds[0] : ServerIdUtil.prefixServerId(uri.getLastPathSegment());
+                String groupId = apiIds.length >= 1 ? apiIds[0] : ServerIdUtil.prefixServerId(uri.getLastPathSegment());
                 GroupActivity.startActivity(baseActivity,groupId,null,false);
                 return true;
             } else if (urlSegments.size() == 4) {
-                String groupId = apiIds.length == 2 ? apiIds[0] : ServerIdUtil.prefixServerId(urlSegments.get(1));
-                String groupDiscussionId = apiIds.length == 2 ? apiIds[1] : ServerIdUtil.prefixServerId(urlSegments.get(3));
+                String groupId = apiIds.length >= 2 ? apiIds[0] : ServerIdUtil.prefixServerId(urlSegments.get(1));
+                String groupDiscussionId = apiIds.length >= 2 ? apiIds[1] : ServerIdUtil.prefixServerId(urlSegments.get(3));
                 GroupMessagesActivity.startActivity(baseActivity,groupId,groupDiscussionId,null, null,true);
                 return true;
             }
         }
         if ("events".equals(urlSegments.get(0))) {
             if (urlSegments.size()<3) {
-                String eventId = apiIds.length == 1 ? apiIds[0] : ServerIdUtil.prefixServerId(uri.getLastPathSegment());
+                String eventId = apiIds.length >= 1 ? apiIds[0] : ServerIdUtil.prefixServerId(uri.getLastPathSegment());
                 EventActivity.startActivity(baseActivity,eventId);
                 return true;
             }
         }
         if ("users".equals(urlSegments.get(0))) {
             if (urlSegments.size()<3) {
-                String memberId = apiIds.length == 1 ? apiIds[0] : ServerIdUtil.prefixServerId(uri.getLastPathSegment());
+                String memberId = apiIds.length >= 1 ? apiIds[0] : ServerIdUtil.prefixServerId(uri.getLastPathSegment());
                 ProfileActivity.startActivity(baseActivity,memberId);
                 return true;
             }
@@ -72,8 +72,8 @@ public class UrlUtil {
                 return false;
             }
             if ("posts".equals(urlSegments.get(2))) {
-                String memberId = apiIds.length == 2 ? apiIds[0] : ServerIdUtil.prefixServerId(urlSegments.get(1));
-                String postId = apiIds.length == 2 ? apiIds[1] : ServerIdUtil.prefixServerId(urlSegments.get(3));
+                String memberId = apiIds.length >= 2 ? apiIds[0] : ServerIdUtil.prefixServerId(urlSegments.get(1));
+                String postId = apiIds.length >= 2 ? apiIds[1] : ServerIdUtil.prefixServerId(urlSegments.get(3));
                 WritingActivity.startActivity(baseActivity,postId,memberId);
                 return true;
             }
@@ -88,14 +88,14 @@ public class UrlUtil {
         String[] apiIds = apiIdsParam != null ? apiIdsParam.split(",") : new String[0];
         if (urlSegments.size()>2 && "users".equals(urlSegments.get(0))) {
             if ("pictures".equals(urlSegments.get(2))) {
-                String memberId = apiIds.length == 2 ? apiIds[0] : ServerIdUtil.prefixServerId(urlSegments.get(1));
-                String pictureId = apiIds.length == 2 ? apiIds[1] : ServerIdUtil.prefixServerId(urlSegments.get(3));
+                String memberId = apiIds.length >= 2 ? apiIds[0] : ServerIdUtil.prefixServerId(urlSegments.get(1));
+                String pictureId = apiIds.length >= 2 ? apiIds[1] : ServerIdUtil.prefixServerId(urlSegments.get(3));
                 FetLifeApiIntentService.startApiCall(turboLinksViewActivity, FetLifeApiIntentService.ACTION_APICALL_MEMBER_PICTURE, memberId, pictureId);
                 return pictureId;
             }
             if ("videos".equals(urlSegments.get(2))) {
-                String memberId = apiIds.length == 2 ? apiIds[0] : ServerIdUtil.prefixServerId(urlSegments.get(1));
-                String videId = apiIds.length == 2 ? apiIds[1] : ServerIdUtil.prefixServerId(urlSegments.get(3));
+                String memberId = apiIds.length >= 2 ? apiIds[0] : ServerIdUtil.prefixServerId(urlSegments.get(1));
+                String videId = apiIds.length >= 2 ? apiIds[1] : ServerIdUtil.prefixServerId(urlSegments.get(3));
                 FetLifeApiIntentService.startApiCall(turboLinksViewActivity, FetLifeApiIntentService.ACTION_APICALL_MEMBER_VIDEO, memberId, videId);
                 return videId;
             }

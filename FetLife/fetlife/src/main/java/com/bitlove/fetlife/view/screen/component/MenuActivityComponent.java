@@ -187,9 +187,9 @@ public class MenuActivityComponent extends ActivityComponent {
             MembersActivity.startActivity(menuActivity, false);
         } else if (id == R.id.nav_friendrequests) {
             TurboLinksViewActivity.startActivity(menuActivity,"requests",menuActivity.getString(R.string.title_activity_friendrequests));
-        } else if (id == R.id.nav_introduce) {
-            logEvent("nav_introduce");
-            AddNfcFriendActivity.startActivity(menuActivity);
+//        } else if (id == R.id.nav_introduce) {
+//            logEvent("nav_introduce");
+//            AddNfcFriendActivity.startActivity(menuActivity);
         } else if (id == R.id.nav_about) {
             TurboLinksViewActivity.startActivity(menuActivity,"android",menuActivity.getString(R.string.title_activity_about));
         } else if (id == R.id.nav_relnotes) {

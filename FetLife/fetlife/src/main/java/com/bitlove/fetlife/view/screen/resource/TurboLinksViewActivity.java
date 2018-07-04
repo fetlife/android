@@ -58,6 +58,8 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         supportedBaseUrls.put("https://app.fetlife.com/ads",R.string.title_activity_ads);
         supportedBaseUrls.put("https://app.fetlife.com/support",R.string.title_activity_support);
         supportedBaseUrls.put("https://app.fetlife.com/glossary",R.string.title_activity_glossary);
+        supportedBaseUrls.put("https://app.fetlife.com/notifications",R.string.title_activity_notifications);
+        supportedBaseUrls.put("https://app.fetlife.com/requests",R.string.title_activity_friendrequests);
     }
 
     private static final String EXTRA_PAGE_URL = "EXTRA_PAGE_URL";
@@ -323,6 +325,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         intent.setDataAndType(uri, "video/*");
         startActivity(intent);
+        init();
     }
 
     private void showPicture(String mediaId) {
@@ -350,6 +353,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         };
         PictureUtil.setOverlayContent(overlay, picture, onPictureOverlayClickListener);
         new ImageViewer.Builder(this, new String[]{picture.getDisplayUrl()}).setStartPosition(0).setOverlayView(overlay).show();
+        init();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
