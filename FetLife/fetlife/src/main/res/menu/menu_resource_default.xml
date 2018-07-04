@@ -75,10 +75,10 @@
             android:icon="@drawable/ic_videocam_black_24dp"
             android:title="@string/menu_upload_video" />
 
-        <item
-            android:id="@+id/nav_introduce"
-            android:icon="@android:drawable/ic_menu_share"
-            android:title="@string/menu_introduce" />
+        <!--<item-->
+            <!--android:id="@+id/nav_introduce"-->
+            <!--android:icon="@android:drawable/ic_menu_share"-->
+            <!--android:title="@string/menu_introduce" />-->
 
     </group>
 

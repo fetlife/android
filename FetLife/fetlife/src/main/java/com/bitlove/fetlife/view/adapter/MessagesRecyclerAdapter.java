@@ -144,16 +144,12 @@ public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessageViewHol
                 }
 
                 @Override
-                public void onVisitItem(Object object, String url) {
+                public void onVisitPicture(Picture picture, String url) {
                     UrlUtil.openUrl(FetLifeApplication.getInstance(),url);
                 }
 
                 @Override
-                public void onShareItem(Object object, String url) {
-                    if (!(object instanceof  Picture)) {
-                        return;
-                    }
-                    Picture picture = (Picture) object;
+                public void onSharePicture(Picture picture, String url) {
                     if (picture.isOnShareList()) {
                         Picture.unsharePicture(picture);
                     } else {

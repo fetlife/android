@@ -233,8 +233,12 @@ public class GroupMessagesActivity extends ResourceActivity
 
     private void setGroupPost(Intent intent) {
 
-        groupId = intent.getStringExtra(EXTRA_GROUP_ID);
-        groupDiscussionId = intent.getStringExtra(EXTRA_GROUP_DISUCSSION_ID);
+        group = Group.loadGroup(getIntent().getStringExtra(EXTRA_GROUP_ID));
+        groupId = group != null ? group.getId() : getIntent().getStringExtra(EXTRA_GROUP_ID);
+
+        groupDiscussion = GroupPost.loadGroupPost(getIntent().getStringExtra(EXTRA_GROUP_DISUCSSION_ID));
+        groupDiscussionId = groupDiscussion != null ? groupDiscussion.getId() : getIntent().getStringExtra(EXTRA_GROUP_DISUCSSION_ID);
+
         String groupDiscussionTitle = intent.getStringExtra(EXTRA_DISCUSSION_TITLE);
         avatarUrl = intent.getStringExtra(EXTRA_AVATAR_RESOURCE_URL);
         memberId = null;

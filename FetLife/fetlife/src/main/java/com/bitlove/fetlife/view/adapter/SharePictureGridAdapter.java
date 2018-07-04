@@ -12,6 +12,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Picture;
 import com.bitlove.fetlife.model.pojos.fetlife.json.FeedEvent;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Story;
+import com.bitlove.fetlife.util.PictureUtil;
 import com.bitlove.fetlife.util.UrlUtil;
 import com.bitlove.fetlife.view.adapter.feed.FeedItemResourceHelper;
 import com.bitlove.fetlife.view.adapter.feed.FeedRecyclerAdapter;
@@ -122,16 +123,12 @@ public class SharePictureGridAdapter extends BaseAdapter {
                     }
 
                     @Override
-                    public void onVisitItem(Object object, String url) {
+                    public void onVisitPicture(Picture picture, String url) {
                         UrlUtil.openUrl(v.getContext(),url);
                     }
 
                     @Override
-                    public void onShareItem(Object object, String url) {
-                        if (!(object instanceof  Picture)) {
-                            return;
-                        }
-                        Picture picture = (Picture) object;
+                    public void onSharePicture(Picture picture, String url) {
                         if (picture.isOnShareList()) {
                             Picture.unsharePicture(picture);
                         } else {
@@ -140,12 +137,12 @@ public class SharePictureGridAdapter extends BaseAdapter {
                     }
 
                 };
-                PictureGridAdapter.setOverlayContent(overlay, getItem(position), onItemClickListener);
+                PictureUtil.setOverlayContent(overlay, getItem(position), onItemClickListener);
 
                 new ImageViewer.Builder(v.getContext(), displayLinks).setStartPosition(position).setOverlayView(overlay).setImageChangeListener(new ImageViewer.OnImageChangeListener() {
                     @Override
                     public void onImageChange(int position) {
-                        PictureGridAdapter.setOverlayContent(overlay, getItem(position), onItemClickListener);
+                        PictureUtil.setOverlayContent(overlay, getItem(position), onItemClickListener);
                     }
                 }).show();
                 return true;

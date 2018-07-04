@@ -25,7 +25,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content">
                 <ImageView
-                    android:id="@+id/feedImageLove"
+                    android:id="@+id/overlayImageLove"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center_horizontal"
@@ -52,7 +52,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content">
                 <ImageView
-                    android:id="@+id/feedImageVisit"
+                    android:id="@+id/overlayImageVisit"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center_horizontal"
@@ -65,7 +65,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content">
                 <ImageView
-                    android:id="@+id/feedImageShare"
+                    android:id="@+id/overlayImageShare"
                     android:tint="@color/text_color_secondary"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
@@ -79,18 +79,18 @@
         <TextView
             style="@style/FeedName"
             android:layout_marginTop="12dp"
-            android:id="@+id/feedImageOverlayName"
+            android:id="@+id/overlayImageName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:id="@+id/feedImageOverlayMeta"
+            android:id="@+id/overlayImageMeta"
             style="@style/FeedMeta"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:id="@+id/feedImageOverlayDescription"
+            android:id="@+id/overlayDescription"
             style="@style/FeedText"
             android:layout_marginTop="16dp"
             android:layout_width="match_parent"

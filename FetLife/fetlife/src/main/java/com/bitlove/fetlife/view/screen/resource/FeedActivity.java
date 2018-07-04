@@ -165,16 +165,12 @@ public class FeedActivity extends ResourceListActivity<Story> implements MenuAct
     }
 
     @Override
-    public void onVisitItem(Object object, String url) {
+    public void onVisitPicture(Picture picture, String url) {
         UrlUtil.openUrl(this,url);
     }
 
     @Override
-    public void onShareItem(Object object, String url) {
-        if (!(object instanceof  Picture)) {
-            return;
-        }
-        Picture picture = (Picture) object;
+    public void onSharePicture(Picture picture, String url) {
         if (picture.isOnShareList()) {
             Picture.unsharePicture(picture);
         } else {

@@ -120,8 +120,14 @@ public interface FetLifeApi {
     @GET("/api/v2/members/{memberId}/pictures")
     Call<List<Picture>> getMemberPictures(@Header("Authorization") String authHeader, @Path("memberId") String memberId, @Query("limit") int limit, @Query("page") int page);
 
+    @GET("/api/v2/members/{memberId}/pictures/{pictureId}")
+    Call<Picture> getMemberPicture(@Header("Authorization") String authHeader, @Path("memberId") String memberId, @Path("pictureId") String pictureId);
+
     @GET("/api/v2/members/{memberId}/videos")
     Call<List<Video>> getMemberVideos(@Header("Authorization") String authHeader, @Path("memberId") String memberId, @Query("limit") int limit, @Query("page") int page);
+
+    @GET("/api/v2/members/{memberId}/videos/{videoId}")
+    Call<Video> getMemberVideo(@Header("Authorization") String authHeader, @Path("memberId") String memberId, @Path("videoId") String videoId);
 
     @GET("/api/v2/members/{memberId}/friends")
     Call<List<Member>> getMemberFriends(@Header("Authorization") String authHeader, @Path("memberId") String memberId, @Query("limit") int limit, @Query("page") int page);

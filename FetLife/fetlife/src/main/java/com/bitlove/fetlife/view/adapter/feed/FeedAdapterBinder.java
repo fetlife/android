@@ -19,6 +19,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Picture;
 import com.bitlove.fetlife.model.pojos.fetlife.json.FeedEvent;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Story;
+import com.bitlove.fetlife.util.PictureUtil;
 import com.bitlove.fetlife.util.ViewUtil;
 import com.bitlove.fetlife.view.adapter.PictureGridAdapter;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -162,7 +163,7 @@ public class FeedAdapterBinder {
                             //TODO: reuse the same imageclick code instead of having it several places in this class
                             LayoutInflater inflater = LayoutInflater.from(v.getContext());
                             final View overlay = inflater.inflate(R.layout.overlay_feed_imageswipe, null);
-                            PictureGridAdapter.setOverlayContent(overlay, picture, onItemClickListener);
+                            PictureUtil.setOverlayContent(overlay, picture, onItemClickListener);
                             new ImageViewer.Builder(v.getContext(), new String[]{picture.getVariants().getHugeUrl()}).setOverlayView(overlay).show();
                         } else {
                             onItemClickListener.onFeedInnerItemClick(feedItemResourceHelper.getFeedStoryType(), feedItemResourceHelper.getUrl(feedEvent), feedEvent, feedItemResourceHelper);
@@ -228,7 +229,7 @@ public class FeedAdapterBinder {
                     public void onClick(View v) {
                         LayoutInflater inflater = LayoutInflater.from(v.getContext());
                         final View overlay = inflater.inflate(R.layout.overlay_feed_imageswipe, null);
-                        PictureGridAdapter.setOverlayContent(overlay, picture, onItemClickListener);
+                        PictureUtil.setOverlayContent(overlay, picture, onItemClickListener);
                         new ImageViewer.Builder(v.getContext(), new String[]{picture.getVariants().getHugeUrl()}).setOverlayView(overlay).show();
                     }
                 });

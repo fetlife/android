@@ -20,6 +20,7 @@ import com.bitlove.fetlife.event.ServiceCallFailedEvent;
 import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
 import com.bitlove.fetlife.event.ServiceCallStartedEvent;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Group;
+import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Rsvp;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.util.UrlUtil;
@@ -73,8 +74,9 @@ public class GroupActivity extends ResourceActivity implements AppBarLayout.OnOf
         membershipIcon = (ImageView) findViewById(R.id.group_menu_icon_member);
         membershipIconText = (TextView) findViewById(R.id.group_menu_icon_text_member);
 
-        groupId = getIntent().getStringExtra(EXTRA_GROUPID);
-        group = Group.loadGroup(groupId);
+        group = Group.loadGroup(getIntent().getStringExtra(EXTRA_GROUPID));
+        groupId = group != null ? group.getId() : getIntent().getStringExtra(EXTRA_GROUPID);
+
         String groupTitle = getIntent().getStringExtra(EXTRA_GROUP_TITLE);
         if (group != null) {
             setGroupDetails(group);
