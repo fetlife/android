@@ -15,6 +15,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.db.NotificationHistoryItem;
 import com.bitlove.fetlife.util.AppUtil;
 import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.resource.NotificationHistoryActivity;
+import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity;
 import com.crashlytics.android.Crashlytics;
 
 import org.json.JSONException;
@@ -46,7 +47,7 @@ public abstract class OneSignalNotification {
             contentIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             contentIntent.setData(Uri.parse(launchUrl));
         } else {
-            contentIntent = NotificationHistoryActivity.createIntent(context,true);
+            contentIntent = TurboLinksViewActivity.createIntent(context,"notifications",context.getString(R.string.title_activity_notifications),true);
             contentIntent.putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE,notificationType);
         }
 

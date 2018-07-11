@@ -12,6 +12,7 @@ import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.model.pojos.fetlife.db.NotificationHistoryItem;
 import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.resource.NotificationHistoryActivity;
+import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity;
 
 import org.json.JSONObject;
 
@@ -78,7 +79,7 @@ public class MentionNotification extends OneSignalNotification {
 
     @Override
     PendingIntent getPendingIntent(Context context) {
-        Intent contentIntent = NotificationHistoryActivity.createIntent(context,true);
+        Intent contentIntent = TurboLinksViewActivity.createIntent(context,"notifications",context.getString(R.string.title_activity_notifications),true);
         contentIntent.putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE,getNotificationType());
 
         PendingIntent contentPendingIntent =

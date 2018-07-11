@@ -1,6 +1,7 @@
 package com.bitlove.fetlife.view.screen.resource;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -69,11 +70,18 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
     private Set<String> requestedMediaIds = new HashSet<>();
 
     public static void startActivity(BaseActivity menuActivity, String pageUrl, String title) {
-        Intent intent = new Intent(menuActivity,TurboLinksViewActivity.class);
+        menuActivity.startActivity(createIntent(menuActivity,pageUrl,title,false));
+    }
+
+    public static Intent createIntent(Context context, String pageUrl, String title, boolean newTask) {
+        Intent intent = new Intent(context,TurboLinksViewActivity.class);
         intent.putExtra(EXTRA_PAGE_URL, pageUrl);
         intent.putExtra(EXTRA_PAGE_TITLE, title);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        menuActivity.startActivity(intent);
+        if (newTask) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+        return intent;
     }
 
     @Override
