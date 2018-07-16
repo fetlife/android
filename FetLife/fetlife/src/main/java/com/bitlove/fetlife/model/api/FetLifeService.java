@@ -1,6 +1,7 @@
 package com.bitlove.fetlife.model.api;
 
 import android.content.Context;
+import android.os.Build;
 
 import com.bitlove.fetlife.BuildConfig;
 import com.bitlove.fetlife.FetLifeApplication;
@@ -105,7 +106,12 @@ public class FetLifeService {
                 return hostname.endsWith(HOST_NAME);
             }
         });
-        uploadClient.setSslSocketFactory(new TLSSocketFactory(context.getSocketFactory()));
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            uploadClient.setSslSocketFactory(new TLSSocketFactory(context.getSocketFactory()));
+        } else {
+            uploadClient.setSslSocketFactory(context.getSocketFactory());
+        }
+
         uploadClient.interceptors().add(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
