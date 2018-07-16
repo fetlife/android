@@ -105,7 +105,7 @@ public class FetLifeService {
                 return hostname.endsWith(HOST_NAME);
             }
         });
-        uploadClient.setSslSocketFactory(context.getSocketFactory());
+        uploadClient.setSslSocketFactory(new TLSSocketFactory(context.getSocketFactory()));
         uploadClient.interceptors().add(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
