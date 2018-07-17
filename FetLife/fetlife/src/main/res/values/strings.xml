@@ -29,7 +29,15 @@
 
             <p><b><br/>Version History</b></p>
 
-            <p/>v2.15.6<br/>
+            <p/>v2.16.4<br/>
+                    <ul>
+                        <li>Additional App Notifications Screen</li>
+                        <li>Fixing performance issue with feed/groups screen</li>
+                        <li>Fix for issue with not visible images on devices with OS version prior to Lolipop</li>
+                        <li>Improved push notification handling</li>
+                    </ul>
+
+            <p/>v2.16.0<br/>
                     <ul>
                         <li>Responsive Notifications</li>
                         <li>Responsive Friend Requests</li>
