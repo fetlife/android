@@ -62,6 +62,11 @@
             android:icon="@android:drawable/ic_dialog_alert"
             android:title="@string/menu_notifications" />
 
+        <item
+            android:id="@+id/nav_app_notifications"
+            android:icon="@android:drawable/ic_dialog_alert"
+            android:title="@string/menu_app_notifications" />
+
     </group>
 
     <group android:id="@+id/interaction" android:checkableBehavior="single">

@@ -113,7 +113,7 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".view.screen.resource.NotificationHistoryActivity"
-            android:label="@string/title_activity_notifications"
+            android:label="@string/title_activity_app_notifications"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".view.screen.resource.MessagesActivity"
