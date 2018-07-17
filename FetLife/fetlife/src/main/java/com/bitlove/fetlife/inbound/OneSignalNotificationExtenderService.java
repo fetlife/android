@@ -49,13 +49,17 @@ public class OneSignalNotificationExtenderService extends NotificationExtenderSe
             long time2Client = clientTime-googleTime;
             long totalTime = clientTime-serverTime;
 
-            Answers.getInstance().logCustom(
-                    new CustomEvent("CloudMessageReceived")
-                            .putCustomAttribute("notificationId",notification.payload.notificationID)
-                            .putCustomAttribute("type",type)
-                            .putCustomAttribute("time2Google",time2Google)
-                            .putCustomAttribute("time2Client",time2Client)
-                            .putCustomAttribute("totalTime",totalTime));
+            if (time2Google < 0 || time2Client < 0) {
+                Crashlytics.logException(new Exception("Invalid notification track time"));
+            } else {
+                Answers.getInstance().logCustom(
+                        new CustomEvent("CloudMessageReceived")
+                                .putCustomAttribute("notificationId",notification.payload.notificationID)
+                                .putCustomAttribute("type",type)
+                                .putCustomAttribute("time2Google",time2Google)
+                                .putCustomAttribute("time2Client",time2Client)
+                                .putCustomAttribute("totalTime",totalTime));
+            }
 
         } catch (Throwable t) {
             Crashlytics.logException(t);
