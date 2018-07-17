@@ -67,7 +67,7 @@ public class EventInfoFragment extends LoadFragment {
         dateTextView.setText(startDateTime + DATE_INTERVAL_SEPARATOR + endDateTime);
         dresscodeTextView.setText(event.getDressCode());
         costTextView.setText(event.getCost());
-        descriptionTextView.setText(StringUtil.parseMarkedHtml(event.getDescription()));
+        descriptionTextView.setText(event.getHtmlDescription());
 //        descriptionTextView.setBackgroundColor(0);
     }
 

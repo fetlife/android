@@ -177,9 +177,9 @@ public class FeedAdapterBinder {
                 itemImage.setVisibility(View.GONE);
             }
 
-            CharSequence itemHeaderText = feedItemResourceHelper.getFormattedText(feedItemResourceHelper.getItemTitle(feedEvent));
-            CharSequence itemTextText = feedItemResourceHelper.getFormattedText(feedItemResourceHelper.getItemBody(feedEvent));
-            CharSequence itemTimeText = feedItemResourceHelper.getFormattedText(feedItemResourceHelper.getItemCaption(feedEvent));
+            CharSequence itemHeaderText = feedItemResourceHelper.getItemTitle(feedEvent);
+            CharSequence itemTextText = feedItemResourceHelper.getItemBody(feedEvent);
+            CharSequence itemTimeText = feedItemResourceHelper.getItemCaption(feedEvent);
 
             TextView itemHeader = (TextView) itemView.findViewById(R.id.feed_innerlist_header);
             itemHeader.setText(itemHeaderText);

@@ -79,8 +79,8 @@ public class GroupDiscussionsRecyclerAdapter extends ResourceListRecyclerAdapter
         final GroupPost groupPost = itemList.get(position);
 
         groupDiscussionViewHolder.headerText.setText(groupPost.getTitle());
-        String groupDiscussionBody = groupPost.getBody();
-        groupDiscussionBody = StringUtil.parseMarkedHtml(groupDiscussionBody).toString();
+        String groupDiscussionBody = groupPost.getHtmlBody().toString();
+//        groupDiscussionBody = StringUtil.parseMarkedHtml(groupDiscussionBody).toString();
         String descPreview = groupDiscussionBody.substring(0,Math.min(MAX_BODY_LENGTH,groupDiscussionBody.length())).trim();
 
         groupDiscussionViewHolder.messageText.setText(descPreview);

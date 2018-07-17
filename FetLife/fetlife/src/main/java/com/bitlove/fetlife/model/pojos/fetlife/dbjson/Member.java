@@ -10,6 +10,7 @@ import com.bitlove.fetlife.model.db.FetLifeDatabase;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Avatar;
 import com.bitlove.fetlife.model.pojos.fetlife.json.AvatarVariants;
 import com.bitlove.fetlife.util.ServerIdUtil;
+import com.bitlove.fetlife.util.StringUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -137,6 +138,17 @@ public class Member extends BaseModel {
 
     public void setAbout(String about) {
         this.about = about;
+        this.htmlAbout = null;
+    }
+
+    @JsonIgnore
+    private CharSequence htmlAbout;
+
+    public CharSequence getHtmlAbout() {
+        if (htmlAbout == null && about != null) {
+            this.htmlAbout = StringUtil.parseMarkedHtml(about);
+        }
+        return htmlAbout;
     }
 
     public String getServerId() {

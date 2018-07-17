@@ -8,6 +8,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.util.DateUtil;
 import com.bitlove.fetlife.util.ServerIdUtil;
+import com.bitlove.fetlife.util.StringUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -149,6 +150,17 @@ public class Writing extends BaseModel{
     @JsonProperty("body")
     public void setBody(String body) {
         this.body = body;
+        this.htmlBody = null;
+    }
+
+    @JsonIgnore
+    private CharSequence htmlBody;
+
+    public CharSequence getHtmlBody() {
+        if (htmlBody == null && body != null) {
+            this.htmlBody = StringUtil.parseMarkedHtml(body);
+        }
+        return htmlBody;
     }
 
     @JsonProperty("comment_count")

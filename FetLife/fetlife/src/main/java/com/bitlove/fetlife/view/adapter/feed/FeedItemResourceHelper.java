@@ -453,7 +453,7 @@ public class FeedItemResourceHelper {
         }
     }
 
-    public String getItemBody(FeedEvent feedEvent) {
+    public CharSequence getItemBody(FeedEvent feedEvent) {
         try {
             switch (feedStoryType) {
                 case PEOPLE_INTO_CREATED:
@@ -484,30 +484,30 @@ public class FeedItemResourceHelper {
                     }
                 case LIKE_CREATED:
                     if (feedEvent.getSecondaryTarget().getWriting() != null) {
-                        return feedEvent.getSecondaryTarget().getWriting().getBody();
+                        return feedEvent.getSecondaryTarget().getWriting().getHtmlBody();
                     } else if (feedEvent.getSecondaryTarget().getStatus() != null) {
-                        return feedEvent.getSecondaryTarget().getStatus().getBody();
+                        return feedEvent.getSecondaryTarget().getStatus().getHtmlBody();
                     } else {
                         return null;
                     }
                 case STATUS_COMMENT_CREATED:
-                    return feedEvent.getSecondaryTarget().getStatus().getBody();
+                    return feedEvent.getSecondaryTarget().getStatus().getHtmlBody();
                 case VIDEO_COMMENT_CREATED:
                     return feedEvent.getSecondaryTarget().getVideo().getBody();
                 case GROUP_COMMENT_CREATED:
-                    return feedEvent.getSecondaryTarget().getGroupPost().getBody();
+                    return feedEvent.getSecondaryTarget().getGroupPost().getHtmlBody();
                 case STATUS_CREATED:
-                    return feedEvent.getTarget().getStatus().getBody();
+                    return feedEvent.getTarget().getStatus().getHtmlBody();
                 case POST_COMMENT_CREATED:
-                    return feedEvent.getSecondaryTarget().getWriting().getBody();
+                    return feedEvent.getSecondaryTarget().getWriting().getHtmlBody();
                 case GROUP_MEMBERSHIP_CREATED:
-                    return getGroup(feedEvent).getDescription();
+                    return getGroup(feedEvent).getHtmlDescription();
                 case GROUP_POST_CREATED:
-                    return feedEvent.getTarget().getGroupPost().getBody();
+                    return feedEvent.getTarget().getGroupPost().getHtmlBody();
                 case WALL_POST_CREATED:
-                    return feedEvent.getTarget().getWallPost().getBody();
+                    return feedEvent.getTarget().getWallPost().getHtmlBody();
                 case POST_CREATED:
-                    return feedEvent.getTarget().getWriting().getBody();
+                    return feedEvent.getTarget().getWriting().getHtmlBody();
                 case FOLLOW_CREATED:
                 case FRIEND_CREATED:
                     return feedEvent.getSecondaryTarget().getMember().getMetaInfo();
@@ -598,14 +598,6 @@ public class FeedItemResourceHelper {
                 return true;
             default:
                 return false;
-        }
-    }
-
-    public CharSequence getFormattedText(String text) {
-        try {
-            return StringUtil.parseMarkedHtml(text);
-        } catch (Throwable t) {
-            return text;
         }
     }
 }

@@ -1,7 +1,9 @@
 package com.bitlove.fetlife.model.pojos.fetlife.dbjson;
 
 import com.bitlove.fetlife.model.db.FetLifeDatabase;
+import com.bitlove.fetlife.model.pojos.fetlife.json.MessageEntities;
 import com.bitlove.fetlife.util.DateUtil;
+import com.bitlove.fetlife.util.StringUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -79,6 +81,18 @@ public class Message extends BaseModel {
 
     public void setBody(String body) {
         this.body = body;
+        this.htmlBody = null;
+    }
+
+    @JsonIgnore
+    private CharSequence htmlBody;
+
+    public CharSequence getHtmlBody() {
+        if (htmlBody == null && body != null) {
+            MessageEntities messageEntities = StringUtil.getMessageEntities(entitiesJson);
+            this.htmlBody = StringUtil.parseMarkedHtmlWithMentions(body.trim(), messageEntities.getMentions());
+        }
+        return htmlBody;
     }
 
     public String getClientId() {

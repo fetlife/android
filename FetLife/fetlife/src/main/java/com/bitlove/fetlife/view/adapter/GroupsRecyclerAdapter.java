@@ -103,8 +103,8 @@ public class GroupsRecyclerAdapter extends ResourceListRecyclerAdapter<Group, Gr
             }
         });
         holder.groupName.setText(group.getName());
-        String description = group.getDescription();
-        description = StringUtil.parseMarkedHtml(description).toString();
+        String description = group.getHtmlDescription().toString();
+//        description = StringUtil.parseMarkedHtml(description).toString();
         String descPreview = description.substring(0,Math.min(MAX_DESC_LENGTH,description.length())).trim();
 
         holder.groupDescription.setText(descPreview);

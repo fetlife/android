@@ -41,8 +41,8 @@ public class GroupInfoFragment extends LoadFragment {
             return;
         }
         GroupInfoEnum groupInfoEnum = (GroupInfoEnum) getArguments().getSerializable(ARG_GROUP_INFO_ENUM);
-        String descText = groupInfoEnum == GroupInfoEnum.RULES ? group.getRules() : group.getDescription();
-        descriptionTextView.setText(StringUtil.parseMarkedHtml(descText));
+        CharSequence descText = groupInfoEnum == GroupInfoEnum.RULES ? group.getHtmlRules() : group.getHtmlDescription();
+        descriptionTextView.setText(descText);
     }
 
     @Nullable

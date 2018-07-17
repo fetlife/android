@@ -157,17 +157,8 @@ public class GroupMessagesRecyclerAdapter extends RecyclerView.Adapter<GroupMess
             return;
         }
 
-        MessageEntities messageEntities;
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
-            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            messageEntities = objectMapper.readValue(groupMessage.getEntitiesJson(), MessageEntities.class);
-        } catch (IOException |NullPointerException e) {
-            messageEntities = new MessageEntities();
-        }
-
-        CharSequence messageBody = StringUtil.parseMarkedHtmlWithMentions(groupMessage.getBody().trim(),messageEntities.getMentions());
+        CharSequence messageBody = groupMessage.getHtmlBody();
+        MessageEntities messageEntities = StringUtil.getMessageEntities(groupMessage.getEntitiesJson());
 
         List<Picture> pictures = messageEntities.getPictures();
         if (pictures.isEmpty()) {

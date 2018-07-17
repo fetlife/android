@@ -30,6 +30,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.json.Mention;
 import com.bitlove.fetlife.model.pojos.fetlife.json.MessageEntities;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Story;
 import com.bitlove.fetlife.util.ColorUtil;
+import com.bitlove.fetlife.util.ServerIdUtil;
 import com.bitlove.fetlife.util.StringUtil;
 import com.bitlove.fetlife.util.UrlUtil;
 import com.bitlove.fetlife.view.adapter.feed.FeedItemResourceHelper;
@@ -73,9 +74,10 @@ public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessageViewHol
     }
 
     private void loadItems() {
+        String localId = ServerIdUtil.getLocalId(conversationId);
         //TODO: think of moving to separate thread with specific DB executor
-        conversation = new Select().from(Conversation.class).where(Conversation_Table.id.is(conversationId)).querySingle();
-        itemList = new Select().from(Message.class).where(Message_Table.conversationId.is(conversationId)).orderBy(Message_Table.pending,false).orderBy(Message_Table.date,false).orderBy(Message_Table.id,false).queryList();
+        conversation = new Select().from(Conversation.class).where(Conversation_Table.id.is(localId)).querySingle();
+        itemList = new Select().from(Message.class).where(Message_Table.conversationId.is(localId)).orderBy(Message_Table.pending,false).orderBy(Message_Table.date,false).orderBy(Message_Table.id,false).queryList();
     }
 
     @Override
@@ -102,18 +104,10 @@ public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessageViewHol
     @Override
     public void onBindViewHolder(MessageViewHolder messageViewHolder, int position) {
         Message message = itemList.get(position);
-        MessageEntities messageEntities;
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
-            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            messageEntities = objectMapper.readValue(message.getEntitiesJson(), MessageEntities.class);
-        } catch (IOException|NullPointerException e) {
-            messageEntities = new MessageEntities();
-        }
 
-        CharSequence messageBody = StringUtil.parseMarkedHtmlWithMentions(message.getBody().trim(),messageEntities.getMentions());
+        CharSequence messageBody = message.getHtmlBody();
 
+        MessageEntities messageEntities = StringUtil.getMessageEntities(message.getEntitiesJson());
         List<Picture> pictures = messageEntities.getPictures();
         if (pictures.isEmpty()) {
             messageViewHolder.messageEntitiesGrid.setVisibility(View.GONE);

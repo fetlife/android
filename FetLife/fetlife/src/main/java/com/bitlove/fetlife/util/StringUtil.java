@@ -4,6 +4,7 @@ import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
@@ -11,25 +12,29 @@ import android.view.View;
 
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Mention;
+import com.bitlove.fetlife.model.pojos.fetlife.json.MessageEntities;
 import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vladsch.flexmark.ast.Node;
 import com.vladsch.flexmark.html.HtmlRenderer;
 import com.vladsch.flexmark.parser.Parser;
 import com.vladsch.flexmark.util.options.MutableDataSet;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class StringUtil {
 
-    public static final CharSequence parseMarkedHtml(String htmlString) {
+    static boolean isInitialized = false;
+    private static Parser parser;
+    private static HtmlRenderer renderer;
 
-        if (htmlString == null) {
-            return null;
+    public static synchronized void init() {
+        if (isInitialized) {
+            return;
         }
-
-        //htmlString = htmlString.replace("\n", "<br/>");
-
         MutableDataSet options = new MutableDataSet();
 
         // uncomment to set optional extensions
@@ -38,19 +43,35 @@ public class StringUtil {
         // uncomment to convert soft-breaks to hard breaks
         options.set(HtmlRenderer.SOFT_BREAK, "<br />\n");
 
-        Parser parser = Parser.builder(options).build();
-        HtmlRenderer renderer = HtmlRenderer.builder(options).build();
+        parser = Parser.builder(options).build();
+        renderer = HtmlRenderer.builder(options).build();
+        isInitialized = true;
+    }
 
-        // You can re-use parser and renderer instances
-        Node document = parser.parse(htmlString.trim());
-        String markedHtml = renderer.render(document).trim();
-        String referenceText = markedHtml.toLowerCase();
-        if (referenceText.startsWith("<p")) {
-            markedHtml = markedHtml.substring(markedHtml.indexOf(">")+1);
-            if (referenceText.endsWith("</p>")) {
-                markedHtml = markedHtml.substring(0,markedHtml.length()-"</p>".length());
-            }
+    public static final CharSequence parseMarkedHtml(String htmlString) {
+
+        if (!isInitialized) {
+            init();
         }
+
+        if (htmlString == null) {
+            return null;
+        }
+
+        //htmlString = htmlString.replace("\n", "<br/>");
+
+        //Disabled due to performance issues
+//        Node document = parser.parse(htmlString.trim());
+//        String markedHtml = renderer.render(document).trim();
+//        String referenceText = markedHtml.toLowerCase();
+//        if (referenceText.startsWith("<p")) {
+//            markedHtml = markedHtml.substring(markedHtml.indexOf(">")+1);
+//            if (referenceText.endsWith("</p>")) {
+//                markedHtml = markedHtml.substring(0,markedHtml.length()-"</p>".length());
+//            }
+//        }
+
+        String markedHtml = htmlString;
 
         return linkifyHtml(markedHtml, Linkify.WEB_URLS);
     }
@@ -129,5 +150,17 @@ public class StringUtil {
         return buffer;
     }
 
+    public static MessageEntities getMessageEntities(String entitiesJson) {
+        MessageEntities messageEntities;
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
+            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            messageEntities = objectMapper.readValue(entitiesJson, MessageEntities.class);
+        } catch (IOException |NullPointerException e) {
+            messageEntities = new MessageEntities();
+        }
+        return messageEntities;
+    }
 }
 

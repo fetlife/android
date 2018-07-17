@@ -1,6 +1,8 @@
 package com.bitlove.fetlife.model.pojos.fetlife.json;
 
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
+import com.bitlove.fetlife.util.StringUtil;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class WallPost {
@@ -35,6 +37,17 @@ public class WallPost {
     @JsonProperty("body")
     public void setBody(String body) {
         this.body = body;
+        this.htmlBody = null;
+    }
+
+    @JsonIgnore
+    private CharSequence htmlBody;
+
+    public CharSequence getHtmlBody() {
+        if (htmlBody == null && body != null) {
+            this.htmlBody = StringUtil.parseMarkedHtml(body);
+        }
+        return htmlBody;
     }
 
     @JsonProperty("content_type")

@@ -5,6 +5,7 @@ import com.bitlove.fetlife.util.DateUtil;
 import com.bitlove.fetlife.util.ServerIdUtil;
 import com.bitlove.fetlife.util.StringUtil;
 import com.crashlytics.android.Crashlytics;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
@@ -130,7 +131,18 @@ public class Group extends BaseModel {
 
     @JsonProperty("description")
     public void setDescription(String description) {
-        this.description = StringUtil.parseMarkedHtml(description).toString();
+        this.description = description;
+        this.htmlDescription = null;
+    }
+
+    @JsonIgnore
+    private CharSequence htmlDescription = null;
+
+    public CharSequence getHtmlDescription() {
+        if (htmlDescription == null && description != null) {
+            this.htmlDescription = StringUtil.parseMarkedHtml(description);
+        }
+        return htmlDescription;
     }
 
     @JsonProperty("id")
@@ -171,6 +183,17 @@ public class Group extends BaseModel {
     @JsonProperty("rules")
     public void setRules(String rules) {
         this.rules = rules;
+        this.htmlRules = null;
+    }
+
+    @JsonIgnore
+    private CharSequence htmlRules = null;
+
+    public CharSequence getHtmlRules() {
+        if (htmlRules == null && rules != null) {
+            this.htmlRules = StringUtil.parseMarkedHtml(rules);
+        }
+        return htmlRules;
     }
 
     @JsonProperty("url")

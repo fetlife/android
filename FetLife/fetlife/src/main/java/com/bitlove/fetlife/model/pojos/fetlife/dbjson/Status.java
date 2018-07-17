@@ -2,6 +2,7 @@ package com.bitlove.fetlife.model.pojos.fetlife.dbjson;
 
 import com.bitlove.fetlife.model.db.FetLifeDatabase;
 import com.bitlove.fetlife.util.DateUtil;
+import com.bitlove.fetlife.util.StringUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -61,6 +62,17 @@ public class Status extends BaseModel {
     @JsonProperty("body")
     public void setBody(String body) {
         this.body = body;
+        this.htmlBody = null;
+    }
+
+    @JsonIgnore
+    private CharSequence htmlBody = null;
+
+    public CharSequence getHtmlBody() {
+        if (htmlBody == null && body != null) {
+            this.htmlBody = StringUtil.parseMarkedHtml(body);
+        }
+        return htmlBody;
     }
 
     @JsonProperty("comment_count")

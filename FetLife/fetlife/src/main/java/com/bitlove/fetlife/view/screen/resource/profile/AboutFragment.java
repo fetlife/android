@@ -31,7 +31,7 @@ public class AboutFragment extends LoadFragment {
         if (member == null) {
             return;
         }
-        aboutTextView.setText(StringUtil.parseMarkedHtml(member.getAbout()));
+        aboutTextView.setText(member.getHtmlAbout());
     }
 
     @Nullable

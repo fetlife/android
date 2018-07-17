@@ -119,7 +119,18 @@ public class GroupPost extends BaseModel {
 
     @JsonProperty("body")
     public void setBody(String body) {
-        this.body = StringUtil.parseMarkedHtml(body).toString();
+        this.body = body;
+        this.htmlBody = null;
+    }
+
+    @JsonIgnore
+    private CharSequence htmlBody;
+
+    public CharSequence getHtmlBody() {
+        if (htmlBody == null && body != null) {
+            this.htmlBody = StringUtil.parseMarkedHtml(body);
+        }
+        return htmlBody;
     }
 
     @JsonProperty("comment_count")

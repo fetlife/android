@@ -7,6 +7,7 @@ import android.util.Log;
 import com.bitlove.fetlife.model.db.FetLifeDatabase;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Rsvp;
 import com.bitlove.fetlife.util.DateUtil;
+import com.bitlove.fetlife.util.StringUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -175,6 +176,17 @@ public class Event extends BaseModel implements Comparable<Event>, ClusterItem {
     @JsonProperty("description")
     public void setDescription(String description) {
         this.description = description;
+        this.htmlDescription = null;
+    }
+
+    @JsonIgnore
+    private CharSequence htmlDescription;
+
+    public CharSequence getHtmlDescription() {
+        if (htmlDescription == null && description != null) {
+            this.htmlDescription = StringUtil.parseMarkedHtml(description);
+        }
+        return htmlDescription;
     }
 
     @JsonProperty("dress_code")
