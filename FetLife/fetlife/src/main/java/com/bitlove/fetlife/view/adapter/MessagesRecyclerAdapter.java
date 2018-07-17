@@ -74,7 +74,7 @@ public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessageViewHol
     }
 
     private void loadItems() {
-        String localId = ServerIdUtil.getLocalId(conversationId);
+        String localId = ServerIdUtil.isServerId(conversationId) ? ServerIdUtil.getLocalId(conversationId) : conversationId;
         //TODO: think of moving to separate thread with specific DB executor
         conversation = new Select().from(Conversation.class).where(Conversation_Table.id.is(localId)).querySingle();
         itemList = new Select().from(Message.class).where(Message_Table.conversationId.is(localId)).orderBy(Message_Table.pending,false).orderBy(Message_Table.date,false).orderBy(Message_Table.id,false).queryList();
