@@ -29,6 +29,13 @@
 
             <p><b><br/>Version History</b></p>
 
+            <p/>v2.16.7<br/>
+                    <ul>
+                        <li>Fix for missing line breaks</li>
+                        <li>Additional fix for issue with not visible images on devices with OS version prior to Lolipop</li>
+                        <li>Fix for connectivity failed messages</li>
+                    </ul>
+
             <p/>v2.16.4<br/>
                     <ul>
                         <li>Additional App Notifications Screen</li>
