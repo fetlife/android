@@ -58,7 +58,7 @@ public class StringUtil {
             return null;
         }
 
-        //htmlString = htmlString.replace("\n", "<br/>");
+        htmlString = htmlString.replace("\n", "<br/>");
 
         //Disabled due to performance issues
 //        Node document = parser.parse(htmlString.trim());
