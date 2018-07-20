@@ -57,7 +57,7 @@ public class FetLifeService {
         tmf.init(keyStore);
 
         SSLContext context = SSLContext.getInstance("TLS");
-        context.init(null, tmf.getTrustManagers(), null);
+        context.init(null, /*tmf.getTrustManagers()*/ null, null);
 
         OkHttpClient client = new OkHttpClient();
         client.setHostnameVerifier(new HostnameVerifier() {
@@ -66,7 +66,6 @@ public class FetLifeService {
                 return hostname.endsWith(HOST_NAME);
             }
         });
-//        client.setSslSocketFactory(context.getSocketFactory());
         client.interceptors().add(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
@@ -86,6 +85,12 @@ public class FetLifeService {
         client.setConnectTimeout(20, TimeUnit.SECONDS);
         client.setReadTimeout(20, TimeUnit.SECONDS);
         client.setWriteTimeout(20, TimeUnit.SECONDS);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            client.setSslSocketFactory(new TLSSocketFactory(context.getSocketFactory()));
+        } else {
+            client.setSslSocketFactory(context.getSocketFactory());
+        }
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);

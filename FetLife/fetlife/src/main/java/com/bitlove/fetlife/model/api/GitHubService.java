@@ -1,5 +1,7 @@
 package com.bitlove.fetlife.model.api;
 
+import android.os.Build;
+
 import com.bitlove.fetlife.FetLifeApplication;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,9 +11,13 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
+import java.security.KeyStore;
 
 import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
 
 import retrofit.JacksonConverterFactory;
 import retrofit.Retrofit;
@@ -44,6 +50,15 @@ public class GitHubService {
                 return response;
             }
         });
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            SSLContext context = SSLContext.getInstance("TLS");
+            TrustManagerFactory tmf = TrustManagerFactory
+                    .getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            tmf.init((KeyStore) null);
+            TrustManager[] trustManagers = tmf.getTrustManagers();
+            context.init(null,trustManagers,null);
+            client.setSslSocketFactory(new TLSSocketFactory(context.getSocketFactory()));
+        }
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
