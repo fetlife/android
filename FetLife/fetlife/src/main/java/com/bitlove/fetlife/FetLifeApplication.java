@@ -5,17 +5,20 @@ import android.app.PendingIntent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.StrictMode;
 import android.support.multidex.MultiDexApplication;
 import android.util.Base64;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.bitlove.fetlife.inbound.OnNotificationOpenedHandler;
 import com.bitlove.fetlife.model.api.FetLifeService;
 import com.bitlove.fetlife.model.api.GitHubService;
+import com.bitlove.fetlife.model.api.TLSSocketFactory;
 import com.bitlove.fetlife.model.db.FetLifeDatabase;
 import com.bitlove.fetlife.model.inmemory.InMemoryStorage;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
@@ -40,6 +43,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.security.AlgorithmParameters;
+import java.security.KeyStore;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Arrays;
@@ -49,6 +53,10 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
 import io.fabric.sdk.android.Fabric;
 import okhttp3.Interceptor;
@@ -139,11 +147,11 @@ public class FetLifeApplication extends MultiDexApplication {
             versionText = getString(R.string.text_unknown);
         }
 
-        //Init Fresco image library
-        initFrescoImageLibrary();
-
         //Init crash logging
         Fabric.with(this, new Crashlytics());
+
+        //Init Fresco image library
+        initFrescoImageLibrary();
 
         PendingIntent restartIntent = PendingIntent.getActivity(this,42, LoginActivity.createIntent(this,getString(R.string.error_session_invalid)),PendingIntent.FLAG_ONE_SHOT);
         Thread.setDefaultUncaughtExceptionHandler(new FetLifeUncaughtExceptionHandler(Thread.getDefaultUncaughtExceptionHandler(),restartIntent));
@@ -190,6 +198,21 @@ public class FetLifeApplication extends MultiDexApplication {
                         return chain.proceed(requestBuilder.build());
                     }
                 });
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            try {
+                SSLContext context = SSLContext.getInstance("TLS");
+                TrustManagerFactory tmf = TrustManagerFactory
+                        .getInstance(TrustManagerFactory.getDefaultAlgorithm());
+                tmf.init((KeyStore) null);
+                TrustManager[] trustManagers = tmf.getTrustManagers();
+                context.init(null,trustManagers,null);
+                okHttpClientBuilder.sslSocketFactory(new TLSSocketFactory(context.getSocketFactory()), (X509TrustManager) trustManagers[0]);
+            } catch (Throwable t) {
+                Log.e("EX","ex",t);
+                //Crashlytics.logException(t);
+            }
+        }
 
         ImagePipelineConfig imagePipelineConfig = OkHttpImagePipelineConfigFactory.newBuilder(this,okHttpClientBuilder.build()).setCacheKeyFactory(new CacheKeyFactory() {
             @Override
