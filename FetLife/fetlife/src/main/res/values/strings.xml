@@ -901,5 +901,9 @@
     <string name="feed_title_new_video">Uploaded a new Video</string>
     <string name="menu_search">Search</string>
     <string name="message_member_forbidden">Sending messsage to this member is not possible, beceause either the member is inactive/deleted or one of you has blocked the other</string>
+    <string name="menu_team">Meet the Team</string>
+    <string name="menu_wallpapers">Wallpapers</string>
+    <string name="title_activity_team">Meet the Team</string>
+    <string name="title_activity_wallpapers">Wallpapers</string>
 
 </resources>

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -56,11 +57,13 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
 
     private static final Map<String,Integer> supportedBaseUrls = new HashMap<>();
     static {
-        supportedBaseUrls.put("https://app.fetlife.com/ads",R.string.title_activity_ads);
-        supportedBaseUrls.put("https://app.fetlife.com/support",R.string.title_activity_support);
-        supportedBaseUrls.put("https://app.fetlife.com/glossary",R.string.title_activity_glossary);
-        supportedBaseUrls.put("https://app.fetlife.com/notifications",R.string.title_activity_notifications);
-        supportedBaseUrls.put("https://app.fetlife.com/requests",R.string.title_activity_friendrequests);
+        supportedBaseUrls.put("https://fetlife.com/ads",R.string.title_activity_ads);
+        supportedBaseUrls.put("https://fetlife.com/support",R.string.title_activity_support);
+        supportedBaseUrls.put("https://fetlife.com/glossary",R.string.title_activity_glossary);
+        supportedBaseUrls.put("https://fetlife.com/wallpapers",R.string.title_activity_wallpapers);
+        supportedBaseUrls.put("https://fetlife.com/team",R.string.title_activity_team);
+        supportedBaseUrls.put("https://fetlife.com/notifications",R.string.title_activity_notifications);
+        supportedBaseUrls.put("https://fetlife.com/requests",R.string.title_activity_friendrequests);
     }
 
     private static final String EXTRA_PAGE_URL = "EXTRA_PAGE_URL";
@@ -147,7 +150,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         turbolinksView = (TurbolinksView) findViewById(R.id.turbolinks_view);
 
         String pageUrl = getIntent().getStringExtra(EXTRA_PAGE_URL);
-        final String location = pageUrl.startsWith("https://") ? pageUrl : FetLifeService.BASE_URL + "/" + pageUrl;
+        final String location = pageUrl.startsWith("https://") ? pageUrl : FetLifeService.WEBVIEW_BASE_URL + "/" + pageUrl;
 
         if (BuildConfig.DEBUG) {
             Log.d("TBLocation",location);
@@ -184,7 +187,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
     public boolean shouldOverrideUrlLoading(WebView view, String location) {
         String mediaId = null;
         Uri uri = Uri.parse(location);
-        if (!uri.getHost().equals(FetLifeService.HOST_NAME)) {
+        if (!location.startsWith(FetLifeService.WEBVIEW_BASE_URL)) {
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);
             return true;
@@ -245,11 +248,12 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         }
 
         String pageUrl = getIntent().getStringExtra(EXTRA_PAGE_URL);
-        String baseLocation = FetLifeService.BASE_URL + "/" + pageUrl;
+        Uri pageUri = Uri.parse(pageUrl);
+        String baseLocation = TextUtils.isEmpty(pageUri.getHost()) ? FetLifeService.WEBVIEW_BASE_URL + "/" + pageUrl : pageUrl;
 
         String mediaId = null;
         if (!location.startsWith(baseLocation)) {
-            Integer expectedTitleResourceId = supportedBaseUrls.get(location);
+            Integer expectedTitleResourceId = getTitleForSupportedLocation(location);
             if (expectedTitleResourceId != null) {
                 TurboLinksViewActivity.startActivity(this,location,getString(expectedTitleResourceId));
                 return;
@@ -262,6 +266,9 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
                 UrlUtil.openUrl(this,UrlUtil.removeAppIds(location));
                 return;
             }
+//        } else if (UrlUtil.isDownloadLink(this, Uri.parse(location))) {
+//            UrlUtil.openUrl(this,location);
+//            return;
         } else {
             location = UrlUtil.removeAppIds(location);
         }
@@ -273,6 +280,13 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
                 .adapter(this)
                 .view(turbolinksView)
                 .visitLocationWithAction(location,action);
+    }
+
+    private Integer getTitleForSupportedLocation(String location) {
+        if (location.startsWith("https://fetlife.com/team")) {
+            return supportedBaseUrls.get("https://fetlife.com/team");
+        }
+        return supportedBaseUrls.get(location);
     }
 
     @Override

@@ -115,6 +115,16 @@
             android:icon="@android:drawable/ic_menu_agenda"
             android:title="@string/menu_relnotes" />
 
+        <item
+            android:id="@+id/nav_team"
+            android:icon="@android:drawable/ic_menu_myplaces"
+            android:title="@string/menu_team" />
+
+        <!--<item-->
+            <!--android:id="@+id/nav_wallpapers"-->
+            <!--android:icon="@android:drawable/ic_menu_gallery"-->
+            <!--android:title="@string/menu_wallpapers" />-->
+
     </group>
 
     <group android:id="@+id/logout" android:checkableBehavior="single">

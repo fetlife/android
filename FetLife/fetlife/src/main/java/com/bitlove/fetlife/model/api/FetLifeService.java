@@ -34,6 +34,7 @@ import retrofit.Retrofit;
 
 public class FetLifeService {
 
+    public static final String WEBVIEW_BASE_URL = "https://fetlife.com";
     public static final String BASE_URL = "https://app.fetlife.com";
     public static final String HOST_NAME = "app.fetlife.com";
     public static final String GRANT_TYPE_PASSWORD = "password";

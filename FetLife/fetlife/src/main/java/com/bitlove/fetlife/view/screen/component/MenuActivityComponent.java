@@ -231,6 +231,10 @@ public class MenuActivityComponent extends ActivityComponent {
             TurboLinksViewActivity.startActivity(menuActivity,"ads",menuActivity.getString(R.string.title_activity_ads));
         } else if (id == R.id.nav_glossary) {
             TurboLinksViewActivity.startActivity(menuActivity,"glossary",menuActivity.getString(R.string.title_activity_glossary));
+        } else if (id == R.id.nav_team) {
+            TurboLinksViewActivity.startActivity(menuActivity,"team",menuActivity.getString(R.string.title_activity_team));
+//        } else if (id == R.id.nav_wallpapers) {
+//            TurboLinksViewActivity.startActivity(menuActivity,"wallpapers",menuActivity.getString(R.string.title_activity_wallpapers));
         } else if (id == R.id.nav_events) {
             if (isLocationPermissionGranted()) {
                 EventsActivity.startActivity(menuActivity);
