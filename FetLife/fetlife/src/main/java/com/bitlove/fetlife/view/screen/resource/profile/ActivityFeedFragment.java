@@ -27,6 +27,7 @@ import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.resource.ConversationsActivity;
 import com.bitlove.fetlife.view.screen.resource.EventActivity;
 import com.bitlove.fetlife.view.screen.resource.PictureShareActivity;
+import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity;
 import com.bitlove.fetlife.view.screen.resource.WritingActivity;
 import com.bitlove.fetlife.view.screen.resource.groups.GroupActivity;
 import com.bitlove.fetlife.view.screen.resource.LoadFragment;
@@ -81,7 +82,8 @@ public class ActivityFeedFragment extends LoadFragment implements FeedRecyclerAd
             Writing targetWriting = feedItemResourceHelper.getWriting(feedEvent);
             if (targetWriting != null) {
                 targetWriting.save();
-                WritingActivity.startActivity((BaseActivity) getActivity(),targetWriting.getId(),targetWriting.getMemberId());
+//                WritingActivity.startActivity((BaseActivity) getActivity(),targetWriting.getId(),targetWriting.getMemberId());
+                TurboLinksViewActivity.startActivity(getBaseActivity(),targetWriting.getUrl(),targetWriting.getTitle());
                 return;
             }
         } else if (feedStoryType == Story.FeedStoryType.RSVP_CREATED) {

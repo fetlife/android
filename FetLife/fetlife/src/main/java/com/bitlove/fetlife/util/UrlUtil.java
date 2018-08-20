@@ -30,6 +30,11 @@ public class UrlUtil {
         }
     }
 
+//    public static boolean isDownloadLink(BaseActivity baseActivity, Uri uri) {
+//        List<String> urlSegments = uri.getPathSegments();
+//        return (urlSegments.size() >= 2 && "wallpapers".equals(urlSegments.get(0)) && "download".equals(urlSegments.get(1)));
+//    }
+
     public static boolean handleInternal(BaseActivity baseActivity, Uri uri) {
         List<String> urlSegments = uri.getPathSegments();
         String apiIdsParam = uri.getQueryParameter("api_ids");
@@ -72,10 +77,10 @@ public class UrlUtil {
                 return false;
             }
             if ("posts".equals(urlSegments.get(2))) {
-                String memberId = apiIds.length >= 2 ? apiIds[0] : ServerIdUtil.prefixServerId(urlSegments.get(1));
-                String postId = apiIds.length >= 2 ? apiIds[1] : ServerIdUtil.prefixServerId(urlSegments.get(3));
-                WritingActivity.startActivity(baseActivity,postId,memberId);
-                return true;
+//                String memberId = apiIds.length >= 2 ? apiIds[0] : ServerIdUtil.prefixServerId(urlSegments.get(1));
+//                String postId = apiIds.length >= 2 ? apiIds[1] : ServerIdUtil.prefixServerId(urlSegments.get(3));
+//                WritingActivity.startActivity(baseActivity,postId,memberId);
+                return false;
             }
             return false;
         }

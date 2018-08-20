@@ -90,7 +90,8 @@ public class FeedActivity extends ResourceListActivity<Story> implements MenuAct
             Writing targetWriting = feedItemResourceHelper.getWriting(feedEvent);
             if (targetWriting != null) {
                 targetWriting.save();
-                WritingActivity.startActivity(this,targetWriting.getId(), targetWriting.getMemberId());
+//                WritingActivity.startActivity(this,targetWriting.getId(), targetWriting.getMemberId());
+                TurboLinksViewActivity.startActivity(this,targetWriting.getUrl(),targetWriting.getTitle());
                 return;
             }
         } else if (feedStoryType == Story.FeedStoryType.RSVP_CREATED) {
