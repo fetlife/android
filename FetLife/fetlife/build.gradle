@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 apply plugin: 'io.fabric'
 
 buildscript {
@@ -172,6 +173,7 @@ dependencies {
     //compile project(path: ':turbolinks', configuration: 'default')
 
     implementation project(path: ':turbolinks', configuration: 'default')
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 
 
@@ -201,3 +203,6 @@ android.applicationVariants.all { variant ->
 }
 
 apply plugin: 'com.google.gms.google-services'
+repositories {
+    mavenCentral()
+}
