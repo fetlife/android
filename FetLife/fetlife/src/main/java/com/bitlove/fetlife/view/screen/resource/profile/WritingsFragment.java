@@ -1,9 +1,9 @@
 package com.bitlove.fetlife.view.screen.resource.profile;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +13,8 @@ import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Writing;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.view.adapter.ResourceListRecyclerAdapter;
 import com.bitlove.fetlife.view.adapter.WritingsRecyclerAdapter;
-import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.resource.LoadFragment;
 import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity;
-import com.bitlove.fetlife.view.screen.resource.WritingActivity;
 
 public class WritingsFragment extends LoadFragment implements ResourceListRecyclerAdapter.OnResourceClickListener<Writing> {
 

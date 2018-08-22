@@ -16,10 +16,10 @@ import com.bitlove.fetlife.model.pojos.fetlife.json.MessageEntities;
 import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vladsch.flexmark.ast.Node;
-import com.vladsch.flexmark.html.HtmlRenderer;
-import com.vladsch.flexmark.parser.Parser;
-import com.vladsch.flexmark.util.options.MutableDataSet;
+//import com.vladsch.flexmark.ast.Node;
+//import com.vladsch.flexmark.html.HtmlRenderer;
+//import com.vladsch.flexmark.parser.Parser;
+//import com.vladsch.flexmark.util.options.MutableDataSet;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,24 +28,24 @@ import java.util.List;
 public class StringUtil {
 
     static boolean isInitialized = false;
-    private static Parser parser;
-    private static HtmlRenderer renderer;
+//    private static Parser parser;
+//    private static HtmlRenderer renderer;
 
     public static synchronized void init() {
         if (isInitialized) {
             return;
         }
-        MutableDataSet options = new MutableDataSet();
+//        MutableDataSet options = new MutableDataSet();
 
         // uncomment to set optional extensions
         //options.set(Parser.EXTENSIONS, Arrays.asList(TablesExtension.create(), StrikethroughExtension.create()));
 
         // uncomment to convert soft-breaks to hard breaks
-        options.set(HtmlRenderer.SOFT_BREAK, "<br />\n");
-
-        parser = Parser.builder(options).build();
-        renderer = HtmlRenderer.builder(options).build();
-        isInitialized = true;
+//        options.set(HtmlRenderer.SOFT_BREAK, "<br />\n");
+//
+//        parser = Parser.builder(options).build();
+//        renderer = HtmlRenderer.builder(options).build();
+//        isInitialized = true;
     }
 
     public static final CharSequence parseMarkedHtml(String htmlString) {

@@ -1,7 +1,7 @@
 package com.bitlove.fetlife.view.screen.resource;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,9 +12,7 @@ import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Event;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.util.DateUtil;
-import com.bitlove.fetlife.util.StringUtil;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 public class EventInfoFragment extends LoadFragment {

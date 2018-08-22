@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.CardView
+        <androidx.cardview.widget.CardView
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:id="@+id/card_view"
             android:layout_width="250dp"
@@ -32,6 +32,6 @@
                 android:name="com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
     </fragment>
 </FrameLayout>

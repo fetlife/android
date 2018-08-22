@@ -1,11 +1,7 @@
 package com.bitlove.fetlife.model.pojos.fetlife.dbjson;
 
-import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 
-import com.bitlove.fetlife.BuildConfig;
 import com.bitlove.fetlife.model.db.FetLifeDatabase;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Avatar;
 import com.bitlove.fetlife.model.pojos.fetlife.json.AvatarVariants;
@@ -24,13 +20,10 @@ import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
-import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 //TODO: clean up the POJOs and define relations
 @Table(database = FetLifeDatabase.class)

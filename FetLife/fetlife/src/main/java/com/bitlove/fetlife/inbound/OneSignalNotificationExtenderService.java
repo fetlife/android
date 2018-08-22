@@ -1,8 +1,5 @@
 package com.bitlove.fetlife.inbound;
 
-import android.app.Notification;
-import android.support.v4.app.NotificationCompat;
-
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.event.NotificationReceivedEvent;
 import com.bitlove.fetlife.notification.AnonymNotification;
@@ -13,12 +10,9 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.onesignal.NotificationExtenderService;
-import com.onesignal.OSNotificationDisplayedResult;
 import com.onesignal.OSNotificationReceivedResult;
 
 import org.json.JSONObject;
-
-import java.lang.reflect.Field;
 
 /**
  * Extension point for One Signal notification library to override default display and onclick behaviour

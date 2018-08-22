@@ -7,16 +7,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.util.ApkUtil;
-import com.bitlove.fetlife.view.dialog.PictureUploadSelectionDialog;
-import com.bitlove.fetlife.view.dialog.VideoUploadSelectionDialog;
-import com.bitlove.fetlife.view.screen.BaseActivity;
-import com.bitlove.fetlife.view.screen.resource.EventsActivity;
 
 public class UpdatePermissionActivity extends Activity {
 

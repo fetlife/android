@@ -3,7 +3,7 @@ package com.bitlove.fetlife.view.screen.resource;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
+import com.google.android.material.navigation.NavigationView;
 
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.model.pojos.fetlife.db.RelationReference;

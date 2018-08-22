@@ -1,7 +1,7 @@
 
 package com.bitlove.fetlife.model.pojos.fetlife.dbjson;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import com.bitlove.fetlife.model.db.FetLifeDatabase;

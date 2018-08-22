@@ -8,6 +8,9 @@ buildscript {
         classpath deps.kotlin.plugin
         classpath deps.fabric
     }
+    repositories {
+        google()
+    }
 }
 
 allprojects {

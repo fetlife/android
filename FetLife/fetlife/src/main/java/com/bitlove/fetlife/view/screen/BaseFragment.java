@@ -1,6 +1,6 @@
 package com.bitlove.fetlife.view.screen;
 
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import com.bitlove.fetlife.FetLifeApplication;
 

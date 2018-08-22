@@ -4,8 +4,8 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
+import androidx.annotation.Nullable;
+import com.google.android.material.snackbar.Snackbar;
 import android.view.View;
 import android.widget.TextView;
 
@@ -20,7 +20,6 @@ import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
 import com.bitlove.fetlife.event.ServiceCallStartedEvent;
 import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.component.EventDisplayHandler;
-import com.bitlove.fetlife.view.screen.standalone.AboutActivity;
 import com.bitlove.fetlife.view.screen.standalone.LoginActivity;
 import com.bitlove.fetlife.view.screen.standalone.ReleaseNotesActivity;
 import com.crashlytics.android.Crashlytics;
@@ -85,7 +84,7 @@ public abstract class ResourceActivity extends BaseActivity {
                     ReleaseNotesActivity.startActivity(v.getContext());
                 }
             });
-            TextView snackText = (TextView) snackbar.getView().findViewById(android.support.design.R.id.snackbar_text);
+            TextView snackText = (TextView) snackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);
             snackText.setTextColor(getResources().getColor(R.color.color_accent));
             snackText.setTypeface(null, Typeface.BOLD);
             snackbar.show();

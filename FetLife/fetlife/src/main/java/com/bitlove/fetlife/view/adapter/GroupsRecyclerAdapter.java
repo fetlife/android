@@ -2,7 +2,7 @@ package com.bitlove.fetlife.view.adapter;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,13 +12,10 @@ import android.widget.TextView;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.model.pojos.fetlife.db.GroupMembershipReference;
 import com.bitlove.fetlife.model.pojos.fetlife.db.GroupMembershipReference_Table;
-import com.bitlove.fetlife.model.pojos.fetlife.db.GroupReference;
 import com.bitlove.fetlife.model.pojos.fetlife.db.GroupReference_Table;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Group;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Group_Table;
 import com.bitlove.fetlife.util.ServerIdUtil;
-import com.bitlove.fetlife.util.StringUtil;
-import com.raizlabs.android.dbflow.annotation.Collate;
 import com.raizlabs.android.dbflow.sql.language.OrderBy;
 import com.raizlabs.android.dbflow.sql.language.Select;
 

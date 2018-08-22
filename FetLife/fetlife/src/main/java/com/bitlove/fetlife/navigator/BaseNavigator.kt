@@ -12,7 +12,7 @@ import com.bitlove.fetlife.view.screen.standalone.LoginActivity
 import com.bitlove.fetlife.view.screen.standalone.ReleaseNotesActivity
 import com.bitlove.fetlife.view.screen.standalone.SettingsActivity
 
-class BaseNavigator (val baseActivity: BaseActivity){
+open class BaseNavigator (val baseActivity: BaseActivity){
 
     fun onOpenUrl(location: String) {
 

@@ -119,9 +119,9 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.InvalidDBConfiguration;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 import com.raizlabs.android.dbflow.structure.database.transaction.ITransaction;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.ResponseBody;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -144,8 +144,9 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import retrofit.Call;
-import retrofit.Response;
+import retrofit2.Call;
+import retrofit2.Response;
+
 
 //TODO use thread executor instead of new threads
 public class FetLifeApiIntentService extends IntentService {
@@ -588,7 +589,7 @@ public class FetLifeApiIntentService extends IntentService {
         boolean forcedCheck = getBoolFromParams(params,0,false);
         Call<List<Release>> releasesCall = getFetLifeApplication().getGitHubService().getGitHubApi().getReleases();
         Response<List<Release>> releasesCallResponse = releasesCall.execute();
-        if (releasesCallResponse.isSuccess()) {
+        if (releasesCallResponse.isSuccessful()) {
             Release latestRelease = null;
             Release latestPreRelease = null;
             final List<Release> releases = releasesCallResponse.body();
@@ -648,7 +649,7 @@ public class FetLifeApiIntentService extends IntentService {
 
         Response<Token> tokenResponse = tokenRefreshCall.execute();
 
-        if (tokenResponse.isSuccess()) {
+        if (tokenResponse.isSuccessful()) {
             //Set the new token information for the current user and mergeSave it to the db
             Token responseBody = tokenResponse.body();
             currentUser.setAccessToken(responseBody.getAccessToken());
@@ -669,7 +670,7 @@ public class FetLifeApiIntentService extends IntentService {
                 new AuthBody(params[0], params[1]));
 
         Response<Token> tokenResponse = tokenCall.execute();
-        if (tokenResponse.isSuccess()) {
+        if (tokenResponse.isSuccessful()) {
             Token responseBody = tokenResponse.body();
             String accessToken = responseBody.getAccessToken();
             //Retrieve user information from the backend after Authentication
@@ -693,7 +694,7 @@ public class FetLifeApiIntentService extends IntentService {
     private Member retrieveCurrentUser(String accessToken) throws IOException {
         Call<Member> getMeCall = getFetLifeApi().getMe(FetLifeService.AUTH_HEADER_PREFIX + accessToken);
         Response<Member> getMeResponse = getMeCall.execute();
-        if (getMeResponse.isSuccess()) {
+        if (getMeResponse.isSuccessful()) {
             return getMeResponse.body();
         } else {
             return null;
@@ -748,7 +749,7 @@ public class FetLifeApiIntentService extends IntentService {
             Crashlytics.logException(iae);
             postConversationResponse = null;
         }
-        if (postConversationResponse != null && postConversationResponse.isSuccess()) {
+        if (postConversationResponse != null && postConversationResponse.isSuccessful()) {
             //Delete the local conversation and create a new one, as the id of the conversation is changed (from local to backend based)
             pendingConversation.delete();
 
@@ -804,7 +805,7 @@ public class FetLifeApiIntentService extends IntentService {
         }
 
         String conversationId = pendingMessage.getConversationId();
-        if (postMessageResponse.isSuccess()) {
+        if (postMessageResponse.isSuccessful()) {
             lastSentMessageTime = System.currentTimeMillis();
             //Update the message state of the returned message object
             final Message message = postMessageResponse.body();
@@ -867,7 +868,7 @@ public class FetLifeApiIntentService extends IntentService {
 
         String groupId = pendingMessage.getGroupId();
         String groupPostId = pendingMessage.getGroupPostId();
-        if (postMessageResponse.isSuccess()) {
+        if (postMessageResponse.isSuccessful()) {
             lastSentGroupMessageTime = System.currentTimeMillis();
             //Update the message state of the returned message object
             final GroupComment message = postMessageResponse.body();
@@ -941,7 +942,7 @@ public class FetLifeApiIntentService extends IntentService {
     private boolean sendPendingFriendRequest(FriendRequest pendingFriendRequest) throws IOException {
         Call<FriendRequest> createFriendRequestCall = getFetLifeApi().createFriendRequest(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), pendingFriendRequest.getTargetMemberId());
         Response<FriendRequest> friendRequestResponse = createFriendRequestCall.execute();
-        if (friendRequestResponse.isSuccess()) {
+        if (friendRequestResponse.isSuccessful()) {
             pendingFriendRequest.delete();
             return true;
         } else {
@@ -952,7 +953,7 @@ public class FetLifeApiIntentService extends IntentService {
     private boolean sendFollowRequest(FollowRequest followRequest) throws IOException {
         Call<ResponseBody> followCall = followRequest.isFollow() ? getFetLifeApi().createFollow(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), followRequest.getMemberId()) : getFetLifeApi().removeFollow(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), followRequest.getMemberId());
         Response<ResponseBody> followResponse = followCall.execute();
-        if (followResponse.isSuccess()) {
+        if (followResponse.isSuccessful()) {
             followRequest.delete();
             return true;
         } else {
@@ -963,7 +964,7 @@ public class FetLifeApiIntentService extends IntentService {
     private boolean sendPendingSharedProfile(SharedProfile pendingSharedProfile) throws IOException {
         Call<FriendRequest> createFriendRequestCall = getFetLifeApi().createFriendRequest(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), pendingSharedProfile.getMemberId());
         Response<FriendRequest> friendRequestResponse = createFriendRequestCall.execute();
-        if (friendRequestResponse.isSuccess()) {
+        if (friendRequestResponse.isSuccessful()) {
             pendingSharedProfile.delete();
             getFetLifeApplication().getEventBus().post(new FriendRequestResponseSendSucceededEvent());
             return true;
@@ -987,7 +988,7 @@ public class FetLifeApiIntentService extends IntentService {
         }
 
         Response<FriendRequest> friendRequestResponse = friendRequestsCall.execute();
-        if (friendRequestResponse.isSuccess()) {
+        if (friendRequestResponse.isSuccessful()) {
             pendingFriendRequest.delete();
             getFetLifeApplication().getEventBus().post(new FriendRequestResponseSendSucceededEvent());
             return true;
@@ -1009,7 +1010,7 @@ public class FetLifeApiIntentService extends IntentService {
         String[] messageIds = Arrays.copyOfRange(params, 1, params.length);
         Call<ResponseBody> setMessagesReadCall = getFetLifeApi().setMessagesRead(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), conversationId, messageIds);
         Response<ResponseBody> response = setMessagesReadCall.execute();
-        return response.isSuccess() ? 1 : Integer.MIN_VALUE;
+        return response.isSuccessful() ? 1 : Integer.MIN_VALUE;
     }
 
     private int setRsvp(String[] params) throws IOException {
@@ -1020,21 +1021,21 @@ public class FetLifeApiIntentService extends IntentService {
         String rsvp = params[1];
         Call<ResponseBody> setRsvpStatus = getFetLifeApi().putRsvp(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), eventId, rsvp);
         Response<ResponseBody> response = setRsvpStatus.execute();
-        return response.isSuccess() ? 1 : Integer.MIN_VALUE;
+        return response.isSuccessful() ? 1 : Integer.MIN_VALUE;
     }
 
     private int joinGroup(String[] params) throws IOException {
         String groupId = params[0];
         Call<ResponseBody> joinGroup = getFetLifeApi().joinGroup(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), groupId);
         Response<ResponseBody> response = joinGroup.execute();
-        return response.isSuccess() ? 1 : Integer.MIN_VALUE;
+        return response.isSuccessful() ? 1 : Integer.MIN_VALUE;
     }
 
     private int leaveGroup(String[] params) throws IOException {
         String groupId = params[0];
         Call<ResponseBody> joinGroup = getFetLifeApi().leaveGroup(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), groupId);
         Response<ResponseBody> response = joinGroup.execute();
-        return response.isSuccess() ? 1 : Integer.MIN_VALUE;
+        return response.isSuccessful() ? 1 : Integer.MIN_VALUE;
     }
 
     private int followDiscussion(String[] params) throws IOException {
@@ -1042,7 +1043,7 @@ public class FetLifeApiIntentService extends IntentService {
         String discussionId = params[1];
         Call<ResponseBody> followDiscussion = getFetLifeApi().followDiscussion(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), groupId, discussionId);
         Response<ResponseBody> response = followDiscussion.execute();
-        return response.isSuccess() ? 1 : Integer.MIN_VALUE;
+        return response.isSuccessful() ? 1 : Integer.MIN_VALUE;
     }
 
     private int unfollowDiscussion(String[] params) throws IOException {
@@ -1050,7 +1051,7 @@ public class FetLifeApiIntentService extends IntentService {
         String discussionId = params[1];
         Call<ResponseBody> unfollowDiscussion = getFetLifeApi().unfollowDiscussion(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), groupId, discussionId);
         Response<ResponseBody> response = unfollowDiscussion.execute();
-        return response.isSuccess() ? 1 : Integer.MIN_VALUE;
+        return response.isSuccessful() ? 1 : Integer.MIN_VALUE;
     }
 
 
@@ -1059,7 +1060,7 @@ public class FetLifeApiIntentService extends IntentService {
         String contentType = params[1];
         Call<ResponseBody> addLoveCall = getFetLifeApi().putLove(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), contentId, contentType);
         Response<ResponseBody> response = addLoveCall.execute();
-        return response.isSuccess() ? 1 : Integer.MIN_VALUE;
+        return response.isSuccessful() ? 1 : Integer.MIN_VALUE;
     }
 
     private int removeLove(String[] params) throws IOException {
@@ -1067,7 +1068,7 @@ public class FetLifeApiIntentService extends IntentService {
         String contentType = params[1];
         Call<ResponseBody> removeLoveCall = getFetLifeApi().deleteLove(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), contentId, contentType);
         Response<ResponseBody> response = removeLoveCall.execute();
-        return response.isSuccess() ? 1 : Integer.MIN_VALUE;
+        return response.isSuccessful() ? 1 : Integer.MIN_VALUE;
     }
 
     //****
@@ -1133,7 +1134,7 @@ public class FetLifeApiIntentService extends IntentService {
                 deleteUri(uri);
             }
 
-            if (response.isSuccess()) {
+            if (response.isSuccessful()) {
                 getFetLifeApplication().getEventBus().post(new ServiceCallFinishedEvent(ACTION_APICALL_UPLOAD_PICTURE, 1, params));
                 return 1;
             } else {
@@ -1190,7 +1191,7 @@ public class FetLifeApiIntentService extends IntentService {
         Call<VideoUploadResult> uploadVideoStartCall = getFetLifeApi().uploadVideoStart(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), title, text, "video_android.mp4", friendsOnly, true);
         Response<VideoUploadResult> uploadVideoStartResponse = uploadVideoStartCall.execute();
 
-        if (!uploadVideoStartResponse.isSuccess()) {
+        if (!uploadVideoStartResponse.isSuccessful()) {
             if (deleteAfterUpload) {
                 deleteUri(uri);
             }
@@ -1289,7 +1290,7 @@ public class FetLifeApiIntentService extends IntentService {
             Call<ResponseBody> uploadVideoPartCall = getFetLifeUploadApi().uploadVideoPart(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), videoUploadId, mediaBody, numberPart);
             Response<ResponseBody> uploadVideoPartResponse = uploadVideoPartCall.execute();
 
-            if (!uploadVideoPartResponse.isSuccess()) {
+            if (!uploadVideoPartResponse.isSuccessful()) {
                 for (int i = chunkToProcess; i < uris.length; i++) {
                     Uri chunkUri = Uri.parse(uris[i]);
                     deleteUri(chunkUri);
@@ -1309,7 +1310,7 @@ public class FetLifeApiIntentService extends IntentService {
                 Call<ResponseBody> uploadVideoFinishCall = getFetLifeApi().uploadVideoFinish(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), videoUploadId);
                 Response<ResponseBody> uploadVideoFinishResponse = uploadVideoFinishCall.execute();
 
-                if (uploadVideoFinishResponse.isSuccess()) {
+                if (uploadVideoFinishResponse.isSuccessful()) {
                     getFetLifeApplication().getEventBus().post(new VideoChunkUploadFinishedEvent(videoUploadId, chunkToProcess+1, uris.length));
                     return chunkToProcess;
                 } else {
@@ -1383,7 +1384,7 @@ public class FetLifeApiIntentService extends IntentService {
         Call<Conversation> getConversationCall = getFetLifeApi().getConversation(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), conversationId);
         Response<Conversation> conversationResponse = getConversationCall.execute();
 
-        if (conversationResponse.isSuccess()) {
+        if (conversationResponse.isSuccessful()) {
             Conversation retrievedConversation = conversationResponse.body();
 
             retrievedConversation.getMember().mergeSave();
@@ -1410,7 +1411,7 @@ public class FetLifeApiIntentService extends IntentService {
         //TODO solve edge case when there is the gap between last message in db and the retrieved messages (e.g. when because of the limit not all recent messages could be retrieved)
 
         Response<List<Message>> messagesResponse = getMessagesCall.execute();
-        if (messagesResponse.isSuccess()) {
+        if (messagesResponse.isSuccessful()) {
             final List<Message> messages = messagesResponse.body();
             FlowManager.getDatabase(FetLifeDatabase.class).executeTransaction(new ITransaction() {
                 @Override
@@ -1446,7 +1447,7 @@ public class FetLifeApiIntentService extends IntentService {
         Response<GroupPost> groupDiscussionResponse = getGroupDiscussionCall.execute();
         GroupPost retrievedGroupDiscussion;
 
-        if (groupDiscussionResponse.isSuccess()) {
+        if (groupDiscussionResponse.isSuccessful()) {
             retrievedGroupDiscussion = groupDiscussionResponse.body();
 
             retrievedGroupDiscussion.getMember().mergeSave();
@@ -1466,7 +1467,7 @@ public class FetLifeApiIntentService extends IntentService {
         //TODO solve edge case when there is the gap between last message in db and the retrieved messages (e.g. when because of the limit not all recent messages could be retrieved)
 
         Response<List<GroupComment>> messagesResponse = getGroupMessagesCall.execute();
-        if (messagesResponse.isSuccess()) {
+        if (messagesResponse.isSuccessful()) {
             final List<GroupComment> messages = messagesResponse.body();
             if (page == 1 && !messages.isEmpty()) {
                 long messageDate = messages.get(0).getDate();
@@ -1511,7 +1512,7 @@ public class FetLifeApiIntentService extends IntentService {
         Call<Feed> getFeedCall = getFetLifeApi().getFeed(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), limit, page);
 //        Call<Feed> getFeedCall = getFetLifeApi().getFeed2(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken());
         Response<Feed> feedResponse = getFeedCall.execute();
-        if (feedResponse.isSuccess()) {
+        if (feedResponse.isSuccessful()) {
             final Feed feed = feedResponse.body();
             final List<Story> stories = feed.getStories();
             getFetLifeApplication().getInMemoryStorage().addFeed(page,stories);
@@ -1567,7 +1568,7 @@ public class FetLifeApiIntentService extends IntentService {
                 break;
         }
         Response<List<Story>> feedResponse = getFeedCall.execute();
-        if (feedResponse.isSuccess()) {
+        if (feedResponse.isSuccessful()) {
             final List<Story> stories = feedResponse.body();
             getFetLifeApplication().getInMemoryStorage().addExploreFeed(exploreType,page,stories);
 
@@ -1597,7 +1598,7 @@ public class FetLifeApiIntentService extends IntentService {
 
         Call<Feed> getFeedCall = getFetLifeApi().getMemberFeed(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), memberId, limit, page);
         Response<Feed> feedResponse = getFeedCall.execute();
-        if (feedResponse.isSuccess()) {
+        if (feedResponse.isSuccessful()) {
             final Feed feed = feedResponse.body();
             final List<Story> stories = feed.getStories();
             getFetLifeApplication().getInMemoryStorage().addProfileFeed(page,stories);
@@ -1614,7 +1615,7 @@ public class FetLifeApiIntentService extends IntentService {
 
         Call<List<Conversation>> getConversationsCall = getFetLifeApi().getConversations(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), PARAM_SORT_ORDER_UPDATED_DESC, limit, page);
         Response<List<Conversation>> conversationsResponse = getConversationsCall.execute();
-        if (conversationsResponse.isSuccess()) {
+        if (conversationsResponse.isSuccessful()) {
             final List<Conversation> conversations = conversationsResponse.body();
             final List<Conversation> currentConversations = new Select().from(Conversation.class).orderBy(Conversation_Table.date,false).queryList();
 
@@ -1679,11 +1680,11 @@ public class FetLifeApiIntentService extends IntentService {
 
         Call<Member> getMemberCall = getFetLifeApi().getMember(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), memberId);
         Response<Member> getMemberResponse = getMemberCall.execute();
-        if (getMemberResponse.isSuccess()) {
+        if (getMemberResponse.isSuccessful()) {
             Member member = getMemberResponse.body();
             Call<List<Relationship>> getMemberRelationshipCall = getFetLifeApi().getMemberRelationship(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), memberId);
             Response<List<Relationship>> getMemberRelationshipResponse = getMemberRelationshipCall.execute();
-            if (getMemberRelationshipResponse.isSuccess()) {
+            if (getMemberRelationshipResponse.isSuccessful()) {
                 new Delete().from(Relationship.class).where(Relationship_Table.memberId.is(memberId)).query();
                 List<Relationship> relationships = getMemberRelationshipResponse.body();
                 for (Relationship relationship : relationships) {
@@ -1710,7 +1711,7 @@ public class FetLifeApiIntentService extends IntentService {
         }
         Call<Writing> getWritingCall = getFetLifeApi().getWriting(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), memberId, writingId);
         Response<Writing> getWritingResponse = getWritingCall.execute();
-        if (getWritingResponse.isSuccess()) {
+        if (getWritingResponse.isSuccessful()) {
             Writing writing = getWritingResponse.body();
             writing.detailSave();
             return 1;
@@ -1727,12 +1728,12 @@ public class FetLifeApiIntentService extends IntentService {
         }
         Call<Event> getEventCall = getFetLifeApi().getEvent(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), eventId);
         Response<Event> getEventResponse = getEventCall.execute();
-        if (getEventResponse.isSuccess()) {
+        if (getEventResponse.isSuccessful()) {
             Event event = getEventResponse.body();
             event.setRsvpStatus(Rsvp.RsvpStatus.NO);
             event.save();
             Response<List<Rsvp>> rsvpsResponse = getFetLifeApi().getRsvps(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(),eventId).execute();
-            if (rsvpsResponse.isSuccess()) {
+            if (rsvpsResponse.isSuccessful()) {
                 List<Rsvp> rsvps = rsvpsResponse.body();
                 if (rsvps.size() > 0) {
                     Rsvp rsvp = rsvps.get(0);
@@ -1756,7 +1757,7 @@ public class FetLifeApiIntentService extends IntentService {
         }
         Call<Picture> getPictureCall = getFetLifeApi().getMemberPicture(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), memberId, pictureId);
         Response<Picture> getPictureResponse = getPictureCall.execute();
-        if (getPictureResponse.isSuccess()) {
+        if (getPictureResponse.isSuccessful()) {
             Picture picture = getPictureResponse.body();
             picture.save();
             return 1;
@@ -1773,7 +1774,7 @@ public class FetLifeApiIntentService extends IntentService {
         }
         Call<Video> getVideoCall = getFetLifeApi().getMemberVideo(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), memberId, videoId);
         Response<Video> getVideoResponse = getVideoCall.execute();
-        if (getVideoResponse.isSuccess()) {
+        if (getVideoResponse.isSuccessful()) {
             Video video = getVideoResponse.body();
             video.save();
             return 1;
@@ -1786,7 +1787,7 @@ public class FetLifeApiIntentService extends IntentService {
         String groupId = getLocalId(params[0]);
         Call<Group> getGroupCall = getFetLifeApi().getGroup(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), groupId);
         Response<Group> getGroupResponse = getGroupCall.execute();
-        if (getGroupResponse.isSuccess()) {
+        if (getGroupResponse.isSuccessful()) {
             Group group = getGroupResponse.body();
             group.setDetailLoaded(true);
             group.save();
@@ -1802,7 +1803,7 @@ public class FetLifeApiIntentService extends IntentService {
         final int page = getIntFromParams(params, 2, 1);
 
         Response<List<Member>> relationsResponse = getFetLifeApi().searchMembers(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(),queryString,limit,page).execute();
-        if (relationsResponse.isSuccess()) {
+        if (relationsResponse.isSuccessful()) {
             final List<Member> foundMembers = relationsResponse.body();
             for (Member friendMember : foundMembers) {
                 friendMember.mergeSave();
@@ -1819,7 +1820,7 @@ public class FetLifeApiIntentService extends IntentService {
         final int page = getIntFromParams(params, 2, 1);
 
         Response<List<Group>> searchResponse = getFetLifeApi().searchGroups(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(),queryString,limit,page).execute();
-        if (searchResponse.isSuccess()) {
+        if (searchResponse.isSuccessful()) {
             final List<Group> foundGroups = searchResponse.body();
             for (Group foundGroup : foundGroups) {
                 foundGroup.save();
@@ -1836,7 +1837,7 @@ public class FetLifeApiIntentService extends IntentService {
         final int page = getIntFromParams(params, 2, 1);
 
         Response<List<Event>> relationsResponse = getFetLifeApi().searchEvents(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(),queryString,limit,page).execute();
-        if (relationsResponse.isSuccess()) {
+        if (relationsResponse.isSuccessful()) {
             final List<Event> foundEvents = relationsResponse.body();
             for (Event event : foundEvents) {
                 event.save();
@@ -1862,7 +1863,7 @@ public class FetLifeApiIntentService extends IntentService {
         double range = MapUtil.getRange(searchBounds.southwest,center);
 
         Response<List<Event>> relationsResponse = getFetLifeApi().searchEvents(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(),center.latitude,center.longitude,range,limit,page).execute();
-        if (relationsResponse.isSuccess()) {
+        if (relationsResponse.isSuccessful()) {
             final List<Event> foundEvents = relationsResponse.body();
             getFetLifeApplication().getEventBus().post(new EventsByLocationRetrievedEvent(searchBounds,page,foundEvents));
 //            Crashlytics.logException(new Exception("EXTRA LOG event search request succeeded"));
@@ -1930,7 +1931,7 @@ public class FetLifeApiIntentService extends IntentService {
         }
 
         Response<List<Member>> relationsResponse = getRelationsCall.execute();
-        if (relationsResponse.isSuccess()) {
+        if (relationsResponse.isSuccessful()) {
 
             final List<Member> friendMembers = relationsResponse.body();
             List<RelationReference> currentFriends = new Select().from(RelationReference.class).where(RelationReference_Table.userId.is(userId)).and(RelationReference_Table.relationType.is(relationType)).orderBy(OrderBy.fromProperty(RelationReference_Table.nickname).ascending().collate(Collate.NOCASE)).queryList();
@@ -1999,7 +2000,7 @@ public class FetLifeApiIntentService extends IntentService {
         final SyncedPositionType syncedPositionType = SyncedPositionType.GROUP_MEMBERS;
 
         Response<List<GroupMembership>> groupMembersResponse = getGroupMembersCall.execute();
-        if (groupMembersResponse.isSuccess()) {
+        if (groupMembersResponse.isSuccessful()) {
 
             List<GroupMembership> memberships = groupMembersResponse.body();
             List<GroupMembershipReference> currentGroupMembers = new Select().from(GroupMembershipReference.class).where(GroupMembershipReference_Table.groupId.is(groupId)).orderBy(OrderBy.fromProperty(GroupMembershipReference_Table.createdAt).descending().collate(Collate.NOCASE)).queryList();
@@ -2060,7 +2061,7 @@ public class FetLifeApiIntentService extends IntentService {
         final SyncedPositionType syncedPositionType = SyncedPositionType.GROUP_DISCUSSIONS;
 
         Response<List<GroupPost>> groupDiscussionsResponse = getGroupDiscussionsCall.execute();
-        if (groupDiscussionsResponse.isSuccess()) {
+        if (groupDiscussionsResponse.isSuccessful()) {
 
             final List<GroupPost> groupDisucssions = groupDiscussionsResponse.body();
             List<GroupDiscussionReference> currentGroupDiscussions = new Select().from(GroupDiscussionReference.class).where(GroupDiscussionReference_Table.groupId.is(groupId)).orderBy(OrderBy.fromProperty(GroupDiscussionReference_Table.createdAt).ascending().collate(Collate.NOCASE)).queryList();
@@ -2143,7 +2144,7 @@ public class FetLifeApiIntentService extends IntentService {
         }
 
         Response<List<Picture>> picturesResponse = getPicturesCall.execute();
-        if (picturesResponse.isSuccess()) {
+        if (picturesResponse.isSuccessful()) {
 
             final List<Picture> retrievedPictures = picturesResponse.body();
             List<PictureReference> currentPictures = new Select().from(PictureReference.class).where(PictureReference_Table.userId.is(userId)).orderBy(OrderBy.fromProperty(PictureReference_Table.date).descending()).queryList();
@@ -2218,7 +2219,7 @@ public class FetLifeApiIntentService extends IntentService {
         }
 
         Response<List<Video>> videosResponse = getVideosCall.execute();
-        if (videosResponse.isSuccess()) {
+        if (videosResponse.isSuccessful()) {
 
             final List<Video> retrievedVideos = videosResponse.body();
             List<VideoReference> currentVideos = new Select().from(VideoReference.class).where(VideoReference_Table.userId.is(userId)).orderBy(OrderBy.fromProperty(Picture_Table.date).descending()).queryList();
@@ -2293,7 +2294,7 @@ public class FetLifeApiIntentService extends IntentService {
         }
 
         Response<List<Status>> statussResponse = getStatusCall.execute();
-        if (statussResponse.isSuccess()) {
+        if (statussResponse.isSuccessful()) {
 
             final List<Status> retrievedStatuses = statussResponse.body();
             List<StatusReference> currentStatus = new Select().from(StatusReference.class).where(StatusReference_Table.userId.is(userId)).orderBy(OrderBy.fromProperty(Picture_Table.date).descending()).queryList();
@@ -2349,7 +2350,7 @@ public class FetLifeApiIntentService extends IntentService {
         getRsvpsCall = getFetLifeApi().getEventRsvps(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), eventId, EventRsvpReference.VALUE_RSVPTYPE_GOING == rsvpType ? PARAM_VALUE_EVENT_RSVP_YES : PARAM_VALUE_EVENT_RSVP_MAYBE,/*"start_date_time",*/ limit, page);
 
         Response<List<Rsvp>> rsvpsResponse = getRsvpsCall.execute();
-        if (rsvpsResponse.isSuccess()) {
+        if (rsvpsResponse.isSuccessful()) {
 
             final List<Rsvp> retrievedRsvps = rsvpsResponse.body();
             List<EventRsvpReference> currentEventRsvps = new Select().from(EventRsvpReference.class).where(EventRsvpReference_Table.eventId.is(eventId)).orderBy(OrderBy.fromProperty(EventRsvpReference_Table.nickname).ascending()).queryList();
@@ -2410,7 +2411,7 @@ public class FetLifeApiIntentService extends IntentService {
         getGroupMembershipsCall = getFetLifeApi().getMemberGroupMemberships(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), memberId, limit, page);
 
         Response<List<GroupMembership>> groupMembershipsResponse = getGroupMembershipsCall.execute();
-        if (groupMembershipsResponse.isSuccess()) {
+        if (groupMembershipsResponse.isSuccessful()) {
 
             final List<GroupMembership> retrievedGroupMemberships = groupMembershipsResponse.body();
             List<GroupMembershipReference> currentGroups = new Select().from(GroupMembershipReference.class).where(GroupMembershipReference_Table.id.is(memberId)).orderBy(OrderBy.fromProperty(GroupMembershipReference_Table.lastVisitedAt).descending()).queryList();
@@ -2474,7 +2475,7 @@ public class FetLifeApiIntentService extends IntentService {
         getRsvpsCall = getFetLifeApi().getMemberRsvps(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), memberId, /*"start_date_time",*/ limit, page);
 
         Response<List<Rsvp>> rsvpsResponse = getRsvpsCall.execute();
-        if (rsvpsResponse.isSuccess()) {
+        if (rsvpsResponse.isSuccessful()) {
 
             final List<Rsvp> retrievedRsvps = rsvpsResponse.body();
             List<EventReference> currentEvents = new Select().from(EventReference.class).where(EventReference_Table.userId.is(memberId)).orderBy(OrderBy.fromProperty(EventReference_Table.date).descending()).queryList();
@@ -2537,7 +2538,7 @@ public class FetLifeApiIntentService extends IntentService {
         getWritingsCall = getFetLifeApi().getMemberWritings(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), memberId, /*"start_date_time",*/ limit, page);
 
         Response<List<Writing>> writingsResponse = getWritingsCall.execute();
-        if (writingsResponse.isSuccess()) {
+        if (writingsResponse.isSuccessful()) {
 
             final List<Writing> retrievedWritings = writingsResponse.body();
             List<WritingReference> currentWritings = new Select().from(WritingReference.class).where(WritingReference_Table.userId.is(memberId)).orderBy(OrderBy.fromProperty(WritingReference_Table.date).descending()).queryList();
@@ -2596,7 +2597,7 @@ public class FetLifeApiIntentService extends IntentService {
         while (true) {
             Call<List<FriendRequest>> getFriendRequestsCall = getFetLifeApi().getFriendRequests(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), PARAM_VALUE_FRIEND_REQUEST_SENT, MAX_PAGE_LIMIT, page++);
             Response<List<FriendRequest>> friendRequestsResponse = getFriendRequestsCall.execute();
-            if (!friendRequestsResponse.isSuccess()) {
+            if (!friendRequestsResponse.isSuccessful()) {
                 return Integer.MIN_VALUE;
             }
             final List<FriendRequest> friendRequests = friendRequestsResponse.body();
@@ -2607,7 +2608,7 @@ public class FetLifeApiIntentService extends IntentService {
                 if (memberId.equals(friendRequest.getTargetMemberId())) {
                     Call<FriendRequest> friendRequestsCall = getFetLifeApi().cancelFriendRequest(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), friendRequest.getId());
                     Response<FriendRequest> friendRequestResponse = friendRequestsCall.execute();
-                    if (friendRequestResponse.isSuccess()) {
+                    if (friendRequestResponse.isSuccessful()) {
                         return 1;
                     } else {
                         return Integer.MIN_VALUE;
@@ -2629,7 +2630,7 @@ public class FetLifeApiIntentService extends IntentService {
         }
         Call<ResponseBody> removeFriendshipCall = getFetLifeApi().removeFriendship(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), memberId);
         Response<ResponseBody> response = removeFriendshipCall.execute();
-        return response.isSuccess() ? 1 : Integer.MIN_VALUE;
+        return response.isSuccessful() ? 1 : Integer.MIN_VALUE;
     }
 
     private int retrieveFriendRequests(String... params) throws IOException {
@@ -2638,7 +2639,7 @@ public class FetLifeApiIntentService extends IntentService {
 
         Call<List<FriendRequest>> getFriendRequestsCall = getFetLifeApi().getFriendRequests(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), PARAM_VALUE_FRIEND_REQUEST_RECEIVED, limit, page);
         Response<List<FriendRequest>> friendRequestsResponse = getFriendRequestsCall.execute();
-        if (friendRequestsResponse.isSuccess()) {
+        if (friendRequestsResponse.isSuccessful()) {
             final List<FriendRequest> friendRequests = friendRequestsResponse.body();
             FlowManager.getDatabase(FetLifeDatabase.class).executeTransaction(new ITransaction() {
                 @Override
@@ -2833,7 +2834,7 @@ public class FetLifeApiIntentService extends IntentService {
             if (localId == null) {
                 Call<AppId> getAppIdCall = getFetLifeApi().getAppId(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), ServerIdUtil.removePrefix(serverId));
                 Response<AppId> getAppIdResponse = getAppIdCall.execute();
-                if (getAppIdResponse.isSuccess()) {
+                if (getAppIdResponse.isSuccessful()) {
                     localId = getAppIdResponse.body().getId();
                     ServerIdUtil.setLocalId(serverId,localId);
                 } else {

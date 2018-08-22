@@ -1,14 +1,19 @@
 package com.bitlove.fetlife.view.screen;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomnavigation.LabelVisibilityMode;
+import com.google.android.material.navigation.NavigationView;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +23,6 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bitlove.fetlife.BuildConfig;
 import com.bitlove.fetlife.FetLifeApplication;
@@ -27,7 +31,11 @@ import com.bitlove.fetlife.view.screen.component.ActivityComponent;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.android.material.resources.TextAppearance;
+import com.mikepenz.iconics.context.IconicsContextWrapper;
+import com.mikepenz.iconics.utils.IconicsMenuInflaterUtil;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,6 +87,27 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
         for (ActivityComponent activityComponent : activityComponentList) {
             activityComponent.onActivityCreated(this, savedInstanceState);
+        }
+
+        BottomNavigationView bottomNavigation = findViewById(R.id.navigation_bottom);
+        if (bottomNavigation != null) {
+            IconicsMenuInflaterUtil.inflate(getMenuInflater(), this, R.menu.menu_navigation_bottom, bottomNavigation.getMenu());
+            bottomNavigation.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_LABELED);
+            bottomNavigation.setItemHorizontalTranslationEnabled(false);
+//            BottomNavigationMenuView menuView = (BottomNavigationMenuView) bottomNavigation.getChildAt(0);
+//            try {
+//                Field shiftingMode = menuView.getClass().getDeclaredField("mShiftingMode");
+//                shiftingMode.setAccessible(true);
+//                shiftingMode.setBoolean(menuView, false);
+//                shiftingMode.setAccessible(false);
+//                for (int i = 0; i < menuView.getChildCount(); i++) {
+//                    BottomNavigationItemView item = (BottomNavigationItemView) menuView.getChildAt(i);
+//                    item.setShiftingMode(false);
+//                    item.setChecked(item.getItemData().isChecked());
+//                }
+//            } catch (Throwable t) {
+//                //TODO log
+//            }
         }
     }
 
@@ -328,4 +357,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         return (FetLifeApplication) getApplication();
     }
 
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(IconicsContextWrapper.wrap(newBase));
+    }
 }

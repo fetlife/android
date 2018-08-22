@@ -1,9 +1,9 @@
 package com.bitlove.fetlife.view.widget;
 
 import android.content.Context;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.view.ScrollingView;
+import com.google.android.material.appbar.AppBarLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.view.ScrollingView;
 import android.util.AttributeSet;
 import android.view.View;
 

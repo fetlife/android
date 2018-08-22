@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/navigation_search"
+        app:showAsAction="always"
+        app:ico_color="#aaa"
+        app:ico_icon="gmd-home"
+        app:ico_size="20dp"
+        android:title="Feed"/>
+    <item
+        android:id="@+id/navigation_conversations"
+        app:showAsAction="always"
+        app:ico_color="#aaa"
+        app:ico_icon="gmd-email"
+        app:ico_size="20dp"
+        android:title="Inbox"/>
+    <item
+        android:id="@+id/navigation_explore"
+        app:showAsAction="always"
+        app:ico_color="#aaa"
+        app:ico_icon="gmd-person"
+        app:ico_size="20dp"
+        android:title="Requests"/>
+    <item
+        android:id="@+id/navigation_groups"
+        app:showAsAction="always"
+        app:ico_color="#aaa"
+        app:ico_icon="gmd-notifications"
+        app:ico_size="20dp"
+        android:title="Notifications"/>
+    <item
+        android:id="@+id/navigation_favorites"
+        app:showAsAction="always"
+        app:ico_color="#aaa"
+        app:ico_icon="gmd-menu"
+        app:ico_size="20dp"
+        android:title="Menu"/>
+
+</menu>

@@ -9,11 +9,11 @@ import com.bitlove.fetlife.R;
 import com.crashlytics.android.Crashlytics;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-import com.squareup.okhttp.ResponseBody;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,8 +29,8 @@ import javax.net.ssl.TrustManagerFactory;
 
 import okio.Buffer;
 import okio.BufferedSource;
-import retrofit.JacksonConverterFactory;
-import retrofit.Retrofit;
+import retrofit2.Retrofit;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class FetLifeService {
 
@@ -60,14 +60,21 @@ public class FetLifeService {
         SSLContext context = SSLContext.getInstance("TLS");
         context.init(null, /*tmf.getTrustManagers()*/ null, null);
 
-        OkHttpClient client = new OkHttpClient();
-        client.setHostnameVerifier(new HostnameVerifier() {
-            @Override
-            public boolean verify(String hostname, SSLSession session) {
-                return hostname.endsWith(HOST_NAME);
-            }
-        });
-        client.interceptors().add(new Interceptor() {
+        OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+
+        clientBuilder
+                .connectTimeout(20, TimeUnit.SECONDS)
+                .readTimeout(20, TimeUnit.SECONDS)
+                .writeTimeout(20, TimeUnit.SECONDS)
+                .hostnameVerifier(new HostnameVerifier() {
+                    @Override
+                    public boolean verify(String hostname, SSLSession session) {
+                        return hostname.endsWith(HOST_NAME);
+                    }
+                }).sslSocketFactory(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ? new TLSSocketFactory(context.getSocketFactory()) : context.getSocketFactory());
+
+
+        clientBuilder.interceptors().add(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
                 Request request = chain.request();
@@ -83,42 +90,30 @@ public class FetLifeService {
                 return response;
             }
         });
-        client.setConnectTimeout(20, TimeUnit.SECONDS);
-        client.setReadTimeout(20, TimeUnit.SECONDS);
-        client.setWriteTimeout(20, TimeUnit.SECONDS);
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            client.setSslSocketFactory(new TLSSocketFactory(context.getSocketFactory()));
-        } else {
-            client.setSslSocketFactory(context.getSocketFactory());
-        }
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         fetLifeApi = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .client(client)
+                .client(clientBuilder.build())
                 .addConverterFactory(JacksonConverterFactory.create(mapper)).build()
                 .create(FetLifeApi.class);
 
-        OkHttpClient uploadClient = new OkHttpClient();
-        uploadClient.setConnectTimeout(5, TimeUnit.MINUTES);
-        uploadClient.setReadTimeout(5, TimeUnit.MINUTES);
-        uploadClient.setWriteTimeout(5, TimeUnit.MINUTES);
-        uploadClient.setHostnameVerifier(new HostnameVerifier() {
-            @Override
-            public boolean verify(String hostname, SSLSession session) {
-                return hostname.endsWith(HOST_NAME);
-            }
-        });
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            uploadClient.setSslSocketFactory(new TLSSocketFactory(context.getSocketFactory()));
-        } else {
-            uploadClient.setSslSocketFactory(context.getSocketFactory());
-        }
+        OkHttpClient.Builder uploadClientBuilder = new OkHttpClient.Builder();
 
-        uploadClient.interceptors().add(new Interceptor() {
+        uploadClientBuilder
+                .connectTimeout(5, TimeUnit.MINUTES)
+                .readTimeout(5, TimeUnit.MINUTES)
+                .writeTimeout(5, TimeUnit.MINUTES)
+                .hostnameVerifier(new HostnameVerifier() {
+                    @Override
+                    public boolean verify(String hostname, SSLSession session) {
+                        return hostname.endsWith(HOST_NAME);
+                    }
+                }).sslSocketFactory(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ? new TLSSocketFactory(context.getSocketFactory()) : context.getSocketFactory());
+
+        uploadClientBuilder.interceptors().add(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
                 Request request = chain.request();
@@ -131,7 +126,7 @@ public class FetLifeService {
 
         fetLifeMultipartUploadApi = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
-                .client(uploadClient)
+                .client(uploadClientBuilder.build())
                 .addConverterFactory(JacksonConverterFactory.create(mapper)).build()
                 .create(FetLifeMultipartUploadApi.class);
 

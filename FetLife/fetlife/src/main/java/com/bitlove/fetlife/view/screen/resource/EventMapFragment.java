@@ -8,9 +8,11 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.graphics.ColorUtils;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.graphics.ColorUtils;
+import androidx.fragment.app.Fragment;
+
 import android.text.TextUtils;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -23,7 +25,6 @@ import com.bitlove.fetlife.event.EventsByLocationRetrieveFailedEvent;
 import com.bitlove.fetlife.event.EventsByLocationRetrievedEvent;
 import com.bitlove.fetlife.event.ServiceCallStartedEvent;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Event;
-import com.bitlove.fetlife.model.pojos.fetlife.json.PeopleInto;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.util.DateUtil;
 import com.bitlove.fetlife.util.MapUtil;
@@ -35,6 +36,7 @@ import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
@@ -107,10 +109,14 @@ public class EventMapFragment extends BaseFragment implements OnMapReadyCallback
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        final SupportMapFragment mf = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-        mf.getMapAsync(EventMapFragment.this);
-        SupportPlaceAutocompleteFragment searchFragment = (SupportPlaceAutocompleteFragment) getChildFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-        searchFragment.setOnPlaceSelectedListener(EventMapFragment.this);
+        final Object mf = getChildFragmentManager().findFragmentById(R.id.map);
+        final SupportMapFragment smf = (SupportMapFragment) mf;
+        //final SupportMapFragment mf = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        smf.getMapAsync(EventMapFragment.this);
+        final Object sf = getChildFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        //SupportPlaceAutocompleteFragment searchFragment = (SupportPlaceAutocompleteFragment) getChildFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
+        SupportPlaceAutocompleteFragment spaf = (SupportPlaceAutocompleteFragment) sf;
+        spaf.setOnPlaceSelectedListener(EventMapFragment.this);
     }
 
     private DelayedEventRetriever delayedEventRetriever;

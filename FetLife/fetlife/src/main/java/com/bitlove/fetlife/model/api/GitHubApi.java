@@ -4,8 +4,8 @@ import com.bitlove.fetlife.model.pojos.github.Release;
 
 import java.util.List;
 
-import retrofit.Call;
-import retrofit.http.GET;
+import retrofit2.Call;
+import retrofit2.http.GET;
 
 public interface GitHubApi {
 

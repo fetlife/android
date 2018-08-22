@@ -1,15 +1,14 @@
 package com.bitlove.fetlife.model.api;
 
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.ResponseBody;
-
-import retrofit.Call;
-import retrofit.http.Header;
-import retrofit.http.Multipart;
-import retrofit.http.POST;
-import retrofit.http.PUT;
-import retrofit.http.Part;
-import retrofit.http.Path;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.http.Header;
+import retrofit2.http.Multipart;
+import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Part;
+import retrofit2.http.Path;
 
 public interface FetLifeMultipartUploadApi {
 

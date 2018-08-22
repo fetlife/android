@@ -5,7 +5,7 @@
           android:title="@string/action_search"
           android:icon="@android:drawable/ic_menu_search"
           yourapp:showAsAction="ifRoom|collapseActionView"
-          yourapp:actionViewClass="android.support.v7.widget.SearchView" />
+          yourapp:actionViewClass="androidx.appcompat.widget.SearchView" />
     <item android:id="@+id/action_progress"
           android:title="Progress"
           yourapp:actionLayout="@layout/custom_menu_item_search_progress_bar"

@@ -1,30 +1,22 @@
 package com.bitlove.fetlife.notification;
 
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.model.pojos.fetlife.db.NotificationHistoryItem;
 import com.bitlove.fetlife.model.pojos.fetlife.db.NotificationHistoryItem_Table;
 import com.bitlove.fetlife.view.screen.BaseActivity;
-import com.bitlove.fetlife.view.screen.resource.ConversationsActivity;
-import com.bitlove.fetlife.view.screen.resource.FriendRequestsActivity;
-import com.bitlove.fetlife.view.screen.resource.MessagesActivity;
-import com.bitlove.fetlife.view.screen.resource.NotificationHistoryActivity;
 import com.onesignal.OneSignal;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class InfoNotification extends OneSignalNotification {
