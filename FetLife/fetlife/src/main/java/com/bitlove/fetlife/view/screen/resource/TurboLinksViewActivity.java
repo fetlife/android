@@ -43,6 +43,7 @@ import com.bitlove.fetlife.view.screen.standalone.LoginActivity;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.common.util.UriUtil;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -74,6 +75,16 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
 
     public static void startActivity(BaseActivity menuActivity, String pageUrl, String title) {
         menuActivity.startActivity(createIntent(menuActivity,pageUrl,title,false));
+    }
+
+    public static void startActivity(BaseActivity menuActivity, String pageUrl, String title, Integer bottomNavId, Bundle options) {
+        Intent intent = new Intent(menuActivity,TurboLinksViewActivity.class);
+        intent.putExtra(EXTRA_PAGE_URL, pageUrl);
+        intent.putExtra(EXTRA_PAGE_TITLE, title);
+        if (bottomNavId != null) {
+            intent.putExtra(BaseActivity.EXTRA_SELECTED_BOTTOM_NAV_ITEM,bottomNavId);
+        }
+        menuActivity.startActivity(intent,options);
     }
 
     public static Intent createIntent(Context context, String pageUrl, String title, boolean newTask) {
@@ -305,6 +316,10 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         // Check if the key event was the Back button and if there's history
         if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {
             TurbolinksSession.getDefault(this).getWebView().goBack();
+            return true;
+        } else if (keyCode == KeyEvent.KEYCODE_BACK) {
+//            getWindow().setExitTransition(null);
+            finish();
             return true;
         }
         // If it wasn't the Back key or there's no web page history, bubble up to the default

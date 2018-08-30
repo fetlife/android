@@ -26,12 +26,12 @@ open class BaseNavigator (val baseActivity: BaseActivity){
                 baseActivity.finish()
                 LoginActivity.startLogin(baseActivity.fetLifeApplication)
             }
-            R.id.nav_conversations -> ConversationsActivity.startActivity(baseActivity, false)
+//            R.id.nav_conversations -> ConversationsActivity.startActivity(baseActivity, false)
             R.id.nav_members -> MembersActivity.startActivity(baseActivity, false)
             R.id.nav_about -> TurboLinksViewActivity.startActivity(baseActivity,"android",baseActivity.getString(R.string.title_activity_about))
-            R.id.nav_friendrequests -> TurboLinksViewActivity.startActivity(baseActivity,"requests",baseActivity.getString(R.string.title_activity_friendrequests))
+//            R.id.nav_friendrequests -> TurboLinksViewActivity.startActivity(baseActivity,"requests",baseActivity.getString(R.string.title_activity_friendrequests))
             R.id.nav_relnotes -> ReleaseNotesActivity.startActivity(baseActivity)
-            R.id.nav_notifications -> TurboLinksViewActivity.startActivity(baseActivity,"notifications",baseActivity.getString(R.string.title_activity_notifications))
+//            R.id.nav_notifications -> TurboLinksViewActivity.startActivity(baseActivity,"notifications",baseActivity.getString(R.string.title_activity_notifications))
             R.id.nav_app_notifications -> NotificationHistoryActivity.startActivity(baseActivity,false)
             R.id.nav_upload_pic -> {
 //                if (isStoragePermissionGranted()) {
@@ -48,7 +48,7 @@ open class BaseNavigator (val baseActivity: BaseActivity){
 //                }
             }
             R.id.nav_settings -> SettingsActivity.startActivity(baseActivity)
-            R.id.nav_feed -> FeedActivity.startActivity(baseActivity)
+//            R.id.nav_feed -> FeedActivity.startActivity(baseActivity)
             R.id.nav_stuff_you_love -> ExploreActivity.startActivity(baseActivity, ExploreActivity.Explore.STUFF_YOU_LOVE)
             R.id.nav_fresh_and_pervy -> ExploreActivity.startActivity(baseActivity, ExploreActivity.Explore.FRESH_AND_PERVY)
             R.id.nav_kinky_and_popular -> ExploreActivity.startActivity(baseActivity, ExploreActivity.Explore.KINKY_AND_POPULAR)

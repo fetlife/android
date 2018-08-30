@@ -2,35 +2,35 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/navigation_search"
+        android:id="@+id/navigation_bottom_feed"
         app:showAsAction="always"
         app:ico_color="#aaa"
         app:ico_icon="gmd-home"
         app:ico_size="20dp"
         android:title="Feed"/>
     <item
-        android:id="@+id/navigation_conversations"
+        android:id="@+id/navigation_bottom_inbox"
         app:showAsAction="always"
         app:ico_color="#aaa"
         app:ico_icon="gmd-email"
         app:ico_size="20dp"
         android:title="Inbox"/>
     <item
-        android:id="@+id/navigation_explore"
+        android:id="@+id/navigation_bottom_requests"
         app:showAsAction="always"
         app:ico_color="#aaa"
         app:ico_icon="gmd-person"
         app:ico_size="20dp"
         android:title="Requests"/>
     <item
-        android:id="@+id/navigation_groups"
+        android:id="@+id/navigation_bottom_notifications"
         app:showAsAction="always"
         app:ico_color="#aaa"
         app:ico_icon="gmd-notifications"
         app:ico_size="20dp"
         android:title="Notifications"/>
     <item
-        android:id="@+id/navigation_favorites"
+        android:id="@+id/navigation_bottom_menu"
         app:showAsAction="always"
         app:ico_color="#aaa"
         app:ico_icon="gmd-menu"

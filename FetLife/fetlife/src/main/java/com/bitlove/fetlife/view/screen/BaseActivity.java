@@ -1,6 +1,7 @@
 package com.bitlove.fetlife.view.screen;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -8,17 +9,28 @@ import android.os.Bundle;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.bitlove.fetlife.view.screen.resource.ConversationsActivity;
+import com.bitlove.fetlife.view.screen.resource.FeedActivity;
+import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomnavigation.LabelVisibilityMode;
 import com.google.android.material.navigation.NavigationView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import android.transition.Transition;
+
+import android.transition.Fade;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
 import android.widget.ProgressBar;
@@ -46,6 +58,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     public static final int PERMISSION_REQUEST_LOCATION = 30000;
 
     public static final String EXTRA_NOTIFICATION_SOURCE_TYPE = "EXTRA_NOTIFICATION_SOURCE_TYPE";
+    public static final String EXTRA_SELECTED_BOTTOM_NAV_ITEM = "EXTRA_SELECTED_BOTTOM_NAV_ITEM";
 
     protected boolean waitingForResult;
     protected ProgressBar progressIndicator;
@@ -60,8 +73,14 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
+        super.onCreate(savedInstanceState);
+//        getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+//        getWindow().setSharedElementExitTransition(makeEnterTransition());
+////        getWindow().setEnterTransition(null);
+////        getWindow().setExitTransition(null);
+//        getWindow().setAllowEnterTransitionOverlap(false);
+//        getWindow().setAllowReturnTransitionOverlap(false);
         logEvent();
 
         if (savedInstanceState == null) {
@@ -73,6 +92,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
         onCreateActivityComponents();
         onSetContentView();
+
+//        getWindow().setEnterTransition(makeExcludeTransition());
+//        getWindow().setExitTransition(makeExcludeTransition());
 
         TextView previewText = (TextView)findViewById(R.id.text_preview);
         if (previewText != null) {
@@ -89,25 +111,102 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             activityComponent.onActivityCreated(this, savedInstanceState);
         }
 
-        BottomNavigationView bottomNavigation = findViewById(R.id.navigation_bottom);
+        final BottomNavigationView bottomNavigation = findViewById(R.id.navigation_bottom);
         if (bottomNavigation != null) {
             IconicsMenuInflaterUtil.inflate(getMenuInflater(), this, R.menu.menu_navigation_bottom, bottomNavigation.getMenu());
-            bottomNavigation.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_LABELED);
-            bottomNavigation.setItemHorizontalTranslationEnabled(false);
-//            BottomNavigationMenuView menuView = (BottomNavigationMenuView) bottomNavigation.getChildAt(0);
-//            try {
-//                Field shiftingMode = menuView.getClass().getDeclaredField("mShiftingMode");
-//                shiftingMode.setAccessible(true);
-//                shiftingMode.setBoolean(menuView, false);
-//                shiftingMode.setAccessible(false);
-//                for (int i = 0; i < menuView.getChildCount(); i++) {
-//                    BottomNavigationItemView item = (BottomNavigationItemView) menuView.getChildAt(i);
-//                    item.setShiftingMode(false);
-//                    item.setChecked(item.getItemData().isChecked());
-//                }
-//            } catch (Throwable t) {
-//                //TODO log
-//            }
+            final int selectedMenuItem = getIntent().getIntExtra(EXTRA_SELECTED_BOTTOM_NAV_ITEM,-1);
+            if (selectedMenuItem < 0) {
+                bottomNavigation.setVisibility(View.GONE);
+            } else {
+                bottomNavigation.setVisibility(View.VISIBLE);
+                bottomNavigation.setSelectedItemId(selectedMenuItem);
+
+                final DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
+
+                final BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                        Intent intent;
+                        ActivityOptionsCompat options = ActivityOptionsCompat.
+                                makeSceneTransitionAnimation(BaseActivity.this, bottomNavigation, "bottomNavBar");
+                        switch (menuItem.getItemId()) {
+                            case R.id.navigation_bottom_feed:
+                                bottomNavigation.setOnNavigationItemSelectedListener(null);
+                                intent = new Intent(BaseActivity.this, FeedActivity.class);
+                                intent.putExtra(EXTRA_SELECTED_BOTTOM_NAV_ITEM,menuItem.getItemId());
+                                BaseActivity.this.startActivity(intent,options.toBundle());
+                                //FeedActivity.startActivity(BaseActivity.this, bottomNavigation, "bottomNavBar");
+//                                finishAfterTransition();
+                                break;
+                            case R.id.navigation_bottom_inbox:
+                                bottomNavigation.setOnNavigationItemSelectedListener(null);
+                                intent = new Intent(BaseActivity.this, ConversationsActivity.class);
+                                intent.putExtra(EXTRA_SELECTED_BOTTOM_NAV_ITEM,menuItem.getItemId());
+                                BaseActivity.this.startActivity(intent,options.toBundle());
+//                                finishAfterTransition();
+//                            ConversationsActivity.startActivity(BaseActivity.this, null, false, bottomNavigation, "bottomNavBar");
+                                break;
+                            case R.id.navigation_bottom_requests:
+                                bottomNavigation.setOnNavigationItemSelectedListener(null);
+                                TurboLinksViewActivity.startActivity(BaseActivity.this,"requests",BaseActivity.this.getString(R.string.title_activity_friendrequests),R.id.navigation_bottom_requests,options.toBundle());
+//                                finishAfterTransition();
+                                break;
+                            case R.id.navigation_bottom_notifications:
+                                bottomNavigation.setOnNavigationItemSelectedListener(null);
+                                TurboLinksViewActivity.startActivity(BaseActivity.this,"notifications",BaseActivity.this.getString(R.string.title_activity_notifications),R.id.navigation_bottom_notifications,options.toBundle());
+  //                              finishAfterTransition();
+                                break;
+                            case R.id.navigation_bottom_menu:
+                                if (drawerLayout != null) {
+                                    if (drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
+                                        if (selectedMenuItem > 0) {
+                                            bottomNavigation.setOnNavigationItemSelectedListener(null);
+                                            bottomNavigation.setSelectedItemId(selectedMenuItem);
+                                            bottomNavigation.setOnNavigationItemSelectedListener(this);
+                                        }
+                                        drawerLayout.closeDrawer(Gravity.RIGHT);
+                                    } else {
+                                        bottomNavigation.setOnNavigationItemSelectedListener(null);
+                                        bottomNavigation.setSelectedItemId(R.id.navigation_bottom_menu);
+                                        bottomNavigation.setOnNavigationItemSelectedListener(this);
+                                        drawerLayout.openDrawer(Gravity.RIGHT);
+                                    }
+                                }
+
+                        }
+                        return false;
+                    }
+                };
+                bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
+                drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+                    @Override
+                    public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+
+                    }
+
+                    @Override
+                    public void onDrawerOpened(@NonNull View drawerView) {
+                        bottomNavigation.setOnNavigationItemSelectedListener(null);
+                        bottomNavigation.setSelectedItemId(R.id.navigation_bottom_menu);
+                        bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
+                    }
+
+                    @Override
+                    public void onDrawerClosed(@NonNull View drawerView) {
+                        if (selectedMenuItem > 0) {
+                            bottomNavigation.setOnNavigationItemSelectedListener(null);
+                            bottomNavigation.setSelectedItemId(selectedMenuItem);
+                            bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
+                        }
+                    }
+
+                    @Override
+                    public void onDrawerStateChanged(int newState) {
+
+                    }
+                });
+
+            }
         }
     }
 
@@ -187,12 +286,20 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         }
     }
 
+
+
     @Override
     protected void onStop() {
         super.onStop();
         getFetLifeApplication().getEventBus().unregister(this);
         for (ActivityComponent activityComponent : activityComponentList) {
             activityComponent.onActivityStopped(this);
+        }
+        BaseActivity baseActivity = (BaseActivity) getFetLifeApplication().getForegroundActivity();
+        final int selectedMenuItem = getIntent().getIntExtra(EXTRA_SELECTED_BOTTOM_NAV_ITEM,-1);
+        if (selectedMenuItem >= 0 && baseActivity != null && baseActivity.getIntent().getIntExtra(EXTRA_SELECTED_BOTTOM_NAV_ITEM,-1) >= 0) {
+//            finishAfterTransition();
+            finish();
         }
     }
 
@@ -266,6 +373,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             result |= componentResult;
         }
         if (result == null || !result) {
+            final int selectedMenuItem = getIntent().getIntExtra(EXTRA_SELECTED_BOTTOM_NAV_ITEM,-1);
+            if (selectedMenuItem >= 0) {
+                finish();
+            }
             super.onBackPressed();
         }
     }
@@ -360,5 +471,13 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(IconicsContextWrapper.wrap(newBase));
+    }
+
+    public static Transition makeExcludeTransition() {
+        Transition fade = new Fade();
+        fade.excludeTarget(R.id.app_bar, true);
+        fade.excludeTarget(android.R.id.navigationBarBackground, true);
+        fade.excludeTarget(android.R.id.statusBarBackground, true);
+        return fade;
     }
 }

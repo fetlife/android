@@ -1,9 +1,11 @@
 package com.bitlove.fetlife.view.screen.resource;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
@@ -14,16 +16,20 @@ import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Picture;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Writing;
 import com.bitlove.fetlife.model.pojos.fetlife.json.FeedEvent;
+import com.bitlove.fetlife.model.pojos.fetlife.json.PeopleInto;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Story;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.util.UrlUtil;
 import com.bitlove.fetlife.view.adapter.ResourceListRecyclerAdapter;
 import com.bitlove.fetlife.view.adapter.feed.FeedItemResourceHelper;
 import com.bitlove.fetlife.view.adapter.feed.FeedRecyclerAdapter;
+import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.component.MenuActivityComponent;
 import com.bitlove.fetlife.view.screen.resource.groups.GroupActivity;
 import com.bitlove.fetlife.view.screen.resource.groups.GroupMessagesActivity;
 import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity;
+
+import androidx.core.app.ActivityOptionsCompat;
 
 public class FeedActivity extends ResourceListActivity<Story> implements MenuActivityComponent.MenuActivityCallBack, FeedRecyclerAdapter.OnFeedItemClickListener {
 
@@ -31,13 +37,24 @@ public class FeedActivity extends ResourceListActivity<Story> implements MenuAct
         context.startActivity(createIntent(context));
     }
 
-    public static Intent createIntent(Context context) {
+    public static void startActivity(Context context, View transitionView, String transitionName) {
+        if (transitionView != null && context instanceof Activity) {
+            ActivityOptionsCompat options = ActivityOptionsCompat.
+                    makeSceneTransitionAnimation((Activity)context, transitionView, transitionName);
+            context.startActivity(createIntent(context),options.toBundle());
+        } else {
+            context.startActivity(createIntent(context));
+        }
+    }
+
+    private static Intent createIntent(Context context) {
         Intent intent = new Intent(context, FeedActivity.class);
         if (FetLifeApplication.getInstance().getUserSessionManager().getActiveUserPreferences().getBoolean(context.getString(R.string.settings_key_general_feed_as_start),false)) {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
         } else {
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         }
+        intent.putExtra(BaseActivity.EXTRA_SELECTED_BOTTOM_NAV_ITEM,R.id.navigation_bottom_feed);
         return intent;
     }
 

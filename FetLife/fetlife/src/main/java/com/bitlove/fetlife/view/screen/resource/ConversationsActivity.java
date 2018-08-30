@@ -1,35 +1,51 @@
 package com.bitlove.fetlife.view.screen.resource;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.event.NewMessageEvent;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Conversation;
+import com.bitlove.fetlife.model.pojos.fetlife.json.PeopleInto;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.notification.AnonymNotification;
 import com.bitlove.fetlife.notification.MessageNotification;
 import com.bitlove.fetlife.view.adapter.ConversationsRecyclerAdapter;
 import com.bitlove.fetlife.view.adapter.ResourceListRecyclerAdapter;
+import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.component.MenuActivityComponent;
 import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import androidx.core.app.ActivityOptionsCompat;
+
 public class ConversationsActivity extends ResourceListActivity<Conversation> implements MenuActivityComponent.MenuActivityCallBack {
 
     private static final String EXTRA_SHARE_URL = "EXTRA_SHARE_URL";
 
     public static void startActivity(Context context, boolean newTask) {
-        startActivity(context, null, newTask);
+        startActivity(context, null, newTask, null, null);
     }
 
     public static void startActivity(Context context, String shareUrl, boolean newTask) {
-        context.startActivity(createIntent(context, shareUrl, newTask));
+        startActivity(context, shareUrl, newTask, null, null);
+    }
+
+    public static void startActivity(Context context, String shareUrl, boolean newTask, View transitionView, String transitionName) {
+        if (transitionView != null && context instanceof Activity) {
+            ActivityOptionsCompat options = ActivityOptionsCompat.
+                    makeSceneTransitionAnimation((Activity)context, transitionView, transitionName);
+            context.startActivity(createIntent(context, shareUrl, newTask),options.toBundle());
+        } else {
+            context.startActivity(createIntent(context, shareUrl, newTask));
+        }
     }
 
     public static Intent createIntent(Context context, boolean newTask) {
@@ -38,7 +54,7 @@ public class ConversationsActivity extends ResourceListActivity<Conversation> im
 
     public static Intent createIntent(Context context, String shareUrl, boolean newTask) {
         Intent intent = new Intent(context, ConversationsActivity.class);
-        if (!newTask && FetLifeApplication.getInstance().getUserSessionManager().getActiveUserPreferences().getBoolean(context.getString(R.string.settings_key_general_feed_as_start),false)) {
+        if (!newTask) {
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         } else {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -46,6 +62,7 @@ public class ConversationsActivity extends ResourceListActivity<Conversation> im
         if (shareUrl != null) {
             intent.putExtra(EXTRA_SHARE_URL, shareUrl);
         }
+        intent.putExtra(BaseActivity.EXTRA_SELECTED_BOTTOM_NAV_ITEM,R.id.navigation_bottom_inbox);
         return intent;
     }
 

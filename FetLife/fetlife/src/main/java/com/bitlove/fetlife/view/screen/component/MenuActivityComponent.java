@@ -84,26 +84,26 @@ public class MenuActivityComponent extends ActivityComponent {
             return;
         }
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                menuActivity, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                InputMethodManager inputMethodManager = (InputMethodManager)
-                        menuActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(menuActivity.getCurrentFocus().getWindowToken(), 0);
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
-                InputMethodManager inputMethodManager = (InputMethodManager)
-                        menuActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(menuActivity.getCurrentFocus().getWindowToken(), 0);
-            }
-        };
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
+//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+//                menuActivity, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+//            @Override
+//            public void onDrawerOpened(View drawerView) {
+//                super.onDrawerOpened(drawerView);
+//                InputMethodManager inputMethodManager = (InputMethodManager)
+//                        menuActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+//                inputMethodManager.hideSoftInputFromWindow(menuActivity.getCurrentFocus().getWindowToken(), 0);
+//            }
+//
+//            @Override
+//            public void onDrawerClosed(View drawerView) {
+//                super.onDrawerClosed(drawerView);
+//                InputMethodManager inputMethodManager = (InputMethodManager)
+//                        menuActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+//                inputMethodManager.hideSoftInputFromWindow(menuActivity.getCurrentFocus().getWindowToken(), 0);
+//            }
+//        };
+//        drawer.addDrawerListener(toggle);
+//        toggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(baseActivity);
 
@@ -181,12 +181,12 @@ public class MenuActivityComponent extends ActivityComponent {
             menuActivity.finish();
             LoginActivity.startLogin(menuActivity.getFetLifeApplication());
             return false;
-        } else if (id == R.id.nav_conversations) {
-            ConversationsActivity.startActivity(menuActivity, false);
+//        } else if (id == R.id.nav_conversations) {
+//            ConversationsActivity.startActivity(menuActivity, false);
         } else if (id == R.id.nav_members) {
             MembersActivity.startActivity(menuActivity, false);
-        } else if (id == R.id.nav_friendrequests) {
-            TurboLinksViewActivity.startActivity(menuActivity,"requests",menuActivity.getString(R.string.title_activity_friendrequests));
+//        } else if (id == R.id.nav_friendrequests) {
+//            TurboLinksViewActivity.startActivity(menuActivity,"requests",menuActivity.getString(R.string.title_activity_friendrequests));
 //        } else if (id == R.id.nav_introduce) {
 //            logEvent("nav_introduce");
 //            AddNfcFriendActivity.startActivity(menuActivity);
@@ -194,8 +194,8 @@ public class MenuActivityComponent extends ActivityComponent {
             TurboLinksViewActivity.startActivity(menuActivity,"android",menuActivity.getString(R.string.title_activity_about));
         } else if (id == R.id.nav_relnotes) {
             ReleaseNotesActivity.startActivity(menuActivity);
-        } else if (id == R.id.nav_notifications) {
-            TurboLinksViewActivity.startActivity(menuActivity,"notifications",menuActivity.getString(R.string.title_activity_notifications));
+//        } else if (id == R.id.nav_notifications) {
+//            TurboLinksViewActivity.startActivity(menuActivity,"notifications",menuActivity.getString(R.string.title_activity_notifications));
         } else if (id == R.id.nav_app_notifications) {
             NotificationHistoryActivity.startActivity(menuActivity,false);
         } else if (id == R.id.nav_upload_pic) {
@@ -214,8 +214,8 @@ public class MenuActivityComponent extends ActivityComponent {
             }
         } else if (id == R.id.nav_settings) {
             SettingsActivity.startActivity(menuActivity);
-        } else if (id == R.id.nav_feed) {
-            FeedActivity.startActivity(menuActivity);
+//        } else if (id == R.id.nav_feed) {
+//            FeedActivity.startActivity(menuActivity);
         } else if (id == R.id.nav_stuff_you_love) {
             ExploreActivity.startActivity(menuActivity, ExploreActivity.Explore.STUFF_YOU_LOVE);
         } else if (id == R.id.nav_fresh_and_pervy) {
@@ -249,7 +249,7 @@ public class MenuActivityComponent extends ActivityComponent {
         }
 
         DrawerLayout drawer = (DrawerLayout) menuActivity.findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        drawer.closeDrawer(GravityCompat.END);
 
         if (isNavigation(id) && ((MenuActivityCallBack)menuActivity).finishAtMenuNavigation()) {
             menuActivity.finish();

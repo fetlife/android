@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:id="@+id/conversation" android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_conversations"
-            android:icon="@android:drawable/ic_menu_view"
-            android:title="@string/menu_conversations" />
-    </group>
+    <!--<group android:id="@+id/conversation" android:checkableBehavior="single">-->
+        <!--<item-->
+            <!--android:id="@+id/nav_conversations"-->
+            <!--android:icon="@android:drawable/ic_menu_view"-->
+            <!--android:title="@string/menu_conversations" />-->
+    <!--</group>-->
+
     <group android:id="@+id/explore" android:checkableBehavior="single">
 
-        <item
-            android:id="@+id/nav_feed"
-            android:icon="@drawable/ic_list_black_24dp"
-            android:title="@string/menu_feed" />
+        <!--<item-->
+            <!--android:id="@+id/nav_feed"-->
+            <!--android:icon="@drawable/ic_list_black_24dp"-->
+            <!--android:title="@string/menu_feed" />-->
 
         <item
             android:id="@+id/nav_stuff_you_love"
@@ -52,15 +53,15 @@
             android:icon="@android:drawable/ic_menu_search"
             android:title="@string/menu_members" />
 
-        <item
-            android:id="@+id/nav_friendrequests"
-            android:icon="@android:drawable/ic_menu_my_calendar"
-            android:title="@string/menu_friendrequests" />
+        <!--<item-->
+            <!--android:id="@+id/nav_friendrequests"-->
+            <!--android:icon="@android:drawable/ic_menu_my_calendar"-->
+            <!--android:title="@string/menu_friendrequests" />-->
 
-        <item
-            android:id="@+id/nav_notifications"
-            android:icon="@android:drawable/ic_dialog_alert"
-            android:title="@string/menu_notifications" />
+        <!--<item-->
+            <!--android:id="@+id/nav_notifications"-->
+            <!--android:icon="@android:drawable/ic_dialog_alert"-->
+            <!--android:title="@string/menu_notifications" />-->
 
         <item
             android:id="@+id/nav_app_notifications"

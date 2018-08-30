@@ -111,7 +111,7 @@ public class EventMapFragment extends BaseFragment implements OnMapReadyCallback
         super.onViewCreated(view, savedInstanceState);
         final Object mf = getChildFragmentManager().findFragmentById(R.id.map);
         final SupportMapFragment smf = (SupportMapFragment) mf;
-        //final SupportMapFragment mf = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        //final SupportMapFragment mft = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         smf.getMapAsync(EventMapFragment.this);
         final Object sf = getChildFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
         //SupportPlaceAutocompleteFragment searchFragment = (SupportPlaceAutocompleteFragment) getChildFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
