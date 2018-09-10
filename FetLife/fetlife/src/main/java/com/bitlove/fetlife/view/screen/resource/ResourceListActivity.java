@@ -24,7 +24,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ResourceListActivity<Resource> extends ResourceActivity implements MenuActivityComponent.MenuActivityCallBack {
+public abstract class ResourceListActivity<Resource> extends ResourceActivity {
 
     private static final int PAGE_COUNT = 25;
 
@@ -166,11 +166,6 @@ public abstract class ResourceListActivity<Resource> extends ResourceActivity im
     public abstract void onItemClick(Resource resource);
 
     public abstract void onAvatarClick(Resource resource);
-
-    @Override
-    public boolean finishAtMenuNavigation() {
-        return true;
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onResourceListCallFinished(ServiceCallFinishedEvent serviceCallFinishedEvent) {

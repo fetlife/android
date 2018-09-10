@@ -15,7 +15,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:contentInsetStartWithNavigation="0dp"
-            app:contentInsetStart="0dp"
+            app:contentInsetStart="16dp"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <TextView

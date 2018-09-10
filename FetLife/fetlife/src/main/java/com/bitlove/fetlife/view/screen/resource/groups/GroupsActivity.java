@@ -27,7 +27,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.ref.WeakReference;
 
-public class GroupsActivity extends ResourceActivity implements MenuActivityComponent.MenuActivityCallBack {
+public class GroupsActivity extends ResourceActivity {
 
     private ViewPager viewPager;
     private WeakReference<Fragment> currentFragmentReference;
@@ -46,11 +46,6 @@ public class GroupsActivity extends ResourceActivity implements MenuActivityComp
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
         return intent;
-    }
-
-    @Override
-    public boolean finishAtMenuNavigation() {
-        return true;
     }
 
     @Override

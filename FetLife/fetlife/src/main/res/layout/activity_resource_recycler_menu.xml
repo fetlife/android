@@ -11,7 +11,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#0c0c0c"
-            app:itemIconSize="22dp"
+            app:itemIconSize="20dp"
             android:transitionName="bottomNavBar"
             app:labelVisibilityMode="labeled"
             app:itemHorizontalTranslationEnabled="false"

@@ -2,6 +2,7 @@ package com.bitlove.fetlife.view.screen.component;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import com.google.android.material.navigation.NavigationView;
@@ -11,6 +12,8 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
+
+import android.os.Looper;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,10 +45,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 public class MenuActivityComponent extends ActivityComponent {
 
-    public interface MenuActivityCallBack {
-        boolean finishAtMenuNavigation();
-    }
-
     private BaseActivity menuActivity;
 
     protected NavigationView navigationView;
@@ -55,10 +54,6 @@ public class MenuActivityComponent extends ActivityComponent {
     public void onActivityCreated(BaseActivity baseActivity, Bundle savedInstanceState) {
 
         this.menuActivity = baseActivity;
-
-        if (!(menuActivity instanceof MenuActivityCallBack)) {
-            throw new IllegalArgumentException();
-        }
 
         Toolbar toolbar = (Toolbar) menuActivity.findViewById(R.id.toolbar);
         DrawerLayout drawer = (DrawerLayout) menuActivity.findViewById(R.id.drawer_layout);
@@ -74,14 +69,12 @@ public class MenuActivityComponent extends ActivityComponent {
 //                        .setColor(R.color.text_color_secondary)
 //                        .setToActionbarSize().build());
 
-        if (toolbar == null || drawer == null || navigationView == null || (navigationHeaderView = navigationView.getHeaderView(0)) == null) {
+        if (drawer == null || navigationView == null || (navigationHeaderView = navigationView.getHeaderView(0)) == null) {
             return;
         }
 
-        menuActivity.setSupportActionBar(toolbar);
-
-        if (toolbar == null) {
-            return;
+        if (toolbar != null) {
+            menuActivity.setSupportActionBar(toolbar);
         }
 
 //        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -170,9 +163,12 @@ public class MenuActivityComponent extends ActivityComponent {
     @Override
     public Boolean onActivityNavigationItemSelected(BaseActivity baseActivity, MenuItem item) {
 
+        menuActivity.setFinishAfterNavigation(false);
+        DrawerLayout drawer = (DrawerLayout) menuActivity.findViewById(R.id.drawer_layout);
+        Intent pendingNavigationIntent = null;
+
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
 
         if (id == R.id.nav_logout) {
             logEvent("nav_logout");
@@ -184,20 +180,23 @@ public class MenuActivityComponent extends ActivityComponent {
 //        } else if (id == R.id.nav_conversations) {
 //            ConversationsActivity.startActivity(menuActivity, false);
         } else if (id == R.id.nav_members) {
-            MembersActivity.startActivity(menuActivity, false);
+            pendingNavigationIntent = MembersActivity.createIntent(menuActivity,false);
+            menuActivity.setFinishAfterNavigation(true);
 //        } else if (id == R.id.nav_friendrequests) {
 //            TurboLinksViewActivity.startActivity(menuActivity,"requests",menuActivity.getString(R.string.title_activity_friendrequests));
 //        } else if (id == R.id.nav_introduce) {
 //            logEvent("nav_introduce");
 //            AddNfcFriendActivity.startActivity(menuActivity);
         } else if (id == R.id.nav_about) {
-            TurboLinksViewActivity.startActivity(menuActivity,"android",menuActivity.getString(R.string.title_activity_about));
+            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"android",menuActivity.getString(R.string.title_activity_about),false);
         } else if (id == R.id.nav_relnotes) {
-            ReleaseNotesActivity.startActivity(menuActivity);
+            pendingNavigationIntent = ReleaseNotesActivity.createIntent(menuActivity);
+            menuActivity.setFinishAfterNavigation(true);
 //        } else if (id == R.id.nav_notifications) {
 //            TurboLinksViewActivity.startActivity(menuActivity,"notifications",menuActivity.getString(R.string.title_activity_notifications));
         } else if (id == R.id.nav_app_notifications) {
-            NotificationHistoryActivity.startActivity(menuActivity,false);
+            pendingNavigationIntent = NotificationHistoryActivity.createIntent(menuActivity,false);
+            menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_upload_pic) {
             logEvent("nav_upload_pic");
             if (isStoragePermissionGranted()) {
@@ -213,47 +212,57 @@ public class MenuActivityComponent extends ActivityComponent {
                 requestStoragePermission(BaseActivity.PERMISSION_REQUEST_VIDEO_UPLOAD);
             }
         } else if (id == R.id.nav_settings) {
-            SettingsActivity.startActivity(menuActivity);
+            pendingNavigationIntent = SettingsActivity.createIntent(menuActivity);
+            //menuActivity.setFinishAfterNavigation(true);
 //        } else if (id == R.id.nav_feed) {
 //            FeedActivity.startActivity(menuActivity);
         } else if (id == R.id.nav_stuff_you_love) {
-            ExploreActivity.startActivity(menuActivity, ExploreActivity.Explore.STUFF_YOU_LOVE);
+            pendingNavigationIntent = ExploreActivity.createIntent(menuActivity, ExploreActivity.Explore.STUFF_YOU_LOVE);
+            menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_fresh_and_pervy) {
-            ExploreActivity.startActivity(menuActivity, ExploreActivity.Explore.FRESH_AND_PERVY);
+            pendingNavigationIntent = ExploreActivity.createIntent(menuActivity, ExploreActivity.Explore.FRESH_AND_PERVY);
+            menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_kinky_and_popular) {
-            ExploreActivity.startActivity(menuActivity, ExploreActivity.Explore.KINKY_AND_POPULAR);
+            pendingNavigationIntent = ExploreActivity.createIntent(menuActivity, ExploreActivity.Explore.KINKY_AND_POPULAR);
+            menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_support) {
-            TurboLinksViewActivity.startActivity(menuActivity,"support",menuActivity.getString(R.string.title_activity_support));
+            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"support",menuActivity.getString(R.string.title_activity_support),false);
+            menuActivity.setFinishAfterNavigation(true);
 //        } else if (id == R.id.nav_search) {
 //            TurboLinksViewActivity.startActivity(menuActivity,"search",menuActivity.getString(R.string.title_activity_search));
         } else if (id == R.id.nav_ads) {
-            TurboLinksViewActivity.startActivity(menuActivity,"ads",menuActivity.getString(R.string.title_activity_ads));
+            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"ads",menuActivity.getString(R.string.title_activity_ads),false);
+            menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_glossary) {
-            TurboLinksViewActivity.startActivity(menuActivity,"glossary",menuActivity.getString(R.string.title_activity_glossary));
+            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"glossary",menuActivity.getString(R.string.title_activity_glossary),false);
+            menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_team) {
-            TurboLinksViewActivity.startActivity(menuActivity,"team",menuActivity.getString(R.string.title_activity_team));
+            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"team",menuActivity.getString(R.string.title_activity_team),false);
+            menuActivity.setFinishAfterNavigation(true);
 //        } else if (id == R.id.nav_wallpapers) {
 //            TurboLinksViewActivity.startActivity(menuActivity,"wallpapers",menuActivity.getString(R.string.title_activity_wallpapers));
         } else if (id == R.id.nav_events) {
+            menuActivity.setFinishAfterNavigation(true);
             if (isLocationPermissionGranted()) {
-                EventsActivity.startActivity(menuActivity);
+                pendingNavigationIntent = EventsActivity.createIntent(menuActivity);
             } else {
                 requestLocationPermission(BaseActivity.PERMISSION_REQUEST_LOCATION);
             }
         } else if (id == R.id.nav_groups) {
-            GroupsActivity.startActivity(menuActivity,false);
+           pendingNavigationIntent = GroupsActivity.createIntent(menuActivity,false);
+            menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_updates) {
             logEvent("nav_updates");
             menuActivity.showToast(menuActivity.getString(R.string.message_toast_checking_for_updates));
             FetLifeApiIntentService.startApiCall(menuActivity,FetLifeApiIntentService.ACTION_EXTERNAL_CALL_CHECK_4_UPDATES,Boolean.toString(true));
         }
 
-        DrawerLayout drawer = (DrawerLayout) menuActivity.findViewById(R.id.drawer_layout);
+        menuActivity.setPendingNavigationIntent(pendingNavigationIntent);
         drawer.closeDrawer(GravityCompat.END);
 
-        if (isNavigation(id) && ((MenuActivityCallBack)menuActivity).finishAtMenuNavigation()) {
-            menuActivity.finish();
-        }
+//        if (isNavigation(id) && ((MenuActivityCallBack)menuActivity).finishAtMenuNavigation()) {
+//            menuActivity.finish();
+//        }
 
         return false;
     }

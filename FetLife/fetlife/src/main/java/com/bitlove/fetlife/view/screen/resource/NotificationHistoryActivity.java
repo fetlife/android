@@ -34,9 +34,8 @@ public class NotificationHistoryActivity extends ResourceListActivity<Notificati
 
     public static Intent createIntent(Context context, boolean newTask) {
         Intent intent = new Intent(context, NotificationHistoryActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         if (newTask) {
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
         }
         return intent;
     }

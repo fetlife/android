@@ -44,7 +44,7 @@
             android:layout_height="match_parent">
 
             <include
-                layout="@layout/content_events"
+                layout="@layout/content_relnotes"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@+id/navigation_bottom_separator"

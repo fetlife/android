@@ -18,6 +18,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.json.Feed;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Group;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.GroupPost;
 import com.bitlove.fetlife.model.pojos.fetlife.json.GroupMembership;
+import com.bitlove.fetlife.model.pojos.fetlife.json.NotificationCounts;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Rsvp;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Story;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Token;
@@ -59,6 +60,9 @@ public interface FetLifeApi {
 
     @GET("/api/v2/me/conversations/{conversationId}")
     Call<Conversation> getConversation(@Header("Authorization") String authHeader, @Path("conversationId") String conversationId);
+
+    @GET("/api/v2/me/notifications/counts")
+    Call<NotificationCounts> getNotificationCounts(@Header("Authorization") String authHeader);
 
     @GET("/api/v2/me/friends")
     Call<List<Member>> getFriends(@Header("Authorization") String authHeader, @Query("limit") int limit, @Query("page") int page);

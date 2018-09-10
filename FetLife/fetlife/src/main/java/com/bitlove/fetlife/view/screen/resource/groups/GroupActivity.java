@@ -46,9 +46,8 @@ public class GroupActivity extends ResourceActivity implements AppBarLayout.OnOf
 
     public static Intent createIntent(Context context, String groupId, String groupTitle, boolean newTask) {
         Intent intent = new Intent(context, GroupActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         if (newTask) {
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
         }
         intent.putExtra(EXTRA_GROUPID, groupId);
         intent.putExtra(EXTRA_GROUP_TITLE, groupTitle);

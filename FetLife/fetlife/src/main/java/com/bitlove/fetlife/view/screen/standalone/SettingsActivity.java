@@ -37,7 +37,6 @@ public class SettingsActivity extends PreferenceActivity {
 
     public static Intent createIntent(Context context) {
         Intent intent = new Intent(context, SettingsActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         return intent;
     }
 

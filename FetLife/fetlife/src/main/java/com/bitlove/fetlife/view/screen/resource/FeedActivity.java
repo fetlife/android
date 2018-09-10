@@ -31,7 +31,7 @@ import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity;
 
 import androidx.core.app.ActivityOptionsCompat;
 
-public class FeedActivity extends ResourceListActivity<Story> implements MenuActivityComponent.MenuActivityCallBack, FeedRecyclerAdapter.OnFeedItemClickListener {
+public class FeedActivity extends ResourceListActivity<Story> implements FeedRecyclerAdapter.OnFeedItemClickListener {
 
     public static void startActivity(Context context) {
         context.startActivity(createIntent(context));
@@ -49,11 +49,6 @@ public class FeedActivity extends ResourceListActivity<Story> implements MenuAct
 
     private static Intent createIntent(Context context) {
         Intent intent = new Intent(context, FeedActivity.class);
-        if (FetLifeApplication.getInstance().getUserSessionManager().getActiveUserPreferences().getBoolean(context.getString(R.string.settings_key_general_feed_as_start),false)) {
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        } else {
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        }
         intent.putExtra(BaseActivity.EXTRA_SELECTED_BOTTOM_NAV_ITEM,R.id.navigation_bottom_feed);
         return intent;
     }
@@ -194,10 +189,5 @@ public class FeedActivity extends ResourceListActivity<Story> implements MenuAct
         } else {
             Picture.sharePicture(picture);
         }
-    }
-
-    @Override
-    public boolean finishAtMenuNavigation() {
-        return !getFetLifeApplication().getUserSessionManager().getActiveUserPreferences().getBoolean(getString(R.string.settings_key_general_feed_as_start),false);
     }
 }

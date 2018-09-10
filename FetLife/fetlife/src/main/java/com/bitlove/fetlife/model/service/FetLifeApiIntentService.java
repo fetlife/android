@@ -92,11 +92,13 @@ import com.bitlove.fetlife.model.pojos.fetlife.json.Feed;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Group;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.GroupPost;
 import com.bitlove.fetlife.model.pojos.fetlife.json.GroupMembership;
+import com.bitlove.fetlife.model.pojos.fetlife.json.NotificationCounts;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Rsvp;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Story;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Token;
 import com.bitlove.fetlife.model.pojos.fetlife.json.VideoUploadResult;
 import com.bitlove.fetlife.model.pojos.github.Release;
+import com.bitlove.fetlife.session.UserSessionManager;
 import com.bitlove.fetlife.util.BytesUtil;
 import com.bitlove.fetlife.util.DateUtil;
 import com.bitlove.fetlife.util.FileUtil;
@@ -196,6 +198,7 @@ public class FetLifeApiIntentService extends IntentService {
     public static final String ACTION_APICALL_GROUP_JOIN = "com.bitlove.fetlife.action.apicall.group_join";
     public static final String ACTION_APICALL_FOLLOW_DISCUSSION = "com.bitlove.fetlife.action.apicall.follow_discussion";
     public static final String ACTION_APICALL_UNFOLLOW_DISCUSSION = "com.bitlove.fetlife.action.apicall.unfollow_discussion";
+    public static final String ACTION_APICALL_NOTIFICATION_COUNTS = "com.bitlove.fetlife.action.apicall.notification_counts";
 
     public static final String ACTION_APICALL_GROUP_LEAVE = "com.bitlove.fetlife.action.apicall.group_leave";
     public static final String ACTION_APICALL_EVENT_RSVPS = "com.bitlove.fetlife.action.apicall.event.ravps";
@@ -279,7 +282,7 @@ public class FetLifeApiIntentService extends IntentService {
         return intent;
     }
 
-    public static synchronized void startPendingCalls(Context context) {
+    public static synchronized void startPendingCalls(Context context, boolean checkForNotifications) {
         if (!isActionInProgress(ACTION_APICALL_SEND_MESSAGES)) {
             startApiCall(context, ACTION_APICALL_SEND_MESSAGES);
         }
@@ -291,6 +294,9 @@ public class FetLifeApiIntentService extends IntentService {
         }
         if (!isActionInProgress(ACTION_EXTERNAL_CALL_CHECK_4_UPDATES)) {
             startApiCall(context, ACTION_EXTERNAL_CALL_CHECK_4_UPDATES);
+        }
+        if (checkForNotifications && !isActionInProgress(ACTION_APICALL_NOTIFICATION_COUNTS)) {
+            startApiCall(context, ACTION_APICALL_NOTIFICATION_COUNTS);
         }
     }
 
@@ -543,6 +549,9 @@ public class FetLifeApiIntentService extends IntentService {
                     break;
                 case ACTION_APICALL_GROUP:
                     result = getGroup(params);
+                    break;
+                case ACTION_APICALL_NOTIFICATION_COUNTS:
+                    result = getNotificationCounts(params);
                     break;
             }
 
@@ -1791,6 +1800,23 @@ public class FetLifeApiIntentService extends IntentService {
             Group group = getGroupResponse.body();
             group.setDetailLoaded(true);
             group.save();
+            return 1;
+        } else {
+            return Integer.MIN_VALUE;
+        }
+    }
+
+    private int getNotificationCounts(String... params) throws IOException {
+        Call<NotificationCounts> getNotifCountCall = getFetLifeApi().getNotificationCounts(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken());
+        Response<NotificationCounts> getNotifCountResponse = getNotifCountCall.execute();
+        if (getNotifCountResponse.isSuccessful()) {
+            NotificationCounts notifCounts = getNotifCountResponse.body();
+            SharedPreferences preferences = getFetLifeApplication().getUserSessionManager().getActiveUserPreferences();
+            preferences.edit()
+                    .putInt(UserSessionManager.PREF_KEY_MESSAGE_COUNT,notifCounts.getMessageCount())
+                    .putInt(UserSessionManager.PREF_KEY_REQUEST_COUNT,notifCounts.getRequestCount())
+                    .putInt(UserSessionManager.PREF_KEY_NOTIF_COUNT,notifCounts.getNotificationCount())
+                    .apply();
             return 1;
         } else {
             return Integer.MIN_VALUE;

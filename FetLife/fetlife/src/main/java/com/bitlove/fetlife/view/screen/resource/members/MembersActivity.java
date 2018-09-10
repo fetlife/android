@@ -26,24 +26,21 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.ref.WeakReference;
 
-public class MembersActivity extends ResourceActivity implements MenuActivityComponent.MenuActivityCallBack {
+public class MembersActivity extends ResourceActivity {
 
     private ViewPager viewPager;
     private WeakReference<Fragment> currentFragmentReference;
 
     public static void startActivity(BaseActivity baseActivity, boolean newTask) {
-        Intent intent = new Intent(baseActivity, MembersActivity.class);
-        if (!newTask) {
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        } else {
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        }
-        baseActivity.startActivity(intent);
+        baseActivity.startActivity(createIntent(baseActivity,newTask));
     }
 
-    @Override
-    public boolean finishAtMenuNavigation() {
-        return true;
+    public static Intent createIntent(BaseActivity baseActivity, boolean newTask) {
+        Intent intent = new Intent(baseActivity, MembersActivity.class);
+        if (newTask) {
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        }
+        return intent;
     }
 
     @Override

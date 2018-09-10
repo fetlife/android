@@ -410,7 +410,7 @@ public class FetLifeApplication extends MultiDexApplication {
         @Override
         public void onActivityResumed(Activity activity) {
             if (!isAppInForeground() || foregroundActivity instanceof LoginActivity) {
-                FetLifeApiIntentService.startPendingCalls(FetLifeApplication.this);
+                FetLifeApiIntentService.startPendingCalls(FetLifeApplication.this, true);
             }
             setForegroundActivity(activity);
         }

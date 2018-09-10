@@ -3,17 +3,18 @@ package com.bitlove.fetlife.view.screen.standalone;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
+
 import androidx.appcompat.widget.Toolbar;
 import android.text.Html;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.util.HtmlListTagHandler;
+import com.bitlove.fetlife.view.screen.BaseActivity;
+import com.bitlove.fetlife.view.screen.component.MenuActivityComponent;
 
-public class ReleaseNotesActivity extends AppCompatActivity {
+public class ReleaseNotesActivity extends BaseActivity {
 
     public static void startActivity(Context context) {
         context.startActivity(createIntent(context));
@@ -21,24 +22,29 @@ public class ReleaseNotesActivity extends AppCompatActivity {
 
     public static Intent createIntent(Context context) {
         Intent intent = new Intent(context, ReleaseNotesActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         return intent;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_about);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
 
         TextView aboutTextView = (TextView) findViewById(R.id.text_about);
 
         aboutTextView.setText(Html.fromHtml(getString(R.string.text_about, getFetLifeApplication().getVersionText()), null, new HtmlListTagHandler()));
 
+    }
+
+    @Override
+    protected void onCreateActivityComponents() {
+        addActivityComponent(new MenuActivityComponent());
+    }
+
+    @Override
+    protected void onSetContentView() {
+        setContentView(R.layout.activity_relnotes);
     }
 
     @Override
@@ -61,9 +67,4 @@ public class ReleaseNotesActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-    protected FetLifeApplication getFetLifeApplication() {
-        return (FetLifeApplication) getApplication();
-    }
-
 }

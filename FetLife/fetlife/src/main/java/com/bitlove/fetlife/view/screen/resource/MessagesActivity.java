@@ -418,6 +418,7 @@ public class MessagesActivity extends ResourceActivity
             @Override
             public void run() {
                 FetLifeApiIntentService.startApiCall(MessagesActivity.this.getApplicationContext(), FetLifeApiIntentService.ACTION_APICALL_SET_MESSAGES_READ, params.toArray(new String[params.size()]));
+                FetLifeApiIntentService.startApiCall(MessagesActivity.this.getApplicationContext(),FetLifeApiIntentService.ACTION_APICALL_NOTIFICATION_COUNTS);
             }
         }).run();
     }

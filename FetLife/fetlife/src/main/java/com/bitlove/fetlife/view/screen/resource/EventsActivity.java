@@ -19,6 +19,7 @@ import com.bitlove.fetlife.event.ServiceCallStartedEvent;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Event;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
+import com.bitlove.fetlife.view.screen.component.MenuActivityComponent;
 import com.bitlove.fetlife.view.screen.resource.profile.EventsFragment;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -41,7 +42,6 @@ public class EventsActivity extends ResourceActivity {
 
     public static Intent createIntent(Context context) {
         Intent intent = new Intent(context, EventsActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         return intent;
     }
 
@@ -63,9 +63,6 @@ public class EventsActivity extends ResourceActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setVisibility(View.GONE);
@@ -159,6 +156,7 @@ public class EventsActivity extends ResourceActivity {
 
     @Override
     protected void onCreateActivityComponents() {
+        addActivityComponent(new MenuActivityComponent());
     }
 
     //Map events

@@ -29,6 +29,11 @@
 
             <p><b><br/>Version History</b></p>
 
+            <p/>v2.17.0<br/>
+                    <ul>
+                        <li>Bottom navigation bar with notification counter badges</li>
+                    </ul>
+
             <p/>v2.16.7<br/>
                     <ul>
                         <li>Fix for missing line breaks</li>

@@ -22,7 +22,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-public class FriendRequestsActivity extends ResourceListActivity<BaseModel> implements MenuActivityComponent.MenuActivityCallBack {
+public class FriendRequestsActivity extends ResourceListActivity<BaseModel> {
 
     public static void startActivity(Context context, boolean newTask) {
         context.startActivity(createIntent(context, newTask));

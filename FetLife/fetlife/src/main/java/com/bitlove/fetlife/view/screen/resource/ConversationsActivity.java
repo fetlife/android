@@ -26,7 +26,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import androidx.core.app.ActivityOptionsCompat;
 
-public class ConversationsActivity extends ResourceListActivity<Conversation> implements MenuActivityComponent.MenuActivityCallBack {
+public class ConversationsActivity extends ResourceListActivity<Conversation> {
 
     private static final String EXTRA_SHARE_URL = "EXTRA_SHARE_URL";
 
@@ -110,12 +110,6 @@ public class ConversationsActivity extends ResourceListActivity<Conversation> im
     @Override
     public void onAvatarClick(Conversation conversation) {
         ProfileActivity.startActivity(this,conversation.getMemberId());
-    }
-
-    @Override
-    public boolean finishAtMenuNavigation() {
-        SharedPreferences userPreferences = getFetLifeApplication().getUserSessionManager().getActiveUserPreferences();
-        return userPreferences != null ? userPreferences.getBoolean(getString(R.string.settings_key_general_feed_as_start),false) : false;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

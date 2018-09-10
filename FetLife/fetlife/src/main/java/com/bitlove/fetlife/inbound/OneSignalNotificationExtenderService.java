@@ -2,6 +2,7 @@ package com.bitlove.fetlife.inbound;
 
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.event.NotificationReceivedEvent;
+import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.notification.AnonymNotification;
 import com.bitlove.fetlife.notification.NotificationParser;
 import com.bitlove.fetlife.notification.OneSignalNotification;
@@ -64,6 +65,8 @@ public class OneSignalNotificationExtenderService extends NotificationExtenderSe
         //Parse the incoming notification so we can handle it accordingly based on its type
         NotificationParser notificationParser = fetLifeApplication.getNotificationParser();
         OneSignalNotification oneSignalNotification = notificationParser.parseNotification(fetLifeApplication, notification);
+
+        FetLifeApiIntentService.startApiCall(fetLifeApplication, FetLifeApiIntentService.ACTION_APICALL_NOTIFICATION_COUNTS);
 
         //Handle the incoming notification to do what is needed at the state of onreceived.
         boolean handledInternally = oneSignalNotification.handle(fetLifeApplication);
