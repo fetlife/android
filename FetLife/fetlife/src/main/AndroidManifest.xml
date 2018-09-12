@@ -105,10 +105,12 @@
             android:windowSoftInputMode="stateAlwaysVisible"/>
         <activity
             android:name=".view.screen.resource.ConversationsActivity"
+            android:windowSoftInputMode="adjustPan"
             android:label="@string/title_activity_conversations"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".view.screen.resource.TurboLinksViewActivity"
+            android:windowSoftInputMode="adjustPan"
             android:label="@string/title_activity_webview"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
@@ -129,15 +131,16 @@
             android:name=".view.screen.resource.ExploreActivity"
             android:label="@string/title_activity_stuff_you_love"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity
             android:name=".view.screen.resource.FeedActivity"
             android:label="@string/title_activity_feed"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity
             android:name=".view.screen.resource.EventsActivity"
             android:label="@string/title_activity_events"
+            android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
@@ -154,12 +157,12 @@
             android:name=".view.screen.resource.groups.GroupsActivity"
             android:label="@string/title_activity_groups"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity
             android:name=".view.screen.resource.FriendRequestsActivity"
             android:label="@string/title_activity_friendrequests"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
         <activity
             android:name=".view.screen.standalone.AddNfcFriendActivity"
             android:theme="@style/AppTheme.Dialog.Transparent"/>
@@ -177,6 +180,7 @@
         <activity
             android:name=".view.screen.standalone.ReleaseNotesActivity"
             android:label="@string/title_activity_relnotes"
+            android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".view.screen.standalone.SettingsActivity"
