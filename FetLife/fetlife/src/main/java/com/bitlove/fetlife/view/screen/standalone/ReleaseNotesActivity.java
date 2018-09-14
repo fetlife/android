@@ -50,7 +50,7 @@ public class ReleaseNotesActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        overridePendingTransition(0, 0);
+//        overridePendingTransition(0, 0);
     }
 
     @Override

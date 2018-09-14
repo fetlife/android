@@ -64,6 +64,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
     public static final String EXTRA_NOTIFICATION_SOURCE_TYPE = "EXTRA_NOTIFICATION_SOURCE_TYPE";
     public static final String EXTRA_SELECTED_BOTTOM_NAV_ITEM = "EXTRA_SELECTED_BOTTOM_NAV_ITEM";
+//    public static final String EXTRA_USE_BOTTOM_NAV_ITEM = "EXTRA_USE_BOTTOM_NAV_ITEM";
+
     private static final int BOTTOM_BAR_ORDER_MESSAGES = 1;
     private static final int BOTTOM_BAR_ORDER_REQUESTS = 2;
     private static final int BOTTOM_BAR_ORDER_NOTIFS = 3;
@@ -225,7 +227,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                 public void onDrawerClosed(@NonNull View drawerView) {
                     Intent pendingNavigationIntent = getPendingNavigationIntent();
                     if (pendingNavigationIntent != null) {
-                        startActivity(pendingNavigationIntent,navOptions.toBundle());
+                        startActivity(pendingNavigationIntent,finishAfterNavigation ? navOptions.toBundle() : null);
                     } else if (selectedMenuItem > 0) {
                         bottomNavigation.setOnNavigationItemSelectedListener(null);
                         bottomNavigation.setSelectedItemId(selectedMenuItem);
