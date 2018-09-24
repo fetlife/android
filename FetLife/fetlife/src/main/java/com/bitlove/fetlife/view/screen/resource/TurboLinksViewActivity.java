@@ -41,6 +41,7 @@ import com.bitlove.fetlife.view.screen.component.ActivityComponent;
 import com.bitlove.fetlife.view.screen.component.MenuActivityComponent;
 import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity;
 import com.bitlove.fetlife.view.screen.standalone.LoginActivity;
+import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.common.util.UriUtil;
@@ -157,7 +158,14 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         turbolinksView = (TurbolinksView) findViewById(R.id.turbolinks_view);
 
         pageUrl = getIntent().getStringExtra(EXTRA_PAGE_URL);
-        final String location = pageUrl.startsWith("https://") ? pageUrl : FetLifeService.WEBVIEW_BASE_URL + "/" + pageUrl;
+        final String location;
+        if (pageUrl == null) {
+            location = "about:blank";
+        } else if (pageUrl.startsWith("https://")) {
+            location = pageUrl;
+        } else {
+            location = FetLifeService.WEBVIEW_BASE_URL + "/" + pageUrl;
+        }
 
         if (BuildConfig.DEBUG) {
             Log.d("TBLocation",location);
@@ -220,8 +228,12 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
     @Override
     public void onReceivedError(int errorCode) {
         hideProgress(false);
-        TurbolinksSession.getDefault(this).visit("about:blank");
-        TurbolinksSession.resetDefault();
+        try {
+            TurbolinksSession.resetDefault();
+            TurbolinksSession.getDefault(this).visit("about:blank");
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+        }
         showToast(getString(R.string.error_apicall_failed));
     }
 
@@ -233,8 +245,12 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
     @Override
     public void requestFailedWithStatusCode(int statusCode) {
         hideProgress(false);
-        TurbolinksSession.getDefault(this).visit("about:blank");
-        TurbolinksSession.resetDefault();
+        try {
+            TurbolinksSession.resetDefault();
+            TurbolinksSession.getDefault(this).visit("about:blank");
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+        }
         if (statusCode == 401) {
             LoginActivity.startLogin(getFetLifeApplication());
             showToast(getString(R.string.error_authentication_failed));

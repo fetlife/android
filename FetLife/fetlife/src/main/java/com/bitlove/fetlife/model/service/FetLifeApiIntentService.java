@@ -1,6 +1,8 @@
 package com.bitlove.fetlife.model.service;
 
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.Service;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +13,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDiskIOException;
 import android.database.sqlite.SQLiteReadOnlyDatabaseException;
 import android.net.Uri;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.OpenableColumns;
 import android.util.Base64;
@@ -121,6 +124,9 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.InvalidDBConfiguration;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 import com.raizlabs.android.dbflow.structure.database.transaction.ITransaction;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.JobIntentService;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -153,6 +159,9 @@ import retrofit2.Response;
 //TODO use thread executor instead of new threads
 public class FetLifeApiIntentService extends IntentService {
 
+    public FetLifeApiIntentService() {
+        super(FetLifeApplication.getInstance().getPackageName());
+    }
 
     //****
     //Action names for Api service calls
@@ -261,7 +270,11 @@ public class FetLifeApiIntentService extends IntentService {
         intent.setAction(action);
         intent.putExtra(EXTRA_PARAMS, params);
         intent.putExtra(EXTRA_UID, UUID.randomUUID().toString());
-        context.startService(intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(intent);
+        } else {
+            context.startService(intent);
+        }
     }
 
     public static synchronized void startClearApiCall(Context context, String action, String... params) {
@@ -300,10 +313,6 @@ public class FetLifeApiIntentService extends IntentService {
         }
     }
 
-    public FetLifeApiIntentService() {
-        super("FetLifeApiIntentService");
-    }
-
     //****
     //Methods for geting information about the currently handled request
     //****
@@ -334,8 +343,17 @@ public class FetLifeApiIntentService extends IntentService {
 
     //Main synchronized method (by default by Intent Service implementation) method
 
+
     @Override
-    protected void onHandleIntent(Intent intent) {
+    public void onCreate() {
+        super.onCreate();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForeground(1,new Notification());
+        }
+    }
+
+    @Override
+    protected void onHandleIntent(@NonNull Intent intent) {
 
         callCount++;
 

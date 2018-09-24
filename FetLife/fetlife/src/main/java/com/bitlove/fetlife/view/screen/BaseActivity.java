@@ -141,6 +141,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             }
 
             SharedPreferences userPrefs = getFetLifeApplication().getUserSessionManager().getActiveUserPreferences();
+            if (userPrefs == null) {
+                return;
+            }
+
             int messageCount = Math.min(MAX_NOTIFICATION_COUNT,userPrefs.getInt(UserSessionManager.PREF_KEY_MESSAGE_COUNT, -1));
             int requestCount = Math.min(MAX_NOTIFICATION_COUNT,userPrefs.getInt(UserSessionManager.PREF_KEY_REQUEST_COUNT, -1));
             int notifCount = Math.min(MAX_NOTIFICATION_COUNT,userPrefs.getInt(UserSessionManager.PREF_KEY_NOTIF_COUNT, -1));

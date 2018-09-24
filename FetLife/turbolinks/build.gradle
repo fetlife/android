@@ -16,12 +16,12 @@ buildscript {
 }
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 25
     buildToolsVersion '28.0.2'
 
     defaultConfig {
-        minSdkVersion 23
-        targetSdkVersion 28
+        minSdkVersion 21
+        targetSdkVersion 25
         versionCode 9
         versionName "$libVersionName"
 

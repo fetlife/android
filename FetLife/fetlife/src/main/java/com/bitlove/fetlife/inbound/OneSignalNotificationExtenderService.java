@@ -1,5 +1,10 @@
 package com.bitlove.fetlife.inbound;
 
+import android.os.Build;
+import android.os.Debug;
+import android.util.Log;
+
+import com.bitlove.fetlife.BuildConfig;
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.event.NotificationReceivedEvent;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
@@ -33,6 +38,11 @@ public class OneSignalNotificationExtenderService extends NotificationExtenderSe
 
     @Override
     protected boolean onNotificationProcessing(OSNotificationReceivedResult notification) {
+
+        if (BuildConfig.DEBUG) {
+            Debug.waitingForDebugger();
+            Log.d("OS","arrived");
+        }
 
         try {
             long clientTime = System.currentTimeMillis();

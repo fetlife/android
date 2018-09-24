@@ -37,6 +37,9 @@ public class UrlUtil {
 
     public static boolean handleInternal(BaseActivity baseActivity, Uri uri) {
         List<String> urlSegments = uri.getPathSegments();
+        if (urlSegments.size() == 0) {
+            return false;
+        }
         String apiIdsParam = uri.getQueryParameter("api_ids");
         String[] apiIds = apiIdsParam != null ? apiIdsParam.split(",") : new String[0];
         if ("groups".equals(urlSegments.get(0))) {
@@ -91,7 +94,7 @@ public class UrlUtil {
         List<String> urlSegments = uri.getPathSegments();
         String apiIdsParam = uri.getQueryParameter(QUERY_API_IDS);
         String[] apiIds = apiIdsParam != null ? apiIdsParam.split(",") : new String[0];
-        if (urlSegments.size()>2 && "users".equals(urlSegments.get(0))) {
+        if (urlSegments.size()>3 && "users".equals(urlSegments.get(0))) {
             if ("pictures".equals(urlSegments.get(2))) {
                 String memberId = apiIds.length >= 2 ? apiIds[0] : ServerIdUtil.prefixServerId(urlSegments.get(1));
                 String pictureId = apiIds.length >= 2 ? apiIds[1] : ServerIdUtil.prefixServerId(urlSegments.get(3));

@@ -27,12 +27,12 @@ android {
 
     defaultConfig {
         applicationId "com.bitlove.fetlife"
-        minSdkVersion 23
-        targetSdkVersion 26
+        minSdkVersion 21
+        targetSdkVersion 25
         multiDexEnabled true
 
-        versionCode 21706
-        versionName "2.17.6"
+        versionCode 21713
+        versionName "2.17.13"
 
         vectorDrawables.useSupportLibrary = true
 

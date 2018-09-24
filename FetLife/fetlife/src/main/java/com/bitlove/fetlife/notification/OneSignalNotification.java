@@ -1,12 +1,16 @@
 package com.bitlove.fetlife.notification;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
+
 import androidx.core.app.NotificationCompat;
 
 import com.bitlove.fetlife.FetLifeApplication;
@@ -43,10 +47,11 @@ public abstract class OneSignalNotification {
 
         if (launchUrl != null) {
             contentIntent = new Intent(Intent.ACTION_VIEW);
-            contentIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            contentIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_RECEIVER_FOREGROUND);
             contentIntent.setData(Uri.parse(launchUrl));
         } else {
             contentIntent = TurboLinksViewActivity.createIntent(context,"notifications",context.getString(R.string.title_activity_notifications),true);
+            contentIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
             contentIntent.putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE,notificationType);
         }
 
@@ -114,14 +119,29 @@ public abstract class OneSignalNotification {
     }
 
     protected NotificationCompat.Builder getDefaultNotificationBuilder(FetLifeApplication fetLifeApplication) {
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(fetLifeApplication)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = fetLifeApplication.getString(R.string.notification_chanel_name_default);
+            String description = fetLifeApplication.getString(R.string.notification_chanel_description_default);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(FetLifeApplication.NOTIFICATION_CHANNEL_DEFUALT, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = fetLifeApplication.getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(fetLifeApplication,FetLifeApplication.NOTIFICATION_CHANNEL_DEFUALT)
                 .setLargeIcon(BitmapFactory.decodeResource(fetLifeApplication.getResources(), R.mipmap.app_icon_kinky))
                 .setSmallIcon(R.drawable.ic_stat_onesignal_default)
                 .setAutoCancel(true)
-                .setVisibility(AppUtil.useAnonymNotifications(FetLifeApplication.getInstance()) ? Notification.VISIBILITY_SECRET : Notification.VISIBILITY_PRIVATE)
+                .setVisibility(AppUtil.useAnonymNotifications(FetLifeApplication.getInstance()) ? NotificationCompat.VISIBILITY_SECRET : Notification.VISIBILITY_PRIVATE)
                 .setContentIntent(getPendingIntent(fetLifeApplication))
                 .setLights(fetLifeApplication.getUserSessionManager().getNotificationColor(),1000,1000)
                 .setSound(fetLifeApplication.getUserSessionManager().getNotificationRingtone());
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            notificationBuilder.setChannelId(FetLifeApplication.NOTIFICATION_CHANNEL_DEFUALT);
+        }
 
         long[] vibrationSetting = fetLifeApplication.getUserSessionManager().getNotificationVibration();
         if (vibrationSetting == null) {

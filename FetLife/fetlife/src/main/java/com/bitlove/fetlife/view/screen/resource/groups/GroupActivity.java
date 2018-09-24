@@ -228,10 +228,15 @@ public class GroupActivity extends ResourceActivity implements AppBarLayout.OnOf
     }
 
     public void onViewGroup(View v) {
-        UrlUtil.openUrl(this,group.getUrl());
+        if (group != null) {
+            UrlUtil.openUrl(this,group.getUrl());
+        }
     }
 
     public void onMembershipIcon(View v) {
+        if (group == null) {
+            return;
+        }
         if (!group.isMemberOfGroup()) {
             ConfirmationDialog groupConfirmationDialog = ConfirmationDialog.newInstance(getString(R.string.title_dialog_join_group),getString(R.string.message_dialog_join_group));
             groupConfirmationDialog.setRightButton(getString(R.string.button_dialog_yes), new ConfirmationDialog.OnClickListener(){

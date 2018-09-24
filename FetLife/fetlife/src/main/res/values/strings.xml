@@ -910,5 +910,7 @@
     <string name="menu_wallpapers">Wallpapers</string>
     <string name="title_activity_team">Meet the Team</string>
     <string name="title_activity_wallpapers">Wallpapers</string>
+    <string name="notification_chanel_name_default">General Notifications</string>
+    <string name="notification_chanel_description_default">As of now all App notifications belong to this category</string>
 
 </resources>

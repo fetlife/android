@@ -22,7 +22,11 @@ public class NotificationUtil {
 
     public static void showMessageNotification(FetLifeApplication fetLifeApplication, int notificationId, String title, String text, PendingIntent pendingIntent) {
         NotificationManager notifyManager = (NotificationManager) fetLifeApplication.getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(fetLifeApplication);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(fetLifeApplication,FetLifeApplication.NOTIFICATION_CHANNEL_DEFUALT);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            builder.setChannelId(FetLifeApplication.NOTIFICATION_CHANNEL_DEFUALT);
+        }
 
         builder.setContentTitle(title)
                 .setAutoCancel(true)
@@ -34,11 +38,15 @@ public class NotificationUtil {
 
     public static void showProgressNotification(FetLifeApplication fetLifeApplication, int notificationId, String title, String text, int progress, int maxProgress, PendingIntent cancelIntent) {
         NotificationManager notifyManager = (NotificationManager) fetLifeApplication.getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(fetLifeApplication);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(fetLifeApplication,FetLifeApplication.NOTIFICATION_CHANNEL_DEFUALT);
         builder.setContentTitle(title)
                 .setContentText(text)
                 .setAutoCancel(false)
                 .setSmallIcon(AppUtil.getAppIconResourceUrl(fetLifeApplication, true));
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            builder.setChannelId(FetLifeApplication.NOTIFICATION_CHANNEL_DEFUALT);
+        }
 
         if (cancelIntent != null) {
             //TODO(VID): Add correct icon and text

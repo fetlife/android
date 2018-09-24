@@ -81,7 +81,7 @@ public class StatusesRecyclerAdapter extends RecyclerView.Adapter<StatusViewHold
 
     @Override
     public int getItemCount() {
-        return itemList.size();
+        return itemList != null ? itemList.size() : 0;
     }
 }
 

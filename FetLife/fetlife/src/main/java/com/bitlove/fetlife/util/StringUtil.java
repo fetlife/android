@@ -14,6 +14,7 @@ import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Mention;
 import com.bitlove.fetlife.model.pojos.fetlife.json.MessageEntities;
 import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity;
+import com.crashlytics.android.Crashlytics;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 //import com.vladsch.flexmark.ast.Node;
@@ -79,7 +80,11 @@ public class StringUtil {
     public static CharSequence parseMarkedHtmlWithMentions(String htmlString, List<Mention> mentions) {
         List<String> mentionTexts = new ArrayList<>();
         for (Mention mention : mentions) {
-            mentionTexts.add(htmlString.subSequence(mention.getOffset(),mention.getOffset()+mention.getLength()).toString());
+            try {
+                mentionTexts.add(htmlString.subSequence(mention.getOffset(),mention.getOffset()+mention.getLength()).toString());
+            } catch (Exception e) {
+                Crashlytics.logException(e);
+            }
         }
 
         Spannable linkifiedText = (Spannable) parseMarkedHtml(htmlString);
@@ -102,7 +107,9 @@ public class StringUtil {
             };
 
             int index = tempStringVersion.indexOf(mentionText);
-            linkifiedText.setSpan(clickableSpan,index,index + mentionText.length(), 0);
+            if (index >= 0) {
+                linkifiedText.setSpan(clickableSpan,index,index + mentionText.length(), 0);
+            }
         }
 
         return linkifiedText;
