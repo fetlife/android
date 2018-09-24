@@ -2,3 +2,5 @@ fabric.properties
 .DS_Store
 
 /build
+
+google-services.json
