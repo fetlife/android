@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
+import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.session.UserSessionManager;
 import com.bitlove.fetlife.view.screen.resource.ConversationsActivity;
@@ -25,6 +26,8 @@ import com.google.android.material.navigation.NavigationView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import okhttp3.Cookie;
+
 import android.transition.Transition;
 
 import android.transition.Fade;
@@ -39,6 +42,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitlove.fetlife.BuildConfig;
 import com.bitlove.fetlife.FetLifeApplication;
@@ -47,14 +51,25 @@ import com.bitlove.fetlife.view.screen.component.ActivityComponent;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.gson.JsonElement;
+import com.hosopy.actioncable.ActionCable;
+import com.hosopy.actioncable.ActionCableException;
+import com.hosopy.actioncable.Channel;
+import com.hosopy.actioncable.Consumer;
+import com.hosopy.actioncable.Subscription;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
 import com.mikepenz.iconics.utils.IconicsMenuInflaterUtil;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.net.CookieManager;
+import java.net.HttpCookie;
+import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -431,8 +446,120 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         for (ActivityComponent activityComponent : activityComponentList) {
             activityComponent.onActivityStarted(this);
         }
+//        registerActionCable();
     }
 
+    private void registerActionCable() {
+        Consumer.Options options = new Consumer.Options();
+
+//        CookieManager cookieManager = new CookieManager();
+//        cookieManager.getCookieStore().removeAll();
+////        HttpCookie cookie = new HttpCookie("_fl_sessionid",getCookie(TurbolinksSession.getDefault(this).getLocation().toString(),"_fl_sessionid"));
+//        HttpCookie cookie = new HttpCookie("_fl_sessionid","b08e6fbb994942a9edfe8d9e43b97470");
+////        HttpCookie cookie = new HttpCookie("_fl_sessionid",getAccessToken());
+////        cookieManager.getCookieStore().add(URI.create("https://*.fetlife.com/*"),cookie);
+////        cookieManager.getCookieStore().add(URI.create("https://staging.fetlife.com/cable"),cookie);
+//        cookieManager.getCookieStore().add(URI.create("https://staging.fetlife.com/cable"),cookie);
+////        cookieManager.getCookieStore().add(URI.create("https://webhook.site/a2b0839b-e64c-4875-9110-07a6c1299e1d"),cookie);
+//        options.cookieHandler = cookieManager;
+
+        Map<String, String> headers = new HashMap();
+//        headers.put("Authorization", FetLifeService.AUTH_HEADER_PREFIX + getAccessToken());
+        headers.put("Cookie","_fl_sessionid=66dc0d6a60fd0c90ee9605f5c14004b9");
+        headers.put("Origin", "https://staging.fetlife.com");
+        headers.put("Access-Control-Allow-Origin", "https://staging.fetlife.com");
+        options.headers = headers;
+
+//        Consumer consumer = ActionCable.createConsumer(URI.create(TurbolinksSession.getDefault(this).getLocation()), options);
+//        Consumer consumer = ActionCable.createConsumer(URI.create("ws://cable.example.com"), options);
+        Consumer consumer = ActionCable.createConsumer(URI.create("wss://staging.fetlife.com/cable"), options);
+//        Consumer consumer = ActionCable.createConsumer(URI.create("ws://webhook.site/a2b0839b-e64c-4875-9110-07a6c1299e1d"), options);
+//        Consumer consumer = ActionCable.createConsumer(URI.create("ws://webhook.site/a2b0839b-e64c-4875-9110-07a6c1299e1d"), options);
+
+        Channel appearanceChannel = new Channel("NotificationsChannel");
+        Subscription subscription = consumer.getSubscriptions().create(appearanceChannel);
+
+        subscription
+                .onConnected(new Subscription.ConnectedCallback() {
+                    @Override
+                    public void call() {
+                        BaseActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(BaseActivity.this,"connected",Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                }).onRejected(new Subscription.RejectedCallback() {
+            @Override
+            public void call() {
+                BaseActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(BaseActivity.this,"rejected",Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        }).onReceived(new Subscription.ReceivedCallback() {
+            @Override
+            public void call(JsonElement data) {
+                BaseActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(BaseActivity.this,"received",Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        }).onDisconnected(new Subscription.DisconnectedCallback() {
+            @Override
+            public void call() {
+                BaseActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(BaseActivity.this,"disconnected",Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        }).onFailed(new Subscription.FailedCallback() {
+            @Override
+            public void call(ActionCableException e) {
+                BaseActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(BaseActivity.this,"failed",Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        });
+
+        consumer.connect();
+
+//        subscription.perform("request_all_counts");
+    }
+
+    public String getCookie(String siteName,String CookieName){
+        String CookieValue = null;
+
+        android.webkit.CookieManager cookieManager = android.webkit.CookieManager.getInstance();
+        String cookies = cookieManager.getCookie(siteName);
+        String[] temp=cookies.split(";");
+        for (String ar1 : temp ){
+            if(ar1.contains(CookieName)){
+                String[] temp1=ar1.split("=");
+                CookieValue = temp1[1];
+                break;
+            }
+        }
+        return CookieValue;
+    }
+
+    private String getAccessToken() {
+        Member currentUser = getFetLifeApplication().getUserSessionManager().getCurrentUser();
+        if (currentUser == null) {
+            return null;
+        }
+        return currentUser.getAccessToken();
+    }
 
 
     @Override
