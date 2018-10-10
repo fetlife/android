@@ -225,6 +225,7 @@ public class FeedItemResourceHelper {
     public Writing getWriting(FeedEvent feedEvent) {
         try {
             switch (feedStoryType) {
+                case POST_COMMENT_CREATED:
                 case COMMENT_CREATED:
                 case LIKE_CREATED:
                 case POST_CREATED:

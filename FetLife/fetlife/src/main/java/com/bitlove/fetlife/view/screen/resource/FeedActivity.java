@@ -98,12 +98,12 @@ public class FeedActivity extends ResourceListActivity<Story> implements FeedRec
                 ProfileActivity.startActivity(this, targetMember.getId());
                 return;
             }
-        } else if (feedStoryType == Story.FeedStoryType.POST_CREATED || feedStoryType == Story.FeedStoryType.LIKE_CREATED || feedStoryType == Story.FeedStoryType.COMMENT_CREATED) {
+        } else if (feedStoryType == Story.FeedStoryType.POST_CREATED || feedStoryType == Story.FeedStoryType.LIKE_CREATED || feedStoryType == Story.FeedStoryType.COMMENT_CREATED || feedStoryType == Story.FeedStoryType.POST_COMMENT_CREATED) {
             Writing targetWriting = feedItemResourceHelper.getWriting(feedEvent);
             if (targetWriting != null) {
                 targetWriting.save();
-//                WritingActivity.startActivity(this,targetWriting.getId(), targetWriting.getMemberId());
-                TurboLinksViewActivity.startActivity(this,targetWriting.getUrl(),targetWriting.getTitle());
+                WritingActivity.startActivity(this,targetWriting.getId(), targetWriting.getMemberId());
+//                TurboLinksViewActivity.startActivity(this,targetWriting.getUrl(),targetWriting.getTitle());
                 return;
             }
         } else if (feedStoryType == Story.FeedStoryType.RSVP_CREATED) {
