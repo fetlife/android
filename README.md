@@ -32,18 +32,6 @@ For more details please check out [FetLife Android App Installation Guide](https
 
 If something went wrong and you still don’t have the App or you still have further questions left, don’t be worried just check out the [FetLife Android App FAQ and Troubleshooting Guide](https://github.com/fetlife/android/files/1127921/FetLifeAndroidAppFAQandTroubleshootingGuide.pdf) or get in contact with us via caretakers@fetlife.com or dreamlite@fetlife.com
 
-### FetLife App is being renewd
-
-During the last two years since the first version of Android App got released several things have changed in the area of the underlying For these reasons we finally decided it is time to refactor our codebase and release a brand new App.
-
-For several weeks now behind the scenes we are already working on the new App, and even though we are not quite finished yet, we would like to involve you in the process of Development as early as we can. 
-Many of the changes and improvements made in the new version of the App, won't be visible for you, but we hope those changes that are visible will make you like the new version of the FetLife App even more than the previous one.
-
-If you are interested in our current stage of Development, feel free to take a look at our alpha version: [fetlife-3-alpha1.apk](https://github.com/fetlife/android/releases/download/v0.3-alpha1/fetlife-3-alpha1.apk).
-Note: As the work on alpha version is still in progress, several of the features of the old App are still missing. To make sure you don't lose any functionality you already got used to the alpha version will not override the original App but will rather appear as a separate App in your App list after installation.
-
-If you had any comment, feedback, remark about the alpha version, please reach to us via FetLife private messaging (username: Dreamlite) or via email: krisztian@fetlife.com
-
 ### Kinksters Helping Kinksters
 
 Want to install the app on your phone but are not technically savvy? Ask your local kinky geek! Technically savvy and want to give back to the community... bring your laptop with you the next time you attend an event and install / update the app for anyone who's interested in having it install on their phone. *#KinkstersHelpingKinksters*
