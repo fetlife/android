@@ -35,6 +35,7 @@ import com.bitlove.fetlife.event.LoginStartedEvent;
 import com.bitlove.fetlife.event.MessageSendFailedEvent;
 import com.bitlove.fetlife.event.MessageSendSucceededEvent;
 import com.bitlove.fetlife.event.NewConversationEvent;
+import com.bitlove.fetlife.event.NotificationCountUpdatedEvent;
 import com.bitlove.fetlife.event.PictureUploadFailedEvent;
 import com.bitlove.fetlife.event.PictureUploadFinishedEvent;
 import com.bitlove.fetlife.event.PictureUploadStartedEvent;
@@ -1835,7 +1836,8 @@ public class FetLifeApiIntentService extends IntentService {
                     .putInt(UserSessionManager.PREF_KEY_REQUEST_COUNT,notifCounts.getRequestCount())
                     .putInt(UserSessionManager.PREF_KEY_NOTIF_COUNT,notifCounts.getNotificationCount())
                     .apply();
-            return 1;
+            getFetLifeApplication().getEventBus().post(new NotificationCountUpdatedEvent(notifCounts.getNotificationCount(), notifCounts.getRequestCount(), notifCounts.getMessageCount()));
+            return Integer.MAX_VALUE;
         } else {
             return Integer.MIN_VALUE;
         }

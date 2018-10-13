@@ -17,6 +17,7 @@ import androidx.multidex.MultiDexApplication;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.bitlove.fetlife.inbound.ActionCable;
 import com.bitlove.fetlife.inbound.OnNotificationOpenedHandler;
 import com.bitlove.fetlife.model.api.FetLifeService;
 import com.bitlove.fetlife.model.api.GitHubService;
@@ -112,6 +113,7 @@ public class FetLifeApplication extends MultiDexApplication {
     private EventBus eventBus;
     private UserSessionManager userSessionManager;
     private InMemoryStorage inMemoryStorage;
+    private ActionCable actionCable;
 
     private GitHubService gitHubService;
 
@@ -176,6 +178,14 @@ public class FetLifeApplication extends MultiDexApplication {
         notificationParser = new NotificationParser();
         eventBus = EventBus.getDefault();
         inMemoryStorage = new InMemoryStorage();
+
+        //Init actionCable
+        actionCable = new ActionCable();
+        actionCable.tryConnect(this);
+    }
+
+    public ActionCable getActionCable() {
+        return actionCable;
     }
 
     private void createNotificationChanels() {
@@ -456,6 +466,7 @@ public class FetLifeApplication extends MultiDexApplication {
                 if (userSessionManager.getCurrentUser() != null && !userSessionManager.keepUserSignedIn()) {
                     userSessionManager.onUserLogOut();
                 }
+                actionCable.disconnect();
             } else if(isWaitingForResult) {
                 //If we are waiting for an external task to be finished, start a delayed log out
                 new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
@@ -469,6 +480,7 @@ public class FetLifeApplication extends MultiDexApplication {
                             if (!isAppInForeground() && userSessionManager.getCurrentUser() != null && !userSessionManager.keepUserSignedIn()) {
                                 userSessionManager.onUserLogOut();
                             }
+                            actionCable.disconnect();
                         }
                     }
                 }, WAITING_FOR_RESULT_LOGOUT_DELAY_MILLIS);

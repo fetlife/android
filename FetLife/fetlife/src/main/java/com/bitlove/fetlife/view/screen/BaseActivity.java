@@ -10,6 +10,7 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bitlove.fetlife.event.NotificationCountUpdatedEvent;
 import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
@@ -148,7 +149,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             Menu menu = bottomNavigation.getMenu();
             IconicsMenuInflaterUtil.inflate(getMenuInflater(), this, R.menu.menu_navigation_bottom, menu);
             final int selectedMenuItem = getIntent().getIntExtra(EXTRA_SELECTED_BOTTOM_NAV_ITEM,-1);
-            FetLifeApiIntentService.startApiCall(this,FetLifeApiIntentService.ACTION_APICALL_NOTIFICATION_COUNTS);
+            if (!getFetLifeApplication().getActionCable().isConnected()) {
+                FetLifeApiIntentService.startApiCall(this,FetLifeApiIntentService.ACTION_APICALL_NOTIFICATION_COUNTS);
+            }
 
             bottomNavigation.setVisibility(View.VISIBLE);
             if (selectedMenuItem >0) {
@@ -330,18 +333,16 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onNotificationCountCallFinished(ServiceCallFinishedEvent serviceCallFinishedEvent) {
-        if (serviceCallFinishedEvent.getServiceCallAction() == FetLifeApiIntentService.ACTION_APICALL_NOTIFICATION_COUNTS) {
-            final BottomNavigationView bottomNavigation = findViewById(R.id.navigation_bottom);
-            if (bottomNavigation != null && bottomNavigation.getVisibility() == View.VISIBLE) {
-                SharedPreferences userPrefs = getFetLifeApplication().getUserSessionManager().getActiveUserPreferences();
-                int messageCount = Math.min(MAX_NOTIFICATION_COUNT,userPrefs.getInt(UserSessionManager.PREF_KEY_MESSAGE_COUNT, -1));
-                int requestCount = Math.min(MAX_NOTIFICATION_COUNT,userPrefs.getInt(UserSessionManager.PREF_KEY_REQUEST_COUNT, -1));
-                int notifCount = Math.min(MAX_NOTIFICATION_COUNT,userPrefs.getInt(UserSessionManager.PREF_KEY_NOTIF_COUNT, -1));
-                setBadgeCount(bottomNavigation,BOTTOM_BAR_ORDER_MESSAGES,messageCount);
-                setBadgeCount(bottomNavigation,BOTTOM_BAR_ORDER_REQUESTS,requestCount);
-                setBadgeCount(bottomNavigation,BOTTOM_BAR_ORDER_NOTIFS,notifCount);
-            }
+    public void onNotificationCountCallFinished(NotificationCountUpdatedEvent notificationCountUpdatedEvent) {
+        final BottomNavigationView bottomNavigation = findViewById(R.id.navigation_bottom);
+        if (bottomNavigation != null && bottomNavigation.getVisibility() == View.VISIBLE) {
+            SharedPreferences userPrefs = getFetLifeApplication().getUserSessionManager().getActiveUserPreferences();
+            Integer messageCount = Math.min(MAX_NOTIFICATION_COUNT,notificationCountUpdatedEvent.getMessagesCount());
+            Integer requestCount = Math.min(MAX_NOTIFICATION_COUNT,notificationCountUpdatedEvent.getRequestCount());
+            Integer notifCount = Math.min(MAX_NOTIFICATION_COUNT,notificationCountUpdatedEvent.getNotificationCount());
+            if (messageCount != null) setBadgeCount(bottomNavigation,BOTTOM_BAR_ORDER_MESSAGES,messageCount);
+            if (requestCount != null) setBadgeCount(bottomNavigation,BOTTOM_BAR_ORDER_REQUESTS,requestCount);
+            if (notifCount != null) setBadgeCount(bottomNavigation,BOTTOM_BAR_ORDER_NOTIFS,notifCount);
         }
     }
 
@@ -447,110 +448,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             activityComponent.onActivityStarted(this);
         }
 //        registerActionCable();
-    }
-
-    private void registerActionCable() {
-        Consumer.Options options = new Consumer.Options();
-
-//        CookieManager cookieManager = new CookieManager();
-//        cookieManager.getCookieStore().removeAll();
-////        HttpCookie cookie = new HttpCookie("_fl_sessionid",getCookie(TurbolinksSession.getDefault(this).getLocation().toString(),"_fl_sessionid"));
-//        HttpCookie cookie = new HttpCookie("_fl_sessionid","b08e6fbb994942a9edfe8d9e43b97470");
-////        HttpCookie cookie = new HttpCookie("_fl_sessionid",getAccessToken());
-////        cookieManager.getCookieStore().add(URI.create("https://*.fetlife.com/*"),cookie);
-////        cookieManager.getCookieStore().add(URI.create("https://staging.fetlife.com/cable"),cookie);
-//        cookieManager.getCookieStore().add(URI.create("https://staging.fetlife.com/cable"),cookie);
-////        cookieManager.getCookieStore().add(URI.create("https://webhook.site/a2b0839b-e64c-4875-9110-07a6c1299e1d"),cookie);
-//        options.cookieHandler = cookieManager;
-
-        Map<String, String> headers = new HashMap();
-//        headers.put("Authorization", FetLifeService.AUTH_HEADER_PREFIX + getAccessToken());
-        headers.put("Cookie","_fl_sessionid=66dc0d6a60fd0c90ee9605f5c14004b9");
-        headers.put("Origin", "https://staging.fetlife.com");
-        headers.put("Access-Control-Allow-Origin", "https://staging.fetlife.com");
-        options.headers = headers;
-
-//        Consumer consumer = ActionCable.createConsumer(URI.create(TurbolinksSession.getDefault(this).getLocation()), options);
-//        Consumer consumer = ActionCable.createConsumer(URI.create("ws://cable.example.com"), options);
-        Consumer consumer = ActionCable.createConsumer(URI.create("wss://staging.fetlife.com/cable"), options);
-//        Consumer consumer = ActionCable.createConsumer(URI.create("ws://webhook.site/a2b0839b-e64c-4875-9110-07a6c1299e1d"), options);
-//        Consumer consumer = ActionCable.createConsumer(URI.create("ws://webhook.site/a2b0839b-e64c-4875-9110-07a6c1299e1d"), options);
-
-        Channel appearanceChannel = new Channel("NotificationsChannel");
-        Subscription subscription = consumer.getSubscriptions().create(appearanceChannel);
-
-        subscription
-                .onConnected(new Subscription.ConnectedCallback() {
-                    @Override
-                    public void call() {
-                        BaseActivity.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(BaseActivity.this,"connected",Toast.LENGTH_LONG).show();
-                            }
-                        });
-                    }
-                }).onRejected(new Subscription.RejectedCallback() {
-            @Override
-            public void call() {
-                BaseActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(BaseActivity.this,"rejected",Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-        }).onReceived(new Subscription.ReceivedCallback() {
-            @Override
-            public void call(JsonElement data) {
-                BaseActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(BaseActivity.this,"received",Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-        }).onDisconnected(new Subscription.DisconnectedCallback() {
-            @Override
-            public void call() {
-                BaseActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(BaseActivity.this,"disconnected",Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-        }).onFailed(new Subscription.FailedCallback() {
-            @Override
-            public void call(ActionCableException e) {
-                BaseActivity.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(BaseActivity.this,"failed",Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-        });
-
-        consumer.connect();
-
-//        subscription.perform("request_all_counts");
-    }
-
-    public String getCookie(String siteName,String CookieName){
-        String CookieValue = null;
-
-        android.webkit.CookieManager cookieManager = android.webkit.CookieManager.getInstance();
-        String cookies = cookieManager.getCookie(siteName);
-        String[] temp=cookies.split(";");
-        for (String ar1 : temp ){
-            if(ar1.contains(CookieName)){
-                String[] temp1=ar1.split("=");
-                CookieValue = temp1[1];
-                break;
-            }
-        }
-        return CookieValue;
     }
 
     private String getAccessToken() {

@@ -205,6 +205,8 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
                         .setPullToRefreshEnabled(true)
                         .visitWithAuthHeader(location, FetLifeService.AUTH_HEADER_PREFIX + accessToken);
 
+                getFetLifeApplication().getActionCable().tryConnect(TurboLinksViewActivity.this);
+
             }
         },33);
     }
@@ -282,119 +284,10 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
     @Override
     public void visitCompleted() {
         hideProgress(true);
-        if (isContentNotificationRelated()) {
+        if (isContentNotificationRelated() && !getFetLifeApplication().getActionCable().isConnected()) {
             FetLifeApiIntentService.startApiCall(this,FetLifeApiIntentService.ACTION_APICALL_NOTIFICATION_COUNTS);
         }
-        if (actionCableConsumer == null) {
-            registerActionCable();
-        }
-    }
-
-    private void registerActionCable() {
-        Consumer.Options options = new Consumer.Options();
-
-//        CookieManager cookieManager = new CookieManager();
-//        cookieManager.getCookieStore().removeAll();
-////        HttpCookie cookie = new HttpCookie("_fl_sessionid",getCookie(TurbolinksSession.getDefault(this).getLocation().toString(),"_fl_sessionid"));
-//        HttpCookie cookie = new HttpCookie("_fl_sessionid","b08e6fbb994942a9edfe8d9e43b97470");
-//        cookie.setVersion(0);
-////        HttpCookie cookie = new HttpCookie("_fl_sessionid",getAccessToken());
-////        cookieManager.getCookieStore().add(URI.create("https://*.fetlife.com/*"),cookie);
-////        cookieManager.getCookieStore().add(URI.create("https://staging.fetlife.com/cable"),cookie);
-//        cookieManager.getCookieStore().add(URI.create("https://staging.fetlife.com/cable"),cookie);
-////        cookieManager.getCookieStore().add(URI.create("https://webhook.site/a2b0839b-e64c-4875-9110-07a6c1299e1d"),cookie);
-//        options.cookieHandler = cookieManager;
-
-        Map<String, String> headers = new HashMap();
-//        headers.put("Authorization", FetLifeService.AUTH_HEADER_PREFIX + getAccessToken());
-//        headers.put("Cookie","_fl_sessionid=66dc0d6a60fd0c90ee9605f5c14004b9");
-//        String cookieValue = getCookie(TurbolinksSession.getDefault(this).getLocation().toString(), "_fl_sessionid");
-//        headers.put("Cookie","_fl_sessionid=" + cookieValue);
-        headers.put("Cookie",android.webkit.CookieManager.getInstance().getCookie(TurbolinksSession.getDefault(this).getLocation().toString()));
-        headers.put("Origin", "https://staging.fetlife.com");
-        headers.put("Access-Control-Allow-Origin", "https://staging.fetlife.com");
-        options.headers = headers;
-
-//        Consumer consumer = ActionCable.createConsumer(URI.create(TurbolinksSession.getDefault(this).getLocation()), options);
-//        Consumer consumer = ActionCable.createConsumer(URI.create("ws://cable.example.com"), options);
-        actionCableConsumer = ActionCable.createConsumer(URI.create("wss://staging.fetlife.com/cable"), options);
-//        Consumer consumer = ActionCable.createConsumer(URI.create("ws://webhook.site/a2b0839b-e64c-4875-9110-07a6c1299e1d"), options);
-
-        Channel appearanceChannel = new Channel("NotificationsChannel");
-        Subscription subscription = actionCableConsumer.getSubscriptions().create(appearanceChannel);
-
-        subscription
-                .onConnected(new Subscription.ConnectedCallback() {
-                    @Override
-                    public void call() {
-                        TurboLinksViewActivity.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(TurboLinksViewActivity.this,"connected",Toast.LENGTH_LONG).show();
-                            }
-                        });
-                    }
-                }).onRejected(new Subscription.RejectedCallback() {
-                    @Override
-                    public void call() {
-                        TurboLinksViewActivity.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(TurboLinksViewActivity.this,"rejected",Toast.LENGTH_LONG).show();
-                            }
-                        });
-                    }
-                }).onReceived(new Subscription.ReceivedCallback() {
-                    @Override
-                    public void call(JsonElement data) {
-                        TurboLinksViewActivity.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(TurboLinksViewActivity.this,"received",Toast.LENGTH_LONG).show();
-                            }
-                        });
-                    }
-                }).onDisconnected(new Subscription.DisconnectedCallback() {
-                    @Override
-                    public void call() {
-                        TurboLinksViewActivity.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(TurboLinksViewActivity.this,"disconnected",Toast.LENGTH_LONG).show();
-                            }
-                        });
-                    }
-                }).onFailed(new Subscription.FailedCallback() {
-                    @Override
-                    public void call(ActionCableException e) {
-                        TurboLinksViewActivity.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(TurboLinksViewActivity.this,"failed",Toast.LENGTH_LONG).show();
-                            }
-                        });
-                    }
-                });
-
-        actionCableConsumer.connect();
-
-//        subscription.perform("request_all_counts");
-    }
-
-    public String getCookie(String siteName,String CookieName){
-        String CookieValue = null;
-
-        android.webkit.CookieManager cookieManager = android.webkit.CookieManager.getInstance();
-        String cookies = cookieManager.getCookie(siteName);
-        String[] temp=cookies.split(";");
-        for (String ar1 : temp ){
-            if(ar1.contains(CookieName)){
-                String[] temp1=ar1.split("=");
-                CookieValue = temp1[1];
-                break;
-            }
-        }
-        return CookieValue;
+        getFetLifeApplication().getActionCable().tryConnect(this);
     }
 
     private String getAccessToken() {

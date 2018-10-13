@@ -68,7 +68,7 @@ public class ApkUtil {
 //                finish();
                 }
             };
-            //register receiver for when .apk download is compete
+            //tryConnect receiver for when .apk download is compete
             context.registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
         } catch (Throwable e) {

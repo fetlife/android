@@ -1,0 +1,93 @@
+package com.bitlove.fetlife.inbound
+
+import android.content.Context
+import android.text.TextUtils
+import android.webkit.CookieManager
+import com.basecamp.turbolinks.TurbolinksSession
+import com.bitlove.fetlife.FetLifeApplication
+import com.bitlove.fetlife.event.NotificationCountUpdatedEvent
+import com.crashlytics.android.Crashlytics
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
+import com.hosopy.actioncable.*
+import com.hosopy.actioncable.ActionCable
+import java.net.URI
+import java.util.HashMap
+
+class ActionCable {
+
+    companion object {
+        const val PREF_KEY_ACTION_CABLE_COOKIES = "PREF_KEY_ACTION_CABLE_COOKIES"
+    }
+
+    private var connected = false
+    private var actionCableConsumer: Consumer? = null
+
+    fun disconnect() {
+        actionCableConsumer?.disconnect()
+        connected = false
+    }
+
+    fun tryConnect(context: Context) {
+
+        if (connected) {
+            return
+        }
+
+        val options = Consumer.Options()
+
+        var cookies: String?
+        try {
+            cookies = CookieManager.getInstance().getCookie(TurbolinksSession.getDefault(context).location.toString())
+        } catch (t: Throwable) {cookies = null}
+
+        if (TextUtils.isEmpty(cookies)) {
+            return
+        }
+
+        val headers = HashMap<String,String>()
+        headers.put("Cookie", cookies!!)
+        headers.put("Origin", "https://fetlife.com")
+        headers.put("Access-Control-Allow-Origin", "https://fetlife.com")
+        options.headers = headers
+
+        actionCableConsumer = ActionCable.createConsumer(URI.create("wss://ws.fetlife.com/cable"), options)
+
+        val appearanceChannel = Channel("NotificationsChannel")
+        val subscription = actionCableConsumer!!.getSubscriptions().create(appearanceChannel)
+
+        subscription
+                .onConnected{connected = true}
+                .onRejected{Crashlytics.logException(Exception("ActionCable rejected"))}
+                .onReceived{jsonElement -> sendNotificationUpdatedEvent(jsonElement)}
+                .onDisconnected{connected = false}
+                .onFailed{ex -> Crashlytics.logException(ex)}
+
+        actionCableConsumer!!.connect()
+
+    }
+
+    private fun sendNotificationUpdatedEvent(jsonElement: JsonElement?) {
+        var jsonObject = jsonElement as? JsonObject
+        var type = jsonObject?.get("type")?.asString
+        var count = jsonObject?.get("count")?.asInt
+        if (count == null || type == null) {
+            return
+        }
+
+        val notifEvent = NotificationCountUpdatedEvent()
+
+        when(type) {
+            "new_messages_count_updated" -> notifEvent.messagesCount = count
+            "friendship_requests_count_updated" -> notifEvent.requestCount = count
+            "notifications_count_updated" -> notifEvent.notificationCount = count
+        }
+
+        FetLifeApplication.getInstance().getEventBus().post(notifEvent)
+    }
+
+    fun isConnected(): Boolean {
+        return connected
+    }
+
+}
