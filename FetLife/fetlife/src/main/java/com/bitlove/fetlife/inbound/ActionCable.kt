@@ -1,16 +1,20 @@
 package com.bitlove.fetlife.inbound
 
 import android.content.Context
+import android.content.SharedPreferences
+import android.preference.PreferenceManager
 import android.text.TextUtils
 import android.webkit.CookieManager
 import com.basecamp.turbolinks.TurbolinksSession
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.event.NotificationCountUpdatedEvent
+import com.bitlove.fetlife.session.UserSessionManager
 import com.crashlytics.android.Crashlytics
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.hosopy.actioncable.*
 import com.hosopy.actioncable.ActionCable
+import com.raizlabs.android.dbflow.kotlinextensions.delete
 import java.net.URI
 import java.util.HashMap
 
@@ -77,13 +81,17 @@ class ActionCable {
 
         val notifEvent = NotificationCountUpdatedEvent()
 
+        var preferenceKey: String
         when(type) {
-            "new_messages_count_updated" -> notifEvent.messagesCount = count
-            "friendship_requests_count_updated" -> notifEvent.requestCount = count
-            "notifications_count_updated" -> notifEvent.notificationCount = count
+            "new_messages_count_updated" -> {notifEvent.messagesCount = count; preferenceKey = UserSessionManager.PREF_KEY_MESSAGE_COUNT}
+            "friendship_requests_count_updated" -> {notifEvent.requestCount = count; preferenceKey = UserSessionManager.PREF_KEY_REQUEST_COUNT}
+            "notifications_count_updated" -> {notifEvent.notificationCount = count; preferenceKey = UserSessionManager.PREF_KEY_NOTIF_COUNT}
+            else -> return
         }
 
-        FetLifeApplication.getInstance().getEventBus().post(notifEvent)
+        FetLifeApplication.getInstance().userSessionManager.activeUserPreferences.edit().putInt(preferenceKey,count).apply();
+
+        FetLifeApplication.getInstance().eventBus.post(notifEvent)
     }
 
     fun isConnected(): Boolean {

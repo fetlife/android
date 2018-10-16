@@ -337,12 +337,12 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         final BottomNavigationView bottomNavigation = findViewById(R.id.navigation_bottom);
         if (bottomNavigation != null && bottomNavigation.getVisibility() == View.VISIBLE) {
             SharedPreferences userPrefs = getFetLifeApplication().getUserSessionManager().getActiveUserPreferences();
-            Integer messageCount = Math.min(MAX_NOTIFICATION_COUNT,notificationCountUpdatedEvent.getMessagesCount());
-            Integer requestCount = Math.min(MAX_NOTIFICATION_COUNT,notificationCountUpdatedEvent.getRequestCount());
-            Integer notifCount = Math.min(MAX_NOTIFICATION_COUNT,notificationCountUpdatedEvent.getNotificationCount());
-            if (messageCount != null) setBadgeCount(bottomNavigation,BOTTOM_BAR_ORDER_MESSAGES,messageCount);
-            if (requestCount != null) setBadgeCount(bottomNavigation,BOTTOM_BAR_ORDER_REQUESTS,requestCount);
-            if (notifCount != null) setBadgeCount(bottomNavigation,BOTTOM_BAR_ORDER_NOTIFS,notifCount);
+            Integer messageCount = notificationCountUpdatedEvent.getMessagesCount();
+            Integer requestCount = notificationCountUpdatedEvent.getRequestCount();
+            Integer notifCount = notificationCountUpdatedEvent.getNotificationCount();
+            if (messageCount != null) setBadgeCount(bottomNavigation,BOTTOM_BAR_ORDER_MESSAGES,Math.min(MAX_NOTIFICATION_COUNT,messageCount));
+            if (requestCount != null) setBadgeCount(bottomNavigation,BOTTOM_BAR_ORDER_REQUESTS,Math.min(MAX_NOTIFICATION_COUNT,requestCount));
+            if (notifCount != null) setBadgeCount(bottomNavigation,BOTTOM_BAR_ORDER_NOTIFS,Math.min(MAX_NOTIFICATION_COUNT,notifCount));
         }
     }
 
