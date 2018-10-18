@@ -29,7 +29,13 @@
 
             <p><b><br/>Version History</b></p>
 
-            <p/>v2.17.5<br/>
+            <p/>v2.17.15<br/>
+                    <ul>
+                        <li>Notification counter improvements</li>
+                        <li>Bug fixes</li>
+                    </ul>
+
+            <p/>v2.17.15<br/>
                     <ul>
                         <li>Bottom navigation bar with notification counter badges</li>
                     </ul>
