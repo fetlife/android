@@ -1,5 +1,6 @@
 package com.bitlove.fetlife.view.responsive
 
+import android.app.Fragment
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
