@@ -12,7 +12,9 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import java.net.CookieManager;
 import android.webkit.WebView;
+import android.widget.Toast;
 
 import com.basecamp.turbolinks.TurbolinksAdapter;
 import com.basecamp.turbolinks.TurbolinksSession;
@@ -46,11 +48,19 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.common.util.UriUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.gson.JsonElement;
+import com.hosopy.actioncable.ActionCable;
+import com.hosopy.actioncable.ActionCableException;
+import com.hosopy.actioncable.Channel;
+import com.hosopy.actioncable.Consumer;
+import com.hosopy.actioncable.Subscription;
 import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.net.HttpCookie;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -75,6 +85,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
     private TurbolinksView turbolinksView;
     private Set<String> requestedMediaIds = new HashSet<>();
     private String pageUrl = null;
+    private Consumer actionCableConsumer;
 
     public static void startActivity(BaseActivity menuActivity, String pageUrl, String title) {
         menuActivity.startActivity(createIntent(menuActivity,pageUrl,title,false));
@@ -194,6 +205,8 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
                         .setPullToRefreshEnabled(true)
                         .visitWithAuthHeader(location, FetLifeService.AUTH_HEADER_PREFIX + accessToken);
 
+                getFetLifeApplication().getActionCable().tryConnect(TurboLinksViewActivity.this);
+
             }
         },33);
     }
@@ -218,6 +231,15 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
     @Override
     protected void onPause() {
         super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (actionCableConsumer != null) {
+            actionCableConsumer.disconnect();
+            actionCableConsumer = null;
+        }
     }
 
     @Override
@@ -262,9 +284,18 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
     @Override
     public void visitCompleted() {
         hideProgress(true);
-        if (isContentNotificationRelated()) {
+        if (isContentNotificationRelated() && !getFetLifeApplication().getActionCable().isConnected()) {
             FetLifeApiIntentService.startApiCall(this,FetLifeApiIntentService.ACTION_APICALL_NOTIFICATION_COUNTS);
         }
+        getFetLifeApplication().getActionCable().tryConnect(this);
+    }
+
+    private String getAccessToken() {
+        Member currentUser = getFetLifeApplication().getUserSessionManager().getCurrentUser();
+        if (currentUser == null) {
+            return null;
+        }
+        return currentUser.getAccessToken();
     }
 
     private boolean isContentNotificationRelated() {

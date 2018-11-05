@@ -10,7 +10,9 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bitlove.fetlife.event.NotificationCountUpdatedEvent;
 import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
+import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.session.UserSessionManager;
 import com.bitlove.fetlife.view.screen.resource.ConversationsActivity;
@@ -25,6 +27,8 @@ import com.google.android.material.navigation.NavigationView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import okhttp3.Cookie;
+
 import android.transition.Transition;
 
 import android.transition.Fade;
@@ -39,6 +43,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitlove.fetlife.BuildConfig;
 import com.bitlove.fetlife.FetLifeApplication;
@@ -47,14 +52,25 @@ import com.bitlove.fetlife.view.screen.component.ActivityComponent;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.gson.JsonElement;
+import com.hosopy.actioncable.ActionCable;
+import com.hosopy.actioncable.ActionCableException;
+import com.hosopy.actioncable.Channel;
+import com.hosopy.actioncable.Consumer;
+import com.hosopy.actioncable.Subscription;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
 import com.mikepenz.iconics.utils.IconicsMenuInflaterUtil;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.net.CookieManager;
+import java.net.HttpCookie;
+import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -133,7 +149,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             Menu menu = bottomNavigation.getMenu();
             IconicsMenuInflaterUtil.inflate(getMenuInflater(), this, R.menu.menu_navigation_bottom, menu);
             final int selectedMenuItem = getIntent().getIntExtra(EXTRA_SELECTED_BOTTOM_NAV_ITEM,-1);
-            FetLifeApiIntentService.startApiCall(this,FetLifeApiIntentService.ACTION_APICALL_NOTIFICATION_COUNTS);
+            if (!getFetLifeApplication().getActionCable().isConnected()) {
+                FetLifeApiIntentService.startApiCall(this,FetLifeApiIntentService.ACTION_APICALL_NOTIFICATION_COUNTS);
+            }
 
             bottomNavigation.setVisibility(View.VISIBLE);
             if (selectedMenuItem >0) {
@@ -315,18 +333,16 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onNotificationCountCallFinished(ServiceCallFinishedEvent serviceCallFinishedEvent) {
-        if (serviceCallFinishedEvent.getServiceCallAction() == FetLifeApiIntentService.ACTION_APICALL_NOTIFICATION_COUNTS) {
-            final BottomNavigationView bottomNavigation = findViewById(R.id.navigation_bottom);
-            if (bottomNavigation != null && bottomNavigation.getVisibility() == View.VISIBLE) {
-                SharedPreferences userPrefs = getFetLifeApplication().getUserSessionManager().getActiveUserPreferences();
-                int messageCount = Math.min(MAX_NOTIFICATION_COUNT,userPrefs.getInt(UserSessionManager.PREF_KEY_MESSAGE_COUNT, -1));
-                int requestCount = Math.min(MAX_NOTIFICATION_COUNT,userPrefs.getInt(UserSessionManager.PREF_KEY_REQUEST_COUNT, -1));
-                int notifCount = Math.min(MAX_NOTIFICATION_COUNT,userPrefs.getInt(UserSessionManager.PREF_KEY_NOTIF_COUNT, -1));
-                setBadgeCount(bottomNavigation,BOTTOM_BAR_ORDER_MESSAGES,messageCount);
-                setBadgeCount(bottomNavigation,BOTTOM_BAR_ORDER_REQUESTS,requestCount);
-                setBadgeCount(bottomNavigation,BOTTOM_BAR_ORDER_NOTIFS,notifCount);
-            }
+    public void onNotificationCountCallFinished(NotificationCountUpdatedEvent notificationCountUpdatedEvent) {
+        final BottomNavigationView bottomNavigation = findViewById(R.id.navigation_bottom);
+        if (bottomNavigation != null && bottomNavigation.getVisibility() == View.VISIBLE) {
+            SharedPreferences userPrefs = getFetLifeApplication().getUserSessionManager().getActiveUserPreferences();
+            Integer messageCount = notificationCountUpdatedEvent.getMessagesCount();
+            Integer requestCount = notificationCountUpdatedEvent.getRequestCount();
+            Integer notifCount = notificationCountUpdatedEvent.getNotificationCount();
+            if (messageCount != null) setBadgeCount(bottomNavigation,BOTTOM_BAR_ORDER_MESSAGES,Math.min(MAX_NOTIFICATION_COUNT,messageCount));
+            if (requestCount != null) setBadgeCount(bottomNavigation,BOTTOM_BAR_ORDER_REQUESTS,Math.min(MAX_NOTIFICATION_COUNT,requestCount));
+            if (notifCount != null) setBadgeCount(bottomNavigation,BOTTOM_BAR_ORDER_NOTIFS,Math.min(MAX_NOTIFICATION_COUNT,notifCount));
         }
     }
 
@@ -431,8 +447,16 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         for (ActivityComponent activityComponent : activityComponentList) {
             activityComponent.onActivityStarted(this);
         }
+//        registerActionCable();
     }
 
+    private String getAccessToken() {
+        Member currentUser = getFetLifeApplication().getUserSessionManager().getCurrentUser();
+        if (currentUser == null) {
+            return null;
+        }
+        return currentUser.getAccessToken();
+    }
 
 
     @Override
