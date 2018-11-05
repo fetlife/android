@@ -31,7 +31,7 @@
 
             <p/>v2.18.0<br/>
                     <ul>
-                        <li>Q&A</li>
+                        <li>Q&amp;A</li>
                     </ul>
 
             <p/>v2.17.15<br/>
@@ -870,6 +870,7 @@
     <string name="title_fragment_groups">Groups</string>
     <string name="title_fragment_group_serach">Search</string>
     <string name="menu_groups">Groups</string>
+    <string name="menu_questions">Ask the Community</string>
     <string name="title_activity_groups">Groups</string>
     <string name="menu_support">Support FetLife</string>
     <string name="menu_glossary">Kinktionary</string>
@@ -879,6 +880,7 @@
     <string name="title_activity_support">Support FetLife</string>
     <string name="title_activity_ads">Advertise on FetLife</string>
     <string name="title_activity_glossary">Kinktionary</string>
+    <string name="title_activity_questions">Ask the Community</string>
     <string name="title_fragment_group_discussions">Discussions</string>
     <string name="title_fragment_group_members">Members</string>
     <string name="action_share">Share</string>

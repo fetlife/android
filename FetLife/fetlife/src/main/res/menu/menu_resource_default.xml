@@ -44,6 +44,11 @@
             android:title="@string/menu_events" />
 
         <item
+            android:id="@+id/nav_questions"
+            android:icon="@drawable/ic_icon_chat"
+            android:title="@string/menu_questions" />
+
+        <item
             android:id="@+id/nav_groups"
             android:icon="@drawable/ic_friend"
             android:title="@string/menu_groups" />

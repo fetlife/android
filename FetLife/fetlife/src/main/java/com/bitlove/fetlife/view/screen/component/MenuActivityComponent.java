@@ -248,6 +248,9 @@ public class MenuActivityComponent extends ActivityComponent {
             } else {
                 requestLocationPermission(BaseActivity.PERMISSION_REQUEST_LOCATION);
             }
+        } else if (id == R.id.nav_questions) {
+            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"q",menuActivity.getString(R.string.title_activity_questions),false);
+            menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_groups) {
            pendingNavigationIntent = GroupsActivity.createIntent(menuActivity,false);
             menuActivity.setFinishAfterNavigation(true);
