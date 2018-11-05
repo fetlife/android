@@ -197,12 +197,12 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
 
                 String accessToken = getFetLifeApplication().getUserSessionManager().getCurrentUser().getAccessToken();
                 turbolinksSession.activity(TurboLinksViewActivity.this)
+                        .setPullToRefreshEnabled(true)
                         .adapter(TurboLinksViewActivity.this)
                         .view(turbolinksView)
                         .addProgressObserver(TurboLinksViewActivity.this)
                         .addPageObserver(TurboLinksViewActivity.this)
                         .restoreWithCachedSnapshot(false)
-                        .setPullToRefreshEnabled(true)
                         .visitWithAuthHeader(location, FetLifeService.AUTH_HEADER_PREFIX + accessToken);
 
                 getFetLifeApplication().getActionCable().tryConnect(TurboLinksViewActivity.this);
@@ -252,7 +252,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         hideProgress(false);
         try {
             TurbolinksSession.resetDefault();
-            TurbolinksSession.getDefault(this).visit("about:blank");
+            TurbolinksSession.getDefault(this).activity(this).adapter(TurboLinksViewActivity.this).view(turbolinksView).visit("about:blank");
         } catch (Exception e) {
             Crashlytics.logException(e);
         }
@@ -269,7 +269,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         hideProgress(false);
         try {
             TurbolinksSession.resetDefault();
-            TurbolinksSession.getDefault(this).visit("about:blank");
+            TurbolinksSession.getDefault(this).activity(this).adapter(TurboLinksViewActivity.this).view(turbolinksView).visit("about:blank");
         } catch (Exception e) {
             Crashlytics.logException(e);
         }
