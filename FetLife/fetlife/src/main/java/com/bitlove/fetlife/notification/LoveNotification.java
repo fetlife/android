@@ -10,7 +10,6 @@ import androidx.core.app.NotificationManagerCompat;
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.model.pojos.fetlife.db.NotificationHistoryItem;
-import com.bitlove.fetlife.model.pojos.fetlife.db.NotificationHistoryItem_Table;
 import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity;
 
@@ -79,7 +78,7 @@ public class LoveNotification extends OneSignalNotification {
 
     @Override
     PendingIntent getPendingIntent(Context context) {
-        Intent contentIntent = TurboLinksViewActivity.createIntent(context,"notifications",context.getString(R.string.title_activity_notifications),true);
+        Intent contentIntent = TurboLinksViewActivity.createIntent(context,"notifications",context.getString(R.string.title_activity_notifications), null, true);
         contentIntent.putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE,getNotificationType());
 
         PendingIntent contentPendingIntent =

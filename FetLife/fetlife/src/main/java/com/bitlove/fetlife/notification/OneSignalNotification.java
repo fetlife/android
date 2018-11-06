@@ -50,7 +50,7 @@ public abstract class OneSignalNotification {
             contentIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_RECEIVER_FOREGROUND);
             contentIntent.setData(Uri.parse(launchUrl));
         } else {
-            contentIntent = TurboLinksViewActivity.createIntent(context,"notifications",context.getString(R.string.title_activity_notifications),true);
+            contentIntent = TurboLinksViewActivity.createIntent(context,"notifications",context.getString(R.string.title_activity_notifications), null, true);
             contentIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
             contentIntent.putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE,notificationType);
         }

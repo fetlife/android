@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
+import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.resource.EventActivity;
@@ -41,7 +42,7 @@ public class UrlUtil {
         }
         if ("q".equals(urlSegments.get(0))) {
             if (urlSegments.size() > 1) {
-                TurboLinksViewActivity.createIntent(baseActivity,uri.toString(),null,false);
+                TurboLinksViewActivity.startActivity(baseActivity,uri.toString(), null);
                 return true;
             }
         }
