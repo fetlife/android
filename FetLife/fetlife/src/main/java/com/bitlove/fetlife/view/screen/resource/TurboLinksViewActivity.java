@@ -1,6 +1,5 @@
 package com.bitlove.fetlife.view.screen.resource;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -12,55 +11,37 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import java.net.CookieManager;
 import android.webkit.WebView;
-import android.widget.Toast;
 
 import com.basecamp.turbolinks.TurbolinksAdapter;
 import com.basecamp.turbolinks.TurbolinksSession;
 import com.basecamp.turbolinks.TurbolinksView;
 import com.bitlove.fetlife.BuildConfig;
-import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.event.ServiceCallFailedEvent;
 import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
 import com.bitlove.fetlife.event.ServiceCallStartedEvent;
 import com.bitlove.fetlife.model.api.FetLifeService;
-import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Event;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Picture;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Video;
-import com.bitlove.fetlife.model.pojos.fetlife.json.FeedEvent;
-import com.bitlove.fetlife.model.pojos.fetlife.json.Story;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.util.PictureUtil;
 import com.bitlove.fetlife.util.ServerIdUtil;
 import com.bitlove.fetlife.util.UrlUtil;
-import com.bitlove.fetlife.view.adapter.feed.FeedItemResourceHelper;
-import com.bitlove.fetlife.view.adapter.feed.FeedRecyclerAdapter;
 import com.bitlove.fetlife.view.screen.BaseActivity;
-import com.bitlove.fetlife.view.screen.component.ActivityComponent;
 import com.bitlove.fetlife.view.screen.component.MenuActivityComponent;
 import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity;
 import com.bitlove.fetlife.view.screen.standalone.LoginActivity;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
-import com.facebook.common.util.UriUtil;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.gson.JsonElement;
-import com.hosopy.actioncable.ActionCable;
-import com.hosopy.actioncable.ActionCableException;
-import com.hosopy.actioncable.Channel;
 import com.hosopy.actioncable.Consumer;
-import com.hosopy.actioncable.Subscription;
 import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.net.HttpCookie;
-import java.net.URI;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -222,7 +203,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         } else if ((mediaId = UrlUtil.isMediaRequested(this,Uri.parse(location))) != null){
             requestedMediaIds.add(mediaId);
             return true;
-        } else if (UrlUtil.handleInternal(this,uri)) {
+        } else if (UrlUtil.handleInternal(this,uri, false)) {
             return true;
         }
         return false;
@@ -321,23 +302,23 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         String baseLocation = TextUtils.isEmpty(pageUri.getHost()) ? FetLifeService.WEBVIEW_BASE_URL + "/" + pageUrl : pageUrl;
 
         String mediaId = null;
+
         if (!location.startsWith(baseLocation)) {
             Integer expectedTitleResourceId = getTitleForSupportedLocation(location);
             if (expectedTitleResourceId != null) {
                 TurboLinksViewActivity.startActivity(this,location,getString(expectedTitleResourceId));
                 return;
-            } else if ((mediaId = UrlUtil.isMediaRequested(this,Uri.parse(location))) != null){
+            } else if ((mediaId = UrlUtil.isMediaRequested(this,Uri.parse(location))) != null) {
                 requestedMediaIds.add(mediaId);
                 return;
-            } else if (UrlUtil.handleInternal(this,Uri.parse(location))){
+            } else if (UrlUtil.handleInternal(this,Uri.parse(location), false)){
                 return;
             } else {
                 UrlUtil.openUrl(this,UrlUtil.removeAppIds(location));
                 return;
             }
-//        } else if (UrlUtil.isDownloadLink(this, Uri.parse(location))) {
-//            UrlUtil.openUrl(this,location);
-//            return;
+        } else if (UrlUtil.handleInternal(this,Uri.parse(location), true)){
+            return;
         } else {
             location = UrlUtil.removeAppIds(location);
         }

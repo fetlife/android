@@ -8,7 +8,6 @@ import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.resource.EventActivity;
 import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity;
-import com.bitlove.fetlife.view.screen.resource.WritingActivity;
 import com.bitlove.fetlife.view.screen.resource.groups.GroupActivity;
 import com.bitlove.fetlife.view.screen.resource.groups.GroupMessagesActivity;
 import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity;
@@ -35,11 +34,22 @@ public class UrlUtil {
 //        return (urlSegments.size() >= 2 && "wallpapers".equals(urlSegments.get(0)) && "download".equals(urlSegments.get(1)));
 //    }
 
-    public static boolean handleInternal(BaseActivity baseActivity, Uri uri) {
+    public static boolean handleInternal(BaseActivity baseActivity, Uri uri, boolean sameBaseLocation) {
         List<String> urlSegments = uri.getPathSegments();
         if (urlSegments.size() == 0) {
             return false;
         }
+        if ("q".equals(urlSegments.get(0))) {
+            if (urlSegments.size() > 1) {
+                TurboLinksViewActivity.createIntent(baseActivity,uri.toString(),null,false);
+                return true;
+            }
+        }
+
+        if (sameBaseLocation) {
+            return false;
+        }
+
         String apiIdsParam = uri.getQueryParameter("api_ids");
         String[] apiIds = apiIdsParam != null ? apiIdsParam.split(",") : new String[0];
         if ("groups".equals(urlSegments.get(0))) {
