@@ -881,6 +881,7 @@
     <string name="title_activity_ads">Advertise on FetLife</string>
     <string name="title_activity_glossary">Kinktionary</string>
     <string name="title_activity_questions">Ask the Community</string>
+    <string name="title_activity_new_question">New question</string>
     <string name="title_fragment_group_discussions">Discussions</string>
     <string name="title_fragment_group_members">Members</string>
     <string name="action_share">Share</string>
