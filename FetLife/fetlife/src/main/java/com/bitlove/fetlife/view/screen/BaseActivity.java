@@ -260,6 +260,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                     bottomNavigation.setOnNavigationItemSelectedListener(null);
                     bottomNavigation.setSelectedItemId(R.id.navigation_bottom_menu_drawer);
                     bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
+                    if (fab != null) {
+                        fab.hide();
+                    }
                 }
 
                 @Override
@@ -271,6 +274,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                         bottomNavigation.setOnNavigationItemSelectedListener(null);
                         bottomNavigation.setSelectedItemId(selectedMenuItem);
                         bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
+                    }
+                    if (fab != null && fabLink != null) {
+                        fab.show();
                     }
                 }
 

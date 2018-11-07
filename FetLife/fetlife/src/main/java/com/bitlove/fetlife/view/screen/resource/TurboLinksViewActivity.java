@@ -81,7 +81,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
     private boolean clearHistory = false;
 
     public static void startActivity(BaseActivity menuActivity, String pageUrl, String title) {
-        menuActivity.startActivity(createIntent(menuActivity,pageUrl,title, null, false));
+        menuActivity.startActivity(createIntent(menuActivity,pageUrl,title, true, null, false));
     }
 
     public static void startActivity(Context context, String pageUrl, String title, boolean hasBottomBar, Integer bottomNavId, Bundle options) {
@@ -95,10 +95,11 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         context.startActivity(intent,options);
     }
 
-    public static Intent createIntent(Context context, String pageUrl, String title, String fabLink, boolean newTask) {
+    public static Intent createIntent(Context context, String pageUrl, String title, boolean hasBottomBar, String fabLink, boolean newTask) {
         Intent intent = new Intent(context,TurboLinksViewActivity.class);
         intent.putExtra(EXTRA_PAGE_URL, pageUrl);
         intent.putExtra(EXTRA_PAGE_TITLE, title);
+        intent.putExtra(EXTRA_HAS_BOTTOM_BAR, hasBottomBar);
         if (fabLink != null) {
             intent.putExtra(EXTRA_FAB_LINK, fabLink);
         }

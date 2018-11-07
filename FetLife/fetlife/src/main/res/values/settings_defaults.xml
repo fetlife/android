@@ -15,6 +15,7 @@
     <string name="settings_default_notification_loves_enabled">true</string>
     <string name="settings_default_notification_comments_enabled">true</string>
     <string name="settings_default_notification_mentions_enabled">true</string>
+    <string name="settings_default_notification_new_answers_enabled">true</string>
     <string name="settings_default_profile_password_always">true</string>
     <string name="settings_default_feed_auto_expand_relation">true</string>
     <string name="settings_default_feed_auto_expand_like">true</string>

@@ -78,7 +78,7 @@ public class LoveNotification extends OneSignalNotification {
 
     @Override
     PendingIntent getPendingIntent(Context context) {
-        Intent contentIntent = TurboLinksViewActivity.createIntent(context,"notifications",context.getString(R.string.title_activity_notifications), null, true);
+        Intent contentIntent = TurboLinksViewActivity.createIntent(context,"notifications",context.getString(R.string.title_activity_notifications), true, null, true);
         contentIntent.putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE,getNotificationType());
 
         PendingIntent contentPendingIntent =

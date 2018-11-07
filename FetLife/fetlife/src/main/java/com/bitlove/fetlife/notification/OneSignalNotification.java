@@ -37,6 +37,7 @@ public abstract class OneSignalNotification {
     public static final int NOTIFICATION_ID_COMMENT = 50;
     public static final int NOTIFICATION_ID_MENTION = 60;
     public static final int NOTIFICATION_ID_GROUP = 70;
+    public static final int NOTIFICATION_ID_ANSWERS = 80;
     public static int NOTIFICATION_ID_INFO_INTERVAL = 1000;
 
     public static final String LAUNCH_URL_PARAM_SEPARATOR = ":";
@@ -50,7 +51,7 @@ public abstract class OneSignalNotification {
             contentIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_RECEIVER_FOREGROUND);
             contentIntent.setData(Uri.parse(launchUrl));
         } else {
-            contentIntent = TurboLinksViewActivity.createIntent(context,"notifications",context.getString(R.string.title_activity_notifications), null, true);
+            contentIntent = TurboLinksViewActivity.createIntent(context,"notifications",context.getString(R.string.title_activity_notifications), true, null, true);
             contentIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
             contentIntent.putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE,notificationType);
         }

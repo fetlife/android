@@ -86,6 +86,12 @@
             android:summary="@string/settings_summary_notification_mentions_enabled"/>
 
         <CheckBoxPreference
+            android:key="@string/settings_key_notification_new_answers_enabled"
+            android:defaultValue="@string/settings_default_notification_new_answers_enabled"
+            android:title="@string/settings_title_notification_new_answers_enabled"
+            android:summary="@string/settings_summary_notification_new_answers_enabled"/>
+
+        <CheckBoxPreference
             android:key="@string/settings_key_notification_prerelease_enabled"
             android:defaultValue="@string/settings_default_notification_prerelease_enabled"
             android:title="@string/settings_title_notification_prerelease_enabled"

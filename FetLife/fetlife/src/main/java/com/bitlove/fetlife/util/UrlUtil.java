@@ -42,7 +42,7 @@ public class UrlUtil {
         }
         if ("q".equals(urlSegments.get(0))) {
             if (urlSegments.size() > 1) {
-                TurboLinksViewActivity.startActivity(baseActivity,uri.toString(), null);
+                TurboLinksViewActivity.startActivity(baseActivity,uri.toString(), null, false, null, null);
                 return true;
             }
         }
