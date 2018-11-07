@@ -33,7 +33,6 @@ import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.component.MenuActivityComponent;
 import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity;
 import com.bitlove.fetlife.view.screen.standalone.LoginActivity;
-import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.hosopy.actioncable.Consumer;
@@ -76,6 +75,8 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
 
     private String title;
     private String pageUrl = null;
+    private boolean hasBottomBar = true;
+
     private Consumer actionCableConsumer;
     private boolean clearHistory = false;
 
@@ -83,10 +84,11 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         menuActivity.startActivity(createIntent(menuActivity,pageUrl,title, null, false));
     }
 
-    public static void startActivity(Context context, String pageUrl, String title, Integer bottomNavId, Bundle options) {
+    public static void startActivity(Context context, String pageUrl, String title, boolean hasBottomBar, Integer bottomNavId, Bundle options) {
         Intent intent = new Intent(context,TurboLinksViewActivity.class);
         intent.putExtra(EXTRA_PAGE_URL, pageUrl);
         intent.putExtra(EXTRA_PAGE_TITLE, title);
+        intent.putExtra(EXTRA_HAS_BOTTOM_BAR, hasBottomBar);
         if (bottomNavId != null) {
             intent.putExtra(BaseActivity.EXTRA_SELECTED_BOTTOM_NAV_ITEM,bottomNavId);
         }
@@ -155,6 +157,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
     private void init() {
 
         pageUrl = getIntent().getStringExtra(EXTRA_PAGE_URL);
+        hasBottomBar = getIntent().getBooleanExtra(EXTRA_HAS_BOTTOM_BAR,true);
 
         title = getIntent().getStringExtra(EXTRA_PAGE_TITLE);
         if (title == null) {
@@ -164,7 +167,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
             }
         }
 
-        if (title == null) {
+        if (!hasBottomBar) {
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
 
@@ -200,6 +203,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
 
                 TurbolinksSession.resetDefault();
                 TurbolinksSession turbolinksSession = TurbolinksSession.getDefault(TurboLinksViewActivity.this);
+
                 turbolinksSession.setDebugLoggingEnabled(BuildConfig.DEBUG);
 
                 String accessToken = getFetLifeApplication().getUserSessionManager().getCurrentUser().getAccessToken();
@@ -216,11 +220,6 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
 
             }
         },33);
-    }
-
-    @Override
-    protected boolean shouldDisplayBottomBar() {
-        return getIntent().getStringExtra(EXTRA_PAGE_TITLE) != null;
     }
 
     @Override
@@ -280,7 +279,12 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         hideProgress(false);
         if (!isFinishing()) {
             showToast(getString(R.string.error_apicall_failed));
-            finish();
+            if (!hasBottomBar) {
+                finish();
+            } else if (!"about:blank".equalsIgnoreCase(TurbolinksSession.getDefault(this).getWebView().getUrl())){
+//                TurbolinksSession.getDefault(this).getWebView().setVisibility(View.INVISIBLE);
+                TurbolinksSession.getDefault(this).getWebView().loadUrl("about:blank");
+            }
         }
     }
 
@@ -298,13 +302,19 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
                 showToast(getString(R.string.error_authentication_failed));
             } else {
                 showToast(getString(R.string.error_apicall_failed));
-                finish();
+                if (!hasBottomBar) {
+                    finish();
+                } else if (!"about:blank".equalsIgnoreCase(TurbolinksSession.getDefault(this).getWebView().getUrl())){
+                    TurbolinksSession.getDefault(this).getWebView().loadUrl("about:blank");
+//                    TurbolinksSession.getDefault(this).getWebView().setVisibility(View.INVISIBLE);
+                }
             }
         }
     }
 
     @Override
     public void visitCompleted() {
+        //TurbolinksSession.getDefault(TurboLinksViewActivity.this).getWebView().setVisibility(View.VISIBLE);
         hideProgress(true);
         if (clearHistory) {
             clearHistory = false;

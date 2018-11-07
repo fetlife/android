@@ -69,6 +69,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     public static final String EXTRA_NOTIFICATION_SOURCE_TYPE = "EXTRA_NOTIFICATION_SOURCE_TYPE";
     public static final String EXTRA_SELECTED_BOTTOM_NAV_ITEM = "EXTRA_SELECTED_BOTTOM_NAV_ITEM";
     public static final String EXTRA_FAB_LINK = "EXTRA_FAB_LINK";
+    public static final String EXTRA_HAS_BOTTOM_BAR = "EXTRA_HAS_BOTTOM_BAR";
 //    public static final String EXTRA_USE_BOTTOM_NAV_ITEM = "EXTRA_USE_BOTTOM_NAV_ITEM";
 
     private static final int BOTTOM_BAR_ORDER_MESSAGES = 1;
@@ -148,7 +149,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         }
 
         final BottomNavigationView bottomNavigation = findViewById(R.id.navigation_bottom);
-        if (bottomNavigation != null && !shouldDisplayBottomBar()) {
+        boolean hasBottomBar = getIntent().getBooleanExtra(EXTRA_HAS_BOTTOM_BAR,true);
+        if (bottomNavigation != null && !hasBottomBar) {
             bottomNavigation.setVisibility(View.GONE);
         } else if (bottomNavigation !=null){
             bottomNavigation.setVisibility(View.VISIBLE);
@@ -209,13 +211,13 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                             break;
                         case R.id.navigation_bottom_requests:
                             bottomNavigation.setOnNavigationItemSelectedListener(null);
-                            TurboLinksViewActivity.startActivity(BaseActivity.this,"requests",BaseActivity.this.getString(R.string.title_activity_friendrequests),R.id.navigation_bottom_requests, navOptions.toBundle());
+                            TurboLinksViewActivity.startActivity(BaseActivity.this,"requests",BaseActivity.this.getString(R.string.title_activity_friendrequests), true, R.id.navigation_bottom_requests, navOptions.toBundle());
 //                                finishAfterTransition();
                             setFinishAfterNavigation(true);
                             break;
                         case R.id.navigation_bottom_notifications:
                             bottomNavigation.setOnNavigationItemSelectedListener(null);
-                            TurboLinksViewActivity.startActivity(BaseActivity.this,"notifications",BaseActivity.this.getString(R.string.title_activity_notifications),R.id.navigation_bottom_notifications, navOptions.toBundle());
+                            TurboLinksViewActivity.startActivity(BaseActivity.this,"notifications",BaseActivity.this.getString(R.string.title_activity_notifications), true, R.id.navigation_bottom_notifications, navOptions.toBundle());
 //                              finishAfterTransition();
                             setFinishAfterNavigation(true);
                             break;
@@ -278,10 +280,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                 }
             });
         }
-    }
-
-    protected boolean shouldDisplayBottomBar() {
-        return true;
     }
 
     private void initNoActivePadding(BottomNavigationView bottomNavigation) {
