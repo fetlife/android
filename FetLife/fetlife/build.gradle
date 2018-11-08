@@ -32,7 +32,7 @@ android {
         multiDexEnabled true
 
         versionCode 21800
-        versionName "2.18.00"
+        versionName "2.18.0"
 
         vectorDrawables.useSupportLibrary = true
 

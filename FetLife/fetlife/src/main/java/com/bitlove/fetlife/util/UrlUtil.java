@@ -62,6 +62,9 @@ public class UrlUtil {
                     TurboLinksViewActivity.startActivity(baseActivity,uri.toString(), null, false, null, null);
                     return true;
                 }
+            } else if (baseUriSegments.size() > 1 && "review".equalsIgnoreCase(baseUriSegments.get(1))) {
+                baseActivity.finish();
+                return true;
             }
         }
 
