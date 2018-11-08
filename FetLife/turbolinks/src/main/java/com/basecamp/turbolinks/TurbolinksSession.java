@@ -71,6 +71,7 @@ public class TurbolinksSession implements TurbolinksScrollUpCallback {
 
     private ProgressObserver progressObserver;
     private PageObserver pageObserver;
+    private boolean disableStartJs;
 
     // ---------------------------------------------------
     // Constructor
@@ -301,6 +302,12 @@ public class TurbolinksSession implements TurbolinksScrollUpCallback {
      * @param location The URL to visit.
      */
     public void visit(String location) {
+        visit(location,false);
+    }
+
+    public void visit(String location, boolean disableStartJs) {
+
+        this.disableStartJs = disableStartJs;
         TurbolinksLog.d("visit called");
 
         this.previousLocation = this.location;
@@ -472,8 +479,10 @@ public class TurbolinksSession implements TurbolinksScrollUpCallback {
 
         currentVisitIdentifier = visitIdentifier;
 
-        runJavascript("webView.changeHistoryForVisitWithIdentifier", visitIdentifier);
-        runJavascript("webView.issueRequestForVisitWithIdentifier", visitIdentifier);
+        if (!disableStartJs) {
+            runJavascript("webView.changeHistoryForVisitWithIdentifier", visitIdentifier);
+            runJavascript("webView.issueRequestForVisitWithIdentifier", visitIdentifier);
+        }
         runJavascript("webView.loadCachedSnapshotForVisitWithIdentifier", visitIdentifier);
     }
 

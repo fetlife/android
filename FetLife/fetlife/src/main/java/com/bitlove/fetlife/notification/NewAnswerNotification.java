@@ -128,11 +128,11 @@ public class NewAnswerNotification extends OneSignalNotification {
     }
 
     private PendingIntent getPendingIntent(Context context, String launchUrl, int requestCode) {
-        Intent baseIntent = TurboLinksViewActivity.createIntent(context,"q",context.getString(R.string.title_activity_questions), true, TurboLinksViewActivity.FAB_LINK_NEW_QUESTION,true);
-        Intent contentIntent = TurboLinksViewActivity.createIntent(context,launchUrl.replaceAll("//fetlife.com","//app.fetlife.com"),null, false, null,true);
+        Intent baseIntent = TurboLinksViewActivity.createIntent(context,"q",context.getString(R.string.title_activity_questions), true, TurboLinksViewActivity.FAB_LINK_NEW_QUESTION,false);
+        Intent contentIntent = TurboLinksViewActivity.createIntent(context,launchUrl.replaceAll("//fetlife.com","//app.fetlife.com"),null, false, null,false);
         contentIntent.putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE,getNotificationType());
 //        return PendingIntent.getActivity(context, requestCode, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        return TaskStackBuilder.create(context).addNextIntent(baseIntent).addNextIntent(contentIntent).getPendingIntent(requestCode,PendingIntent.FLAG_UPDATE_CURRENT);
+        return TaskStackBuilder.create(context).addNextIntentWithParentStack(baseIntent).addNextIntent(contentIntent).getPendingIntent(requestCode,PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     @Override

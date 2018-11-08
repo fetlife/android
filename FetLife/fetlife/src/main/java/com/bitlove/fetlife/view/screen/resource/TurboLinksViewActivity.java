@@ -249,11 +249,12 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
                 return false;
             }
 
-            if (UrlUtil.handleInternal(this,uri, location.startsWith(baseLocation))) {
+            if (UrlUtil.handleInternal(this,uri, location.startsWith(baseLocation), baseLocation)) {
                 return true;
             }
         }
-        return false;
+        visitProposedToLocationWithAction(location, "advance");
+        return true;
     }
 
     @Override
@@ -365,9 +366,9 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         Uri pageUri = Uri.parse(pageUrl);
         String baseLocation = TextUtils.isEmpty(pageUri.getHost()) ? FetLifeService.WEBVIEW_BASE_URL + "/" + pageUrl : pageUrl;
 
-        if (baseLocation.equalsIgnoreCase(location)) {
-            return;
-        }
+//        if (baseLocation.equalsIgnoreCase(location)) {
+//            return;
+//        }
 
         String mediaId = null;
 
@@ -379,13 +380,13 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
             } else if ((mediaId = UrlUtil.isMediaRequested(this,Uri.parse(location))) != null) {
                 requestedMediaIds.add(mediaId);
                 return;
-            } else if (UrlUtil.handleInternal(this,Uri.parse(location), false)){
+            } else if (UrlUtil.handleInternal(this,Uri.parse(location), false, baseLocation)){
                 return;
             } else {
                 UrlUtil.openUrl(this,UrlUtil.removeAppIds(location));
                 return;
             }
-        } else if (UrlUtil.handleInternal(this,Uri.parse(location), true)){
+        } else if (UrlUtil.handleInternal(this,Uri.parse(location), true, baseLocation)){
             return;
         } else {
             location = UrlUtil.removeAppIds(location);
@@ -397,6 +398,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
                 .activity(this)
                 .adapter(this)
                 .view(turbolinksView)
+                .restoreWithCachedSnapshot(false)
                 .visitLocationWithAction(location,action);
     }
 
@@ -421,8 +423,8 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         WebView webView = TurbolinksSession.getDefault(this).getWebView();
         // Check if the key event was the Back button and if there's history
-        if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {
-            TurbolinksSession.getDefault(this).getWebView().goBack();
+        if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack() && !hasBottomBar) {
+            webView.goBack();
             return true;
         } else if (keyCode == KeyEvent.KEYCODE_BACK) {
 //            getWindow().setExitTransition(null);

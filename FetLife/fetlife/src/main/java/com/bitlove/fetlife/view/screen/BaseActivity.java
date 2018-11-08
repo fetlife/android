@@ -137,7 +137,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                 fab.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (!UrlUtil.handleInternal(BaseActivity.this, Uri.parse(fabLink),false)) {
+                        if (!UrlUtil.handleInternal(BaseActivity.this, Uri.parse(fabLink),false, null)) {
                             UrlUtil.openUrl(BaseActivity.this, fabLink);
                         }
                     }
