@@ -153,6 +153,7 @@
         <TextView
             android:id="@+id/text_event_description"
             android:autoLink="web"
+            android:textIsSelectable="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColorLink="@color/text_color_link"
