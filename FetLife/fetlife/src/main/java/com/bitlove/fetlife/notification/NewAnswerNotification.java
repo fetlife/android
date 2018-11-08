@@ -1,14 +1,19 @@
 package com.bitlove.fetlife.notification;
 
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.util.Log;
 
+import com.bitlove.fetlife.BuildConfig;
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.model.pojos.fetlife.db.NotificationHistoryItem;
 import com.bitlove.fetlife.view.screen.BaseActivity;
+import com.bitlove.fetlife.view.screen.resource.ConversationsActivity;
 import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity;
 
 import org.json.JSONObject;
@@ -18,6 +23,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -42,47 +48,71 @@ public class NewAnswerNotification extends OneSignalNotification {
         synchronized (notifications) {
             notifications.add(this);
 
-            NotificationCompat.Builder notificationBuilder = getDefaultNotificationBuilder(fetLifeApplication);
-
-            List<String> newAnswers = getGroupedAnswerTexts(fetLifeApplication, notifications);
-            String title = notifications.size() == 1 ? fetLifeApplication.getString(R.string.noification_title_new_answer) : fetLifeApplication.getString(R.string.noification_title_new_answers,notifications.size());
-            String firstAnswer = newAnswers.get(0);
-
-            notificationBuilder.setContentTitle(title).setContentText(firstAnswer);
-
-            NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-            inboxStyle.setBigContentTitle(title);
-            //TODO: localization
-            inboxStyle.setSummaryText("…");
-            for (String message : newAnswers) {
-                inboxStyle.addLine(message);
-            }
-            notificationBuilder.setStyle(inboxStyle);
+            String title = notifications.size() == 1 ? fetLifeApplication.getString(R.string.noification_summary_title_new_answer) : fetLifeApplication.getString(R.string.noification_summary_title_new_answers,notifications.size());
 
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(fetLifeApplication);
-            notificationManager.notify(OneSignalNotification.NOTIFICATION_ID_ANSWERS, notificationBuilder.build());
+            NotificationCompat.Builder summaryNotificationBuilder = getDefaultNotificationBuilder(fetLifeApplication);
+
+            List<Notification> newAnswersNotifications = getGroupedNotifications(fetLifeApplication, notifications);
+
+            summaryNotificationBuilder
+                    .setGroupSummary(true)
+                    .setGroup(Integer.toString(OneSignalNotification.NOTIFICATION_ID_ANSWERS))
+                    .setContentTitle(title)
+                    .setContentText(title);
+
+            NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+            inboxStyle.setBigContentTitle(fetLifeApplication.getString(R.string.noification_title_new_answers));
+            inboxStyle.setSummaryText(title);
+
+            for (Notification notification : newAnswersNotifications) {
+                inboxStyle.addLine(notification.extras.getString(Notification.EXTRA_TITLE));
+            }
+
+            summaryNotificationBuilder.setStyle(inboxStyle);
+            summaryNotificationBuilder.setContentIntent(null);
+
+            notificationManager.notify(OneSignalNotification.NOTIFICATION_ID_ANSWERS, summaryNotificationBuilder.build());
+
+            int i = OneSignalNotification.NOTIFICATION_ID_ANSWERS + 1;
+            for (Notification notification : newAnswersNotifications) {
+                notificationManager.notify(i++,notification);
+            }
 
             onNotificationDisplayed(fetLifeApplication,NOTIFICATION_ID_DO_NOT_COLLAPSE);
         }
     }
 
-    private List<String> getGroupedAnswerTexts(FetLifeApplication fetLifeApplication, List<NewAnswerNotification> notifications) {
+    private List<Notification> getGroupedNotifications(FetLifeApplication fetLifeApplication, List<NewAnswerNotification> newAnswerNotifications) {
         LinkedHashMap<String,Integer> newAnswerGroups = new LinkedHashMap<>();
-        for (NewAnswerNotification notification : notifications) {
-            Integer newAnswerCount = newAnswerGroups.get(notification.launchUrl);
+        LinkedHashMap<String,String> newAnswerUrls = new LinkedHashMap<>();
+        for (NewAnswerNotification notification : newAnswerNotifications) {
+            if (launchUrl == null) {
+                continue;
+            }
+            List<String> launchUriSegments = Uri.parse(notification.launchUrl).getPathSegments();
+            String groupId = launchUriSegments.size() > 1 ? launchUriSegments.get(1) : "";
+            Integer newAnswerCount = newAnswerGroups.get(groupId);
             if (newAnswerCount == null) {
                 newAnswerCount = 1;
             } else {
                 newAnswerCount++;
             }
-            newAnswerGroups.put(notification.launchUrl,newAnswerCount);
+            newAnswerGroups.put(groupId,newAnswerCount);
+            newAnswerUrls.put(groupId,notification.launchUrl);
         }
-        List<String> answers = new ArrayList<>();
+        List<Notification> notifications = new ArrayList<>();
+        int i = OneSignalNotification.NOTIFICATION_ID_ANSWERS + 1;
         for (Map.Entry<String,Integer> newAnswerGroup : newAnswerGroups.entrySet()) {
-            answers.add(new Integer(1).equals(newAnswerGroup.getValue()) ? fetLifeApplication.getString(R.string.noification_text_new_answer) : fetLifeApplication.getString(R.string.noification_text_new_answers,newAnswerGroup.getValue()));
+            NotificationCompat.Builder notificationBuilder = getDefaultNotificationBuilder(fetLifeApplication);
+            notificationBuilder.setContentIntent(getPendingIntent(fetLifeApplication,newAnswerUrls.get(newAnswerGroup.getKey()),i++));
+            notificationBuilder.setGroup(Integer.toString(OneSignalNotification.NOTIFICATION_ID_ANSWERS));
+            notificationBuilder.setContentTitle(fetLifeApplication.getString(R.string.noification_title_new_answers));
+            notificationBuilder.setContentText(new Integer(1).equals(newAnswerGroup.getValue()) ? fetLifeApplication.getString(R.string.noification_text_new_answer) : fetLifeApplication.getString(R.string.noification_text_new_answers,newAnswerGroup.getValue()));
+            notifications.add(notificationBuilder.build());
         }
-        Collections.reverse(answers);
-        return answers;
+        Collections.reverse(notifications);
+        return notifications;
     }
 
 
@@ -94,10 +124,15 @@ public class NewAnswerNotification extends OneSignalNotification {
 
     @Override
     PendingIntent getPendingIntent(Context context) {
+        return null;
+    }
+
+    private PendingIntent getPendingIntent(Context context, String launchUrl, int requestCode) {
         Intent baseIntent = TurboLinksViewActivity.createIntent(context,"q",context.getString(R.string.title_activity_questions), true, TurboLinksViewActivity.FAB_LINK_NEW_QUESTION,true);
-        baseIntent.putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE,getNotificationType());
-        Intent contentIntent = TurboLinksViewActivity.createIntent(context,launchUrl.replaceAll("//fetlife.com","//app.fetlife.com"),null, false, null,false);
-        return TaskStackBuilder.create(context).addNextIntent(baseIntent).addNextIntent(contentIntent).getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent contentIntent = TurboLinksViewActivity.createIntent(context,launchUrl.replaceAll("//fetlife.com","//app.fetlife.com"),null, false, null,true);
+        contentIntent.putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE,getNotificationType());
+//        return PendingIntent.getActivity(context, requestCode, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        return TaskStackBuilder.create(context).addNextIntent(baseIntent).addNextIntent(contentIntent).getPendingIntent(requestCode,PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     @Override

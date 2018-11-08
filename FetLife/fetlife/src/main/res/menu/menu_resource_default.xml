@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!--<group android:id="@+id/conversation" android:checkableBehavior="single">-->
         <!--<item-->
@@ -40,7 +41,8 @@
 
         <item
             android:id="@+id/nav_groups"
-            android:icon="@drawable/ic_friend"
+            app:ico_icon="gmd-group"
+            app:ico_size="24dp"
             android:title="@string/menu_groups" />
 
         <item
