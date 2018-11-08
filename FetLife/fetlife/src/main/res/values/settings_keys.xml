@@ -25,4 +25,5 @@
     <string name="settings_key_feed_auto_expand_post">settings_key_feed_auto_expand_post</string>
     <string name="settings_key_feed_auto_expand_comment">settings_key_feed_auto_expand_comment</string>
     <string name="settings_key_feed_auto_expand_media">settings_key_feed_auto_expand_media</string>
+    <string name="settings_key_notification_new_answers_enabled">settings_key_notification_questions_enabled</string>
 </resources>

@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.LayoutRes;
@@ -15,6 +16,7 @@ import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.session.UserSessionManager;
+import com.bitlove.fetlife.util.UrlUtil;
 import com.bitlove.fetlife.view.screen.resource.ConversationsActivity;
 import com.bitlove.fetlife.view.screen.resource.FeedActivity;
 import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity;
@@ -22,12 +24,11 @@ import com.crashlytics.android.Crashlytics;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.internal.BaselineLayout;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import okhttp3.Cookie;
 
 import android.transition.Transition;
 
@@ -43,7 +44,6 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bitlove.fetlife.BuildConfig;
 import com.bitlove.fetlife.FetLifeApplication;
@@ -52,25 +52,14 @@ import com.bitlove.fetlife.view.screen.component.ActivityComponent;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.google.gson.JsonElement;
-import com.hosopy.actioncable.ActionCable;
-import com.hosopy.actioncable.ActionCableException;
-import com.hosopy.actioncable.Channel;
-import com.hosopy.actioncable.Consumer;
-import com.hosopy.actioncable.Subscription;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
 import com.mikepenz.iconics.utils.IconicsMenuInflaterUtil;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.net.CookieManager;
-import java.net.HttpCookie;
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public abstract class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -80,6 +69,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
     public static final String EXTRA_NOTIFICATION_SOURCE_TYPE = "EXTRA_NOTIFICATION_SOURCE_TYPE";
     public static final String EXTRA_SELECTED_BOTTOM_NAV_ITEM = "EXTRA_SELECTED_BOTTOM_NAV_ITEM";
+    public static final String EXTRA_FAB_LINK = "EXTRA_FAB_LINK";
+    public static final String EXTRA_HAS_BOTTOM_BAR = "EXTRA_HAS_BOTTOM_BAR";
 //    public static final String EXTRA_USE_BOTTOM_NAV_ITEM = "EXTRA_USE_BOTTOM_NAV_ITEM";
 
     private static final int BOTTOM_BAR_ORDER_MESSAGES = 1;
@@ -122,6 +113,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         onCreateActivityComponents();
         onSetContentView();
 
+
+        setupSideMenu();
+
 //        getWindow().setEnterTransition(makeExcludeTransition());
 //        getWindow().setExitTransition(makeExcludeTransition());
 
@@ -140,8 +134,30 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             activityComponent.onActivityCreated(this, savedInstanceState);
         }
 
+        final String fabLink = getIntent().getStringExtra(EXTRA_FAB_LINK);
+        final FloatingActionButton fab = findViewById(R.id.fab);
+        if (fab != null) {
+            if (fabLink != null) {
+                fab.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!UrlUtil.handleInternal(BaseActivity.this, Uri.parse(fabLink),false, null)) {
+                            UrlUtil.openUrl(BaseActivity.this, fabLink);
+                        }
+                    }
+                });
+                fab.show();
+            } else {
+                fab.hide();
+            }
+        }
+
         final BottomNavigationView bottomNavigation = findViewById(R.id.navigation_bottom);
-        if (bottomNavigation != null) {
+        boolean hasBottomBar = getIntent().getBooleanExtra(EXTRA_HAS_BOTTOM_BAR,true);
+        if (bottomNavigation != null && !hasBottomBar) {
+            bottomNavigation.setVisibility(View.GONE);
+        } else if (bottomNavigation !=null){
+            bottomNavigation.setVisibility(View.VISIBLE);
 
             final ActivityOptionsCompat navOptions = ActivityOptionsCompat.
                     makeSceneTransitionAnimation(BaseActivity.this, bottomNavigation, "bottomNavBar");
@@ -153,7 +169,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                 FetLifeApiIntentService.startApiCall(this,FetLifeApiIntentService.ACTION_APICALL_NOTIFICATION_COUNTS);
             }
 
-            bottomNavigation.setVisibility(View.VISIBLE);
             if (selectedMenuItem >0) {
                 bottomNavigation.setSelectedItemId(selectedMenuItem);
             }
@@ -200,13 +215,13 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                             break;
                         case R.id.navigation_bottom_requests:
                             bottomNavigation.setOnNavigationItemSelectedListener(null);
-                            TurboLinksViewActivity.startActivity(BaseActivity.this,"requests",BaseActivity.this.getString(R.string.title_activity_friendrequests),R.id.navigation_bottom_requests,navOptions.toBundle());
+                            TurboLinksViewActivity.startActivity(BaseActivity.this,"requests",BaseActivity.this.getString(R.string.title_activity_friendrequests), true, R.id.navigation_bottom_requests, navOptions.toBundle());
 //                                finishAfterTransition();
                             setFinishAfterNavigation(true);
                             break;
                         case R.id.navigation_bottom_notifications:
                             bottomNavigation.setOnNavigationItemSelectedListener(null);
-                            TurboLinksViewActivity.startActivity(BaseActivity.this,"notifications",BaseActivity.this.getString(R.string.title_activity_notifications),R.id.navigation_bottom_notifications,navOptions.toBundle());
+                            TurboLinksViewActivity.startActivity(BaseActivity.this,"notifications",BaseActivity.this.getString(R.string.title_activity_notifications), true, R.id.navigation_bottom_notifications, navOptions.toBundle());
 //                              finishAfterTransition();
                             setFinishAfterNavigation(true);
                             break;
@@ -219,10 +234,16 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                                         bottomNavigation.setOnNavigationItemSelectedListener(this);
                                     }
                                     drawerLayout.closeDrawer(Gravity.RIGHT);
+                                    if (fab != null && fabLink != null) {
+                                        fab.show();
+                                    }
                                 } else {
                                     bottomNavigation.setOnNavigationItemSelectedListener(null);
                                     bottomNavigation.setSelectedItemId(R.id.navigation_bottom_menu_drawer);
                                     bottomNavigation.setOnNavigationItemSelectedListener(this);
+                                    if (fab != null) {
+                                        fab.hide();
+                                    }
                                     drawerLayout.openDrawer(Gravity.RIGHT);
                                 }
                             }
@@ -243,6 +264,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                     bottomNavigation.setOnNavigationItemSelectedListener(null);
                     bottomNavigation.setSelectedItemId(R.id.navigation_bottom_menu_drawer);
                     bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
+                    if (fab != null) {
+                        fab.hide();
+                    }
                 }
 
                 @Override
@@ -255,11 +279,32 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                         bottomNavigation.setSelectedItemId(selectedMenuItem);
                         bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
                     }
+                    if (fab != null && fabLink != null) {
+                        fab.show();
+                    }
                 }
 
                 @Override
                 public void onDrawerStateChanged(int newState) {
 
+                }
+            });
+        }
+    }
+
+    private void setupSideMenu() {
+        final NavigationView navigationView = findViewById(R.id.nav_view);
+
+        if (navigationView != null) {
+            boolean showQuestions = getFetLifeApplication().getUserSessionManager().getActiveUserPreferences().getBoolean(UserSessionManager.PREF_KEY_QUESTIONS_ENABLED,false);
+            MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_questions);
+            if (menuItem != null) {
+                menuItem.setVisible(showQuestions);
+            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    navigationView.invalidate();
                 }
             });
         }
@@ -330,6 +375,13 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
     public void setPendingNavigationIntent(Intent pendingNavigationIntent) {
         this.pendingNavigationIntent = pendingNavigationIntent;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onCheck4QuestionsFeatureFinished(ServiceCallFinishedEvent serviceCallFinishedEvent) {
+        if (FetLifeApiIntentService.ACTION_APICALL_CHECK_4_QUESTIONS.equalsIgnoreCase(serviceCallFinishedEvent.getServiceCallAction())) {
+            setupSideMenu();
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

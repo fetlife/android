@@ -9,7 +9,6 @@ import com.onesignal.OSNotificationReceivedResult;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class NotificationParser {
@@ -36,6 +35,8 @@ public class NotificationParser {
     public static final String JSON_VALUE_TYPE_FRIEND_REQUEST = "friend_request";
     public static final String JSON_VALUE_TYPE_CONVERSATION_NEW = "conversation_new";
     public static final String JSON_VALUE_TYPE_CONVERSATION_RESPONSE = "conversation_response";
+
+    public static final String JSON_VALUE_TYPE_QUESTIONS_NEW_ANSWER = "question_answered";
 
     public static final String JSON_VALUE_TYPE_SIGNUP_EMAIL_ADDRESS_VERIFY = "signup_email_address_verify";
     public static final String JSON_VALUE_TYPE_SIGNUP_EMAIL_ADDRESS_USED = "signup_email_address_used";
@@ -224,13 +225,26 @@ public class NotificationParser {
             case JSON_VALUE_TYPE_MENTION_EVENT_LISTING:
             case JSON_VALUE_TYPE_MENTION_ABOUT_ME:
                 return new MentionNotification(title, message, launchUrl, additionalData, id, group);
+            case JSON_VALUE_TYPE_QUESTIONS_NEW_ANSWER:
+                return new NewAnswerNotification(title, message, launchUrl, additionalData, id, group);
             default:
+                OneSignalNotification notification = parseByUrl(title, message, launchUrl, additionalData, id, group);
+                if (notification != null) {
+                    return notification;
+                }
                 if (title != null || message != null) {
                     return new InfoNotification(title, message, launchUrl, additionalData, id, group);
                 } else {
                     return new UnknownNotification(title, message, launchUrl, additionalData, id, group);
                 }
         }
+    }
+
+    private OneSignalNotification parseByUrl(String title, String message, String launchUrl, JSONObject additionalData, String id, String group) {
+        if (launchUrl == null) {
+            return null;
+        }
+        return null;
     }
 
     public void clearNotification(String notificationType) {
@@ -285,6 +299,8 @@ public class NotificationParser {
             case JSON_VALUE_TYPE_MENTION_ABOUT_ME:
                 MentionNotification.clearNotifications();
                 break;
+            case JSON_VALUE_TYPE_QUESTIONS_NEW_ANSWER:
+                NewAnswerNotification.clearNotifications();
             default:
                 AnonymNotification.clearNotifications();
                 break;

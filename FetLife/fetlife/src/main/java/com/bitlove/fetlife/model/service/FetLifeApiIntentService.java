@@ -2,7 +2,6 @@ package com.bitlove.fetlife.model.service;
 
 import android.app.IntentService;
 import android.app.Notification;
-import android.app.Service;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -110,7 +109,6 @@ import com.bitlove.fetlife.util.MapUtil;
 import com.bitlove.fetlife.util.MessageDuplicationDebugUtil;
 import com.bitlove.fetlife.util.NetworkUtil;
 import com.bitlove.fetlife.util.ServerIdUtil;
-import com.bitlove.fetlife.util.UrlUtil;
 import com.bitlove.fetlife.util.VersionUtil;
 import com.bitlove.fetlife.view.adapter.feed.FeedItemResourceHelper;
 import com.bitlove.fetlife.view.screen.resource.ExploreActivity;
@@ -127,7 +125,6 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 import com.raizlabs.android.dbflow.structure.database.transaction.ITransaction;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.JobIntentService;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -159,6 +156,8 @@ import retrofit2.Response;
 
 //TODO use thread executor instead of new threads
 public class FetLifeApiIntentService extends IntentService {
+
+    private static final String FEATURE_QUESTIONS = "questions";
 
     public FetLifeApiIntentService() {
         super(FetLifeApplication.getInstance().getPackageName());
@@ -215,6 +214,8 @@ public class FetLifeApiIntentService extends IntentService {
     public static final String ACTION_APICALL_SET_RSVP_STATUS = "com.bitlove.fetlife.action.apicall.event.set_ravp";
     public static final String ACTION_APICALL_GROUP_MEMBERS = "com.bitlove.fetlife.action.apicall.group_members";
     public static final String ACTION_APICALL_GROUP_DISCUSSIONS = "com.bitlove.fetlife.action.apicall.group_discussions";
+
+    public static final String ACTION_APICALL_CHECK_4_QUESTIONS = "com.bitlove.fetlife.action.apicall.check_4_questions";
 
     public static final String ACTION_CANCEL_UPLOAD_VIDEO_CHUNK = "com.bitlove.fetlife.action.cancel.upload_video_chunk";
 
@@ -311,6 +312,9 @@ public class FetLifeApiIntentService extends IntentService {
         }
         if (checkForNotifications && !isActionInProgress(ACTION_APICALL_NOTIFICATION_COUNTS)) {
             startApiCall(context, ACTION_APICALL_NOTIFICATION_COUNTS);
+        }
+        if (!isActionInProgress(ACTION_APICALL_CHECK_4_QUESTIONS)) {
+            startApiCall(context, ACTION_APICALL_CHECK_4_QUESTIONS);
         }
     }
 
@@ -532,6 +536,9 @@ public class FetLifeApiIntentService extends IntentService {
                 case ACTION_APICALL_PENDING_RELATIONS:
                     result = sendPendingFriendRequests();
                     break;
+                case ACTION_APICALL_CHECK_4_QUESTIONS:
+                    result = sendCheck4QuestionsRequests();
+                    break;
                 case ACTION_APICALL_UPLOAD_PICTURE:
                     result = uploadPicture(params);
                     break;
@@ -610,6 +617,18 @@ public class FetLifeApiIntentService extends IntentService {
             //make sure we set the action in progress indicator correctly
             setActionInProgress(null);
             setInProgressActionParams(null);
+        }
+    }
+
+    private int sendCheck4QuestionsRequests() throws IOException {
+        Call<List<String>> sendCheck4QuestionsCall = getFetLifeApplication().getFetLifeService().getFetLifeApi().check4QuestionsFeature(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken());
+        Response<List<String>> sendCheck4QuestionsResponse = sendCheck4QuestionsCall.execute();
+        if (sendCheck4QuestionsResponse.isSuccessful()) {
+            boolean questionsEnabled = (Collections.binarySearch(sendCheck4QuestionsResponse.body(),FEATURE_QUESTIONS) >= 0);
+            getFetLifeApplication().getUserSessionManager().getActiveUserPreferences().edit().putBoolean(UserSessionManager.PREF_KEY_QUESTIONS_ENABLED,questionsEnabled).apply();
+            return 0;
+        } else {
+            return Integer.MAX_VALUE;
         }
     }
 

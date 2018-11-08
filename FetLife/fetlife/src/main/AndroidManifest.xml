@@ -110,8 +110,8 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".view.screen.resource.TurboLinksViewActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:label="@string/title_activity_webview"
+            android:windowSoftInputMode="adjustResize"
+            android:label=""
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".view.screen.resource.NotificationHistoryActivity"

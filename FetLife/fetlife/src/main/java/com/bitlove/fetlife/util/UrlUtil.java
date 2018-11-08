@@ -4,11 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
+import com.basecamp.turbolinks.TurbolinksSession;
+import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.resource.EventActivity;
 import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity;
-import com.bitlove.fetlife.view.screen.resource.WritingActivity;
 import com.bitlove.fetlife.view.screen.resource.groups.GroupActivity;
 import com.bitlove.fetlife.view.screen.resource.groups.GroupMessagesActivity;
 import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity;
@@ -16,6 +17,7 @@ import com.crashlytics.android.Crashlytics;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UrlUtil {
@@ -35,11 +37,38 @@ public class UrlUtil {
 //        return (urlSegments.size() >= 2 && "wallpapers".equals(urlSegments.get(0)) && "download".equals(urlSegments.get(1)));
 //    }
 
-    public static boolean handleInternal(BaseActivity baseActivity, Uri uri) {
+    public static boolean handleInternal(BaseActivity baseActivity, Uri uri, boolean sameBaseLocation, String baseLocation) {
+        List<String> baseUriSegments = baseLocation != null ? Uri.parse(baseLocation).getPathSegments() : new ArrayList<String>();
         List<String> urlSegments = uri.getPathSegments();
         if (urlSegments.size() == 0) {
             return false;
         }
+        if ("q".equals(urlSegments.get(0))) {
+            if (urlSegments.size() > 1) {
+                if ("review".equalsIgnoreCase(urlSegments.get(1))) {
+                    if (baseUriSegments.size() > 1 && "review".equalsIgnoreCase(baseUriSegments.get(1))) {
+//                        TurbolinksSession.getDefault(baseActivity).getWebView().clearHistory();
+//                        TurboLinksViewActivity.startActivity(baseActivity,uri.toString(), baseActivity.getString(R.string.title_activity_review_questions), false, null, null);
+//                        baseActivity.finish();
+                        return false;
+                    } else {
+                        TurboLinksViewActivity.startActivity(baseActivity, uri.toString(), baseActivity.getString(R.string.title_activity_review_questions), false, null, null);
+                        return true;
+                    }
+                } else if ("search".equalsIgnoreCase(urlSegments.get(1))) {
+                    TurbolinksSession.getDefault(baseActivity).getWebView().clearHistory();
+                    return false;
+                } else {
+                    TurboLinksViewActivity.startActivity(baseActivity,uri.toString(), null, false, null, null);
+                    return true;
+                }
+            }
+        }
+
+        if (sameBaseLocation) {
+            return false;
+        }
+
         String apiIdsParam = uri.getQueryParameter("api_ids");
         String[] apiIds = apiIdsParam != null ? apiIdsParam.split(",") : new String[0];
         if ("groups".equals(urlSegments.get(0))) {

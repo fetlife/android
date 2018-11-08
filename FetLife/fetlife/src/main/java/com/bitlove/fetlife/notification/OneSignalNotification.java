@@ -30,14 +30,15 @@ public abstract class OneSignalNotification {
 
     protected static final int NOTIFICATION_ID_DO_NOT_COLLAPSE = -1;
 
-    public static final int NOTIFICATION_ID_ANONYM = 10;
-    public static final int NOTIFICATION_ID_FRIEND_REQUEST = 20;
-    public static final int NOTIFICATION_ID_MESSAGE = 30;
-    public static final int NOTIFICATION_ID_LOVE = 40;
-    public static final int NOTIFICATION_ID_COMMENT = 50;
-    public static final int NOTIFICATION_ID_MENTION = 60;
-    public static final int NOTIFICATION_ID_GROUP = 70;
-    public static int NOTIFICATION_ID_INFO_INTERVAL = 1000;
+    public static final int NOTIFICATION_ID_ANONYM = 100;
+    public static final int NOTIFICATION_ID_FRIEND_REQUEST = 200;
+    public static final int NOTIFICATION_ID_MESSAGE = 300;
+    public static final int NOTIFICATION_ID_LOVE = 400;
+    public static final int NOTIFICATION_ID_COMMENT = 500;
+    public static final int NOTIFICATION_ID_MENTION = 600;
+    public static final int NOTIFICATION_ID_GROUP = 700;
+    public static final int NOTIFICATION_ID_ANSWERS = 800;
+    public static int NOTIFICATION_ID_INFO_INTERVAL = 10000;
 
     public static final String LAUNCH_URL_PARAM_SEPARATOR = ":";
     public static final String LAUNCH_URL_PREFIX = "FetLifeApp://";
@@ -50,7 +51,7 @@ public abstract class OneSignalNotification {
             contentIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_RECEIVER_FOREGROUND);
             contentIntent.setData(Uri.parse(launchUrl));
         } else {
-            contentIntent = TurboLinksViewActivity.createIntent(context,"notifications",context.getString(R.string.title_activity_notifications),true);
+            contentIntent = TurboLinksViewActivity.createIntent(context,"notifications",context.getString(R.string.title_activity_notifications), true, null, true);
             contentIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
             contentIntent.putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE,notificationType);
         }

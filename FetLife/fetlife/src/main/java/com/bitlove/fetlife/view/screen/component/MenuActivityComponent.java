@@ -1,24 +1,22 @@
 package com.bitlove.fetlife.view.screen.component;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+
+import com.bitlove.fetlife.session.UserSessionManager;
 import com.google.android.material.navigation.NavigationView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
 
-import android.os.Looper;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.bitlove.fetlife.R;
@@ -27,9 +25,7 @@ import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.view.dialog.PictureUploadSelectionDialog;
 import com.bitlove.fetlife.view.dialog.VideoUploadSelectionDialog;
 import com.bitlove.fetlife.view.screen.BaseActivity;
-import com.bitlove.fetlife.view.screen.resource.ConversationsActivity;
 import com.bitlove.fetlife.view.screen.resource.EventsActivity;
-import com.bitlove.fetlife.view.screen.resource.FeedActivity;
 import com.bitlove.fetlife.view.screen.resource.ExploreActivity;
 import com.bitlove.fetlife.view.screen.resource.NotificationHistoryActivity;
 import com.bitlove.fetlife.view.screen.resource.groups.GroupsActivity;
@@ -188,7 +184,7 @@ public class MenuActivityComponent extends ActivityComponent {
 //            logEvent("nav_introduce");
 //            AddNfcFriendActivity.startActivity(menuActivity);
         } else if (id == R.id.nav_about) {
-            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"android",menuActivity.getString(R.string.title_activity_about),false);
+            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"android",menuActivity.getString(R.string.title_activity_about), true, null, false);
         } else if (id == R.id.nav_relnotes) {
             pendingNavigationIntent = ReleaseNotesActivity.createIntent(menuActivity);
             menuActivity.setFinishAfterNavigation(true);
@@ -226,18 +222,18 @@ public class MenuActivityComponent extends ActivityComponent {
             pendingNavigationIntent = ExploreActivity.createIntent(menuActivity, ExploreActivity.Explore.KINKY_AND_POPULAR);
             menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_support) {
-            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"support",menuActivity.getString(R.string.title_activity_support),false);
+            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"support",menuActivity.getString(R.string.title_activity_support), true, null, false);
             menuActivity.setFinishAfterNavigation(true);
 //        } else if (id == R.id.nav_search) {
 //            TurboLinksViewActivity.startActivity(menuActivity,"search",menuActivity.getString(R.string.title_activity_search));
         } else if (id == R.id.nav_ads) {
-            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"ads",menuActivity.getString(R.string.title_activity_ads),false);
+            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"ads",menuActivity.getString(R.string.title_activity_ads), true, null, false);
             menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_glossary) {
-            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"glossary",menuActivity.getString(R.string.title_activity_glossary),false);
+            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"glossary",menuActivity.getString(R.string.title_activity_glossary), true, null, false);
             menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_team) {
-            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"team",menuActivity.getString(R.string.title_activity_team),false);
+            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"team",menuActivity.getString(R.string.title_activity_team), true, null, false);
             menuActivity.setFinishAfterNavigation(true);
 //        } else if (id == R.id.nav_wallpapers) {
 //            TurboLinksViewActivity.startActivity(menuActivity,"wallpapers",menuActivity.getString(R.string.title_activity_wallpapers));
@@ -248,6 +244,9 @@ public class MenuActivityComponent extends ActivityComponent {
             } else {
                 requestLocationPermission(BaseActivity.PERMISSION_REQUEST_LOCATION);
             }
+        } else if (id == R.id.nav_questions) {
+            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"q",menuActivity.getString(R.string.title_activity_questions), true, TurboLinksViewActivity.FAB_LINK_NEW_QUESTION,false);
+            menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_groups) {
            pendingNavigationIntent = GroupsActivity.createIntent(menuActivity,false);
             menuActivity.setFinishAfterNavigation(true);

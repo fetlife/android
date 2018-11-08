@@ -29,6 +29,13 @@
 
             <p><b><br/>Version History</b></p>
 
+            <p/>v2.18.0<br/>
+                    <ul>
+                        <li>Make Event description selectable</li>
+                        <li>Bug fixes</li>
+                        <li>Ask the Community (In progress)</li>
+                    </ul>
+
             <p/>v2.17.15<br/>
                     <ul>
                         <li>Notification counter improvements</li>
@@ -411,7 +418,8 @@
     <string name="settings_summary_notification_comments_enabled">Enable Notifications about your stuff commented by other users</string>
     <string name="settings_title_notification_mentions_enabled">Mention Notifications</string>
     <string name="settings_summary_notification_mentions_enabled">Enable Notifications about you got mentioned by other users</string>
-
+    <string name="settings_title_notification_new_answers_enabled">New Answer Notifications</string>
+    <string name="settings_summary_notification_new_answers_enabled">Enable Notifications about new answers to your Ask the Community questions</string>
 
     <string name="settings_title_notification_info_enabled">Info Notifications</string>
     <string name="settings_summary_notification_info_enabled">Enable Notifications for information messages</string>
@@ -819,10 +827,15 @@
     <string name="title_fragment_member_serach">Search</string>
     <string name="noification_title_new_message">New private message</string>
     <string name="noification_title_new_messages">%1$d new private messages</string>
+    <string name="noification_summary_title_new_answer">You have new answer from the community</string>
+    <string name="noification_summary_title_new_answers">You have %1$d new answers from the community</string>
+    <string name="noification_title_new_answers">Ask the community</string>
     <string name="noification_title_new_group_message">New group comment</string>
     <string name="noification_title_new_group_messages">%1$d new group comments</string>
     <string name="noification_text_new_message">New message from %1$s</string>
     <string name="noification_text_new_messages">%1$d messages from %2$s</string>
+    <string name="noification_text_new_answer">You have a new answer to your question</string>
+    <string name="noification_text_new_answers">You have %1$d new answers to your question</string>
     <string name="noification_text_new_group_message">New comment in %1$s</string>
     <string name="noification_text_new_group_messages">%1$d comments in %2$s</string>
     <string name="noification_title_new_friendrequest">New Friend Request</string>
@@ -865,6 +878,7 @@
     <string name="title_fragment_groups">Groups</string>
     <string name="title_fragment_group_serach">Search</string>
     <string name="menu_groups">Groups</string>
+    <string name="menu_questions">Ask the Community</string>
     <string name="title_activity_groups">Groups</string>
     <string name="menu_support">Support FetLife</string>
     <string name="menu_glossary">Kinktionary</string>
@@ -874,6 +888,8 @@
     <string name="title_activity_support">Support FetLife</string>
     <string name="title_activity_ads">Advertise on FetLife</string>
     <string name="title_activity_glossary">Kinktionary</string>
+    <string name="title_activity_questions">Ask the Community</string>
+    <string name="title_activity_new_question">New question</string>
     <string name="title_fragment_group_discussions">Discussions</string>
     <string name="title_fragment_group_members">Members</string>
     <string name="action_share">Share</string>
@@ -918,5 +934,6 @@
     <string name="title_activity_wallpapers">Wallpapers</string>
     <string name="notification_chanel_name_default">General Notifications</string>
     <string name="notification_chanel_description_default">As of now all App notifications belong to this category</string>
+    <string name="title_activity_review_questions">Review community content</string>
 
 </resources>
