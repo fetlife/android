@@ -157,6 +157,8 @@ import retrofit2.Response;
 //TODO use thread executor instead of new threads
 public class FetLifeApiIntentService extends IntentService {
 
+    private static final String FEATURE_QUESTIONS = "questions";
+
     public FetLifeApiIntentService() {
         super(FetLifeApplication.getInstance().getPackageName());
     }
@@ -619,16 +621,15 @@ public class FetLifeApiIntentService extends IntentService {
     }
 
     private int sendCheck4QuestionsRequests() throws IOException {
-        Call<ResponseBody> sendCheck4QuestionsCall = getFetLifeApplication().getFetLifeService().getFetLifeApi().check4QuestionsFeature(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken());
-        Response<ResponseBody> sendCheck4QuestionsResponse = sendCheck4QuestionsCall.execute();
-        int result;
+        Call<List<String>> sendCheck4QuestionsCall = getFetLifeApplication().getFetLifeService().getFetLifeApi().check4QuestionsFeature(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken());
+        Response<List<String>> sendCheck4QuestionsResponse = sendCheck4QuestionsCall.execute();
         if (sendCheck4QuestionsResponse.isSuccessful()) {
+            boolean questionsEnabled = (Collections.binarySearch(sendCheck4QuestionsResponse.body(),FEATURE_QUESTIONS) >= 0);
+            getFetLifeApplication().getUserSessionManager().getActiveUserPreferences().edit().putBoolean(UserSessionManager.PREF_KEY_QUESTIONS_ENABLED,questionsEnabled).apply();
+            return 0;
         } else {
-//            return Integer.MIN_VALUE;
+            return Integer.MAX_VALUE;
         }
-        boolean questionsEnabled = true;
-        getFetLifeApplication().getUserSessionManager().getActiveUserPreferences().edit().putBoolean(UserSessionManager.PREF_KEY_QUESTIONS_ENABLED,questionsEnabled).apply();
-        return 0;
     }
 
     private int checkForUpdates(String... params) throws IOException {
