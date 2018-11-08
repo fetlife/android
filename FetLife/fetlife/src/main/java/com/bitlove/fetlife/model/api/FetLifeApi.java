@@ -229,5 +229,8 @@ public interface FetLifeApi {
     @GET("/api/v2/ids")
     Call<AppId> getAppId(@Header("Authorization") String authHeader, @Query("id_to_obfuscate") String serverUrl);
 
+    @GET("/api/v2/answers")
+    Call<ResponseBody> check4QuestionsFeature(@Header("Authorization") String authHeader);
+
 
 }

@@ -31,8 +31,8 @@ android {
         targetSdkVersion 25
         multiDexEnabled true
 
-        versionCode 21715
-        versionName "2.17.15"
+        versionCode 21800
+        versionName "2.18.00"
 
         vectorDrawables.useSupportLibrary = true
 

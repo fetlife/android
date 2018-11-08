@@ -34,6 +34,7 @@ public class UserSessionManager {
     public static final String PREF_KEY_MESSAGE_COUNT = "PREF_KEY_MESSAGE_COUNT";
     public static final String PREF_KEY_REQUEST_COUNT = "PREF_KEY_REQUEST_COUNT";
     public static final String PREF_KEY_NOTIF_COUNT = "PREF_KEY_NOTIF_COUNT";
+    public static final String PREF_KEY_QUESTIONS_ENABLED = "PREF_KEY_QUESTIONS_ENABLED";
 
     private final FetLifeApplication fetLifeApplication;
 

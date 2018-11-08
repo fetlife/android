@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bitlove.fetlife.event.NotificationCountUpdatedEvent;
+import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.session.UserSessionManager;
@@ -111,6 +112,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
         onCreateActivityComponents();
         onSetContentView();
+
+
+        setupSideMenu();
 
 //        getWindow().setEnterTransition(makeExcludeTransition());
 //        getWindow().setExitTransition(makeExcludeTransition());
@@ -288,6 +292,24 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         }
     }
 
+    private void setupSideMenu() {
+        final NavigationView navigationView = findViewById(R.id.nav_view);
+
+        if (navigationView != null) {
+            boolean showQuestions = getFetLifeApplication().getUserSessionManager().getActiveUserPreferences().getBoolean(UserSessionManager.PREF_KEY_QUESTIONS_ENABLED,false);
+            MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_questions);
+            if (menuItem != null) {
+                menuItem.setVisible(showQuestions);
+            }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    navigationView.invalidate();
+                }
+            });
+        }
+    }
+
     private void initNoActivePadding(BottomNavigationView bottomNavigation) {
         BottomNavigationMenuView bottomNavigationMenuView =
                 (BottomNavigationMenuView) bottomNavigation.getChildAt(0);
@@ -353,6 +375,13 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
     public void setPendingNavigationIntent(Intent pendingNavigationIntent) {
         this.pendingNavigationIntent = pendingNavigationIntent;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onCheck4QuestionsFeatureFinished(ServiceCallFinishedEvent serviceCallFinishedEvent) {
+        if (FetLifeApiIntentService.ACTION_APICALL_CHECK_4_QUESTIONS.equalsIgnoreCase(serviceCallFinishedEvent.getServiceCallAction())) {
+            setupSideMenu();
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

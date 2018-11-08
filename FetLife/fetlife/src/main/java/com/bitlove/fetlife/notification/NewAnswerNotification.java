@@ -132,7 +132,7 @@ public class NewAnswerNotification extends OneSignalNotification {
         Intent contentIntent = TurboLinksViewActivity.createIntent(context,launchUrl.replaceAll("//fetlife.com","//app.fetlife.com"),null, false, null,false);
         contentIntent.putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE,getNotificationType());
 //        return PendingIntent.getActivity(context, requestCode, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        return TaskStackBuilder.create(context).addNextIntentWithParentStack(baseIntent).addNextIntent(contentIntent).getPendingIntent(requestCode,PendingIntent.FLAG_UPDATE_CURRENT);
+        return TaskStackBuilder.create(context).addNextIntentWithParentStack(baseIntent).addNextIntent(contentIntent).getPendingIntent(requestCode,PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
     @Override
