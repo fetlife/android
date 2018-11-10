@@ -27,7 +27,7 @@ public class LoveNotification extends OneSignalNotification {
 
     public LoveNotification(String title, String message, String launchUrl, JSONObject additionalData, String id, String group) {
         super(title, message,launchUrl,additionalData,id, group);
-        notificationType = NotificationParser.JSON_VALUE_TYPE_CONVERSATION_RESPONSE;
+        notificationType = NotificationParser.JSON_VALUE_TYPE_LOVE_PICTURE;
     }
 
     @Override

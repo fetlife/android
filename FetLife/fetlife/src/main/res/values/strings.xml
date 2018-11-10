@@ -29,6 +29,12 @@
 
             <p><b><br/>Version History</b></p>
 
+            <p/>v2.18.2<br/>
+                    <ul>
+                        <li>Make profile description selectable</li>
+                        <li>Bug fixes</li>
+                    </ul>
+
             <p/>v2.18.0<br/>
                     <ul>
                         <li>Make Event description selectable</li>
