@@ -1,10 +1,12 @@
 package com.bitlove.fetlife.notification;
 
 import android.app.Activity;
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -130,28 +132,71 @@ public class GroupMessageNotification extends OneSignalNotification {
         synchronized (notifications) {
             notifications.add(this);
 
-            NotificationCompat.Builder notificationBuilder = getDefaultNotificationBuilder(fetLifeApplication);
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(fetLifeApplication);
+            NotificationCompat.Builder summaryNotificationBuilder = getDefaultNotificationBuilder(fetLifeApplication);
 
-            List<String> messages = getGroupedMessageTexts(fetLifeApplication, notifications);
+            List<Notification> groupedGroupMessageNotifications = getGroupedNotifications(fetLifeApplication, notifications);
+
+            summaryNotificationBuilder
+                    .setGroupSummary(true)
+                    .setGroup(Integer.toString(OneSignalNotification.NOTIFICATION_ID_GROUP))
+                    .setContentTitle(title)
+                    .setContentText(title);
+
             String title = notifications.size() == 1 ? fetLifeApplication.getString(R.string.noification_title_new_group_message) : fetLifeApplication.getString(R.string.noification_title_new_group_messages,notifications.size());
-            String firstMessage = messages.get(0);
-
-            notificationBuilder.setContentTitle(title).setContentText(firstMessage);
 
             NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-            inboxStyle.setBigContentTitle(title);
-            //TODO: localization
-            inboxStyle.setSummaryText("…");
-            for (String message : messages) {
-                inboxStyle.addLine(message);
-            }
-            notificationBuilder.setStyle(inboxStyle);
+            inboxStyle.setBigContentTitle(fetLifeApplication.getString(R.string.noification_title_groups));
+            inboxStyle.setSummaryText(title);
 
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(fetLifeApplication);
-            notificationManager.notify(OneSignalNotification.NOTIFICATION_ID_GROUP, notificationBuilder.build());
+            for (Notification notification : groupedGroupMessageNotifications) {
+                inboxStyle.addLine(notification.extras.getString(Notification.EXTRA_TITLE));
+            }
+
+            summaryNotificationBuilder.setStyle(inboxStyle);
+            summaryNotificationBuilder.setContentIntent(null);
+
+            notificationManager.notify(OneSignalNotification.NOTIFICATION_ID_GROUP, summaryNotificationBuilder.build());
+
+            int i = OneSignalNotification.NOTIFICATION_ID_GROUP + 1;
+            for (Notification notification : groupedGroupMessageNotifications) {
+                notificationManager.notify(i++,notification);
+            }
 
             onNotificationDisplayed(fetLifeApplication,NOTIFICATION_ID_DO_NOT_COLLAPSE);
         }
+    }
+
+    private List<Notification> getGroupedNotifications(FetLifeApplication fetLifeApplication, List<GroupMessageNotification> newAnswerNotifications) {
+        LinkedHashMap<String,Integer> newAnswerGroups = new LinkedHashMap<>();
+        LinkedHashMap<String,String> newAnswerUrls = new LinkedHashMap<>();
+        for (NewAnswerNotification notification : newAnswerNotifications) {
+            if (launchUrl == null) {
+                continue;
+            }
+            List<String> launchUriSegments = Uri.parse(notification.launchUrl).getPathSegments();
+            String groupId = launchUriSegments.size() > 1 ? launchUriSegments.get(1) : "";
+            Integer newAnswerCount = newAnswerGroups.get(groupId);
+            if (newAnswerCount == null) {
+                newAnswerCount = 1;
+            } else {
+                newAnswerCount++;
+            }
+            newAnswerGroups.put(groupId,newAnswerCount);
+            newAnswerUrls.put(groupId,notification.launchUrl);
+        }
+        List<Notification> notifications = new ArrayList<>();
+        int i = OneSignalNotification.NOTIFICATION_ID_ANSWERS + 1;
+        for (Map.Entry<String,Integer> newAnswerGroup : newAnswerGroups.entrySet()) {
+            NotificationCompat.Builder notificationBuilder = getDefaultNotificationBuilder(fetLifeApplication);
+            notificationBuilder.setContentIntent(getPendingIntent(fetLifeApplication,newAnswerUrls.get(newAnswerGroup.getKey()),i++));
+            notificationBuilder.setGroup(Integer.toString(OneSignalNotification.NOTIFICATION_ID_ANSWERS));
+            notificationBuilder.setContentTitle(fetLifeApplication.getString(R.string.noification_title_new_answers));
+            notificationBuilder.setContentText(new Integer(1).equals(newAnswerGroup.getValue()) ? fetLifeApplication.getString(R.string.noification_text_new_answer) : fetLifeApplication.getString(R.string.noification_text_new_answers,newAnswerGroup.getValue()));
+            notifications.add(notificationBuilder.build());
+        }
+        Collections.reverse(notifications);
+        return notifications;
     }
 
     @Override
