@@ -33,7 +33,7 @@ public class MessageNotification extends OneSignalNotification {
     protected String nickname;
 
     public MessageNotification(String title, String message, String launchUrl, JSONObject additionalData, String id, String group) {
-        super(title, message,launchUrl,additionalData,id, group);
+        super(id, title, message,launchUrl, group, additionalData);
         conversationId = additionalData.optString(NotificationParser.JSON_FIELD_STRING_CONVERSATIONID);
         nickname = additionalData.optString(NotificationParser.JSON_FIELD_STRING_NICKNAME);
         notificationType = NotificationParser.JSON_VALUE_TYPE_CONVERSATION_RESPONSE;

@@ -1,12 +1,12 @@
-package com.bitlove.fetlife.notification;
+package com.bitlove.fetlife.inbound.onesignal.update;
 
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 
 import com.bitlove.fetlife.FetLifeApplication;
+import com.bitlove.fetlife.notification.InfoNotification;
 import com.bitlove.fetlife.util.ApkUtil;
-import com.bitlove.fetlife.view.screen.resource.groups.GroupMessagesActivity;
 
 import org.json.JSONObject;
 

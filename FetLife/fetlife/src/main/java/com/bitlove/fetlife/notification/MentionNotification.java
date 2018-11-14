@@ -26,7 +26,7 @@ public class MentionNotification extends OneSignalNotification {
     private static List<MentionNotification> notifications = new ArrayList<MentionNotification>();
 
     public MentionNotification(String title, String message, String launchUrl, JSONObject additionalData, String id, String group) {
-        super(title, message,launchUrl,additionalData,id, group);
+        super(id, title, message,launchUrl, group, additionalData);
         notificationType = NotificationParser.JSON_VALUE_TYPE_CONVERSATION_RESPONSE;
     }
 

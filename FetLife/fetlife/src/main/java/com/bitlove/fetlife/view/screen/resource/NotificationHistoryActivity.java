@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+
+import com.crashlytics.android.Crashlytics;
 import com.google.android.material.navigation.NavigationView;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,6 +26,8 @@ import com.raizlabs.android.dbflow.sql.language.Delete;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.lang.reflect.Method;
 
 public class NotificationHistoryActivity extends ResourceListActivity<NotificationHistoryItem>
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -79,7 +83,7 @@ public class NotificationHistoryActivity extends ResourceListActivity<Notificati
         String launchUrl = notificationHistoryItem.getLaunchUrl();
         if (launchUrl != null && launchUrl.trim().length() != 0) {
             if (launchUrl.startsWith(OneSignalNotification.LAUNCH_URL_PREFIX)) {
-                OneSignalNotification.handleInnerLaunchUrl(this,launchUrl);
+                handleInnerLaunchUrl(this,launchUrl);
             } else {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -116,6 +120,17 @@ public class NotificationHistoryActivity extends ResourceListActivity<Notificati
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void handleInnerLaunchUrl(Context context,String launchUrl) {
+        try {
+            String baseString = launchUrl.substring(OneSignalNotification.LAUNCH_URL_PREFIX.length());
+            String className = baseString.substring(0,baseString.indexOf(OneSignalNotification.LAUNCH_URL_PARAM_SEPARATOR));
+            Method method = Class.forName(className).getMethod("handleInnerLaunchUrl", Context.class, String.class);
+            method.invoke(null,context,launchUrl);
+        } catch (Throwable t) {
+            Crashlytics.logException(t);
         }
     }
 }

@@ -28,6 +28,8 @@ import java.lang.reflect.Method;
 
 public abstract class OneSignalNotification {
 
+    public static final String NOTIFICATION_CHANNEL_DEFUALT = "NOTIFICATION_CHANNEL_DEFUALT";
+
     protected static final int NOTIFICATION_ID_DO_NOT_COLLAPSE = -1;
 
     public static final int NOTIFICATION_ID_ANONYM = 100;
@@ -38,7 +40,7 @@ public abstract class OneSignalNotification {
     public static final int NOTIFICATION_ID_MENTION = 600;
     public static final int NOTIFICATION_ID_GROUP = 700;
     public static final int NOTIFICATION_ID_ANSWERS = 800;
-    public static int NOTIFICATION_ID_INFO_INTERVAL = 10000;
+    public static int NOTIFICATION_ID_INFO_INTERVAL = 1000;
 
     public static final String LAUNCH_URL_PARAM_SEPARATOR = ":";
     public static final String LAUNCH_URL_PREFIX = "FetLifeApp://";
@@ -87,7 +89,7 @@ public abstract class OneSignalNotification {
 
     protected String notificationType;
 
-    public OneSignalNotification(String title, String message, String launchUrl, JSONObject additionalData, String id, String group) {
+    public OneSignalNotification(String id, String title, String message, String launchUrl, String group, JSONObject additionalData) {
         this.title = title;
         this.message = message;
         this.launchUrl = launchUrl;
@@ -124,14 +126,14 @@ public abstract class OneSignalNotification {
             CharSequence name = fetLifeApplication.getString(R.string.notification_chanel_name_default);
             String description = fetLifeApplication.getString(R.string.notification_chanel_description_default);
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(FetLifeApplication.NOTIFICATION_CHANNEL_DEFUALT, name, importance);
+            NotificationChannel channel = new NotificationChannel(OneSignalNotification.NOTIFICATION_CHANNEL_DEFUALT, name, importance);
             channel.setDescription(description);
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
             NotificationManager notificationManager = fetLifeApplication.getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(fetLifeApplication,FetLifeApplication.NOTIFICATION_CHANNEL_DEFUALT)
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(fetLifeApplication,NOTIFICATION_CHANNEL_DEFUALT)
                 .setLargeIcon(BitmapFactory.decodeResource(fetLifeApplication.getResources(), R.mipmap.app_icon_kinky))
                 .setSmallIcon(R.drawable.ic_stat_onesignal_default)
                 .setAutoCancel(true)
@@ -141,7 +143,7 @@ public abstract class OneSignalNotification {
                 .setSound(fetLifeApplication.getUserSessionManager().getNotificationRingtone());
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            notificationBuilder.setChannelId(FetLifeApplication.NOTIFICATION_CHANNEL_DEFUALT);
+            notificationBuilder.setChannelId(NOTIFICATION_CHANNEL_DEFUALT);
         }
 
         long[] vibrationSetting = fetLifeApplication.getUserSessionManager().getNotificationVibration();

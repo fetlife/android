@@ -18,7 +18,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.bitlove.fetlife.inbound.ActionCable;
-import com.bitlove.fetlife.inbound.OnNotificationOpenedHandler;
+import com.bitlove.fetlife.inbound.onesignal.OnNotificationOpenedHandler;
 import com.bitlove.fetlife.model.api.FetLifeService;
 import com.bitlove.fetlife.model.api.GitHubService;
 import com.bitlove.fetlife.model.api.TLSSocketFactory;
@@ -76,7 +76,6 @@ public class FetLifeApplication extends MultiDexApplication {
     private static final long WAITING_FOR_RESULT_LOGOUT_DELAY_MILLIS = 60 * 1000;
 
     private static final String PREFIX_FILE_DB = "db_";
-    public static final String NOTIFICATION_CHANNEL_DEFUALT = "NOTIFICATION_CHANNEL_DEFUALT";
 
     //****
     //App singleton behaviour to make it accessible where dependency injection is not possible

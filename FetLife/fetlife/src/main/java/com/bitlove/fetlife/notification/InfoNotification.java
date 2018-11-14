@@ -26,7 +26,7 @@ public class InfoNotification extends OneSignalNotification {
     protected String collapseId;
 
     public InfoNotification(String title, String message, String launchUrl, JSONObject additionalData, String id, String group) {
-        super(title, message,launchUrl,additionalData,id,group);
+        super(id, title, message,launchUrl, group, additionalData);
         collapseId = additionalData != null ? additionalData.optString(NotificationParser.JSON_FIELD_STRING_COLLAPSE_ID) : null;
         notificationType = BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE;
     }

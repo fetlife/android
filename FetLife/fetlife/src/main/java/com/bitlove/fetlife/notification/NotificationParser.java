@@ -192,7 +192,7 @@ public class NotificationParser {
             case JSON_VALUE_TYPE_MENTION_GROUP_DISCUSSION:
             case JSON_VALUE_TYPE_MENTION_GROUP_DISCUSSION_COMMENT:
             case JSON_VALUE_TYPE_COMMENT_GROUP:
-                return new GroupMessageNotification(title, message, launchUrl, additionalData, id, group);
+                return new GroupMessageNotification(id, title, message, launchUrl, group, additionalData);
             case JSON_VALUE_TYPE_FRIEND_REQUEST:
             case JSON_VALUE_TYPE_LEGACY_FRIEND_REQUEST_CREATED:
                 return new FriendRequestNotification(title, message, launchUrl, additionalData, id, group);

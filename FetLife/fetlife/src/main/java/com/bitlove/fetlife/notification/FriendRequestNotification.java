@@ -22,7 +22,7 @@ public class FriendRequestNotification extends OneSignalNotification {
     private static List<FriendRequestNotification> notifications = new ArrayList<FriendRequestNotification>();
 
     public FriendRequestNotification(String title, String message, String launchUrl, JSONObject additionalData, String id, String group) {
-        super(title, message,launchUrl,additionalData,id,group);
+        super(id, title, message,launchUrl, group, additionalData);
         notificationType = NotificationParser.JSON_VALUE_TYPE_FRIEND_REQUEST;
     }
 

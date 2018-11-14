@@ -936,5 +936,7 @@
     <string name="notification_chanel_description_default">As of now all App notifications belong to this category</string>
     <string name="title_activity_review_questions">Review community content</string>
     <string name="noification_title_groups">Group Conversations</string>
+    <string name="notification_chanel_name_questions"><![CDATA[Q&A Notifications]]></string>
+    <string name="notification_chanel_description_questions"><![CDATA[Notifications related to FetLife\'s Q&A section]]></string>
 
 </resources>

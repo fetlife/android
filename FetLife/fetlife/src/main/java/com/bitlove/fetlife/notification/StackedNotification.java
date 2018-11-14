@@ -7,7 +7,6 @@ import android.os.Build;
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.view.screen.resource.ConversationsActivity;
 import com.bitlove.fetlife.view.screen.resource.MessagesActivity;
-import com.bitlove.fetlife.view.screen.resource.NotificationHistoryActivity;
 
 import org.json.JSONObject;
 
@@ -21,7 +20,7 @@ public class StackedNotification extends OneSignalNotification {
     protected List<OneSignalNotification> subNotificaions = new ArrayList<>();
 
     public StackedNotification(String title, String message, String launchUrl, JSONObject additionalData, String id, String group, List<OneSignalNotification> subNotificaions) {
-        super(title, message, launchUrl, additionalData, id, group != null ? group : "");
+        super(id, title, message, launchUrl, group != null ? group : "", additionalData);
         this.subNotificaions = subNotificaions;
     }
 

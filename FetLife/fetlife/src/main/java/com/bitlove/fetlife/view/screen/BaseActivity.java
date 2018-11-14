@@ -68,6 +68,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     public static final int PERMISSION_REQUEST_LOCATION = 30000;
 
     public static final String EXTRA_NOTIFICATION_SOURCE_TYPE = "EXTRA_NOTIFICATION_SOURCE_TYPE";
+    public static final String EXTRA_NOTIFICATION_GROUP_ID = "EXTRA_NOTIFICATION_GROUP_ID";
     public static final String EXTRA_SELECTED_BOTTOM_NAV_ITEM = "EXTRA_SELECTED_BOTTOM_NAV_ITEM";
     public static final String EXTRA_FAB_LINK = "EXTRA_FAB_LINK";
     public static final String EXTRA_HAS_BOTTOM_BAR = "EXTRA_HAS_BOTTOM_BAR";

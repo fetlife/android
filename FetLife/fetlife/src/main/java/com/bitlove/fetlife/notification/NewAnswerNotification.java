@@ -6,14 +6,11 @@ import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 
-import com.bitlove.fetlife.BuildConfig;
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.model.pojos.fetlife.db.NotificationHistoryItem;
 import com.bitlove.fetlife.view.screen.BaseActivity;
-import com.bitlove.fetlife.view.screen.resource.ConversationsActivity;
 import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity;
 
 import org.json.JSONObject;
@@ -23,7 +20,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -33,7 +29,7 @@ public class NewAnswerNotification extends OneSignalNotification {
     private static List<NewAnswerNotification> notifications = new ArrayList<>();
 
     public NewAnswerNotification(String title, String message, String launchUrl, JSONObject additionalData, String id, String group) {
-        super(title, message, launchUrl, additionalData, id, group);
+        super(id, title, message, launchUrl, group, additionalData);
         notificationType = NotificationParser.JSON_VALUE_TYPE_QUESTIONS_NEW_ANSWER;
     }
 
