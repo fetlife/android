@@ -24,6 +24,7 @@ import java.util.Map;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+@Deprecated
 public class NewAnswerNotification extends OneSignalNotification {
 
     private static List<NewAnswerNotification> notifications = new ArrayList<>();

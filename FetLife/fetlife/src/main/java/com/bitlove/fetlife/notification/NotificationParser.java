@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class NotificationParser {
 
     public static final String JSON_FIELD_STRING_LAUNCHURL = "launchURL";

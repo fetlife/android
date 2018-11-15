@@ -35,6 +35,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated
 public class GroupMessageNotification extends OneSignalNotification {
 
     private static List<GroupMessageNotification> notifications = new ArrayList<GroupMessageNotification>();

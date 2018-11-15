@@ -17,6 +17,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class FriendRequestNotification extends OneSignalNotification {
 
     private static List<FriendRequestNotification> notifications = new ArrayList<FriendRequestNotification>();

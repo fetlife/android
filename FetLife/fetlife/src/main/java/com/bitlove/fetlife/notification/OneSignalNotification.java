@@ -26,6 +26,7 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Method;
 
+@Deprecated
 public abstract class OneSignalNotification {
 
     public static final String NOTIFICATION_CHANNEL_DEFUALT = "NOTIFICATION_CHANNEL_DEFUALT";

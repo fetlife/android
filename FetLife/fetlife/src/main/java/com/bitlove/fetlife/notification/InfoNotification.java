@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class InfoNotification extends OneSignalNotification {
 
     private static List<InfoNotification> notifications = new ArrayList<InfoNotification>();

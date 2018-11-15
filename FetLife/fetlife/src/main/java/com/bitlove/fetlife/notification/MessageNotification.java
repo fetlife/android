@@ -25,6 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated
 public class MessageNotification extends OneSignalNotification {
 
     private static List<MessageNotification> notifications = new ArrayList<MessageNotification>();

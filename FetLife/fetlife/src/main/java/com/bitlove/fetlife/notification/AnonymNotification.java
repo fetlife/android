@@ -10,6 +10,7 @@ import com.bitlove.fetlife.R;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class AnonymNotification {
 
     private static List<AnonymNotification> notifications = new ArrayList<AnonymNotification>();

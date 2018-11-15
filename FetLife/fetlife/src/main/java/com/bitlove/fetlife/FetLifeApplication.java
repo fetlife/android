@@ -1,8 +1,6 @@
 package com.bitlove.fetlife;
 
 import android.app.Activity;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -18,7 +16,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.bitlove.fetlife.inbound.ActionCable;
-import com.bitlove.fetlife.inbound.onesignal.OnNotificationOpenedHandler;
 import com.bitlove.fetlife.model.api.FetLifeService;
 import com.bitlove.fetlife.model.api.GitHubService;
 import com.bitlove.fetlife.model.api.TLSSocketFactory;
@@ -152,7 +149,7 @@ public class FetLifeApplication extends MultiDexApplication {
         Thread.setDefaultUncaughtExceptionHandler(new FetLifeUncaughtExceptionHandler(Thread.getDefaultUncaughtExceptionHandler(),restartIntent));
 
         //Init push notifications
-        OneSignal.startInit(this).inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification).setNotificationOpenedHandler(new OnNotificationOpenedHandler()).init();
+        OneSignal.startInit(this).inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification).init();
 
         //Register activity call back to keep track of currently displayed Activity
         registerActivityLifecycleCallbacks(new ForegroundActivityObserver());

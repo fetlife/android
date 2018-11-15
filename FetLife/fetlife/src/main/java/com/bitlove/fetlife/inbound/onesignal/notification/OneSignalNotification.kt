@@ -7,27 +7,24 @@ import android.app.PendingIntent
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.bitlove.fetlife.BuildConfig
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.model.pojos.fetlife.db.NotificationHistoryItem
-import com.bitlove.fetlife.notification.NotificationParser
 import com.bitlove.fetlife.util.AppUtil
 import com.bitlove.fetlife.util.NotificationUtil
 import org.json.JSONObject
 
-//TODO clear notif, launch url substring as id, anonym, deleteintent
+//TODO anonym, deleteintent, inner launches, move hardcoded urls
 abstract class OneSignalNotification(val notificationType: String,
                                      val notificationIdRange: Int,
-                                     val title: String,
-                                     val message: String,
-                                     val launchUrl: String,
+                                     val title: String?,
+                                     val message: String?,
+                                     val launchUrl: String?,
                                      val mergeId: String?,
                                      val collapseId: String?,
-                                     val additionalData: JSONObject,
+                                     val additionalData: JSONObject?,
                                      private val preferenceKey: String?) {
 
     open fun getNotificationChannelId(): String = notificationType
@@ -38,8 +35,8 @@ abstract class OneSignalNotification(val notificationType: String,
     open fun getSummaryTitle(notificationCount: Int, context: Context): String? = null
     open fun getSummaryText(notificationCount: Int, context: Context): String? = null
 
-    open fun getNotificationTitle(oneSignalNotification: OneSignalNotification, count: Int, context: Context): String = oneSignalNotification.title
-    open fun getNotificationText(oneSignalNotification: OneSignalNotification, count: Int, context: Context): String = oneSignalNotification.message
+    open fun getNotificationTitle(oneSignalNotification: OneSignalNotification, count: Int, context: Context): String? = oneSignalNotification.title
+    open fun getNotificationText(oneSignalNotification: OneSignalNotification, count: Int, context: Context): String? = oneSignalNotification.message
     open fun getNotificationIntent(oneSignalNotification: OneSignalNotification, context: Context, order: Int): PendingIntent? = null
 
     open fun getNotificationItemLaunchUrl(): String? = launchUrl
@@ -63,12 +60,7 @@ abstract class OneSignalNotification(val notificationType: String,
             fetLifeApplication.getSystemService(NotificationManager::class.java)!!.createNotificationChannel(channel)
         }
 
-        //Collapsing notification with same collapseId
-        if (collapseId != null) {
-            val collapseIndex = liveNotifications.withIndex().firstOrNull { it.value.collapseId == collapseId }?.index
-            if (collapseIndex != null) NotificationUtil.cancelNotification(fetLifeApplication, notificationIdRange + collapseIndex + 1)
-        }
-        liveNotifications.add(this)
+        addToLiveNotifications(liveNotifications, fetLifeApplication)
 
         //Sending notifications
         val notificationManager = NotificationManagerCompat.from(fetLifeApplication)
@@ -101,6 +93,15 @@ abstract class OneSignalNotification(val notificationType: String,
 
         //Saving notification item
         saveNotificationItem(notificationIdRange)
+    }
+
+    open fun addToLiveNotifications(liveNotifications: MutableList<OneSignalNotification>, fetLifeApplication: FetLifeApplication) {
+        //Collapsing notification with same collapseId
+        if (collapseId != null) {
+            val collapseIndex = liveNotifications.withIndex().firstOrNull { it.value.collapseId == collapseId }?.index
+            if (collapseIndex != null) NotificationUtil.cancelNotification(fetLifeApplication, notificationIdRange + collapseIndex + 1)
+        }
+        liveNotifications.add(this)
     }
 
     open fun isEnabled(fetLifeApplication: FetLifeApplication): Boolean {
@@ -149,7 +150,7 @@ abstract class OneSignalNotification(val notificationType: String,
             this.launchUrl = getNotificationItemLaunchUrl()
             this.collapseId = this@OneSignalNotification.collapseId
             this.timeStamp = try {
-                (this@OneSignalNotification.additionalData.getDouble("sent_at") * 1000).toLong()
+                (this@OneSignalNotification.additionalData!!.getDouble("sent_at") * 1000)?.toLong()
             } catch (exception: Throwable) {
                 -1
             }

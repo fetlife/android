@@ -1,4 +1,4 @@
-package com.bitlove.fetlife.inbound.onesignal;
+package com.bitlove.fetlife.notification;
 
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.notification.OneSignalNotification;
