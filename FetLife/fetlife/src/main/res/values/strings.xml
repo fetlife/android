@@ -827,15 +827,10 @@
     <string name="title_fragment_member_serach">Search</string>
     <string name="noification_title_new_message">New private message</string>
     <string name="noification_title_new_messages">%1$d new private messages</string>
-    <string name="noification_summary_title_new_answer">You have new answer from the community</string>
-    <string name="noification_summary_title_new_answers">You have %1$d new answers from the community</string>
-    <string name="noification_title_new_answers">Ask the community</string>
     <string name="noification_title_new_group_message">New group comment</string>
     <string name="noification_title_new_group_messages">%1$d new group comments</string>
     <string name="noification_text_new_message">New message from %1$s</string>
     <string name="noification_text_new_messages">%1$d messages from %2$s</string>
-    <string name="noification_text_new_answer">You have a new answer to your question</string>
-    <string name="noification_text_new_answers">You have %1$d new answers to your question</string>
     <string name="noification_text_new_group_message">New comment in %1$s</string>
     <string name="noification_text_new_group_messages">%1$d comments in %2$s</string>
     <string name="noification_title_new_friendrequest">New Friend Request</string>
@@ -936,7 +931,13 @@
     <string name="notification_chanel_description_default">As of now all App notifications belong to this category</string>
     <string name="title_activity_review_questions">Review community content</string>
     <string name="noification_title_groups">Group Conversations</string>
-    <string name="notification_chanel_name_questions"><![CDATA[Q&A Notifications]]></string>
-    <string name="notification_chanel_description_questions"><![CDATA[Notifications related to FetLife\'s Q&A section]]></string>
+    <string name="notification_channel_name_questions"><![CDATA[Q&A Notifications]]></string>
+    <string name="notification_channel_description_questions"><![CDATA[Notifications related to FetLife\'s Q&A section]]></string>
+
+    <plurals name="noification_summary_title_questions_new_answer">
+        <item quantity="one">Your question has a new answer</item>
+        <item quantity="other">Your question has %d new answers</item>
+    </plurals>
+    <string name="noification_summary_text_questions_new_answer">Ask the community</string>
 
 </resources>

@@ -44,7 +44,7 @@ public class NewAnswerNotification extends OneSignalNotification {
         synchronized (notifications) {
             notifications.add(this);
 
-            String title = notifications.size() == 1 ? fetLifeApplication.getString(R.string.noification_summary_title_new_answer) : fetLifeApplication.getString(R.string.noification_summary_title_new_answers,notifications.size());
+            String title = notifications.size() == 1 ? "TEMP" : "TEMP";
 
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(fetLifeApplication);
             NotificationCompat.Builder summaryNotificationBuilder = getDefaultNotificationBuilder(fetLifeApplication);
@@ -58,7 +58,7 @@ public class NewAnswerNotification extends OneSignalNotification {
                     .setContentText(title);
 
             NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-            inboxStyle.setBigContentTitle(fetLifeApplication.getString(R.string.noification_title_new_answers));
+            inboxStyle.setBigContentTitle("TEMP");
             inboxStyle.setSummaryText(title);
 
             for (Notification notification : newAnswersNotifications) {
@@ -103,8 +103,8 @@ public class NewAnswerNotification extends OneSignalNotification {
             NotificationCompat.Builder notificationBuilder = getDefaultNotificationBuilder(fetLifeApplication);
             notificationBuilder.setContentIntent(getPendingIntent(fetLifeApplication,newAnswerUrls.get(newAnswerGroup.getKey()),i++));
             notificationBuilder.setGroup(Integer.toString(OneSignalNotification.NOTIFICATION_ID_ANSWERS));
-            notificationBuilder.setContentTitle(fetLifeApplication.getString(R.string.noification_title_new_answers));
-            notificationBuilder.setContentText(new Integer(1).equals(newAnswerGroup.getValue()) ? fetLifeApplication.getString(R.string.noification_text_new_answer) : fetLifeApplication.getString(R.string.noification_text_new_answers,newAnswerGroup.getValue()));
+            notificationBuilder.setContentTitle("TEMP");
+            notificationBuilder.setContentText(new Integer(1).equals(newAnswerGroup.getValue()) ? "TEMP" : "TEMP");
             notifications.add(notificationBuilder.build());
         }
         Collections.reverse(notifications);
@@ -143,6 +143,6 @@ public class NewAnswerNotification extends OneSignalNotification {
 
     @Override
     public String getAssociatedPreferenceKey(Context context) {
-        return context.getString(R.string.settings_key_notification_new_answers_enabled);
+        return context.getString(R.string.settings_key_notification_questions_enabled);
     }
 }

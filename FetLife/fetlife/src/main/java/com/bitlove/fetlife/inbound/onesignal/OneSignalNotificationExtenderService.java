@@ -2,10 +2,8 @@ package com.bitlove.fetlife.inbound.onesignal;
 
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.event.NotificationReceivedEvent;
+import com.bitlove.fetlife.inbound.onesignal.notification.OneSignalNotification;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
-import com.bitlove.fetlife.notification.AnonymNotification;
-import com.bitlove.fetlife.notification.NotificationParser;
-import com.bitlove.fetlife.notification.OneSignalNotification;
 import com.bitlove.fetlife.util.AppUtil;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
@@ -28,7 +26,7 @@ public class OneSignalNotificationExtenderService extends NotificationExtenderSe
         FetLifeApplication fetLifeApplication = getFetLifeApplication();
 
         //Parse the incoming notification so we can handle it accordingly based on its type
-        NotificationParser notificationParser = fetLifeApplication.getNotificationParser();
+        NotificationParser notificationParser = new NotificationParser();
         OneSignalNotification oneSignalNotification = notificationParser.parseNotification(fetLifeApplication, notification);
 
         //Look up for latest notification count and update the badge
@@ -40,12 +38,12 @@ public class OneSignalNotificationExtenderService extends NotificationExtenderSe
         //Check if the Notification was not fully handled internally and if it is not disabled by the user settings
         if (!handledInternally && oneSignalNotification.isEnabled(fetLifeApplication)) {
             //Check if the user use settings for hiding details of the notifications
-            if (AppUtil.useAnonymNotifications(fetLifeApplication)) {
-                AnonymNotification anonymNotification = new AnonymNotification(oneSignalNotification);
-                anonymNotification.display(getFetLifeApplication());
-            } else {
+//            if (AppUtil.useAnonymNotifications(fetLifeApplication)) {
+//                AnonymNotification anonymNotification = new AnonymNotification(oneSignalNotification);
+//                anonymNotification.display(getFetLifeApplication());
+//            } else {
                 oneSignalNotification.display(fetLifeApplication);
-            }
+//            }
         }
 
         fetLifeApplication.getEventBus().post(new NotificationReceivedEvent());

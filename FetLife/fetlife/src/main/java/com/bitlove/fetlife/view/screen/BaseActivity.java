@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 
 import com.bitlove.fetlife.event.NotificationCountUpdatedEvent;
 import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
+import com.bitlove.fetlife.inbound.onesignal.notification.OneSignalNotification;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.session.UserSessionManager;
@@ -68,7 +69,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     public static final int PERMISSION_REQUEST_LOCATION = 30000;
 
     public static final String EXTRA_NOTIFICATION_SOURCE_TYPE = "EXTRA_NOTIFICATION_SOURCE_TYPE";
-    public static final String EXTRA_NOTIFICATION_GROUP_ID = "EXTRA_NOTIFICATION_GROUP_ID";
+    public static final String EXTRA_NOTIFICATION_MERGE_ID = "EXTRA_NOTIFICATION_MERGE_ID";
     public static final String EXTRA_SELECTED_BOTTOM_NAV_ITEM = "EXTRA_SELECTED_BOTTOM_NAV_ITEM";
     public static final String EXTRA_FAB_LINK = "EXTRA_FAB_LINK";
     public static final String EXTRA_HAS_BOTTOM_BAR = "EXTRA_HAS_BOTTOM_BAR";
@@ -104,11 +105,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 //        getWindow().setAllowReturnTransitionOverlap(false);
         logEvent();
 
-        if (savedInstanceState == null) {
-            String notificationSourceType = getIntent().getStringExtra(EXTRA_NOTIFICATION_SOURCE_TYPE);
-            if (notificationSourceType != null) {
-                getFetLifeApplication().getNotificationParser().clearNotification(notificationSourceType);
-            }
+        String notificationSourceType = getIntent().getStringExtra(EXTRA_NOTIFICATION_SOURCE_TYPE);
+        String notificationMergeId = getIntent().getStringExtra(EXTRA_NOTIFICATION_MERGE_ID);
+        if (notificationSourceType != null) {
+            OneSignalNotification.Companion.clearNotifications(notificationSourceType,notificationMergeId);
         }
 
         onCreateActivityComponents();
@@ -292,6 +292,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             });
         }
     }
+
+
 
     private void setupSideMenu() {
         final NavigationView navigationView = findViewById(R.id.nav_view);

@@ -1,5 +1,7 @@
 package com.bitlove.fetlife.inbound.onesignal
 
+import android.content.Context
+import com.bitlove.fetlife.R
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.inbound.onesignal.notification.OneSignalNotification
 import com.bitlove.fetlife.inbound.onesignal.notification.QuestionAnsweredNotification
@@ -13,36 +15,38 @@ class NotificationParser {
         val osNotificationPayload = osNotificationReceivedResult.payload
 
         val additionalData = osNotificationPayload.additionalData
-        val id = osNotificationPayload.notificationID
         val title = osNotificationPayload.title
         val message = osNotificationPayload.body
         val launchUrl = osNotificationPayload.launchURL
-        val group = osNotificationPayload.groupKey
+        val collapseId = additionalData?.optString(JSON_FIELD_STRING_COLLAPSE_ID, null)
 
-        checkMinVersion(additionalData, fetLifeApplication) || return UnknownNotification(id,title,message,launchUrl,group,additionalData)
-        checkMaxVersion(additionalData, fetLifeApplication) || return UnknownNotification(id,title,message,launchUrl,group,additionalData)
+        //unused
+        //val id = osNotificationPayload.notificationID
+        //val group = osNotificationPayload.groupKey
 
-        val notificationType = additionalData?.optString(JSON_FIELD_STRING_TYPE)?.toLowerCase() ?: return UnknownNotification(id,title,message,launchUrl,group,additionalData)
+        checkMinVersion(additionalData, fetLifeApplication) || return UnknownNotification(title,message,launchUrl,additionalData)
+        checkMaxVersion(additionalData, fetLifeApplication) || return UnknownNotification(title,message,launchUrl,additionalData)
+
+        val notificationType = additionalData?.optString(JSON_FIELD_STRING_TYPE)?.toLowerCase() ?: return UnknownNotification(title,message,launchUrl,additionalData)
         return when {
-            notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_QUESTION) -> QuestionAnsweredNotification(id,title,message,launchUrl,group,additionalData)
+            notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_QUESTION) -> QuestionAnsweredNotification(notificationType, NOTIFICATION_ID_ANSWERS, title, message, launchUrl, launchUrl, collapseId, additionalData, getPreferenceKey(notificationType, fetLifeApplication))
             else -> {
-                if (title != null && message != null) {
-                    InfoNotification(id,title,message,launchUrl,group,additionalData)
-                } else {
-                    UnknownNotification(id,title,message,launchUrl,group,additionalData)
-                }
+                UnknownNotification(title,message,launchUrl,additionalData)
+//                if (title != null && message != null) {
+//                    InfoNotification(id,title,message,launchUrl,group,additionalData)
+//                } else {
+//                    UnknownNotification(title,message,launchUrl,additionalData)
+//                }
             }
         }
     }
 
-    fun clearNotification(notificationType: String, groupingField: String) {
-        when {
-            notificationType == JSON_VALUE_TYPE_INFO -> InfoNotification.clearNotifications()
-            notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_QUESTION) -> QuestionAnsweredNotification.clearNotifications(groupingField)
-            else -> {}
-        }//Legacy, skip
+    private fun getPreferenceKey(notificationType: String, context: Context): String? {
+        return when {
+            notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_QUESTION) -> context.getString(R.string.settings_key_notification_questions_enabled)
+            else -> null
+        }
     }
-
 
     private fun checkMinVersion(additionalData: JSONObject?, fetLifeApplication: FetLifeApplication): Boolean {
         val minVersion = additionalData?.optString(JSON_FIELD_INT_MIN_VERSION) ?: return true
@@ -65,6 +69,18 @@ class NotificationParser {
     }
 
     companion object {
+
+        //Notification Ids ranges
+        const val NOTIFICATION_ID_ANONYM = 100
+        const val NOTIFICATION_ID_FRIEND_REQUEST = 200
+        const val NOTIFICATION_ID_MESSAGE = 300
+        const val NOTIFICATION_ID_LOVE = 400
+        const val NOTIFICATION_ID_COMMENT = 500
+        const val NOTIFICATION_ID_MENTION = 600
+        const val NOTIFICATION_ID_GROUP = 700
+        const val NOTIFICATION_ID_ANSWERS = 800
+        const val NOTIFICATION_ID_INFO_INTERVAL = 10000
+
         const val JSON_FIELD_STRING_TYPE = "type"
         const val JSON_FIELD_STRING_COLLAPSE_ID = "collapse_id"
 
