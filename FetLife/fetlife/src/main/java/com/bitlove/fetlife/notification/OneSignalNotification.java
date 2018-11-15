@@ -121,6 +121,40 @@ public abstract class OneSignalNotification {
         return sharedPreferences.getBoolean(getAssociatedPreferenceKey(fetLifeApplication), true);
     }
 
+    protected NotificationCompat.Builder getDefaultNotificationBuilder(FetLifeApplication fetLifeApplication, PendingIntent contentIntent, String title, String text, String notificationChannelId) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(fetLifeApplication, notificationChannelId)
+                .setContentIntent(contentIntent)
+
+            .setAutoCancel(true)
+
+            .setContentTitle(title)
+            .setContentText(text)
+                .setGroup(notificationType)
+
+                .setLargeIcon(BitmapFactory.decodeResource(fetLifeApplication.getResources(), R.mipmap.app_icon_kinky))
+                .setSmallIcon(R.drawable.ic_stat_onesignal_default)
+                .setLights(fetLifeApplication.getUserSessionManager().getNotificationColor(), 1000, 1000)
+                .setSound(fetLifeApplication.getUserSessionManager().getNotificationRingtone());
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                builder.setChannelId(NOTIFICATION_CHANNEL_DEFUALT);
+            }
+
+            if (AppUtil.useAnonymNotifications(FetLifeApplication.getInstance())) {
+                builder.setVisibility(NotificationCompat.VISIBILITY_SECRET);
+            } else {
+                builder.setVisibility(NotificationCompat.VISIBILITY_PRIVATE);
+            }
+
+        long[] vibrationSetting = fetLifeApplication.getUserSessionManager().getNotificationVibration();
+            if (vibrationSetting != null) {
+                builder.setVibrate(vibrationSetting);
+            } else {
+                builder.setDefaults(Notification.DEFAULT_VIBRATE);
+            }
+            return builder;
+    }
+
     protected NotificationCompat.Builder getDefaultNotificationBuilder(FetLifeApplication fetLifeApplication) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = fetLifeApplication.getString(R.string.notification_chanel_name_default);

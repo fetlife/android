@@ -47,15 +47,15 @@ public class NewAnswerNotification extends OneSignalNotification {
             String title = notifications.size() == 1 ? "TEMP" : "TEMP";
 
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(fetLifeApplication);
-            NotificationCompat.Builder summaryNotificationBuilder = getDefaultNotificationBuilder(fetLifeApplication);
+            NotificationCompat.Builder summaryNotificationBuilder = getDefaultNotificationBuilder(fetLifeApplication,null,title,title,OneSignalNotification.NOTIFICATION_CHANNEL_DEFUALT);
 
             List<Notification> newAnswersNotifications = getGroupedNotifications(fetLifeApplication, notifications);
 
             summaryNotificationBuilder
-                    .setGroupSummary(true)
-                    .setGroup(Integer.toString(OneSignalNotification.NOTIFICATION_ID_ANSWERS))
-                    .setContentTitle(title)
-                    .setContentText(title);
+                    .setGroupSummary(true);
+//                    .setGroup(Integer.toString(OneSignalNotification.NOTIFICATION_ID_ANSWERS))
+//                    .setContentTitle(title)
+//                    .setContentText(title);
 
             NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
             inboxStyle.setBigContentTitle("TEMP");
@@ -100,11 +100,11 @@ public class NewAnswerNotification extends OneSignalNotification {
         List<Notification> notifications = new ArrayList<>();
         int i = OneSignalNotification.NOTIFICATION_ID_ANSWERS + 1;
         for (Map.Entry<String,Integer> newAnswerGroup : newAnswerGroups.entrySet()) {
-            NotificationCompat.Builder notificationBuilder = getDefaultNotificationBuilder(fetLifeApplication);
-            notificationBuilder.setContentIntent(getPendingIntent(fetLifeApplication,newAnswerUrls.get(newAnswerGroup.getKey()),i++));
-            notificationBuilder.setGroup(Integer.toString(OneSignalNotification.NOTIFICATION_ID_ANSWERS));
-            notificationBuilder.setContentTitle("TEMP");
-            notificationBuilder.setContentText(new Integer(1).equals(newAnswerGroup.getValue()) ? "TEMP" : "TEMP");
+            NotificationCompat.Builder notificationBuilder = getDefaultNotificationBuilder(fetLifeApplication,getPendingIntent(fetLifeApplication),"TEMP","TEMP",OneSignalNotification.NOTIFICATION_CHANNEL_DEFUALT);
+//            notificationBuilder.setContentIntent(getPendingIntent(fetLifeApplication,newAnswerUrls.get(newAnswerGroup.getKey()),i++));
+//            notificationBuilder.setGroup(Integer.toString(OneSignalNotification.NOTIFICATION_ID_ANSWERS));
+//            notificationBuilder.setContentTitle("TEMP");
+//            notificationBuilder.setContentText(new Integer(1).equals(newAnswerGroup.getValue()) ? "TEMP" : "TEMP");
             notifications.add(notificationBuilder.build());
         }
         Collections.reverse(notifications);
@@ -129,6 +129,15 @@ public class NewAnswerNotification extends OneSignalNotification {
         contentIntent.putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE,getNotificationType());
 //        return PendingIntent.getActivity(context, requestCode, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         return TaskStackBuilder.create(context).addNextIntentWithParentStack(baseIntent).addNextIntent(contentIntent).getPendingIntent(requestCode,PendingIntent.FLAG_CANCEL_CURRENT);
+    }
+
+    PendingIntent getNotificationIntent(OneSignalNotification oneSignalNotification, Context context, int order) {
+        Intent baseIntent = TurboLinksViewActivity.createIntent(context, "q", context.getString(R.string.title_activity_questions), true, TurboLinksViewActivity.FAB_LINK_NEW_QUESTION, false);
+        Intent contentIntent = TurboLinksViewActivity.createIntent(context, launchUrl.replace("//fetlife.com", "//app.fetlife.com"), null, false, null, false);
+        contentIntent.putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE, notificationType);
+        //contentIntent.putExtra(BaseActivity.EXTRA_NOTIFICATION_MERGE_ID, mergeId);
+        //return PendingIntent.getActivity(context, order, contentIntent, PendingIntent.FLAG_IMMUTABLE)
+        return TaskStackBuilder.create(context).addNextIntentWithParentStack(baseIntent).addNextIntent(contentIntent).getPendingIntent(order, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
     @Override
