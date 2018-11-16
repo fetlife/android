@@ -1,11 +1,9 @@
 package com.bitlove.fetlife.session;
 
-import android.app.Notification;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Debug;
 import android.preference.PreferenceManager;
 import android.util.Log;
 

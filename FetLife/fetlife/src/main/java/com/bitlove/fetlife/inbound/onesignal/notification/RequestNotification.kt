@@ -1,6 +1,6 @@
 package com.bitlove.fetlife.inbound.onesignal.notification
 
-import android.app.*
+import android.app.PendingIntent
 import android.content.Context
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.view.screen.BaseActivity
@@ -36,7 +36,7 @@ class RequestNotification(notificationType: String, notificationIdRange: Int, ti
     }
 
     override fun getNotificationText(oneSignalNotification: OneSignalNotification, count: Int, context: Context): String? {
-        return oneSignalNotification.message.toLowerCase()
+        return oneSignalNotification.message?.toLowerCase()
     }
 
     override fun getNotificationIntent(oneSignalNotification: OneSignalNotification, context: Context, order: Int): PendingIntent? {

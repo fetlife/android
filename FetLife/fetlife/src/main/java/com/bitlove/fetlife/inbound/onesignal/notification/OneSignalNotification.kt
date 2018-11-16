@@ -173,5 +173,4 @@ abstract class OneSignalNotification(val notificationType: String,
 
     }
 
-
 }

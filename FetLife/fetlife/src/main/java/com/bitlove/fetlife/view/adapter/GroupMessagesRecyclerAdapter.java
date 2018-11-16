@@ -3,8 +3,6 @@ package com.bitlove.fetlife.view.adapter;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -38,6 +36,8 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class GroupMessagesRecyclerAdapter extends RecyclerView.Adapter<GroupMessageViewHolder> {
 

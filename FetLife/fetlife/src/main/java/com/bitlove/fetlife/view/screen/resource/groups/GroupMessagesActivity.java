@@ -3,12 +3,6 @@ package com.bitlove.fetlife.view.screen.resource.groups;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import com.google.android.material.navigation.NavigationView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
@@ -20,7 +14,6 @@ import android.widget.MultiAutoCompleteTextView;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.event.GroupMessageSendFailedEvent;
 import com.bitlove.fetlife.event.GroupMessageSendSucceededEvent;
-//import com.bitlove.fetlife.event.NewGroupPostEvent;
 import com.bitlove.fetlife.event.NewGroupMessageEvent;
 import com.bitlove.fetlife.event.ServiceCallFailedEvent;
 import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
@@ -28,7 +21,6 @@ import com.bitlove.fetlife.event.ServiceCallStartedEvent;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Group;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.GroupComment;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.GroupPost;
-import com.bitlove.fetlife.model.pojos.fetlife.dbjson.GroupPost_Table;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member_Table;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
@@ -39,6 +31,7 @@ import com.bitlove.fetlife.view.screen.resource.PictureShareActivity;
 import com.bitlove.fetlife.view.screen.resource.ResourceActivity;
 import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity;
 import com.crashlytics.android.Crashlytics;
+import com.google.android.material.navigation.NavigationView;
 import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.InvalidDBConfiguration;
 
@@ -48,6 +41,14 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+//import com.bitlove.fetlife.event.NewGroupPostEvent;
 
 public class GroupMessagesActivity extends ResourceActivity
         implements NavigationView.OnNavigationItemSelectedListener, GroupMessagesRecyclerAdapter.GroupMessageClickListener {

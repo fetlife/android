@@ -2,9 +2,6 @@ package com.bitlove.fetlife.view.screen.resource;
 
 import android.content.Intent;
 import android.os.Bundle;
-import com.google.android.material.appbar.AppBarLayout;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -22,9 +19,13 @@ import com.bitlove.fetlife.util.UrlUtil;
 import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity;
 import com.bitlove.fetlife.view.widget.FlingBehavior;
+import com.google.android.material.appbar.AppBarLayout;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 public class WritingActivity extends ResourceActivity implements AppBarLayout.OnOffsetChangedListener {
 

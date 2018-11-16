@@ -11,8 +11,6 @@ import com.bitlove.fetlife.event.FriendSuggestionAddedEvent;
 import com.bitlove.fetlife.model.pojos.fetlife.db.SharedProfile;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.FriendRequest;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
-import com.bitlove.fetlife.notification.AnonymNotification;
-import com.bitlove.fetlife.notification.FriendRequestNotification;
 import com.bitlove.fetlife.view.adapter.FriendRequestsRecyclerAdapter;
 import com.bitlove.fetlife.view.adapter.ResourceListRecyclerAdapter;
 import com.bitlove.fetlife.view.screen.component.MenuActivityComponent;
@@ -51,8 +49,6 @@ public class FriendRequestsActivity extends ResourceListActivity<BaseModel> {
     @Override
     protected void onResourceStart() {
         super.onResourceStart();
-        FriendRequestNotification.clearNotifications();
-        AnonymNotification.clearNotifications();
     }
 
     @Override

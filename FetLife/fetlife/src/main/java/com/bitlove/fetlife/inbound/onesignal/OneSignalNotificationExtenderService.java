@@ -27,7 +27,7 @@ public class OneSignalNotificationExtenderService extends NotificationExtenderSe
         FetLifeApplication fetLifeApplication = getFetLifeApplication();
 
         //Parse the incoming notification so we can handle it accordingly based on its type
-        NotificationParser notificationParser = new NotificationParser();
+        NotificationParser notificationParser = fetLifeApplication.getNotificationParser();
         OneSignalNotification oneSignalNotification = notificationParser.parseNotification(fetLifeApplication, notification);
 
         //Look up for latest notification count and update the badge

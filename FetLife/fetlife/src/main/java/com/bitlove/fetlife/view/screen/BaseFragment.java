@@ -1,8 +1,8 @@
 package com.bitlove.fetlife.view.screen;
 
-import androidx.fragment.app.Fragment;
-
 import com.bitlove.fetlife.FetLifeApplication;
+
+import androidx.fragment.app.Fragment;
 
 public class BaseFragment extends Fragment {
 

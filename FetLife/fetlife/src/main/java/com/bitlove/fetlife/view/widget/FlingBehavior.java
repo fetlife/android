@@ -1,11 +1,13 @@
 package com.bitlove.fetlife.view.widget;
 
 import android.content.Context;
-import com.google.android.material.appbar.AppBarLayout;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.core.view.ScrollingView;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.google.android.material.appbar.AppBarLayout;
+
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.view.ScrollingView;
 
 public final class FlingBehavior extends AppBarLayout.Behavior {
 

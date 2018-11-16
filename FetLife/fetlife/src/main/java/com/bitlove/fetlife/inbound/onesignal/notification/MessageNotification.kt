@@ -1,22 +1,22 @@
 package com.bitlove.fetlife.inbound.onesignal.notification
 
-import android.app.*
+import android.app.PendingIntent
+import android.app.TaskStackBuilder
 import android.content.Context
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.event.NewMessageEvent
+import com.bitlove.fetlife.inbound.onesignal.NotificationParser
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService
-import com.bitlove.fetlife.notification.NotificationParser
 import com.bitlove.fetlife.view.screen.BaseActivity
 import com.bitlove.fetlife.view.screen.resource.ConversationsActivity
 import com.bitlove.fetlife.view.screen.resource.MessagesActivity
 import com.crashlytics.android.Crashlytics
 import org.json.JSONObject
-import java.lang.Exception
 
 class MessageNotification(notificationType: String, notificationIdRange: Int, title: String, message: String, launchUrl: String, mergeId: String?, collapseId: String?, additionalData: JSONObject, preferenceKey: String?) : OneSignalNotification(notificationType, notificationIdRange, title, message, launchUrl, mergeId, collapseId, additionalData, preferenceKey) {
 
-    private var conversationId: String? = additionalData.optString(NotificationParser.JSON_FIELD_STRING_CONVERSATIONID)
+    private var conversationId: String? = additionalData.optString(NotificationParser.JSON_FIELD_STRING_CONVERSATION_ID)
     private var nickname: String? = additionalData.optString(NotificationParser.JSON_FIELD_STRING_NICKNAME)
 
     override fun handle(fetLifeApplication: FetLifeApplication): Boolean {

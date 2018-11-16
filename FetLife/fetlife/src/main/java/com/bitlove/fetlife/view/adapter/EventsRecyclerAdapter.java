@@ -2,7 +2,6 @@ package com.bitlove.fetlife.view.adapter;
 
 import android.os.Handler;
 import android.os.Looper;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +25,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class EventsRecyclerAdapter extends ResourceListRecyclerAdapter<Event, EventsViewHolder> {
 

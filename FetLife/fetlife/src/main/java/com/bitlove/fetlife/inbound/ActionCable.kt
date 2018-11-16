@@ -1,8 +1,6 @@
 package com.bitlove.fetlife.inbound
 
 import android.content.Context
-import android.content.SharedPreferences
-import android.preference.PreferenceManager
 import android.text.TextUtils
 import android.webkit.CookieManager
 import com.basecamp.turbolinks.TurbolinksSession
@@ -12,11 +10,11 @@ import com.bitlove.fetlife.session.UserSessionManager
 import com.crashlytics.android.Crashlytics
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import com.hosopy.actioncable.*
 import com.hosopy.actioncable.ActionCable
-import com.raizlabs.android.dbflow.kotlinextensions.delete
+import com.hosopy.actioncable.Channel
+import com.hosopy.actioncable.Consumer
 import java.net.URI
-import java.util.HashMap
+import java.util.*
 
 class ActionCable {
 

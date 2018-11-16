@@ -1,7 +1,6 @@
 package com.bitlove.fetlife.model.pojos.fetlife.db;
 
 import com.bitlove.fetlife.model.db.FetLifeDatabase;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;

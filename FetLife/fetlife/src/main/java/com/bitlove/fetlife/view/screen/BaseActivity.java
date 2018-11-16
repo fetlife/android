@@ -7,33 +7,8 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.bitlove.fetlife.event.NotificationCountUpdatedEvent;
-import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
-import com.bitlove.fetlife.inbound.onesignal.notification.OneSignalNotification;
-import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
-import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
-import com.bitlove.fetlife.session.UserSessionManager;
-import com.bitlove.fetlife.util.UrlUtil;
-import com.bitlove.fetlife.view.screen.resource.ConversationsActivity;
-import com.bitlove.fetlife.view.screen.resource.FeedActivity;
-import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity;
-import com.crashlytics.android.Crashlytics;
-import com.google.android.material.bottomnavigation.BottomNavigationItemView;
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-
-import android.transition.Transition;
-
 import android.transition.Fade;
+import android.transition.Transition;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -49,10 +24,26 @@ import android.widget.TextView;
 import com.bitlove.fetlife.BuildConfig;
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
+import com.bitlove.fetlife.event.NotificationCountUpdatedEvent;
+import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
+import com.bitlove.fetlife.inbound.onesignal.notification.OneSignalNotification;
+import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
+import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
+import com.bitlove.fetlife.session.UserSessionManager;
+import com.bitlove.fetlife.util.UrlUtil;
 import com.bitlove.fetlife.view.screen.component.ActivityComponent;
+import com.bitlove.fetlife.view.screen.resource.ConversationsActivity;
+import com.bitlove.fetlife.view.screen.resource.FeedActivity;
+import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity;
+import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
 import com.mikepenz.iconics.utils.IconicsMenuInflaterUtil;
 
@@ -61,6 +52,13 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 public abstract class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 

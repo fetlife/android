@@ -1,6 +1,7 @@
 package com.bitlove.fetlife.inbound.onesignal.notification
 
-import android.app.*
+import android.app.PendingIntent
+import android.app.TaskStackBuilder
 import android.content.Context
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.view.screen.BaseActivity
@@ -35,7 +36,7 @@ class QuestionAnsweredNotification(notificationType: String, notificationIdRange
 
     override fun getNotificationIntent(oneSignalNotification: OneSignalNotification, context: Context, order: Int): PendingIntent? {
         val baseIntent = TurboLinksViewActivity.createIntent(context, "q", context.getString(R.string.title_activity_questions), true, TurboLinksViewActivity.FAB_LINK_NEW_QUESTION, true)
-        val contentIntent = TurboLinksViewActivity.createIntent(context, oneSignalNotification.launchUrl.replace("//fetlife.com".toRegex(), "//app.fetlife.com"), null, false, null, false)
+        val contentIntent = TurboLinksViewActivity.createIntent(context, oneSignalNotification.launchUrl?.replace("//fetlife.com".toRegex(), "//app.fetlife.com"), null, false, null, false)
         contentIntent.putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE, oneSignalNotification.notificationType)
         contentIntent.putExtra(BaseActivity.EXTRA_NOTIFICATION_MERGE_ID, oneSignalNotification.mergeId)
         //return PendingIntent.getActivity(context, order, contentIntent, PendingIntent.FLAG_IMMUTABLE)

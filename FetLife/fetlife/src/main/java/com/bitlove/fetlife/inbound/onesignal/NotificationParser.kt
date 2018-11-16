@@ -1,10 +1,9 @@
 package com.bitlove.fetlife.inbound.onesignal
 
 import android.content.Context
-import com.bitlove.fetlife.R
 import com.bitlove.fetlife.FetLifeApplication
+import com.bitlove.fetlife.R
 import com.bitlove.fetlife.inbound.onesignal.notification.*
-import com.bitlove.fetlife.notification.NotificationParser
 import com.onesignal.OSNotificationReceivedResult
 import org.json.JSONObject
 
@@ -49,7 +48,7 @@ class NotificationParser {
     private fun getMergeId(notificationType: String, launchUrl: String?, additionalData: JSONObject?): String? {
         return when {
             notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_MESSAGE) ||
-            notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_CONVERSATION) -> additionalData?.optString(NotificationParser.JSON_FIELD_STRING_CONVERSATIONID)
+            notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_CONVERSATION) -> additionalData?.optString(NotificationParser.JSON_FIELD_STRING_CONVERSATION_ID)
             else -> launchUrl?.substringBefore("?")
         }
     }

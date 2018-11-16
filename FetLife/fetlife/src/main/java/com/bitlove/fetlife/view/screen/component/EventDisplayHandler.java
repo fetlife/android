@@ -22,12 +22,11 @@ import com.bitlove.fetlife.event.VideoChunkUploadFailedEvent;
 import com.bitlove.fetlife.event.VideoChunkUploadFinishedEvent;
 import com.bitlove.fetlife.event.VideoChunkUploadStartedEvent;
 import com.bitlove.fetlife.event.VideoUploadFailedEvent;
+import com.bitlove.fetlife.inbound.onesignal.update.UpdateBroadcastReceiver;
 import com.bitlove.fetlife.model.pojos.fetlife.db.NotificationHistoryItem;
 import com.bitlove.fetlife.model.pojos.github.Release;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.model.service.ServiceCallCancelReceiver;
-import com.bitlove.fetlife.inbound.onesignal.update.UpdateBroadcastReceiver;
-import com.bitlove.fetlife.inbound.onesignal.update.UpdateNotification;
 import com.bitlove.fetlife.util.NotificationUtil;
 import com.bitlove.fetlife.util.VersionUtil;
 import com.bitlove.fetlife.view.screen.BaseActivity;
@@ -151,12 +150,12 @@ public class EventDisplayHandler {
         String message = baseActivity.getString(release.isPrerelease() ? R.string.notification_text_new_prerelease : R.string.notification_text_new_release,release.getTag());
         String url = release.getReleaseUrl();
 
-        NotificationHistoryItem notificationHistoryItem = new NotificationHistoryItem();
-        notificationHistoryItem.setTimeStamp(System.currentTimeMillis());
-        notificationHistoryItem.setDisplayHeader(header);
-        notificationHistoryItem.setDisplayMessage(message);
-        notificationHistoryItem.setLaunchUrl(UpdateNotification.getInnerLaunchUrl(url));
-        notificationHistoryItem.save();
+//        NotificationHistoryItem notificationHistoryItem = new NotificationHistoryItem();
+//        notificationHistoryItem.setTimeStamp(System.currentTimeMillis());
+//        notificationHistoryItem.setDisplayHeader(header);
+//        notificationHistoryItem.setDisplayMessage(message);
+//        notificationHistoryItem.setLaunchUrl(UpdateNotification.getInnerLaunchUrl(url));
+//        notificationHistoryItem.save();
 
         Intent notificationIntent = new Intent(baseActivity, UpdateBroadcastReceiver.class);
         notificationIntent.putExtra(UpdateBroadcastReceiver.EXTRA_URL,url);

@@ -11,9 +11,6 @@ import android.os.PersistableBundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-import androidx.appcompat.app.AlertDialog;
-import androidx.preference.PreferenceManager;
-import androidx.appcompat.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -22,6 +19,10 @@ import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
 
 import java.util.List;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 
 public class SettingsActivity extends PreferenceActivity {
 

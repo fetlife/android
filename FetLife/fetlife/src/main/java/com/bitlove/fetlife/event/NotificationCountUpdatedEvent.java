@@ -1,7 +1,5 @@
 package com.bitlove.fetlife.event;
 
-import com.google.gson.JsonElement;
-
 public class NotificationCountUpdatedEvent {
 
     private Integer notificationCount;

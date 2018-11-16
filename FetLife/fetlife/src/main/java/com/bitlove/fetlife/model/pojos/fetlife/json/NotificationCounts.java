@@ -1,6 +1,5 @@
 package com.bitlove.fetlife.model.pojos.fetlife.json;
 
-import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class NotificationCounts {

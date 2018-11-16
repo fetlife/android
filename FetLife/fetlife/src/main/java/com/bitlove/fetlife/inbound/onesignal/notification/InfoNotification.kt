@@ -1,17 +1,11 @@
 package com.bitlove.fetlife.inbound.onesignal.notification
 
-import android.app.*
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
-import com.bitlove.fetlife.event.NewMessageEvent
-import com.bitlove.fetlife.model.service.FetLifeApiIntentService
-import com.bitlove.fetlife.notification.NotificationParser
 import com.bitlove.fetlife.view.screen.BaseActivity
-import com.bitlove.fetlife.view.screen.resource.ConversationsActivity
-import com.bitlove.fetlife.view.screen.resource.MessagesActivity
 import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity
 import org.json.JSONObject
 

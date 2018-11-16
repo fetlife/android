@@ -3,10 +3,11 @@ package com.bitlove.fetlife.util;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import androidx.core.app.NotificationCompat;
 
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.inbound.onesignal.notification.OneSignalNotification;
+
+import androidx.core.app.NotificationCompat;
 
 public class NotificationUtil {
 

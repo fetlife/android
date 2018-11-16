@@ -1,6 +1,7 @@
 package com.bitlove.fetlife.inbound.onesignal.notification
 
-import android.app.*
+import android.app.PendingIntent
+import android.app.TaskStackBuilder
 import android.content.Context
 import android.text.TextUtils
 import com.bitlove.fetlife.FetLifeApplication

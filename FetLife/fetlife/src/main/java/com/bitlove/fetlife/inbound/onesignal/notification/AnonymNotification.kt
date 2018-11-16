@@ -13,7 +13,6 @@ import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.StartActivity
 import com.bitlove.fetlife.inbound.onesignal.NotificationParser
-import com.bitlove.fetlife.util.AppUtil
 
 class AnonymNotification {
 

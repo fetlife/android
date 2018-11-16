@@ -3,9 +3,6 @@ package com.bitlove.fetlife.view.screen.resource.profile;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,11 +22,14 @@ import com.bitlove.fetlife.view.adapter.feed.FeedItemResourceHelper;
 import com.bitlove.fetlife.view.adapter.feed.FeedRecyclerAdapter;
 import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.resource.EventActivity;
-import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity;
+import com.bitlove.fetlife.view.screen.resource.LoadFragment;
 import com.bitlove.fetlife.view.screen.resource.WritingActivity;
 import com.bitlove.fetlife.view.screen.resource.groups.GroupActivity;
-import com.bitlove.fetlife.view.screen.resource.LoadFragment;
 import com.bitlove.fetlife.view.screen.resource.groups.GroupMessagesActivity;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class ActivityFeedFragment extends LoadFragment implements FeedRecyclerAdapter.OnFeedItemClickListener {
 

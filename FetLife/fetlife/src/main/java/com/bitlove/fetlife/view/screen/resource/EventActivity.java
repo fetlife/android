@@ -1,38 +1,37 @@
 package com.bitlove.fetlife.view.screen.resource;
 
-        import android.content.Intent;
-        import android.os.Bundle;
-        import android.provider.CalendarContract;
+import android.content.Intent;
+import android.os.Bundle;
+import android.provider.CalendarContract;
+import android.text.TextUtils;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-        import com.bitlove.fetlife.view.screen.component.MenuActivityComponent;
-        import com.google.android.material.appbar.AppBarLayout;
-        import androidx.coordinatorlayout.widget.CoordinatorLayout;
-        import androidx.fragment.app.Fragment;
-        import androidx.fragment.app.FragmentStatePagerAdapter;
-        import androidx.viewpager.widget.ViewPager;
-        import androidx.appcompat.widget.Toolbar;
-        import android.text.TextUtils;
-        import android.view.MenuItem;
-        import android.view.View;
-        import android.view.animation.AlphaAnimation;
-        import android.widget.ImageView;
-        import android.widget.TextView;
+import com.bitlove.fetlife.R;
+import com.bitlove.fetlife.event.ServiceCallFailedEvent;
+import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
+import com.bitlove.fetlife.event.ServiceCallStartedEvent;
+import com.bitlove.fetlife.model.pojos.fetlife.db.EventRsvpReference;
+import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Event;
+import com.bitlove.fetlife.model.pojos.fetlife.json.Rsvp;
+import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
+import com.bitlove.fetlife.util.DateUtil;
+import com.bitlove.fetlife.util.UrlUtil;
+import com.bitlove.fetlife.view.screen.BaseActivity;
+import com.bitlove.fetlife.view.widget.FlingBehavior;
+import com.google.android.material.appbar.AppBarLayout;
 
-        import com.bitlove.fetlife.R;
-        import com.bitlove.fetlife.event.ServiceCallFailedEvent;
-        import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
-        import com.bitlove.fetlife.event.ServiceCallStartedEvent;
-        import com.bitlove.fetlife.model.pojos.fetlife.db.EventRsvpReference;
-        import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Event;
-        import com.bitlove.fetlife.model.pojos.fetlife.json.Rsvp;
-        import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
-        import com.bitlove.fetlife.util.DateUtil;
-        import com.bitlove.fetlife.util.UrlUtil;
-        import com.bitlove.fetlife.view.screen.BaseActivity;
-        import com.bitlove.fetlife.view.widget.FlingBehavior;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
-        import org.greenrobot.eventbus.Subscribe;
-        import org.greenrobot.eventbus.ThreadMode;
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 public class EventActivity extends ResourceActivity implements AppBarLayout.OnOffsetChangedListener {
 
