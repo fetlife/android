@@ -37,4 +37,13 @@
 
     <color name="app_icon_background">#000000</color>
 
+    <color name="side_menu_background_main">#1b1b1b</color>
+    <color name="side_menu_background_header">#0c0c0c</color>
+    <color name="side_menu_border">#252525</color>
+    <color name="side_menu_label">#d3d3d3</color>
+    <color name="side_menu_secondary_label">#555</color>
+    <color name="side_menu_icon">#555</color>
+
+    <color name="test">#ff0000</color>
+
 </resources>

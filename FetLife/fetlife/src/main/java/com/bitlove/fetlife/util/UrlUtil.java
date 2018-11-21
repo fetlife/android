@@ -38,6 +38,9 @@ public class UrlUtil {
 //    }
 
     public static boolean handleInternal(BaseActivity baseActivity, Uri uri, boolean sameBaseLocation, String baseLocation) {
+        if (!uri.isHierarchical()) {
+            return false;
+        }
         List<String> baseUriSegments = baseLocation != null ? Uri.parse(baseLocation).getPathSegments() : new ArrayList<String>();
         List<String> urlSegments = uri.getPathSegments();
         if (urlSegments.size() == 0) {
@@ -124,6 +127,7 @@ public class UrlUtil {
 
     public static String isMediaRequested(TurboLinksViewActivity turboLinksViewActivity, Uri uri) {
         List<String> urlSegments = uri.getPathSegments();
+        if (!uri.isHierarchical()) return null;
         String apiIdsParam = uri.getQueryParameter(QUERY_API_IDS);
         String[] apiIds = apiIdsParam != null ? apiIdsParam.split(",") : new String[0];
         if (urlSegments.size()>3 && "users".equals(urlSegments.get(0))) {

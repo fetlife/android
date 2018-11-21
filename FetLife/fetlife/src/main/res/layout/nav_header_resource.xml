@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/side_nav_bar"
+    android:background="@color/side_menu_background_header"
     android:gravity="bottom"
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -12,37 +13,50 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/nav_header_image"
-        style="@style/NavHeaderImage"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/nav_header_image_container"
         android:layout_width="@dimen/avatar_icon_size"
         android:layout_height="@dimen/avatar_icon_size"
+        android:background="@color/side_menu_border"
+        app:cardCornerRadius="2dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="@dimen/nav_header_vertical_spacing"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="@dimen/nav_header_vertical_spacing"
-        fresco:placeholderImage="@drawable/dummy_avatar" />
+        android:elevation="10dp">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/nav_header_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            fresco:placeholderImage="@drawable/dummy_avatar" />
+
+    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/nav_header_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/nav_header_image"
+        android:layout_toRightOf="@id/nav_header_image_container"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="@dimen/nav_header_vertical_spacing"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="@dimen/listitem_horizontal_margin"
         android:ellipsize="end"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/side_menu_label"
+        />
 
     <TextView
         android:id="@+id/nav_header_subtext"
-        android:layout_toRightOf="@id/nav_header_image"
+        android:layout_toRightOf="@id/nav_header_image_container"
         android:layout_below="@id/nav_header_text"
         android:layout_marginTop="@dimen/listitem_vertical_margin"
         android:layout_marginRight="@dimen/listitem_horizontal_margin"
         android:ellipsize="end"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:textColor="@color/side_menu_secondary_label"
+        />
 
 </RelativeLayout>

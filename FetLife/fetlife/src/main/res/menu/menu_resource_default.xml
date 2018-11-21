@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!--<group android:id="@+id/conversation" android:checkableBehavior="single">-->
         <!--<item-->
@@ -16,19 +16,22 @@
             <!--android:title="@string/menu_feed" />-->
 
         <item
-            android:id="@+id/nav_stuff_you_love"
-            android:icon="@drawable/ic_list_black_24dp"
-            android:title="@string/nav_stuff_you_love" />
-
-        <item
             android:id="@+id/nav_kinky_and_popular"
-            android:icon="@drawable/ic_list_black_24dp"
+            android:icon="@drawable/ic_view_day_black_24dp"
+            android:iconTint="@color/side_menu_icon"
             android:title="@string/nav_kinky_and_popular" />
 
         <item
             android:id="@+id/nav_fresh_and_pervy"
-            android:icon="@drawable/ic_list_black_24dp"
+            android:icon="@drawable/ic_view_day_black_24dp"
+            android:iconTint="@color/side_menu_icon"
             android:title="@string/nav_fresh_and_pervy" />
+
+        <item
+            android:id="@+id/nav_stuff_you_love"
+            android:icon="@drawable/ic_favorite_black_24dp"
+            android:iconTint="@color/side_menu_icon"
+            android:title="@string/nav_stuff_you_love" />
 
     </group>
     <group android:id="@+id/navigation" android:checkableBehavior="single">
@@ -39,23 +42,23 @@
             <!--android:title="@string/menu_search" />-->
 
         <item
-            android:id="@+id/nav_groups"
-            android:icon="@drawable/ic_friend"
-            android:title="@string/menu_groups" />
-
-        <item
             android:id="@+id/nav_questions"
-            android:icon="@drawable/ic_icon_chat"
+            android:icon="@drawable/ic_question_answer_black_24dp"
             android:title="@string/menu_questions" />
 
         <item
+            android:id="@+id/nav_groups"
+            android:icon="@drawable/ic_group_black_24dp"
+            android:title="@string/menu_groups" />
+
+        <item
             android:id="@+id/nav_events"
-            android:icon="@drawable/ic_menu_map"
+            android:icon="@drawable/ic_room_black_24dp"
             android:title="@string/menu_events" />
 
         <item
             android:id="@+id/nav_members"
-            android:icon="@android:drawable/ic_menu_search"
+            android:icon="@drawable/ic_search_black_24dp"
             android:title="@string/menu_members" />
 
         <!--<item-->
@@ -70,7 +73,7 @@
 
         <item
             android:id="@+id/nav_app_notifications"
-            android:icon="@android:drawable/ic_dialog_alert"
+            android:icon="@drawable/ic_notifications_black_24dp"
             android:title="@string/menu_app_notifications" />
 
     </group>
@@ -78,12 +81,12 @@
     <group android:id="@+id/interaction" android:checkableBehavior="single">
         <item
             android:id="@+id/nav_upload_pic"
-            android:icon="@android:drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_photo_black_24dp"
             android:title="@string/menu_upload_photo" />
 
         <item
             android:id="@+id/nav_upload_video"
-            android:icon="@drawable/ic_videocam_black_24dp"
+            android:icon="@drawable/ic_slideshow_black_24dp"
             android:title="@string/menu_upload_video" />
 
         <!--<item-->
@@ -93,47 +96,12 @@
 
     </group>
 
-
-    <group android:id="@+id/about" android:checkableBehavior="single">
+    <group android:id="@+id/logout" android:checkableBehavior="single">
 
         <item
             android:id="@+id/nav_support"
-            android:icon="@android:drawable/ic_menu_myplaces"
+            android:icon="@drawable/ic_thumb_up_black_24dp"
             android:title="@string/menu_support" />
-
-        <item
-            android:id="@+id/nav_ads"
-            android:icon="@android:drawable/ic_menu_agenda"
-            android:title="@string/menu_ads" />
-
-        <item
-            android:id="@+id/nav_glossary"
-            android:icon="@android:drawable/ic_menu_compass"
-            android:title="@string/menu_glossary" />
-
-        <item
-            android:id="@+id/nav_about"
-            android:icon="@android:drawable/ic_menu_info_details"
-            android:title="@string/menu_about" />
-
-        <item
-            android:id="@+id/nav_relnotes"
-            android:icon="@android:drawable/ic_menu_agenda"
-            android:title="@string/menu_relnotes" />
-
-        <item
-            android:id="@+id/nav_team"
-            android:icon="@android:drawable/ic_menu_myplaces"
-            android:title="@string/menu_team" />
-
-        <!--<item-->
-            <!--android:id="@+id/nav_wallpapers"-->
-            <!--android:icon="@android:drawable/ic_menu_gallery"-->
-            <!--android:title="@string/menu_wallpapers" />-->
-
-    </group>
-
-    <group android:id="@+id/logout" android:checkableBehavior="single">
 
         <item
             android:id="@+id/nav_updates"
@@ -142,13 +110,58 @@
 
         <item
             android:id="@+id/nav_settings"
-            android:icon="@android:drawable/ic_menu_preferences"
+            android:icon="@drawable/ic_settings_black_24dp"
             android:title="@string/menu_settings" />
+
         <item
             android:id="@+id/nav_logout"
-            android:icon="@android:drawable/ic_menu_close_clear_cancel"
+            android:icon="@drawable/ic_close_black_24dp"
             android:title="@string/menu_logout" />
     </group>
 
+    <group
+        android:id="@+id/about" android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_relnotes"
+            android:title="@string/menu_relnotes" />
+
+        <item
+            android:id="@+id/nav_glossary"
+            android:title="@string/menu_glossary" />
+
+        <item
+            android:id="@+id/nav_guidelines"
+            android:visible="false"
+            android:title="@string/menu_guidelines" />
+
+        <item
+            android:id="@+id/nav_about"
+            android:title="@string/menu_about" />
+
+        <item
+            android:id="@+id/nav_help"
+            android:visible="false"
+            android:title="@string/menu_help" />
+
+        <item
+            android:id="@+id/nav_ads"
+            android:title="@string/menu_ads" />
+
+        <item
+            android:id="@+id/nav_team"
+            android:title="@string/menu_team" />
+
+        <item
+            android:id="@+id/nav_contact"
+            android:visible="false"
+            android:title="@string/menu_contact" />
+
+        <!--<item-->
+        <!--android:id="@+id/nav_wallpapers"-->
+        <!--android:icon="@android:drawable/ic_menu_gallery"-->
+        <!--android:title="@string/menu_wallpapers" />-->
+
+    </group>
 
 </menu>

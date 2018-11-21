@@ -13,6 +13,7 @@
         <item name="android:colorBackground">@color/window_background</item>
         <item name="preferenceTheme">@style/AppPreferenceTheme</item>
         <item name="android:alertDialogTheme">@style/AppTheme.AlertDialog</item>
+        <item name="android:listDivider">@color/side_menu_border</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>

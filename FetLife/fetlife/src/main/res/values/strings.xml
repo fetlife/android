@@ -29,6 +29,11 @@
 
             <p><b><br/>Version History</b></p>
 
+            <p/>v2.18.5<br/>
+                    <ul>
+                        <li>Improved Side Menu design</li>
+                    </ul>
+
             <p/>v2.18.2<br/>
                     <ul>
                         <li>Make profile description selectable</li>
@@ -359,7 +364,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="menu_members">Members</string>
+    <string name="menu_members">Search Members</string>
     <string name="menu_about">About &amp; Install</string>
     <string name="menu_friendrequests">Friend Requests</string>
     <string name="menu_introduce">Share My Profile</string>
@@ -884,10 +889,10 @@
     <string name="title_fragment_groups">Groups</string>
     <string name="title_fragment_group_serach">Search</string>
     <string name="menu_groups">Groups</string>
-    <string name="menu_questions">Ask the Community</string>
+    <string name="menu_questions"><![CDATA[Q&A]]></string>
     <string name="title_activity_groups">Groups</string>
     <string name="menu_support">Support FetLife</string>
-    <string name="menu_glossary">Kinktionary</string>
+    <string name="menu_glossary">Glossary</string>
     <string name="menu_ads">Advertise on FetLife</string>
     <string name="title_activity_webview">FetLife</string>
     <string name="title_activity_search">Search</string>
@@ -900,6 +905,9 @@
     <string name="title_fragment_group_members">Members</string>
     <string name="action_share">Share</string>
     <string name="menu_relnotes">Release Notes</string>
+    <string name="menu_help">Help</string>
+    <string name="menu_guidelines">Guidelines</string>
+    <string name="menu_contact">Contact Us</string>
     <string name="title_activity_relnotes">Release Notes</string>
     <string name="list_header_picture_suggest">Recently Viewed</string>
     <string name="list_header_picture_sharelist">Share List</string>
@@ -941,5 +949,8 @@
     <string name="notification_chanel_name_default">General Notifications</string>
     <string name="notification_chanel_description_default">As of now all App notifications belong to this category</string>
     <string name="title_activity_review_questions">Review community content</string>
+    <string name="title_activity_help">Help</string>
+    <string name="title_activity_guidelines">Guidelines</string>
+    <string name="title_activity_contact">Get In Touch</string>
 
 </resources>

@@ -58,6 +58,10 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
                     android:fitsSystemWindows="true"
+                    style="@style/NavigationView"
+                    app:itemIconTint="@color/side_menu_icon"
+                    android:background="@color/side_menu_background_main"
+                    app:itemTextColor="@color/side_menu_label"
                     app:headerLayout="@layout/nav_header_resource"
                     app:menu="@menu/menu_resource_default"/>
 

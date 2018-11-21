@@ -221,6 +221,15 @@ public class MenuActivityComponent extends ActivityComponent {
         } else if (id == R.id.nav_kinky_and_popular) {
             pendingNavigationIntent = ExploreActivity.createIntent(menuActivity, ExploreActivity.Explore.KINKY_AND_POPULAR);
             menuActivity.setFinishAfterNavigation(true);
+        } else if (id == R.id.nav_help) {
+            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"help",menuActivity.getString(R.string.title_activity_help), true, null, false);
+            menuActivity.setFinishAfterNavigation(true);
+        } else if (id == R.id.nav_guidelines) {
+            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"guidelines",menuActivity.getString(R.string.title_activity_guidelines), true, null, false);
+            menuActivity.setFinishAfterNavigation(true);
+        } else if (id == R.id.nav_contact) {
+            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"contact",menuActivity.getString(R.string.title_activity_contact), true, null, false);
+            menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_support) {
             pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"support",menuActivity.getString(R.string.title_activity_support), true, null, false);
             menuActivity.setFinishAfterNavigation(true);

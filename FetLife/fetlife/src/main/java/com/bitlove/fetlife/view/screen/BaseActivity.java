@@ -16,6 +16,7 @@ import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.session.UserSessionManager;
+import com.bitlove.fetlife.util.ColorUtil;
 import com.bitlove.fetlife.util.UrlUtil;
 import com.bitlove.fetlife.view.screen.resource.ConversationsActivity;
 import com.bitlove.fetlife.view.screen.resource.FeedActivity;
@@ -30,9 +31,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.text.SpannableString;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.transition.Transition;
 
 import android.transition.Fade;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -296,11 +302,20 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         final NavigationView navigationView = findViewById(R.id.nav_view);
 
         if (navigationView != null) {
+            Menu menu = navigationView.getMenu();
             boolean showQuestions = getFetLifeApplication().getUserSessionManager().getActiveUserPreferences().getBoolean(UserSessionManager.PREF_KEY_QUESTIONS_ENABLED,false);
-            MenuItem menuItem = navigationView.getMenu().findItem(R.id.nav_questions);
+            MenuItem menuItem = menu.findItem(R.id.nav_questions);
             if (menuItem != null) {
                 menuItem.setVisible(showQuestions);
             }
+            greyOutMenuItem(menu.findItem(R.id.nav_relnotes));
+            greyOutMenuItem(menu.findItem(R.id.nav_glossary));
+            greyOutMenuItem(menu.findItem(R.id.nav_about));
+            greyOutMenuItem(menu.findItem(R.id.nav_ads));
+            greyOutMenuItem(menu.findItem(R.id.nav_team));
+            greyOutMenuItem(menu.findItem(R.id.nav_help));
+            greyOutMenuItem(menu.findItem(R.id.nav_guidelines));
+            greyOutMenuItem(menu.findItem(R.id.nav_contact));
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -308,6 +323,20 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                 }
             });
         }
+    }
+
+    private void greyOutMenuItem(MenuItem item) {
+        if (item == null) return;
+//        TextView textView = new TextView(this);
+//        textView.setTextColor(ColorUtil.retrieverColor(this,R.color.text_color_secondary));
+//        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP,10f);
+//        textView.setText(item.getTitle());
+//        item.setActionView(textView);
+        SpannableString spannableString = new SpannableString(item.getTitle());
+//        spannableString.setSpan(new AbsoluteSizeSpan(14,true), 0, spannableString.length(), 0);
+        spannableString.setSpan(new ForegroundColorSpan(ColorUtil.retrieverColor(this,R.color.side_menu_secondary_label)), 0, spannableString.length(), 0);
+//        item.getActionView().setPadding(0,0,0,0);
+        item.setTitle(spannableString);
     }
 
     private void initNoActivePadding(BottomNavigationView bottomNavigation) {

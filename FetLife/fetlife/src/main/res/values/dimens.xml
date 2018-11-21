@@ -1,4 +1,8 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!--<dimen tools:override="true" name="design_navigation_icon_padding">0dp</dimen>-->
+    <!--<dimen name="design_navigation_item_horizontal_padding">0dp</dimen>-->
+    <dimen name="design_navigation_item_icon_padding">16dp</dimen>
 
     <dimen name="design_bottom_navigation_margin">12dp</dimen>
 
@@ -8,7 +12,7 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
 
-    <dimen name="avatar_icon_size">80dp</dimen>
+    <dimen name="avatar_icon_size">48dp</dimen>
     <dimen name="bottomnavbar_icon_size">20dp</dimen>
 
     <dimen name="edittext_padding">8dp</dimen>

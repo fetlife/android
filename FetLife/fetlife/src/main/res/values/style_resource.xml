@@ -13,9 +13,7 @@
         <item name="android:textColor">@color/text_color_edit_dark</item>
     </style>
 
-    <style name="NavHeaderImage" parent="TextAppearance.AppCompat.Body1">
-        <item name="android:background">@color/text_color_edit_dark</item>
-        <item name="android:padding">@dimen/icon_border</item>
+    <style name="NavigationView" parent="Widget.Design.NavigationView">
     </style>
 
 </resources>
