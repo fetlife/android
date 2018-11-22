@@ -71,7 +71,7 @@ class GroupMessageNotification(notificationType: String, notificationIdRange: In
     }
 
     override fun getSummaryText(notificationCount: Int, context: Context): String? {
-        return context.getString(R.string.noification_summary_text_groups)
+        return context.getString(R.string.noification_summary_text_groups_new_message)
     }
 
     override fun getNotificationTitle(oneSignalNotification: OneSignalNotification, notificationCount: Int, context: Context): String? {
@@ -87,6 +87,7 @@ class GroupMessageNotification(notificationType: String, notificationIdRange: In
     override fun getNotificationIntent(oneSignalNotification: OneSignalNotification, context: Context, order: Int): PendingIntent? {
         val groupId = (oneSignalNotification as? GroupMessageNotification)?.groupId
         val groupDiscussionId = (oneSignalNotification as? GroupMessageNotification)?.groupDiscussionId
+        val groupTitle = (oneSignalNotification as? GroupMessageNotification)?.groupTitle
         val groupDiscussionTitle = (oneSignalNotification as? GroupMessageNotification)?.groupDiscussionTitle
         val baseIntent = GroupsActivity.createIntent(context, true)
         val interimIntent = GroupActivity.createIntent(context, groupId, groupTitle, false)

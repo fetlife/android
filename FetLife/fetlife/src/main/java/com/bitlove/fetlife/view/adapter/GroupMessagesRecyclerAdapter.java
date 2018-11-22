@@ -24,6 +24,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.json.FeedEvent;
 import com.bitlove.fetlife.model.pojos.fetlife.json.MessageEntities;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Story;
 import com.bitlove.fetlife.util.ColorUtil;
+import com.bitlove.fetlife.util.ServerIdUtil;
 import com.bitlove.fetlife.util.StringUtil;
 import com.bitlove.fetlife.util.UrlUtil;
 import com.bitlove.fetlife.view.adapter.feed.FeedItemResourceHelper;
@@ -56,8 +57,8 @@ public class GroupMessagesRecyclerAdapter extends RecyclerView.Adapter<GroupMess
     private static final float PENDING_ALPHA = 0.5f;
 
     private GroupPost groupDiscussion;
-    private final String groupDiscussionId;
-    private final String groupId;
+    private String groupDiscussionId;
+    private String groupId;
 
     private List<GroupComment> itemList;
     private int requestedPageCount;
@@ -82,6 +83,12 @@ public class GroupMessagesRecyclerAdapter extends RecyclerView.Adapter<GroupMess
     }
 
     private void loadItems() {
+        if (groupId != null && ServerIdUtil.isServerId(groupId) && ServerIdUtil.containsServerId(groupId)) {
+            groupId = ServerIdUtil.getLocalId(groupId);
+        }
+        if (groupDiscussionId != null && ServerIdUtil.isServerId(groupDiscussionId) && ServerIdUtil.containsServerId(groupDiscussionId)) {
+            groupDiscussionId = ServerIdUtil.getLocalId(groupDiscussionId);
+        }
         //TODO: think of moving to separate thread with specific DB executor
         groupDiscussion = new Select().from(GroupPost.class).where(GroupPost_Table.id.is(groupDiscussionId)).querySingle();
         if (groupDiscussion == null) {

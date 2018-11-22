@@ -953,12 +953,27 @@
         <item quantity="one">New comment on the discussions you follow</item>
         <item quantity="other">%d new comments on the discussions you follow</item>
     </plurals>
-    <string name="noification_summary_text_groups">Group Discussions</string>
+    <string name="noification_summary_text_groups_new_message">Group Discussions</string>
+    <plurals name="noification_summary_title_groups_new_discussion">
+        <item quantity="one">New discussion is started in a Group you follow</item>
+        <item quantity="other">%d new discussion are started in a Group you follow</item>
+    </plurals>
+    <plurals name="noification_summary_title_groups_new_discussion_with_title">
+        <item quantity="one">New discussion is started in %s</item>
+        <item quantity="other">%d new discussion are started in %s</item>
+    </plurals>
+    <string name="noification_summary_text_groups_new_discussion">New Group Discussions</string>
     <plurals name="noification_title_groups_new_message">
         <item quantity="one">New comment</item>
         <item quantity="other">%d new comments</item>
     </plurals>
     <string name="noification_text_groups_new_message">on a discussion you follow</string>
+    <plurals name="noification_title_groups_new_discussion">
+        <item quantity="one">New discussion</item>
+        <item quantity="other">%d new discussions</item>
+    </plurals>
+    <string name="noification_text_groups_new_discussion">in a group you follow</string>
+    <string name="noification_text_groups_new_discussion_with_title">in %s</string>
 
     <plurals name="noification_summary_title_info">
         <item quantity="one">You have a new notification</item>

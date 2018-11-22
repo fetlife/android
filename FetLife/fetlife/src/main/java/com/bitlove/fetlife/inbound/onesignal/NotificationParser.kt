@@ -28,7 +28,8 @@ class NotificationParser {
 
         val notificationType = additionalData?.optString(JSON_FIELD_STRING_TYPE)?.toLowerCase() ?: return UnknownNotification(title,message,launchUrl,additionalData)
         return when {
-            notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_COMMENT_GROUP) -> GroupMessageNotification(JSON_VALUE_TYPE_PREFIX_COMMENT_GROUP, NOTIFICATION_ID_GROUP, title, message, launchUrl, getMergeId(notificationType, launchUrl, additionalData), collapseId, additionalData, getPreferenceKey(notificationType, fetLifeApplication))
+            notificationType == JSON_VALUE_TYPE_GROUP_POST -> GroupNotification(JSON_VALUE_TYPE_GROUP_POST, NOTIFICATION_ID_GROUP_DISCUSSION, title, message, launchUrl, getMergeId(notificationType, launchUrl, additionalData), collapseId, additionalData, getPreferenceKey(notificationType, fetLifeApplication))
+            notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_COMMENT_GROUP) -> GroupMessageNotification(JSON_VALUE_TYPE_PREFIX_COMMENT_GROUP, NOTIFICATION_ID_GROUP_MESSAGE, title, message, launchUrl, getMergeId(notificationType, launchUrl, additionalData), collapseId, additionalData, getPreferenceKey(notificationType, fetLifeApplication))
             notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_QUESTION) -> QuestionAnsweredNotification(JSON_VALUE_TYPE_PREFIX_QUESTION, NOTIFICATION_ID_ANSWERS, title, message, launchUrl, getMergeId(notificationType, launchUrl, additionalData), collapseId, additionalData, getPreferenceKey(notificationType, fetLifeApplication))
             notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_MESSAGE) ||
             notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_CONVERSATION) -> MessageNotification(JSON_VALUE_TYPE_PREFIX_MESSAGE, NOTIFICATION_ID_MESSAGE, title, message, launchUrl, getMergeId(notificationType, launchUrl, additionalData), collapseId, additionalData, getPreferenceKey(notificationType, fetLifeApplication))
@@ -56,6 +57,7 @@ class NotificationParser {
 
     private fun getPreferenceKey(notificationType: String, context: Context): String? {
         return when {
+            notificationType == JSON_VALUE_TYPE_GROUP_POST ||
             notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_COMMENT_GROUP) -> context.getString(R.string.settings_key_notification_group_messages_enabled)
             notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_QUESTION) -> context.getString(R.string.settings_key_notification_questions_enabled)
             notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_MESSAGE) ||
@@ -97,8 +99,9 @@ class NotificationParser {
         const val NOTIFICATION_ID_LOVE = 400
         const val NOTIFICATION_ID_COMMENT = 500
         const val NOTIFICATION_ID_MENTION = 600
-        const val NOTIFICATION_ID_GROUP = 700
-        const val NOTIFICATION_ID_ANSWERS = 800
+        const val NOTIFICATION_ID_GROUP_MESSAGE = 700
+        const val NOTIFICATION_ID_GROUP_DISCUSSION = 800
+        const val NOTIFICATION_ID_ANSWERS = 900
         const val NOTIFICATION_ID_INFO_INTERVAL = 10000
 
         const val JSON_FIELD_STRING_TYPE = "type"
@@ -172,6 +175,9 @@ class NotificationParser {
         const val JSON_FIELD_STRING_GROUPPOSTID = "group_post_id"
         const val JSON_FIELD_STRING_GROUP_POST_TITLE = "group_post_title"
         const val JSON_FIELD_STRING_GROUP_NAME = "group_name"
+
+        const val JSON_VALUE_TYPE_GROUP_POST = "group_post"
+
 
         fun clearNotificationTypeForUrl(location: String) {
             val uri = Uri.parse(location)
