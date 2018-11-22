@@ -194,6 +194,7 @@ class NotificationParser {
                 "q" -> OneSignalNotification.clearNotifications(JSON_VALUE_TYPE_PREFIX_QUESTION)
                 "messages" -> OneSignalNotification.clearNotifications(JSON_VALUE_TYPE_PREFIX_MESSAGE)
                 "group_messages" -> OneSignalNotification.clearNotifications(JSON_VALUE_TYPE_PREFIX_COMMENT_GROUP)
+                "group_discussions" -> OneSignalNotification.clearNotifications(JSON_VALUE_TYPE_GROUP_POST)
             }
         }
     }

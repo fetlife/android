@@ -115,6 +115,7 @@ public class GroupMessagesActivity extends ResourceActivity
 
         //Not ideal but clear all
         NotificationParser.Companion.clearNotificationTypeForUrl("group_messages");
+        NotificationParser.Companion.clearNotificationTypeForUrl("group_discussions");
 
         findViewById(R.id.text_preview).setVisibility(View.GONE);
 
