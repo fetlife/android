@@ -1,6 +1,7 @@
 package com.bitlove.fetlife.inbound.onesignal
 
 import android.content.Context
+import android.net.Uri
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.inbound.onesignal.notification.*
@@ -27,14 +28,14 @@ class NotificationParser {
 
         val notificationType = additionalData?.optString(JSON_FIELD_STRING_TYPE)?.toLowerCase() ?: return UnknownNotification(title,message,launchUrl,additionalData)
         return when {
-            notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_COMMENT_GROUP) -> GroupMessageNotification(notificationType, NOTIFICATION_ID_GROUP, title, message, launchUrl, getMergeId(notificationType, launchUrl, additionalData), collapseId, additionalData, getPreferenceKey(notificationType, fetLifeApplication))
-            notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_QUESTION) -> QuestionAnsweredNotification(notificationType, NOTIFICATION_ID_ANSWERS, title, message, launchUrl, getMergeId(notificationType, launchUrl, additionalData), collapseId, additionalData, getPreferenceKey(notificationType, fetLifeApplication))
+            notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_COMMENT_GROUP) -> GroupMessageNotification(JSON_VALUE_TYPE_PREFIX_COMMENT_GROUP, NOTIFICATION_ID_GROUP, title, message, launchUrl, getMergeId(notificationType, launchUrl, additionalData), collapseId, additionalData, getPreferenceKey(notificationType, fetLifeApplication))
+            notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_QUESTION) -> QuestionAnsweredNotification(JSON_VALUE_TYPE_PREFIX_QUESTION, NOTIFICATION_ID_ANSWERS, title, message, launchUrl, getMergeId(notificationType, launchUrl, additionalData), collapseId, additionalData, getPreferenceKey(notificationType, fetLifeApplication))
             notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_MESSAGE) ||
-            notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_CONVERSATION) -> MessageNotification(notificationType, NOTIFICATION_ID_MESSAGE, title, message, launchUrl, getMergeId(notificationType, launchUrl, additionalData), collapseId, additionalData, getPreferenceKey(notificationType, fetLifeApplication))
-            notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_LOVE) -> LoveNotification(notificationType, NOTIFICATION_ID_LOVE, title, message, launchUrl, getMergeId(notificationType, launchUrl, additionalData), collapseId, additionalData, getPreferenceKey(notificationType, fetLifeApplication))
-            notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_MENTION) -> MentionNotification(notificationType, NOTIFICATION_ID_MENTION, title, message, launchUrl, getMergeId(notificationType, launchUrl, additionalData), collapseId, additionalData, getPreferenceKey(notificationType, fetLifeApplication))
-            notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_COMMENT) -> CommentNotification(notificationType, NOTIFICATION_ID_COMMENT, title, message, launchUrl, getMergeId(notificationType, launchUrl, additionalData), collapseId, additionalData, getPreferenceKey(notificationType, fetLifeApplication))
-            notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_REQUEST) -> RequestNotification(notificationType, NOTIFICATION_ID_FRIEND_REQUEST, title, message, launchUrl, getMergeId(notificationType, launchUrl, additionalData), collapseId, additionalData, getPreferenceKey(notificationType, fetLifeApplication))
+            notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_CONVERSATION) -> MessageNotification(JSON_VALUE_TYPE_PREFIX_MESSAGE, NOTIFICATION_ID_MESSAGE, title, message, launchUrl, getMergeId(notificationType, launchUrl, additionalData), collapseId, additionalData, getPreferenceKey(notificationType, fetLifeApplication))
+            notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_LOVE) -> LoveNotification(JSON_VALUE_TYPE_PREFIX_LOVE, NOTIFICATION_ID_LOVE, title, message, launchUrl, getMergeId(notificationType, launchUrl, additionalData), collapseId, additionalData, getPreferenceKey(notificationType, fetLifeApplication))
+            notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_MENTION) -> MentionNotification(JSON_VALUE_TYPE_PREFIX_MENTION, NOTIFICATION_ID_MENTION, title, message, launchUrl, getMergeId(notificationType, launchUrl, additionalData), collapseId, additionalData, getPreferenceKey(notificationType, fetLifeApplication))
+            notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_COMMENT) -> CommentNotification(JSON_VALUE_TYPE_PREFIX_COMMENT, NOTIFICATION_ID_COMMENT, title, message, launchUrl, getMergeId(notificationType, launchUrl, additionalData), collapseId, additionalData, getPreferenceKey(notificationType, fetLifeApplication))
+            notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_REQUEST) -> RequestNotification(JSON_VALUE_TYPE_PREFIX_REQUEST, NOTIFICATION_ID_FRIEND_REQUEST, title, message, launchUrl, getMergeId(notificationType, launchUrl, additionalData), collapseId, additionalData, getPreferenceKey(notificationType, fetLifeApplication))
             else -> {
                 if (title != null && message != null) {
                     InfoNotification(notificationType, NOTIFICATION_ID_MESSAGE, title, message, launchUrl, id, collapseId, additionalData, getPreferenceKey(notificationType, fetLifeApplication))
@@ -172,6 +173,22 @@ class NotificationParser {
         const val JSON_FIELD_STRING_GROUP_POST_TITLE = "group_post_title"
         const val JSON_FIELD_STRING_GROUP_NAME = "group_name"
 
+        fun clearNotificationTypeForUrl(location: String) {
+            val uri = Uri.parse(location)
+            val definingSegment = if (uri.isHierarchical) uri.pathSegments.getOrNull(0) else location
+            when (definingSegment) {
+                "requests" -> {
+                    OneSignalNotification.clearNotifications(JSON_VALUE_TYPE_PREFIX_REQUEST)
+                }
+                "notifications" -> {
+                    OneSignalNotification.clearNotifications(JSON_VALUE_TYPE_PREFIX_LOVE)
+                    OneSignalNotification.clearNotifications(JSON_VALUE_TYPE_PREFIX_COMMENT)
+                    OneSignalNotification.clearNotifications(JSON_VALUE_TYPE_PREFIX_MENTION)
+                }
+                "q" -> OneSignalNotification.clearNotifications(JSON_VALUE_TYPE_PREFIX_QUESTION)
+                "messages" -> OneSignalNotification.clearNotifications(JSON_VALUE_TYPE_PREFIX_MESSAGE)
+                "group_messages" -> OneSignalNotification.clearNotifications(JSON_VALUE_TYPE_PREFIX_COMMENT_GROUP)
+            }
+        }
     }
-    
 }

@@ -34,7 +34,7 @@ class InfoNotification(notificationType: String, notificationIdRange: Int, title
                 data = Uri.parse(launchUrl)
             }
         } else {
-            TurboLinksViewActivity.createIntent(context, "notifications", context.getString(R.string.title_activity_notifications), true, null, true).apply {
+            TurboLinksViewActivity.createIntent(context, "notifications", context.getString(R.string.title_activity_notifications), true, R.id.navigation_bottom_notifications, true).apply {
                 addFlags(Intent.FLAG_RECEIVER_FOREGROUND)
                 putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE, oneSignalNotification.notificationType)
                 putExtra(BaseActivity.EXTRA_NOTIFICATION_MERGE_ID, oneSignalNotification.mergeId)

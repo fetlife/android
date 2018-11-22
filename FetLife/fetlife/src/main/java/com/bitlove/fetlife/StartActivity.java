@@ -3,6 +3,7 @@ package com.bitlove.fetlife;
 import android.app.Activity;
 import android.os.Bundle;
 
+import com.bitlove.fetlife.inbound.onesignal.notification.OneSignalNotification;
 import com.bitlove.fetlife.session.UserSessionManager;
 import com.bitlove.fetlife.view.screen.resource.ConversationsActivity;
 import com.bitlove.fetlife.view.screen.resource.FeedActivity;
@@ -16,6 +17,8 @@ public class StartActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        OneSignalNotification.Companion.clearNotifications(null, null);
+
         UserSessionManager userSessionManager = getFetLifeApplication().getUserSessionManager();
         if (userSessionManager.getCurrentUser() == null) {
             LoginActivity.startLogin(getFetLifeApplication());

@@ -10,6 +10,7 @@ import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.event.ServiceCallFailedEvent;
 import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
 import com.bitlove.fetlife.event.ServiceCallStartedEvent;
+import com.bitlove.fetlife.inbound.onesignal.NotificationParser;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.view.screen.BaseActivity;
@@ -50,6 +51,9 @@ public class GroupsActivity extends ResourceActivity {
 
     @Override
     protected void onResourceCreate(Bundle savedInstanceState) {
+
+        //Postpone till proper counter
+//        NotificationParser.Companion.clearNotificationTypeForUrl("group_messages");
 
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);

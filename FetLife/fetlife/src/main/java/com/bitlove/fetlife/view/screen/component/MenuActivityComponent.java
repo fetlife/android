@@ -182,7 +182,7 @@ public class MenuActivityComponent extends ActivityComponent {
 //            logEvent("nav_introduce");
 //            AddNfcFriendActivity.startActivity(menuActivity);
         } else if (id == R.id.nav_about) {
-            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"android",menuActivity.getString(R.string.title_activity_about), true, null, false);
+            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"android",menuActivity.getString(R.string.title_activity_about), true, (String)null, false);
         } else if (id == R.id.nav_relnotes) {
             pendingNavigationIntent = ReleaseNotesActivity.createIntent(menuActivity);
             menuActivity.setFinishAfterNavigation(true);
@@ -220,18 +220,18 @@ public class MenuActivityComponent extends ActivityComponent {
             pendingNavigationIntent = ExploreActivity.createIntent(menuActivity, ExploreActivity.Explore.KINKY_AND_POPULAR);
             menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_support) {
-            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"support",menuActivity.getString(R.string.title_activity_support), true, null, false);
+            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"support",menuActivity.getString(R.string.title_activity_support), true, (String)null, false);
             menuActivity.setFinishAfterNavigation(true);
 //        } else if (id == R.id.nav_search) {
 //            TurboLinksViewActivity.startActivity(menuActivity,"search",menuActivity.getString(R.string.title_activity_search));
         } else if (id == R.id.nav_ads) {
-            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"ads",menuActivity.getString(R.string.title_activity_ads), true, null, false);
+            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"ads",menuActivity.getString(R.string.title_activity_ads), true, (String)null, false);
             menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_glossary) {
-            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"glossary",menuActivity.getString(R.string.title_activity_glossary), true, null, false);
+            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"glossary",menuActivity.getString(R.string.title_activity_glossary), true, (String)null, false);
             menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_team) {
-            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"team",menuActivity.getString(R.string.title_activity_team), true, null, false);
+            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"team",menuActivity.getString(R.string.title_activity_team), true, (String)null, false);
             menuActivity.setFinishAfterNavigation(true);
 //        } else if (id == R.id.nav_wallpapers) {
 //            TurboLinksViewActivity.startActivity(menuActivity,"wallpapers",menuActivity.getString(R.string.title_activity_wallpapers));

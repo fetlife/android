@@ -40,7 +40,7 @@ class RequestNotification(notificationType: String, notificationIdRange: Int, ti
     }
 
     override fun getNotificationIntent(oneSignalNotification: OneSignalNotification, context: Context, order: Int): PendingIntent? {
-        val contentIntent = TurboLinksViewActivity.createIntent(context, "requests", context.getString(R.string.title_activity_friendrequests), true, null, true).apply {
+        val contentIntent = TurboLinksViewActivity.createIntent(context, "requests", context.getString(R.string.title_activity_friendrequests), true, R.id.navigation_bottom_requests, true).apply {
             putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE, oneSignalNotification.notificationType)
             putExtra(BaseActivity.EXTRA_NOTIFICATION_MERGE_ID, oneSignalNotification.mergeId)
         }

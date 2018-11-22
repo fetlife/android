@@ -166,9 +166,16 @@ abstract class OneSignalNotification(val notificationType: String,
 
         val liveNotificationMap : MutableMap<String,MutableList<OneSignalNotification>> = HashMap()
 
-        fun clearNotifications(notificationType: String, mergeId: String?) {
+        fun clearNotifications(notificationType: String? = null, mergeId: String? = null) {
+            if (notificationType == null) {
+                liveNotificationMap.clear()
+            }
             val liveNotifications = liveNotificationMap[notificationType] ?: return
-            liveNotifications.removeAll { it.mergeId == mergeId }
+            if (mergeId == null) {
+                liveNotificationMap.remove(notificationType)
+            } else {
+                liveNotifications.removeAll { it.mergeId == mergeId }
+            }
         }
 
     }

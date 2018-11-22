@@ -18,6 +18,7 @@ import com.bitlove.fetlife.event.NewGroupMessageEvent;
 import com.bitlove.fetlife.event.ServiceCallFailedEvent;
 import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
 import com.bitlove.fetlife.event.ServiceCallStartedEvent;
+import com.bitlove.fetlife.inbound.onesignal.NotificationParser;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Group;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.GroupComment;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.GroupPost;
@@ -111,6 +112,9 @@ public class GroupMessagesActivity extends ResourceActivity
 
     @Override
     protected void onResourceCreate(Bundle savedInstanceState) {
+
+        //Not ideal but clear all
+        NotificationParser.Companion.clearNotificationTypeForUrl("group_messages");
 
         findViewById(R.id.text_preview).setVisibility(View.GONE);
 

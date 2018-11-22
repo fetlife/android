@@ -40,7 +40,7 @@ class MentionNotification(notificationType: String, notificationIdRange: Int, ti
     }
 
     override fun getNotificationIntent(oneSignalNotification: OneSignalNotification, context: Context, order: Int): PendingIntent? {
-        val contentIntent = TurboLinksViewActivity.createIntent(context, "notifications", context.getString(R.string.title_activity_notifications), true, null, true).apply {
+        val contentIntent = TurboLinksViewActivity.createIntent(context, "notifications", context.getString(R.string.title_activity_notifications), true, R.id.navigation_bottom_notifications, true).apply {
             putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE, oneSignalNotification.notificationType)
             putExtra(BaseActivity.EXTRA_NOTIFICATION_MERGE_ID, oneSignalNotification.mergeId)
         }
