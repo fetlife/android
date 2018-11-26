@@ -50,6 +50,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitlove.fetlife.BuildConfig;
 import com.bitlove.fetlife.FetLifeApplication;
@@ -620,6 +621,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
     @Override
     public void onBackPressed() {
+        if (BuildConfig.DEBUG) {
+            Toast.makeText(this, "Back Pressed", Toast.LENGTH_SHORT).show();
+        }
         Boolean result = null;
         for (ActivityComponent activityComponent : activityComponentList) {
             Boolean componentResult = activityComponent.onActivityBackPressed(this);

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.Toast;
 
 import com.basecamp.turbolinks.TurbolinksAdapter;
 import com.basecamp.turbolinks.TurbolinksSession;
@@ -63,6 +64,20 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         supportedBaseUrls.put("https://app.fetlife.com/team",R.string.title_activity_team);
         supportedBaseUrls.put("https://app.fetlife.com/notifications",R.string.title_activity_notifications);
         supportedBaseUrls.put("https://app.fetlife.com/requests",R.string.title_activity_friendrequests);
+        supportedBaseUrls.put("https://app.fetlife.com/help",R.string.title_activity_help);
+        supportedBaseUrls.put("https://app.fetlife.com/guidelines",R.string.title_activity_guidelines);
+        supportedBaseUrls.put("https://app.fetlife.com/contact",R.string.title_activity_contact);
+
+        supportedBaseUrls.put("https://fetlife.com/ads",R.string.title_activity_ads);
+        supportedBaseUrls.put("https://fetlife.com/support",R.string.title_activity_support);
+        supportedBaseUrls.put("https://fetlife.com/glossary",R.string.title_activity_glossary);
+        supportedBaseUrls.put("https://fetlife.com/wallpapers",R.string.title_activity_wallpapers);
+        supportedBaseUrls.put("https://fetlife.com/team",R.string.title_activity_team);
+        supportedBaseUrls.put("https://fetlife.com/notifications",R.string.title_activity_notifications);
+        supportedBaseUrls.put("https://fetlife.com/requests",R.string.title_activity_friendrequests);
+        supportedBaseUrls.put("https://fetlife.com/help",R.string.title_activity_help);
+        supportedBaseUrls.put("https://fetlife.com/guidelines",R.string.title_activity_guidelines);
+        supportedBaseUrls.put("https://fetlife.com/contact",R.string.title_activity_contact);
         supportedBaseUrls.put(FAB_LINK_NEW_QUESTION,R.string.title_activity_new_question);
     }
 
@@ -402,10 +417,12 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
     }
 
     private Integer getTitleForSupportedLocation(String location) {
-        if (location.startsWith("https://fetlife.com/team")) {
-            return supportedBaseUrls.get("https://fetlife.com/team");
+        for (Map.Entry<String,Integer> entry : supportedBaseUrls.entrySet()) {
+            if (location.startsWith(entry.getKey())) {
+                return entry.getValue();
+            }
         }
-        return supportedBaseUrls.get(location);
+        return null;
     }
 
     @Override
@@ -419,20 +436,16 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        WebView webView = TurbolinksSession.getDefault(this).getWebView();
-        // Check if the key event was the Back button and if there's history
-        if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack() && !hasBottomBar) {
-            webView.goBack();
-            return true;
-        } else if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            getWindow().setExitTransition(null);
-            finish();
-            return true;
-        }
-        // If it wasn't the Back key or there's no web page history, bubble up to the default
-        // system behavior (probably exit the activity)
-        return super.onKeyDown(keyCode, event);
+    public void onBackPressed() {
+//        WebView webview = TurbolinksSession.getDefault(this).getWebView();;
+//        if (webview.canGoBack()) {
+//        if (BuildConfig.DEBUG) {
+//            Toast.makeText(this, "Back Pressed", Toast.LENGTH_SHORT).show();
+//        }
+//            webview.goBack();
+//        } else {
+            super.onBackPressed();
+//        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
