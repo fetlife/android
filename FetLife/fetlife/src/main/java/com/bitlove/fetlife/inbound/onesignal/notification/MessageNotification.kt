@@ -27,6 +27,8 @@ class MessageNotification(notificationType: String, notificationIdRange: Int, ti
             return false;
         }
 
+        saveNotificationItem(notificationIdRange)
+
         var conversationInForeground = false
         val appInForeground = fetLifeApplication.isAppInForeground
 
@@ -39,8 +41,6 @@ class MessageNotification(notificationType: String, notificationIdRange: Int, ti
                 conversationInForeground = true
             }
         }
-
-        saveNotificationItem(notificationIdRange)
 
         //TODO: display in app notification if the user is not on the same message screen
         return conversationInForeground
