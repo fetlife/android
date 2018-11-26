@@ -40,6 +40,8 @@ class MessageNotification(notificationType: String, notificationIdRange: Int, ti
             }
         }
 
+        saveNotificationItem(notificationIdRange)
+
         //TODO: display in app notification if the user is not on the same message screen
         return conversationInForeground
     }

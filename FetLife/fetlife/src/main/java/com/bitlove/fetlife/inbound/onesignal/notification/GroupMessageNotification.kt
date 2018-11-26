@@ -54,6 +54,8 @@ class GroupMessageNotification(notificationType: String, notificationIdRange: In
             }
         }
 
+        saveNotificationItem(notificationIdRange)
+
         //TODO: display in app notification if the user is not on the same message screen
         return groupDiscussionInForeground
     }

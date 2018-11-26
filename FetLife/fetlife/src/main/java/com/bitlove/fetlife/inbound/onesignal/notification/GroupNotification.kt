@@ -70,6 +70,8 @@ class GroupNotification(notificationType: String, notificationIdRange: Int, titl
             }
         }
 
+        saveNotificationItem(notificationIdRange)
+
         //TODO: display in app notification if the user is not on the same message screen
         return groupDiscussionInForeground
     }
