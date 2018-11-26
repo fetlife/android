@@ -15,7 +15,9 @@ With official FetLife Android App you can...
 
 ### Requirements
 
-- Android OS version 4.0.3 or newer
+- Android OS version 5.0 or newer
+
+Latest stable version supporting older OS version: [fetlife-2.16.7.apk](https://github.com/fetlife/android/releases/download/v2.16.7/fetlife-2.16.7.apk)
 
 ### Screenshots
 
@@ -27,6 +29,8 @@ With official FetLife Android App you can...
 Installation of FetLife App is a bit different than for Apps from the Google Play store, but it is still pretty straightforward, Android OS will guide you through the whole process. 
 
 Just download our latest stable version [fetlife-2.17.15.apk](https://github.com/fetlife/android/releases/download/v2.17.15/fetlife-2.17.15.apk) or our latest beta version [fetlife-2.18.0.apk](https://github.com/fetlife/android/releases/download/v2.18.0/fetlife-2.18.0.apk) and follow the on-screen prompts on your device.
+
+Wa
 
 For more details please check out [FetLife Android App Installation Guide](https://github.com/fetlife/android/files/1127920/FetLifeAndroidAppInstallationGuide.pdf)
 
