@@ -23,12 +23,12 @@ if (propFile.canRead()) {
 
 android {
     compileSdkVersion 28
-    buildToolsVersion "28.0.2"
+    buildToolsVersion "28.0.3"
 
     defaultConfig {
         applicationId "com.bitlove.fetlife"
         minSdkVersion 21
-        targetSdkVersion 25
+        targetSdkVersion 26
         multiDexEnabled true
 
         versionCode 21805
