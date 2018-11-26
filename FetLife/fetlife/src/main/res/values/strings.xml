@@ -385,12 +385,17 @@
     <string name="title_activity_friends">Friends</string>
     <string name="title_activity_friends_new_conversation">New Conversation</string>
     <string name="title_activity_friendrequests">Friend Requests</string>
-    <string name="title_activity_about">About This App</string>
+    <string name="title_activity_about">About &amp; Install</string>
     <string name="title_activity_notifications">Notifications</string>
     <string name="title_activity_app_notifications">App Notifications</string>
     <string name="title_intent_choose_media_upload">Select Media App</string>
     <string name="title_media_picture_upload_confirmation">Add your picture</string>
     <string name="title_media_video_upload_confirmation">Add your video</string>
+
+    <string name="title_activity_privacy">Privacy</string>
+    <string name="title_activity_legal">Legal Requests</string>
+    <string name="title_activity_2257exempt">2257 Exempt</string>
+    <string name="title_activity_terms">Terms of Use</string>
 
     <!-- *** Settings texts *** -->
 
@@ -898,7 +903,7 @@
     <string name="title_activity_search">Search</string>
     <string name="title_activity_support">Support FetLife</string>
     <string name="title_activity_ads">Advertise on FetLife</string>
-    <string name="title_activity_glossary">Kinktionary</string>
+    <string name="title_activity_glossary">Glossary</string>
     <string name="title_activity_questions">Ask the Community</string>
     <string name="title_activity_new_question">New question</string>
     <string name="title_fragment_group_discussions">Discussions</string>
@@ -951,6 +956,6 @@
     <string name="title_activity_review_questions">Review community content</string>
     <string name="title_activity_help">Help</string>
     <string name="title_activity_guidelines">Guidelines</string>
-    <string name="title_activity_contact">Get In Touch</string>
+    <string name="title_activity_contact">Contact Us</string>
 
 </resources>
