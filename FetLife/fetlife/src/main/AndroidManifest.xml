@@ -59,7 +59,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".notification.UpdateBroadcastReceiver"/>
+        <receiver android:name=".inbound.onesignal.update.UpdateBroadcastReceiver"/>
 
         <activity
             android:name=".StartActivity"
@@ -193,13 +193,13 @@
             android:name=".view.screen.resource.profile.ProfileActivity"
             android:label="@string/title_activity_about"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".notification.UpdatePermissionActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <activity android:name=".inbound.onesignal.update.UpdatePermissionActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
         
         <service
             android:name=".model.service.FetLifeApiIntentService"
             android:exported="false"/>
         <service
-            android:name=".inbound.OneSignalNotificationExtenderService"
+            android:name=".inbound.onesignal.OneSignalNotificationExtenderService"
             android:permission="android.permission.BIND_JOB_SERVICE"
             android:exported="false">
             <intent-filter>

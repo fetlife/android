@@ -3,7 +3,6 @@ package com.bitlove.fetlife.view.screen.resource;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,6 +17,8 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.appcompat.widget.Toolbar;
 
 public class PictureShareActivity extends ResourceActivity {
 

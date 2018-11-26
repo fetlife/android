@@ -1,8 +1,6 @@
 package com.bitlove.fetlife;
 
 import android.app.Activity;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -12,20 +10,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.StrictMode;
-import androidx.multidex.MultiDexApplication;
-
 import android.util.Log;
 import android.widget.Toast;
 
 import com.bitlove.fetlife.inbound.ActionCable;
-import com.bitlove.fetlife.inbound.OnNotificationOpenedHandler;
+import com.bitlove.fetlife.inbound.onesignal.NotificationParser;
 import com.bitlove.fetlife.model.api.FetLifeService;
 import com.bitlove.fetlife.model.api.GitHubService;
 import com.bitlove.fetlife.model.api.TLSSocketFactory;
 import com.bitlove.fetlife.model.db.FetLifeDatabase;
 import com.bitlove.fetlife.model.inmemory.InMemoryStorage;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
-import com.bitlove.fetlife.notification.NotificationParser;
 import com.bitlove.fetlife.session.UserSessionManager;
 import com.bitlove.fetlife.util.FileUtil;
 import com.bitlove.fetlife.view.screen.resource.ResourceListActivity;
@@ -50,6 +45,7 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
+import androidx.multidex.MultiDexApplication;
 import io.fabric.sdk.android.Fabric;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -76,7 +72,6 @@ public class FetLifeApplication extends MultiDexApplication {
     private static final long WAITING_FOR_RESULT_LOGOUT_DELAY_MILLIS = 60 * 1000;
 
     private static final String PREFIX_FILE_DB = "db_";
-    public static final String NOTIFICATION_CHANNEL_DEFUALT = "NOTIFICATION_CHANNEL_DEFUALT";
 
     //****
     //App singleton behaviour to make it accessible where dependency injection is not possible
@@ -153,7 +148,7 @@ public class FetLifeApplication extends MultiDexApplication {
         Thread.setDefaultUncaughtExceptionHandler(new FetLifeUncaughtExceptionHandler(Thread.getDefaultUncaughtExceptionHandler(),restartIntent));
 
         //Init push notifications
-        OneSignal.startInit(this).inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification).setNotificationOpenedHandler(new OnNotificationOpenedHandler()).init();
+        OneSignal.startInit(this).inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification).init();
 
         //Register activity call back to keep track of currently displayed Activity
         registerActivityLifecycleCallbacks(new ForegroundActivityObserver());
@@ -189,19 +184,19 @@ public class FetLifeApplication extends MultiDexApplication {
     }
 
     private void createNotificationChanels() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getString(R.string.notification_chanel_name_default);
-            String description = getString(R.string.notification_chanel_description_default);
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_DEFUALT, name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
+//        // Create the NotificationChannel, but only on API 26+ because
+//        // the NotificationChannel class is new and not in the support library
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            CharSequence name = getString(R.string.notification_chanel_name_default);
+//            String description = getString(R.string.notification_chanel_description_default);
+//            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+//            NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_DEFUALT, name, importance);
+//            channel.setDescription(description);
+//            // Register the channel with the system; you can't change the importance
+//            // or other notification behaviors after this
+//            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+//            notificationManager.createNotificationChannel(channel);
+//        }
     }
 
     private void initFrescoImageLibrary() {

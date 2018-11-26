@@ -22,6 +22,7 @@ import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.event.ServiceCallFailedEvent;
 import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
 import com.bitlove.fetlife.event.ServiceCallStartedEvent;
+import com.bitlove.fetlife.inbound.onesignal.NotificationParser;
 import com.bitlove.fetlife.model.api.FetLifeService;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Picture;
@@ -105,10 +106,15 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
     private boolean clearHistory = false;
 
     public static void startActivity(BaseActivity menuActivity, String pageUrl, String title) {
-        menuActivity.startActivity(createIntent(menuActivity,pageUrl,title, true, null, false));
+        menuActivity.startActivity(createIntent(menuActivity,pageUrl,title, true, (String)null, false));
     }
 
-    public static void startActivity(Context context, String pageUrl, String title, boolean hasBottomBar, Integer bottomNavId, Bundle options) {
+    public static void startActivity(Context context, String pageUrl, String title, boolean hasBottomBar, Integer bottomNavId, Bundle options, boolean newTask) {
+        Intent intent = createIntent(context, pageUrl, title, hasBottomBar, bottomNavId, newTask);
+        context.startActivity(intent,options);
+    }
+
+    public static Intent createIntent(Context context, String pageUrl, String title, boolean hasBottomBar, Integer bottomNavId, boolean newTask) {
         Intent intent = new Intent(context,TurboLinksViewActivity.class);
         intent.putExtra(EXTRA_PAGE_URL, pageUrl);
         intent.putExtra(EXTRA_PAGE_TITLE, title);
@@ -116,7 +122,10 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         if (bottomNavId != null) {
             intent.putExtra(BaseActivity.EXTRA_SELECTED_BOTTOM_NAV_ITEM,bottomNavId);
         }
-        context.startActivity(intent,options);
+        if (newTask) {
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        }
+        return intent;
     }
 
     public static Intent createIntent(Context context, String pageUrl, String title, boolean hasBottomBar, String fabLink, boolean newTask) {
@@ -183,6 +192,8 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
 
         pageUrl = getIntent().getStringExtra(EXTRA_PAGE_URL);
         hasBottomBar = getIntent().getBooleanExtra(EXTRA_HAS_BOTTOM_BAR,true);
+
+        NotificationParser.Companion.clearNotificationTypeForUrl(pageUrl);
 
         title = getIntent().getStringExtra(EXTRA_PAGE_TITLE);
         if (title == null) {

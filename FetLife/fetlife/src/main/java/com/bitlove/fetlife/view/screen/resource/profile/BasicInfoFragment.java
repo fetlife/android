@@ -1,7 +1,6 @@
 package com.bitlove.fetlife.view.screen.resource.profile;
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -22,6 +21,8 @@ import com.bitlove.fetlife.view.screen.resource.LoadFragment;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import androidx.annotation.Nullable;
 
 public class BasicInfoFragment extends LoadFragment {
 

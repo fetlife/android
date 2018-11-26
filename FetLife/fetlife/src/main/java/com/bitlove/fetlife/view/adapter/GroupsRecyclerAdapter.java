@@ -2,7 +2,6 @@ package com.bitlove.fetlife.view.adapter;
 
 import android.os.Handler;
 import android.os.Looper;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.model.pojos.fetlife.db.GroupMembershipReference;
 import com.bitlove.fetlife.model.pojos.fetlife.db.GroupMembershipReference_Table;
-import com.bitlove.fetlife.model.pojos.fetlife.db.GroupReference_Table;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Group;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Group_Table;
 import com.bitlove.fetlife.util.ServerIdUtil;
@@ -25,6 +23,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class GroupsRecyclerAdapter extends ResourceListRecyclerAdapter<Group, GroupsViewHolder> {
 

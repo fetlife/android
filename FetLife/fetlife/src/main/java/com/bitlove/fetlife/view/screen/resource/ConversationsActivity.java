@@ -3,18 +3,14 @@ package com.bitlove.fetlife.view.screen.resource;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
-import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.event.NewMessageEvent;
+import com.bitlove.fetlife.inbound.onesignal.NotificationParser;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Conversation;
-import com.bitlove.fetlife.model.pojos.fetlife.json.PeopleInto;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
-import com.bitlove.fetlife.notification.AnonymNotification;
-import com.bitlove.fetlife.notification.MessageNotification;
 import com.bitlove.fetlife.view.adapter.ConversationsRecyclerAdapter;
 import com.bitlove.fetlife.view.adapter.ResourceListRecyclerAdapter;
 import com.bitlove.fetlife.view.screen.BaseActivity;
@@ -74,7 +70,9 @@ public class ConversationsActivity extends ResourceListActivity<Conversation> {
     @Override
     protected void onResourceCreate(Bundle savedInstanceState) {
         super.onResourceCreate(savedInstanceState);
-//
+
+        NotificationParser.Companion.clearNotificationTypeForUrl("messages");
+
 //        floatingActionButton.setVisibility(View.VISIBLE);
 //        floatingActionButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -88,8 +86,6 @@ public class ConversationsActivity extends ResourceListActivity<Conversation> {
     @Override
     protected void onResourceStart() {
         super.onResourceStart();
-        MessageNotification.clearNotifications();
-        AnonymNotification.clearNotifications();
     }
 
     @Override

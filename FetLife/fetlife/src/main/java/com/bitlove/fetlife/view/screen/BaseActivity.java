@@ -7,9 +7,6 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.LayoutRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.bitlove.fetlife.event.NotificationCountUpdatedEvent;
 import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
@@ -32,13 +29,10 @@ import androidx.core.app.ActivityOptionsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.text.SpannableString;
-import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
-import android.text.style.RelativeSizeSpan;
 import android.transition.Transition;
 
 import android.transition.Fade;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -55,10 +49,26 @@ import android.widget.Toast;
 import com.bitlove.fetlife.BuildConfig;
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
+import com.bitlove.fetlife.event.NotificationCountUpdatedEvent;
+import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
+import com.bitlove.fetlife.inbound.onesignal.notification.OneSignalNotification;
+import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
+import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
+import com.bitlove.fetlife.session.UserSessionManager;
+import com.bitlove.fetlife.util.UrlUtil;
 import com.bitlove.fetlife.view.screen.component.ActivityComponent;
+import com.bitlove.fetlife.view.screen.resource.ConversationsActivity;
+import com.bitlove.fetlife.view.screen.resource.FeedActivity;
+import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity;
+import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.android.material.bottomnavigation.BottomNavigationItemView;
+import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
 import com.mikepenz.iconics.utils.IconicsMenuInflaterUtil;
 
@@ -68,6 +78,13 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.LayoutRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
 public abstract class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final int PERMISSION_REQUEST_PICTURE_UPLOAD = 10000;
@@ -75,6 +92,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     public static final int PERMISSION_REQUEST_LOCATION = 30000;
 
     public static final String EXTRA_NOTIFICATION_SOURCE_TYPE = "EXTRA_NOTIFICATION_SOURCE_TYPE";
+    public static final String EXTRA_NOTIFICATION_MERGE_ID = "EXTRA_NOTIFICATION_MERGE_ID";
     public static final String EXTRA_SELECTED_BOTTOM_NAV_ITEM = "EXTRA_SELECTED_BOTTOM_NAV_ITEM";
     public static final String EXTRA_FAB_LINK = "EXTRA_FAB_LINK";
     public static final String EXTRA_HAS_BOTTOM_BAR = "EXTRA_HAS_BOTTOM_BAR";
@@ -110,11 +128,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 //        getWindow().setAllowReturnTransitionOverlap(false);
         logEvent();
 
-        if (savedInstanceState == null) {
-            String notificationSourceType = getIntent().getStringExtra(EXTRA_NOTIFICATION_SOURCE_TYPE);
-            if (notificationSourceType != null) {
-                getFetLifeApplication().getNotificationParser().clearNotification(notificationSourceType);
-            }
+        String notificationSourceType = getIntent().getStringExtra(EXTRA_NOTIFICATION_SOURCE_TYPE);
+        String notificationMergeId = getIntent().getStringExtra(EXTRA_NOTIFICATION_MERGE_ID);
+        if (notificationSourceType != null) {
+            OneSignalNotification.Companion.clearNotifications(notificationSourceType,notificationMergeId);
         }
 
         onCreateActivityComponents();
@@ -222,13 +239,13 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                             break;
                         case R.id.navigation_bottom_requests:
                             bottomNavigation.setOnNavigationItemSelectedListener(null);
-                            TurboLinksViewActivity.startActivity(BaseActivity.this,"requests",BaseActivity.this.getString(R.string.title_activity_friendrequests), true, R.id.navigation_bottom_requests, navOptions.toBundle());
+                            TurboLinksViewActivity.startActivity(BaseActivity.this,"requests",BaseActivity.this.getString(R.string.title_activity_friendrequests), true, R.id.navigation_bottom_requests, navOptions.toBundle(), false);
 //                                finishAfterTransition();
                             setFinishAfterNavigation(true);
                             break;
                         case R.id.navigation_bottom_notifications:
                             bottomNavigation.setOnNavigationItemSelectedListener(null);
-                            TurboLinksViewActivity.startActivity(BaseActivity.this,"notifications",BaseActivity.this.getString(R.string.title_activity_notifications), true, R.id.navigation_bottom_notifications, navOptions.toBundle());
+                            TurboLinksViewActivity.startActivity(BaseActivity.this,"notifications",BaseActivity.this.getString(R.string.title_activity_notifications), true, R.id.navigation_bottom_notifications, navOptions.toBundle(), false);
 //                              finishAfterTransition();
                             setFinishAfterNavigation(true);
                             break;
@@ -298,6 +315,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             });
         }
     }
+
+
 
     private void setupSideMenu() {
         final NavigationView navigationView = findViewById(R.id.nav_view);

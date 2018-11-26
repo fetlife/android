@@ -1,4 +1,4 @@
-package com.bitlove.fetlife.notification;
+package com.bitlove.fetlife.inbound.onesignal.update;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;

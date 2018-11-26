@@ -3,8 +3,6 @@ package com.bitlove.fetlife.view.adapter;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +20,15 @@ import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.view.screen.resource.ResourceListActivity;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.android.material.snackbar.Snackbar;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class FriendRequestsRecyclerAdapter extends ResourceListRecyclerAdapter<FriendRequestScreenModelObject, FriendRequestScreenViewHolder> {
 

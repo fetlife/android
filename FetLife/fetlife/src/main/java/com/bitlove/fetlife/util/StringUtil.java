@@ -4,7 +4,6 @@ import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
@@ -17,14 +16,15 @@ import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity;
 import com.crashlytics.android.Crashlytics;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.vladsch.flexmark.ast.Node;
-//import com.vladsch.flexmark.html.HtmlRenderer;
-//import com.vladsch.flexmark.parser.Parser;
-//import com.vladsch.flexmark.util.options.MutableDataSet;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+//import com.vladsch.flexmark.ast.Node;
+//import com.vladsch.flexmark.html.HtmlRenderer;
+//import com.vladsch.flexmark.parser.Parser;
+//import com.vladsch.flexmark.util.options.MutableDataSet;
 
 public class StringUtil {
 

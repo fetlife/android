@@ -55,14 +55,14 @@ public class UrlUtil {
 //                        baseActivity.finish();
                         return false;
                     } else {
-                        TurboLinksViewActivity.startActivity(baseActivity, uri.toString(), baseActivity.getString(R.string.title_activity_review_questions), false, null, null);
+                        TurboLinksViewActivity.startActivity(baseActivity, uri.toString(), baseActivity.getString(R.string.title_activity_review_questions), false, null, null, false);
                         return true;
                     }
                 } else if ("search".equalsIgnoreCase(urlSegments.get(1))) {
                     TurbolinksSession.getDefault(baseActivity).getWebView().clearHistory();
                     return false;
                 } else {
-                    TurboLinksViewActivity.startActivity(baseActivity,uri.toString(), null, false, null, null);
+                    TurboLinksViewActivity.startActivity(baseActivity,uri.toString(), null, false, null, null, false);
                     return true;
                 }
             } else if (baseUriSegments.size() > 1 && "review".equalsIgnoreCase(baseUriSegments.get(1))) {

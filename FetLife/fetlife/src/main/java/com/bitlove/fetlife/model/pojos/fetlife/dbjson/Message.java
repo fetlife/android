@@ -11,7 +11,6 @@ import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.Map;

@@ -7,9 +7,6 @@ import android.net.Uri;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,12 +17,10 @@ import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Picture;
 import com.bitlove.fetlife.model.pojos.fetlife.json.FeedEvent;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Story;
 import com.bitlove.fetlife.util.PictureUtil;
-import com.bitlove.fetlife.util.ViewUtil;
 import com.bitlove.fetlife.view.adapter.PictureGridAdapter;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.stfalcon.frescoimageviewer.ImageViewer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FeedAdapterBinder {

@@ -32,6 +32,7 @@
             <p/>v2.18.5<br/>
                     <ul>
                         <li>Improved Side Menu design</li>
+                        <li>Improved notification handlings</li>
                     </ul>
 
             <p/>v2.18.2<br/>
@@ -419,26 +420,26 @@
     <string name="settings_summary_notification_anonymtext">Hide all details in incoming notifications and keep them away from lock screen</string>
     <string name="settings_category_notification_enablement">Enable Notifications</string>
     <string name="settings_title_notification_messages_enabled">Message Notifications</string>
-    <string name="settings_summary_notification_messages_enabled">Enable Notifications for incoming Messages</string>
+    <string name="settings_summary_notification_messages_enabled">Notifications for incoming Messages</string>
     <string name="settings_title_notification_group_messages_enabled">Group Discussion Notifications</string>
-    <string name="settings_summary_notification_group_messages_enabled">Enable Notifications for Group Discussion Comments and Mentions</string>
+    <string name="settings_summary_notification_group_messages_enabled">Notifications for Group Discussion Comments and Mentions</string>
     <string name="settings_title_notification_friendrequests_enabled">Friend Request Notifications</string>
-    <string name="settings_summary_notification_friendrequests_enabled">Enable Notifications for incoming Friend Requests</string>
+    <string name="settings_summary_notification_friendrequests_enabled">Notifications for incoming Friend Requests</string>
     <string name="settings_title_notification_prerelease_enabled">Pre-Release Notifications</string>
-    <string name="settings_summary_notification_prerelease_enabled">Enable Notifications about new preview releases</string>
+    <string name="settings_summary_notification_prerelease_enabled">Notifications about new preview releases</string>
     <string name="settings_title_notification_others_enabled">Other Notifications</string>
-    <string name="settings_summary_notification_others_enabled">Enable Notifications for any other event</string>
+    <string name="settings_summary_notification_others_enabled">Notifications for any other event</string>
     <string name="settings_title_notification_loves_enabled">Love Notifications</string>
-    <string name="settings_summary_notification_loves_enabled">Enable Notifications about your stuff Loved by other users</string>
+    <string name="settings_summary_notification_loves_enabled">Notifications about your content Loved by other users</string>
     <string name="settings_title_notification_comments_enabled">Comment Notifications</string>
-    <string name="settings_summary_notification_comments_enabled">Enable Notifications about your stuff commented by other users</string>
+    <string name="settings_summary_notification_comments_enabled">Notifications about your content commented by other users</string>
     <string name="settings_title_notification_mentions_enabled">Mention Notifications</string>
-    <string name="settings_summary_notification_mentions_enabled">Enable Notifications about you got mentioned by other users</string>
-    <string name="settings_title_notification_new_answers_enabled">New Answer Notifications</string>
-    <string name="settings_summary_notification_new_answers_enabled">Enable Notifications about new answers to your Ask the Community questions</string>
-
+    <string name="settings_summary_notification_mentions_enabled">Notifications about you got mentioned by other users</string>
+    <string name="settings_title_notification_questions_enabled">New Answer Notifications</string>
+    <string name="settings_summary_notification_questions_enabled">Notifications about new answers to your Ask the Community questions</string>
     <string name="settings_title_notification_info_enabled">Info Notifications</string>
-    <string name="settings_summary_notification_info_enabled">Enable Notifications for information messages</string>
+    <string name="settings_summary_notification_info_enabled">Notifications for information notifications</string>
+
     <string name="noification_title_new_one_or_more_notification">New Notification</string>
     <string name="noification_text_new_anonym_notification">You have new notification waiting</string>
     <string name="noification_text_new_anonym_notifications">You have %1$d new notifications waiting</string>
@@ -843,15 +844,10 @@
     <string name="title_fragment_member_serach">Search</string>
     <string name="noification_title_new_message">New private message</string>
     <string name="noification_title_new_messages">%1$d new private messages</string>
-    <string name="noification_summary_title_new_answer">You have new answer from the community</string>
-    <string name="noification_summary_title_new_answers">You have %1$d new answers from the community</string>
-    <string name="noification_title_new_answers">Ask the community</string>
     <string name="noification_title_new_group_message">New group comment</string>
     <string name="noification_title_new_group_messages">%1$d new group comments</string>
     <string name="noification_text_new_message">New message from %1$s</string>
     <string name="noification_text_new_messages">%1$d messages from %2$s</string>
-    <string name="noification_text_new_answer">You have a new answer to your question</string>
-    <string name="noification_text_new_answers">You have %1$d new answers to your question</string>
     <string name="noification_text_new_group_message">New comment in %1$s</string>
     <string name="noification_text_new_group_messages">%1$d comments in %2$s</string>
     <string name="noification_title_new_friendrequest">New Friend Request</string>
@@ -957,5 +953,86 @@
     <string name="title_activity_help">Help</string>
     <string name="title_activity_guidelines">Guidelines</string>
     <string name="title_activity_contact">Contact Us</string>
+    <string name="noification_title_groups">Group Conversations</string>
 
+    <plurals name="noification_summary_title_questions_new_answer">
+        <item quantity="one">Your questions has a new answer</item>
+        <item quantity="other">Your questions has %d new answers</item>
+    </plurals>
+    <string name="noification_summary_text_questions_new_answer">Ask the community</string>
+    <plurals name="noification_title_questions_new_answer">
+        <item quantity="one">New answer</item>
+        <item quantity="other">%d new answers</item>
+    </plurals>
+    <string name="noification_text_questions_new_answer">to a question you asked</string>
+
+    <plurals name="noification_summary_text_messages_new_message">
+        <item quantity="one">sent a private messages</item>
+        <item quantity="other">sent %d private messages</item>
+    </plurals>
+    <string name="noification_summary_text_messages_new_message">Private messages</string>
+
+    <plurals name="noification_summary_title_groups_new_message">
+        <item quantity="one">New comment on the discussions you follow</item>
+        <item quantity="other">%d new comments on the discussions you follow</item>
+    </plurals>
+    <string name="noification_summary_text_groups_new_message">Group Discussions</string>
+    <plurals name="noification_summary_title_groups_new_discussion">
+        <item quantity="one">New discussion is started in a Group you follow</item>
+        <item quantity="other">%d new discussion are started in a Group you follow</item>
+    </plurals>
+    <plurals name="noification_summary_title_groups_new_discussion_with_title">
+        <item quantity="one">New discussion is started in %s</item>
+        <item quantity="other">%d new discussion are started in %s</item>
+    </plurals>
+    <string name="noification_summary_text_groups_new_discussion">New Group Discussions</string>
+    <plurals name="noification_title_groups_new_message">
+        <item quantity="one">New comment</item>
+        <item quantity="other">%d new comments</item>
+    </plurals>
+    <string name="noification_text_groups_new_message">on a discussion you follow</string>
+    <plurals name="noification_title_groups_new_discussion">
+        <item quantity="one">New discussion</item>
+        <item quantity="other">%d new discussions</item>
+    </plurals>
+    <string name="noification_text_groups_new_discussion">in a group you follow</string>
+    <string name="noification_text_groups_new_discussion_with_title">in %s</string>
+
+    <plurals name="noification_summary_title_info">
+        <item quantity="one">You have a new notification</item>
+        <item quantity="other">You have %d new notifications</item>
+    </plurals>
+    <string name="noification_summary_text_info">Notifications</string>
+
+    <string name="noification_title_anonym">You have private notifications</string>
+    <string name="noification_text_anonym">Check the App for more details</string>
+
+    <plurals name="noification_summary_title_loves_new_love">
+        <item quantity="one">Your received a new love</item>
+        <item quantity="other">Your received %d new loves</item>
+    </plurals>
+    <string name="noification_summary_text_loves_new_love">Loves</string>
+    <string name="noification_title_loves_new_love">%d members</string>
+
+    <plurals name="noification_summary_title_mentions_new_mention">
+        <item quantity="one">Your were mentioned by a FetLife member</item>
+        <item quantity="two">Your were mentioned twice by FetLife members</item>
+        <item quantity="other">Your were mentioned %d times by FetLife members</item>
+    </plurals>
+    <string name="noification_summary_text_mentions_new_mention">Mentions</string>
+    <string name="noification_title_mentions_new_mention">%d members</string>
+
+    <plurals name="noification_summary_title_comments_new_comment">
+        <item quantity="one">Your received a new comments</item>
+        <item quantity="other">Your received %d new comments</item>
+    </plurals>
+    <string name="noification_summary_text_comments_new_comment">Comments</string>
+    <string name="noification_title_comments_new_comment">%d members</string>
+
+    <plurals name="noification_summary_title_requests_new_friendrequest">
+        <item quantity="one">Your received a new friend request</item>
+        <item quantity="other">Your received %d new friend requests</item>
+    </plurals>
+    <string name="noification_summary_text_requests_new_friendrequest">Requests</string>
+    <string name="noification_title_comments_requests_new_friendrequest">%d members</string>
 </resources>

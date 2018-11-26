@@ -4,7 +4,6 @@ import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.event.ServiceCallFailedEvent;
 import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
 import com.bitlove.fetlife.model.db.FetLifeDatabase;
-import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.util.DateUtil;
 import com.bitlove.fetlife.util.ServerIdUtil;
@@ -20,9 +19,6 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Table(database = FetLifeDatabase.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
