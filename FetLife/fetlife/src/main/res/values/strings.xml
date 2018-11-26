@@ -392,6 +392,11 @@
     <string name="title_media_picture_upload_confirmation">Add your picture</string>
     <string name="title_media_video_upload_confirmation">Add your video</string>
 
+    <string name="title_activity_privacy">Privacy</string>
+    <string name="title_activity_legal">Legal Requests</string>
+    <string name="title_activity_2257exempt">2257 Exempt</string>
+    <string name="title_activity_terms">Terms of Use</string>
+
     <!-- *** Settings texts *** -->
 
     <string name="settings_category_general_start">Start Screen Setting</string>

@@ -68,6 +68,10 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         supportedBaseUrls.put("https://app.fetlife.com/guidelines",R.string.title_activity_guidelines);
         supportedBaseUrls.put("https://app.fetlife.com/contact",R.string.title_activity_contact);
         supportedBaseUrls.put("https://app.fetlife.com/android",R.string.title_activity_about);
+        supportedBaseUrls.put("https://app.fetlife.com/privacy",R.string.title_activity_privacy);
+        supportedBaseUrls.put("https://app.fetlife.com/legalese/tou",R.string.title_activity_terms);
+        supportedBaseUrls.put("https://app.fetlife.com/legalese/legal_requests",R.string.title_activity_legal);
+        supportedBaseUrls.put("https://app.fetlife.com/legalese/2257exempt",R.string.title_activity_2257exempt);
 
         supportedBaseUrls.put("https://fetlife.com/ads",R.string.title_activity_ads);
         supportedBaseUrls.put("https://fetlife.com/support",R.string.title_activity_support);
@@ -80,6 +84,10 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         supportedBaseUrls.put("https://fetlife.com/guidelines",R.string.title_activity_guidelines);
         supportedBaseUrls.put("https://fetlife.com/contact",R.string.title_activity_contact);
         supportedBaseUrls.put("https://fetlife.com/android",R.string.title_activity_about);
+        supportedBaseUrls.put("https://fetlife.com/privacy",R.string.title_activity_privacy);
+        supportedBaseUrls.put("https://fetlife.com/legalese/tou",R.string.title_activity_terms);
+        supportedBaseUrls.put("https://fetlife.com/legalese/legal_requests",R.string.title_activity_legal);
+        supportedBaseUrls.put("https://fetlife.com/legalese/2257exempt",R.string.title_activity_2257exempt);
         supportedBaseUrls.put(FAB_LINK_NEW_QUESTION,R.string.title_activity_new_question);
     }
 
@@ -439,15 +447,15 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
 
     @Override
     public void onBackPressed() {
-//        WebView webview = TurbolinksSession.getDefault(this).getWebView();;
-//        if (webview.canGoBack()) {
-//        if (BuildConfig.DEBUG) {
-//            Toast.makeText(this, "Back Pressed", Toast.LENGTH_SHORT).show();
-//        }
-//            webview.goBack();
-//        } else {
+        WebView webview = TurbolinksSession.getDefault(this).getWebView();;
+        if (webview.canGoBack()) {
+        if (BuildConfig.DEBUG) {
+            Toast.makeText(this, "Back Pressed", Toast.LENGTH_SHORT).show();
+        }
+            webview.goBack();
+        } else {
             super.onBackPressed();
-//        }
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
