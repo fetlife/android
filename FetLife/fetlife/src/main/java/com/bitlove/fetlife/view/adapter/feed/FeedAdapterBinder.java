@@ -7,9 +7,6 @@ import android.net.Uri;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,11 +16,8 @@ import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Picture;
 import com.bitlove.fetlife.model.pojos.fetlife.json.FeedEvent;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Story;
-import com.bitlove.fetlife.util.PictureUtil;
-import com.bitlove.fetlife.util.ViewUtil;
 import com.bitlove.fetlife.view.adapter.PictureGridAdapter;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -144,7 +138,7 @@ public class FeedAdapterBinder {
     }
 
     private void addImageTextListItemViews(List<FeedEvent> events, LinearLayout linearLayout, final FeedRecyclerAdapter.OnFeedItemClickListener onItemClickListener, final FeedItemResourceHelper feedItemResourceHelper) {
-        Context context = linearLayout.getContext();
+        final Context context = linearLayout.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         for (final FeedEvent feedEvent : events) {
 
@@ -160,11 +154,9 @@ public class FeedAdapterBinder {
                     @Override
                     public void onClick(View v) {
                         if (feedItemResourceHelper.browseImageOnClick()) {
-                            //TODO: reuse the same imageclick code instead of having it several places in this class
-                            LayoutInflater inflater = LayoutInflater.from(v.getContext());
-                            final View overlay = inflater.inflate(R.layout.overlay_feed_imageswipe, null);
-                            PictureUtil.setOverlayContent(overlay, picture, onItemClickListener);
-                            new ImageViewer.Builder(v.getContext(), new String[]{picture.getVariants().getHugeUrl()}).setOverlayView(overlay).show();
+                            List<Picture> pictures = new ArrayList<>();
+                            pictures.add(picture);
+                            fetLifeApplication.getImageViewerWrapper().show(context,pictures,0);
                         } else {
                             onItemClickListener.onFeedInnerItemClick(feedItemResourceHelper.getFeedStoryType(), feedItemResourceHelper.getUrl(feedEvent), feedEvent, feedItemResourceHelper);
                         }
@@ -215,7 +207,7 @@ public class FeedAdapterBinder {
     }
 
     private void addImageOnlyListItemViews(final List<FeedEvent> events, LinearLayout linearLayout, final FeedRecyclerAdapter.OnFeedItemClickListener onItemClickListener, final FeedItemResourceHelper feedItemResourceHelper) {
-        Context context = linearLayout.getContext();
+        final Context context = linearLayout.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         for (final FeedEvent event : events) {
 
@@ -227,10 +219,9 @@ public class FeedAdapterBinder {
                 simpleDraweeView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        LayoutInflater inflater = LayoutInflater.from(v.getContext());
-                        final View overlay = inflater.inflate(R.layout.overlay_feed_imageswipe, null);
-                        PictureUtil.setOverlayContent(overlay, picture, onItemClickListener);
-                        new ImageViewer.Builder(v.getContext(), new String[]{picture.getVariants().getHugeUrl()}).setOverlayView(overlay).show();
+                        List<Picture> pictures = new ArrayList<>();
+                        pictures.add(picture);
+                        fetLifeApplication.getImageViewerWrapper().show(context,pictures,0);
                     }
                 });
             } else {

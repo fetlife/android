@@ -1,24 +1,18 @@
 package com.bitlove.fetlife.view.adapter;
 
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Picture;
 import com.bitlove.fetlife.model.pojos.fetlife.json.FeedEvent;
-import com.bitlove.fetlife.util.PictureUtil;
-import com.bitlove.fetlife.util.ViewUtil;
 import com.bitlove.fetlife.view.adapter.feed.FeedItemResourceHelper;
 import com.bitlove.fetlife.view.adapter.feed.FeedRecyclerAdapter;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,16 +93,7 @@ public class PictureGridAdapter extends BaseAdapter {
             simpleDraweeView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    LayoutInflater inflater = LayoutInflater.from(v.getContext());
-                    final View overlay = inflater.inflate(R.layout.overlay_feed_imageswipe, null);
-                    PictureUtil.setOverlayContent(overlay, getItem(position), onItemClickListener);
-
-                    new ImageViewer.Builder(v.getContext(), displayLinks).setStartPosition(position).setOverlayView(overlay).setImageChangeListener(new ImageViewer.OnImageChangeListener() {
-                        @Override
-                        public void onImageChange(int position) {
-                            PictureUtil.setOverlayContent(overlay, getItem(position), onItemClickListener);
-                        }
-                    }).show();
+                    FetLifeApplication.getInstance().getImageViewerWrapper().show(v.getContext(),pictures,position);
                 }
             });
         } else {

@@ -19,7 +19,6 @@ import com.bitlove.fetlife.util.ServerIdUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.raizlabs.android.dbflow.sql.language.OrderBy;
 import com.raizlabs.android.dbflow.sql.language.Select;
-import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,22 +91,7 @@ public class PicturesRecyclerAdapter extends RecyclerView.Adapter<PictureViewHol
             @Override
             public void onClick(View view) {
                 Context context = holder.itemView.getContext();
-
-                LayoutInflater inflater = LayoutInflater.from(context);
-                final View overlay = inflater.inflate(R.layout.overlay_feed_imageswipe, null);
-                PictureUtil.setOverlayContent(overlay, itemList.get(position), onPictureClickListener);
-
-                new ImageViewer.Builder(context, displayLinks).setStartPosition(position).setOverlayView(overlay).setImageChangeListener(new ImageViewer.OnImageChangeListener() {
-                    @Override
-                    public void onImageChange(int position) {
-                        try {
-                            PictureUtil.setOverlayContent(overlay, itemList.get(position), onPictureClickListener);
-                        } catch (IndexOutOfBoundsException ioobe) {
-                            //Rare issue when user is browsing photos while Picture list is updated.
-                            //TODO: return user to picture list screen in this case
-                        }
-                    }
-                }).show();
+                FetLifeApplication.getInstance().getImageViewerWrapper().show(context,itemList,position);
             }
         });
 

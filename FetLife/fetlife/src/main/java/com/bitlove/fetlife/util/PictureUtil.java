@@ -9,6 +9,8 @@ import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Picture;
+import com.bitlove.fetlife.view.screen.BaseActivity;
+import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity;
 
 public class PictureUtil {
 
@@ -20,7 +22,7 @@ public class PictureUtil {
 
     private static final int OVERLAY_HITREC_PADDING = 200;
 
-    public static void setOverlayContent(View overlay, final Picture picture, final OnPictureOverlayClickListener onItemClickListener) {
+    public static void setOverlayContent(View overlay, final Picture picture) {
 
         AsyncTask.execute(new Runnable() {
             @Override
@@ -57,7 +59,7 @@ public class PictureUtil {
         imageVisit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onItemClickListener.onVisitPicture(picture, picture.getUrl());
+                UrlUtil.openUrl(v.getContext(),picture.getUrl());
             }
         });
 
@@ -67,7 +69,11 @@ public class PictureUtil {
         imageShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onItemClickListener.onSharePicture(picture, picture.getUrl());
+                if (picture.isOnShareList()) {
+                    Picture.unsharePicture(picture);
+                } else {
+                    Picture.sharePicture(picture);
+                }
                 ((ImageView) v).setColorFilter(picture.isOnShareList() ? v.getContext().getResources().getColor(R.color.text_color_primary) : v.getContext().getResources().getColor(R.color.text_color_secondary));
             }
         });
@@ -76,7 +82,7 @@ public class PictureUtil {
         imageName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onItemClickListener.onMemberClick(picture.getMember());
+                ProfileActivity.startActivity((BaseActivity) v.getContext(), picture.getMemberId());
             }
         });
         imageDescription.setText(Picture.getFormattedBody(picture.getBody()));

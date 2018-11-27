@@ -114,6 +114,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             if (notificationSourceType != null) {
                 getFetLifeApplication().getNotificationParser().clearNotification(notificationSourceType);
             }
+        } else {
+            getFetLifeApplication().getImageViewerWrapper().onConfigurationChanged(this);
         }
 
         onCreateActivityComponents();

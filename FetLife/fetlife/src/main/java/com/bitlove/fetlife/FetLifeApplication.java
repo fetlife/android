@@ -379,6 +379,11 @@ public class FetLifeApplication extends MultiDexApplication {
     //Getters for service classes
     //****
 
+
+    public ImageViewerWrapper getImageViewerWrapper() {
+        return imageViewerWrapper;
+    }
+
     public InMemoryStorage getInMemoryStorage() {
         return inMemoryStorage;
     }

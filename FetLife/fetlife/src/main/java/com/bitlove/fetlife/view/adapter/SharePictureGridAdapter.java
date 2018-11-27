@@ -12,13 +12,11 @@ import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Picture;
 import com.bitlove.fetlife.model.pojos.fetlife.json.FeedEvent;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Story;
-import com.bitlove.fetlife.util.PictureUtil;
 import com.bitlove.fetlife.util.UrlUtil;
 import com.bitlove.fetlife.view.adapter.feed.FeedItemResourceHelper;
 import com.bitlove.fetlife.view.adapter.feed.FeedRecyclerAdapter;
 import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -137,14 +135,7 @@ public class SharePictureGridAdapter extends BaseAdapter {
                     }
 
                 };
-                PictureUtil.setOverlayContent(overlay, getItem(position), onItemClickListener);
-
-                new ImageViewer.Builder(v.getContext(), displayLinks).setStartPosition(position).setOverlayView(overlay).setImageChangeListener(new ImageViewer.OnImageChangeListener() {
-                    @Override
-                    public void onImageChange(int position) {
-                        PictureUtil.setOverlayContent(overlay, getItem(position), onItemClickListener);
-                    }
-                }).show();
+                FetLifeApplication.getInstance().getImageViewerWrapper().show(v.getContext(), pictures, position);
                 return true;
             }
         });
