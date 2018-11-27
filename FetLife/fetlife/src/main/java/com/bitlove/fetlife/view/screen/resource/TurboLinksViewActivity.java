@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.Toast;
 
 import com.basecamp.turbolinks.TurbolinksAdapter;
 import com.basecamp.turbolinks.TurbolinksSession;
@@ -21,6 +22,7 @@ import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.event.ServiceCallFailedEvent;
 import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
 import com.bitlove.fetlife.event.ServiceCallStartedEvent;
+import com.bitlove.fetlife.inbound.onesignal.NotificationParser;
 import com.bitlove.fetlife.model.api.FetLifeService;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Picture;
@@ -64,6 +66,30 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         supportedBaseUrls.put("https://app.fetlife.com/team",R.string.title_activity_team);
         supportedBaseUrls.put("https://app.fetlife.com/notifications",R.string.title_activity_notifications);
         supportedBaseUrls.put("https://app.fetlife.com/requests",R.string.title_activity_friendrequests);
+        supportedBaseUrls.put("https://app.fetlife.com/help",R.string.title_activity_help);
+        supportedBaseUrls.put("https://app.fetlife.com/guidelines",R.string.title_activity_guidelines);
+        supportedBaseUrls.put("https://app.fetlife.com/contact",R.string.title_activity_contact);
+        supportedBaseUrls.put("https://app.fetlife.com/android",R.string.title_activity_about);
+        supportedBaseUrls.put("https://app.fetlife.com/privacy",R.string.title_activity_privacy);
+        supportedBaseUrls.put("https://app.fetlife.com/legalese/tou",R.string.title_activity_terms);
+        supportedBaseUrls.put("https://app.fetlife.com/legalese/legal_requests",R.string.title_activity_legal);
+        supportedBaseUrls.put("https://app.fetlife.com/legalese/2257exempt",R.string.title_activity_2257exempt);
+
+        supportedBaseUrls.put("https://fetlife.com/ads",R.string.title_activity_ads);
+        supportedBaseUrls.put("https://fetlife.com/support",R.string.title_activity_support);
+        supportedBaseUrls.put("https://fetlife.com/glossary",R.string.title_activity_glossary);
+        supportedBaseUrls.put("https://fetlife.com/wallpapers",R.string.title_activity_wallpapers);
+        supportedBaseUrls.put("https://fetlife.com/team",R.string.title_activity_team);
+        supportedBaseUrls.put("https://fetlife.com/notifications",R.string.title_activity_notifications);
+        supportedBaseUrls.put("https://fetlife.com/requests",R.string.title_activity_friendrequests);
+        supportedBaseUrls.put("https://fetlife.com/help",R.string.title_activity_help);
+        supportedBaseUrls.put("https://fetlife.com/guidelines",R.string.title_activity_guidelines);
+        supportedBaseUrls.put("https://fetlife.com/contact",R.string.title_activity_contact);
+        supportedBaseUrls.put("https://fetlife.com/android",R.string.title_activity_about);
+        supportedBaseUrls.put("https://fetlife.com/privacy",R.string.title_activity_privacy);
+        supportedBaseUrls.put("https://fetlife.com/legalese/tou",R.string.title_activity_terms);
+        supportedBaseUrls.put("https://fetlife.com/legalese/legal_requests",R.string.title_activity_legal);
+        supportedBaseUrls.put("https://fetlife.com/legalese/2257exempt",R.string.title_activity_2257exempt);
         supportedBaseUrls.put(FAB_LINK_NEW_QUESTION,R.string.title_activity_new_question);
     }
 
@@ -81,10 +107,15 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
     private boolean clearHistory = false;
 
     public static void startActivity(BaseActivity menuActivity, String pageUrl, String title) {
-        menuActivity.startActivity(createIntent(menuActivity,pageUrl,title, true, null, false));
+        menuActivity.startActivity(createIntent(menuActivity,pageUrl,title, true, (String)null, false));
     }
 
-    public static void startActivity(Context context, String pageUrl, String title, boolean hasBottomBar, Integer bottomNavId, Bundle options) {
+    public static void startActivity(Context context, String pageUrl, String title, boolean hasBottomBar, Integer bottomNavId, Bundle options, boolean newTask) {
+        Intent intent = createIntent(context, pageUrl, title, hasBottomBar, bottomNavId, newTask);
+        context.startActivity(intent,options);
+    }
+
+    public static Intent createIntent(Context context, String pageUrl, String title, boolean hasBottomBar, Integer bottomNavId, boolean newTask) {
         Intent intent = new Intent(context,TurboLinksViewActivity.class);
         intent.putExtra(EXTRA_PAGE_URL, pageUrl);
         intent.putExtra(EXTRA_PAGE_TITLE, title);
@@ -92,7 +123,10 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         if (bottomNavId != null) {
             intent.putExtra(BaseActivity.EXTRA_SELECTED_BOTTOM_NAV_ITEM,bottomNavId);
         }
-        context.startActivity(intent,options);
+        if (newTask) {
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        }
+        return intent;
     }
 
     public static Intent createIntent(Context context, String pageUrl, String title, boolean hasBottomBar, String fabLink, boolean newTask) {
@@ -159,6 +193,8 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
 
         pageUrl = getIntent().getStringExtra(EXTRA_PAGE_URL);
         hasBottomBar = getIntent().getBooleanExtra(EXTRA_HAS_BOTTOM_BAR,true);
+
+        NotificationParser.Companion.clearNotificationTypeForUrl(pageUrl);
 
         title = getIntent().getStringExtra(EXTRA_PAGE_TITLE);
         if (title == null) {
@@ -403,10 +439,12 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
     }
 
     private Integer getTitleForSupportedLocation(String location) {
-        if (location.startsWith("https://fetlife.com/team")) {
-            return supportedBaseUrls.get("https://fetlife.com/team");
+        for (Map.Entry<String,Integer> entry : supportedBaseUrls.entrySet()) {
+            if (location.startsWith(entry.getKey())) {
+                return entry.getValue();
+            }
         }
-        return supportedBaseUrls.get(location);
+        return null;
     }
 
     @Override
@@ -420,20 +458,16 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        WebView webView = TurbolinksSession.getDefault(this).getWebView();
-        // Check if the key event was the Back button and if there's history
-        if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack() && !hasBottomBar) {
-            webView.goBack();
-            return true;
-        } else if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            getWindow().setExitTransition(null);
-            finish();
-            return true;
+    public void onBackPressed() {
+        WebView webview = TurbolinksSession.getDefault(this).getWebView();;
+        if (webview.canGoBack()) {
+        if (BuildConfig.DEBUG) {
+            Toast.makeText(this, "Back Pressed", Toast.LENGTH_SHORT).show();
         }
-        // If it wasn't the Back key or there's no web page history, bubble up to the default
-        // system behavior (probably exit the activity)
-        return super.onKeyDown(keyCode, event);
+            webview.goBack();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

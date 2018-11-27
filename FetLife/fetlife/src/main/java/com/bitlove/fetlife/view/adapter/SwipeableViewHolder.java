@@ -1,7 +1,8 @@
 package com.bitlove.fetlife.view.adapter;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public abstract class SwipeableViewHolder extends RecyclerView.ViewHolder {
 

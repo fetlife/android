@@ -1,11 +1,6 @@
 package com.bitlove.fetlife.view.screen.resource;
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.core.view.MenuItemCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +14,12 @@ import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.view.adapter.ResourceListRecyclerAdapter;
 import com.bitlove.fetlife.view.adapter.SearchEventRecyclerAdapter;
 import com.bitlove.fetlife.view.screen.BaseActivity;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.view.MenuItemCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class SearchEventFragment extends LoadFragment implements ResourceListRecyclerAdapter.OnResourceClickListener<Event> {
 

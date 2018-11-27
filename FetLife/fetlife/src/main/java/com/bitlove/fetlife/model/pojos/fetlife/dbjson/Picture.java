@@ -1,8 +1,6 @@
 
 package com.bitlove.fetlife.model.pojos.fetlife.dbjson;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.text.Html;
 
 import com.bitlove.fetlife.FetLifeApplication;

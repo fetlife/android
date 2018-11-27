@@ -2,7 +2,6 @@ package com.bitlove.fetlife.view.adapter.feed;
 
 import android.os.Handler;
 import android.os.Looper;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +22,8 @@ import com.crashlytics.android.Crashlytics;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class FeedRecyclerAdapter extends ResourceListRecyclerAdapter<Story, FeedViewHolder> {
 

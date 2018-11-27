@@ -3,7 +3,6 @@ package com.bitlove.fetlife.view.screen.resource;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import com.google.android.material.navigation.NavigationView;
 
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.model.pojos.fetlife.db.RelationReference;
@@ -14,6 +13,7 @@ import com.bitlove.fetlife.view.adapter.RelationsRecyclerAdapter;
 import com.bitlove.fetlife.view.adapter.ResourceListRecyclerAdapter;
 import com.bitlove.fetlife.view.screen.component.MenuActivityComponent;
 import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity;
+import com.google.android.material.navigation.NavigationView;
 
 public class FriendsActivity extends ResourceListActivity<Member> implements NavigationView.OnNavigationItemSelectedListener {
 

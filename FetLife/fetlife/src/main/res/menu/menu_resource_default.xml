@@ -123,8 +123,12 @@
         android:id="@+id/about" android:checkableBehavior="single">
 
         <item
-            android:id="@+id/nav_relnotes"
-            android:title="@string/menu_relnotes" />
+            android:id="@+id/nav_help"
+            android:title="@string/menu_help" />
+
+        <item
+            android:id="@+id/nav_about"
+            android:title="@string/menu_about" />
 
         <item
             android:id="@+id/nav_glossary"
@@ -132,17 +136,11 @@
 
         <item
             android:id="@+id/nav_guidelines"
-            android:visible="false"
             android:title="@string/menu_guidelines" />
 
         <item
-            android:id="@+id/nav_about"
-            android:title="@string/menu_about" />
-
-        <item
-            android:id="@+id/nav_help"
-            android:visible="false"
-            android:title="@string/menu_help" />
+            android:id="@+id/nav_relnotes"
+            android:title="@string/menu_relnotes" />
 
         <item
             android:id="@+id/nav_ads"
@@ -154,7 +152,6 @@
 
         <item
             android:id="@+id/nav_contact"
-            android:visible="false"
             android:title="@string/menu_contact" />
 
         <!--<item-->

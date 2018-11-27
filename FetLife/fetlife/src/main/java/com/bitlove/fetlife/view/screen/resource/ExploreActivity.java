@@ -3,7 +3,6 @@ package com.bitlove.fetlife.view.screen.resource;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
@@ -16,6 +15,8 @@ import com.crashlytics.android.answers.CustomEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.Nullable;
 
 public class ExploreActivity extends FeedActivity {
 

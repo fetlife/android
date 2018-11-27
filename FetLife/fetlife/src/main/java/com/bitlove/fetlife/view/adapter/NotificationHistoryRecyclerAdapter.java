@@ -3,9 +3,6 @@ package com.bitlove.fetlife.view.adapter;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +13,7 @@ import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.model.pojos.fetlife.db.NotificationHistoryItem;
 import com.bitlove.fetlife.model.pojos.fetlife.db.NotificationHistoryItem_Table;
 import com.bitlove.fetlife.view.screen.resource.ResourceListActivity;
+import com.google.android.material.snackbar.Snackbar;
 import com.raizlabs.android.dbflow.sql.language.Select;
 
 import java.text.SimpleDateFormat;
@@ -23,6 +21,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class NotificationHistoryRecyclerAdapter extends ResourceListRecyclerAdapter<NotificationHistoryItem, NotificationHistoryItemViewHolder> {
 

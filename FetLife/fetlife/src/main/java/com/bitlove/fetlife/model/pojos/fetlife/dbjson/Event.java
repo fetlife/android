@@ -1,7 +1,6 @@
 
 package com.bitlove.fetlife.model.pojos.fetlife.dbjson;
 
-import androidx.annotation.NonNull;
 import android.util.Log;
 
 import com.bitlove.fetlife.model.db.FetLifeDatabase;
@@ -20,6 +19,8 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.text.SimpleDateFormat;
+
+import androidx.annotation.NonNull;
 
 @Table(database = FetLifeDatabase.class)
 @JsonIgnoreProperties(ignoreUnknown = true)

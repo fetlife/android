@@ -3,10 +3,6 @@ package com.bitlove.fetlife.view.screen.resource.groups;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-
 import android.view.MenuItem;
 import android.view.ViewGroup;
 
@@ -14,6 +10,7 @@ import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.event.ServiceCallFailedEvent;
 import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
 import com.bitlove.fetlife.event.ServiceCallStartedEvent;
+import com.bitlove.fetlife.inbound.onesignal.NotificationParser;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.view.screen.BaseActivity;
@@ -26,6 +23,10 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.ref.WeakReference;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 public class GroupsActivity extends ResourceActivity {
 
@@ -50,6 +51,9 @@ public class GroupsActivity extends ResourceActivity {
 
     @Override
     protected void onResourceCreate(Bundle savedInstanceState) {
+
+        //Postpone till proper counter
+//        NotificationParser.Companion.clearNotificationTypeForUrl("group_messages");
 
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);

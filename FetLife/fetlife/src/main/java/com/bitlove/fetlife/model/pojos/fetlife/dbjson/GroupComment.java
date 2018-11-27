@@ -6,8 +6,6 @@ import com.bitlove.fetlife.util.DateUtil;
 import com.bitlove.fetlife.util.StringUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -15,7 +13,6 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.Map;
 
 @Table(database = FetLifeDatabase.class)

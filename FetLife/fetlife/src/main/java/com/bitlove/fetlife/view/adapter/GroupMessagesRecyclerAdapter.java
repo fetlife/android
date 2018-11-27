@@ -3,8 +3,6 @@ package com.bitlove.fetlife.view.adapter;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.method.LinkMovementMethod;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -26,6 +24,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.json.FeedEvent;
 import com.bitlove.fetlife.model.pojos.fetlife.json.MessageEntities;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Story;
 import com.bitlove.fetlife.util.ColorUtil;
+import com.bitlove.fetlife.util.ServerIdUtil;
 import com.bitlove.fetlife.util.StringUtil;
 import com.bitlove.fetlife.util.UrlUtil;
 import com.bitlove.fetlife.view.adapter.feed.FeedItemResourceHelper;
@@ -38,6 +37,8 @@ import com.raizlabs.android.dbflow.sql.language.Select;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class GroupMessagesRecyclerAdapter extends RecyclerView.Adapter<GroupMessageViewHolder> {
 
@@ -56,8 +57,8 @@ public class GroupMessagesRecyclerAdapter extends RecyclerView.Adapter<GroupMess
     private static final float PENDING_ALPHA = 0.5f;
 
     private GroupPost groupDiscussion;
-    private final String groupDiscussionId;
-    private final String groupId;
+    private String groupDiscussionId;
+    private String groupId;
 
     private List<GroupComment> itemList;
     private int requestedPageCount;
@@ -82,6 +83,12 @@ public class GroupMessagesRecyclerAdapter extends RecyclerView.Adapter<GroupMess
     }
 
     private void loadItems() {
+        if (groupId != null && ServerIdUtil.isServerId(groupId) && ServerIdUtil.containsServerId(groupId)) {
+            groupId = ServerIdUtil.getLocalId(groupId);
+        }
+        if (groupDiscussionId != null && ServerIdUtil.isServerId(groupDiscussionId) && ServerIdUtil.containsServerId(groupDiscussionId)) {
+            groupDiscussionId = ServerIdUtil.getLocalId(groupDiscussionId);
+        }
         //TODO: think of moving to separate thread with specific DB executor
         groupDiscussion = new Select().from(GroupPost.class).where(GroupPost_Table.id.is(groupDiscussionId)).querySingle();
         if (groupDiscussion == null) {

@@ -2,10 +2,11 @@ package com.bitlove.fetlife.navigator
 
 import android.view.MenuItem
 import com.bitlove.fetlife.R
-import com.bitlove.fetlife.StartActivity
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService
 import com.bitlove.fetlife.view.screen.BaseActivity
-import com.bitlove.fetlife.view.screen.resource.*
+import com.bitlove.fetlife.view.screen.resource.ExploreActivity
+import com.bitlove.fetlife.view.screen.resource.NotificationHistoryActivity
+import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity
 import com.bitlove.fetlife.view.screen.resource.groups.GroupsActivity
 import com.bitlove.fetlife.view.screen.resource.members.MembersActivity
 import com.bitlove.fetlife.view.screen.standalone.LoginActivity

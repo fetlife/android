@@ -1,8 +1,11 @@
 package com.bitlove.fetlife.model.api;
 
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Conversation;
+import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Event;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.FriendRequest;
+import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Group;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.GroupComment;
+import com.bitlove.fetlife.model.pojos.fetlife.dbjson.GroupPost;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Message;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Picture;
@@ -12,11 +15,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Video;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Writing;
 import com.bitlove.fetlife.model.pojos.fetlife.json.AppId;
 import com.bitlove.fetlife.model.pojos.fetlife.json.AuthBody;
-import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Event;
-import com.bitlove.fetlife.model.pojos.fetlife.json.Comment;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Feed;
-import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Group;
-import com.bitlove.fetlife.model.pojos.fetlife.dbjson.GroupPost;
 import com.bitlove.fetlife.model.pojos.fetlife.json.GroupMembership;
 import com.bitlove.fetlife.model.pojos.fetlife.json.NotificationCounts;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Rsvp;
@@ -25,7 +24,6 @@ import com.bitlove.fetlife.model.pojos.fetlife.json.Token;
 import com.bitlove.fetlife.model.pojos.fetlife.json.VideoUploadResult;
 
 import java.util.List;
-
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

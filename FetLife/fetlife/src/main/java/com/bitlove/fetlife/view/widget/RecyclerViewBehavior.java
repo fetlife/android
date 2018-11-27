@@ -1,11 +1,13 @@
 package com.bitlove.fetlife.view.widget;
 
 import android.content.Context;
-import com.google.android.material.appbar.AppBarLayout;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.google.android.material.appbar.AppBarLayout;
+
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class RecyclerViewBehavior extends AppBarLayout.Behavior {
     private static final int TOP_CHILD_FLING_THRESHOLD = 3;

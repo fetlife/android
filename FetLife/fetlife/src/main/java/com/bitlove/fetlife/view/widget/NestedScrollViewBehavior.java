@@ -1,10 +1,12 @@
 package com.bitlove.fetlife.view.widget;
 
-import com.google.android.material.appbar.AppBarLayout;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import android.view.View;
 
+import com.google.android.material.appbar.AppBarLayout;
+
 import java.lang.ref.WeakReference;
+
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 public class NestedScrollViewBehavior extends AppBarLayout.Behavior {
 

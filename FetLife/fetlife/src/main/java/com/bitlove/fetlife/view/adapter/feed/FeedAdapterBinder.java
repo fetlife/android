@@ -16,6 +16,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Picture;
 import com.bitlove.fetlife.model.pojos.fetlife.json.FeedEvent;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Story;
+import com.bitlove.fetlife.util.PictureUtil;
 import com.bitlove.fetlife.view.adapter.PictureGridAdapter;
 import com.facebook.drawee.view.SimpleDraweeView;
 

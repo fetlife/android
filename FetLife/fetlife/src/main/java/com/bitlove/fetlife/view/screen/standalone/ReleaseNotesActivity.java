@@ -3,8 +3,6 @@ package com.bitlove.fetlife.view.screen.standalone;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.appcompat.widget.Toolbar;
 import android.text.Html;
 import android.view.MenuItem;
 import android.widget.TextView;

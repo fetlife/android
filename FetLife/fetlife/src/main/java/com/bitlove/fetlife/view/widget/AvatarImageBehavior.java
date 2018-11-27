@@ -2,13 +2,14 @@ package com.bitlove.fetlife.view.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.appcompat.widget.Toolbar;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.bitlove.fetlife.R;
+
+import androidx.appcompat.widget.Toolbar;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 
 @SuppressWarnings("unused")
 public class AvatarImageBehavior extends CoordinatorLayout.Behavior<ImageView> {

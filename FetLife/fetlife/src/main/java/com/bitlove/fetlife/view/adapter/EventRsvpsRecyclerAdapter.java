@@ -3,8 +3,6 @@ package com.bitlove.fetlife.view.adapter;
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.model.pojos.fetlife.db.EventRsvpReference;
 import com.bitlove.fetlife.model.pojos.fetlife.db.EventRsvpReference_Table;
-import com.bitlove.fetlife.model.pojos.fetlife.db.RelationReference;
-import com.bitlove.fetlife.model.pojos.fetlife.db.RelationReference_Table;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member_Table;
 import com.bitlove.fetlife.util.ServerIdUtil;
