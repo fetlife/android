@@ -17,7 +17,7 @@ With official FetLife Android App you can...
 
 - Android OS version 5.0 or newer
 
-Latest stable version supporting older OS version: [fetlife-2.16.7.apk](https://github.com/fetlife/android/releases/download/v2.16.7/fetlife-2.16.7.apk)
+Latest stable version supporting older OS version: 2.16.7
 
 ### Screenshots
 
