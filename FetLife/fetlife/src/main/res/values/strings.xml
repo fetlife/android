@@ -900,7 +900,7 @@
     <string name="title_activity_support">Support FetLife</string>
     <string name="title_activity_ads">Advertise on FetLife</string>
     <string name="title_activity_glossary">Glossary</string>
-    <string name="title_activity_questions">Ask the Community</string>
+    <string name="title_activity_questions">Q&amp;A</string>
     <string name="title_activity_new_question">New question</string>
     <string name="title_fragment_group_discussions">Discussions</string>
     <string name="title_fragment_group_members">Members</string>
@@ -1035,4 +1035,6 @@
     </plurals>
     <string name="noification_summary_text_requests_new_friendrequest">Requests</string>
     <string name="noification_title_comments_requests_new_friendrequest">%d members</string>
+    <string name="title_webview_questions_popular">Popular</string>
+    <string name="title_webview_questions_tags">Tags</string>
 </resources>

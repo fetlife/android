@@ -55,25 +55,16 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
     private static final Map<String,Integer> supportedBaseUrls = new HashMap<>();
 
     public static final String FAB_LINK_NEW_QUESTION = "https://app.fetlife.com/q/new";
+
+    public static final String URL_QUESTIONS_POPULAR = "https://fetlife.com/q?filter=popular";
+    public static final String URL_QUESTIONS_TAGS = "https://fetlife.com/q/tags";
+    public static final String URL_QUESTIONS = "https://fetlife.com/q";
+
     private static final String WEB_TITLE_SEPARATOR = " |";
 
     static {
-        supportedBaseUrls.put("https://app.fetlife.com/ads",R.string.title_activity_ads);
-        supportedBaseUrls.put("https://app.fetlife.com/support",R.string.title_activity_support);
-        supportedBaseUrls.put("https://app.fetlife.com/glossary",R.string.title_activity_glossary);
-        supportedBaseUrls.put("https://app.fetlife.com/wallpapers",R.string.title_activity_wallpapers);
-        supportedBaseUrls.put("https://app.fetlife.com/team",R.string.title_activity_team);
-        supportedBaseUrls.put("https://app.fetlife.com/notifications",R.string.title_activity_notifications);
-        supportedBaseUrls.put("https://app.fetlife.com/requests",R.string.title_activity_friendrequests);
-        supportedBaseUrls.put("https://app.fetlife.com/help",R.string.title_activity_help);
-        supportedBaseUrls.put("https://app.fetlife.com/guidelines",R.string.title_activity_guidelines);
-        supportedBaseUrls.put("https://app.fetlife.com/contact",R.string.title_activity_contact);
-        supportedBaseUrls.put("https://app.fetlife.com/android",R.string.title_activity_about);
-        supportedBaseUrls.put("https://app.fetlife.com/privacy",R.string.title_activity_privacy);
-        supportedBaseUrls.put("https://app.fetlife.com/legalese/tou",R.string.title_activity_terms);
-        supportedBaseUrls.put("https://app.fetlife.com/legalese/legal_requests",R.string.title_activity_legal);
-        supportedBaseUrls.put("https://app.fetlife.com/legalese/2257exempt",R.string.title_activity_2257exempt);
-
+//        supportedBaseUrls.put("https://app.fetlife.com/q",R.string.title_activity_questions);
+//        supportedBaseUrls.put("https://fetlife.com/q",R.string.title_activity_questions);
         supportedBaseUrls.put("https://fetlife.com/ads",R.string.title_activity_ads);
         supportedBaseUrls.put("https://fetlife.com/support",R.string.title_activity_support);
         supportedBaseUrls.put("https://fetlife.com/glossary",R.string.title_activity_glossary);
@@ -126,6 +117,10 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
         }
         return intent;
+    }
+
+    public static void startActivity(Context context, String pageUrl, String title, boolean hasBottomBar, String fabLink, boolean newTask) {
+        context.startActivity(createIntent(context,pageUrl,title,hasBottomBar,fabLink,newTask));
     }
 
     public static Intent createIntent(Context context, String pageUrl, String title, boolean hasBottomBar, String fabLink, boolean newTask) {
@@ -425,6 +420,10 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
             return;
         } else {
             location = UrlUtil.removeAppIds(location);
+            Integer expectedTitleResourceId = getTitleForSupportedLocation(location);
+            if (expectedTitleResourceId != null) {
+                setTitle(expectedTitleResourceId);
+            }
         }
 
         TurbolinksView turbolinksView = (TurbolinksView) findViewById(R.id.turbolinks_view);
@@ -438,6 +437,16 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
     }
 
     private Integer getTitleForSupportedLocation(String location) {
+        location = location.replace("//app.fetlife.com","//fetlife.com");
+        if (location.startsWith(URL_QUESTIONS_POPULAR)) {
+            return R.string.title_webview_questions_popular;
+        }
+        if (location.startsWith(URL_QUESTIONS_TAGS)) {
+            return R.string.title_webview_questions_tags;
+        }
+        if (location.startsWith(URL_QUESTIONS)) {
+            return R.string.title_activity_questions;
+        }
         for (Map.Entry<String,Integer> entry : supportedBaseUrls.entrySet()) {
             if (location.startsWith(entry.getKey())) {
                 return entry.getValue();
