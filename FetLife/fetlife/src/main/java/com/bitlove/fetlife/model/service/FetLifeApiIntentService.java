@@ -642,7 +642,7 @@ public class FetLifeApiIntentService extends IntentService {
             Collections.sort(releases, new Comparator<Release>() {
                 @Override
                 public int compare(Release o1, Release o2) {
-                    return VersionUtil.getVersionInt(o1.getTag())-VersionUtil.getVersionInt(o2.getTag());
+                    return VersionUtil.getVersionInt(o2.getTag())-VersionUtil.getVersionInt(o1.getTag());
                 }
             });
             for (Release release : releases) {
