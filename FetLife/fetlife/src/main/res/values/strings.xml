@@ -29,6 +29,12 @@
 
             <p><b><br/>Version History</b></p>
 
+            <p/>v2.19.0<br/>
+                    <ul>
+                        <li>Keeping pictures open after orientation changes</li>
+                        <li>Fix of not opening notifications for devices below Android 7.0</li>
+                    </ul>
+
             <p/>v2.18.5<br/>
                     <ul>
                         <li>Improved Side Menu design</li>
