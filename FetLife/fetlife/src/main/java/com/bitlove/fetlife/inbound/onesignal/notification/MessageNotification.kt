@@ -55,7 +55,7 @@ class MessageNotification(notificationType: String, notificationIdRange: Int, ti
     }
 
     override fun getSummaryTitle(notificationCount: Int, context: Context): String? {
-        return context.resources.getQuantityString(R.plurals.noification_summary_text_messages_new_message, notificationCount, notificationCount)
+        return context.resources.getQuantityString(R.plurals.noification_summary_title_messages_new_message, notificationCount, notificationCount)
     }
 
     override fun getSummaryText(notificationCount: Int, context: Context): String? {
@@ -79,6 +79,10 @@ class MessageNotification(notificationType: String, notificationIdRange: Int, ti
             putExtra(BaseActivity.EXTRA_NOTIFICATION_MERGE_ID, oneSignalNotification.mergeId)
         }
         return TaskStackBuilder.create(context).addNextIntentWithParentStack(baseIntent).addNextIntent(contentIntent).getPendingIntent(order, PendingIntent.FLAG_CANCEL_CURRENT)
+    }
+
+    override fun getLegacySummaryIntent(context: Context): PendingIntent? {
+        return PendingIntent.getActivity(context,notificationIdRange,ConversationsActivity.createIntent(context,true),PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     override fun saveNotificationItem(notificationId: Int) {}

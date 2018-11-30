@@ -28,7 +28,7 @@ class InfoNotification(notificationType: String, notificationIdRange: Int, title
     }
 
     override fun getNotificationIntent(oneSignalNotification: OneSignalNotification, context: Context, order: Int): PendingIntent? {
-        val contentIntent = if (launchUrl != null) {
+        val contentIntent = if (oneSignalNotification.launchUrl != null) {
             Intent(Intent.ACTION_VIEW).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_RECEIVER_FOREGROUND)
                 data = Uri.parse(launchUrl)

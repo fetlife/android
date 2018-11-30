@@ -100,6 +100,10 @@ class GroupMessageNotification(notificationType: String, notificationIdRange: In
         return TaskStackBuilder.create(context).addNextIntentWithParentStack(baseIntent).addNextIntent(interimIntent).addNextIntent(contentIntent).getPendingIntent(order, PendingIntent.FLAG_CANCEL_CURRENT)
     }
 
+    override fun getLegacySummaryIntent(context: Context): PendingIntent? {
+        return PendingIntent.getActivity(context,notificationIdRange, GroupsActivity.createIntent(context,true),PendingIntent.FLAG_UPDATE_CURRENT)
+    }
+
     override fun saveNotificationItem(notificationId: Int) {}
 
 }

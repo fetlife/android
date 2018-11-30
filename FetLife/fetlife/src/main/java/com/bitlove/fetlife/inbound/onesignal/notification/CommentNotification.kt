@@ -4,6 +4,7 @@ import android.app.PendingIntent
 import android.content.Context
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.view.screen.BaseActivity
+import com.bitlove.fetlife.view.screen.resource.ConversationsActivity
 import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity
 import org.json.JSONObject
 
@@ -46,5 +47,4 @@ class CommentNotification(notificationType: String, notificationIdRange: Int, ti
         }
         return PendingIntent.getActivity(context,order,contentIntent,PendingIntent.FLAG_CANCEL_CURRENT)
     }
-
 }

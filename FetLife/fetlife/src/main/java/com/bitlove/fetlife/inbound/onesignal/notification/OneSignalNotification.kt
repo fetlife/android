@@ -38,6 +38,7 @@ abstract class OneSignalNotification(val notificationType: String,
     open fun getNotificationTitle(oneSignalNotification: OneSignalNotification, count: Int, context: Context): String? = oneSignalNotification.title
     open fun getNotificationText(oneSignalNotification: OneSignalNotification, count: Int, context: Context): String? = oneSignalNotification.message
     open fun getNotificationIntent(oneSignalNotification: OneSignalNotification, context: Context, order: Int): PendingIntent? = null
+    open fun getLegacySummaryIntent(context: Context): PendingIntent? = getNotificationIntent(this,context,notificationIdRange)
 
     open fun getNotificationItemLaunchUrl(): String? = launchUrl
 
@@ -80,14 +81,17 @@ abstract class OneSignalNotification(val notificationType: String,
             val text = getNotificationText(referenceNotification,groupCount,fetLifeApplication)
             val pendingIntent = getNotificationIntent(referenceNotification, fetLifeApplication, i++)
 
-            val groupedNotification = getDefaultNotificationBuilder(channelId,fetLifeApplication,pendingIntent,title,text).build()
+            val groupedNotification = getDefaultNotificationBuilder(channelId, notificationType, fetLifeApplication, pendingIntent, title, text).build()
             notificationManager.notify(i++, groupedNotification)
             inboxStyle.addLine("$title $text")
         }
 
-        val summaryNotification = getDefaultNotificationBuilder(channelId, fetLifeApplication, null, summaryTitle, summaryText). apply {
+        val summaryNotification = getDefaultNotificationBuilder(channelId, notificationType, fetLifeApplication, null, summaryTitle, summaryText). apply {
             setGroupSummary(true)
             setStyle(inboxStyle)
+            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) {
+                setContentIntent(getLegacySummaryIntent(fetLifeApplication))
+            }
         }.build()
         notificationManager.notify(notificationIdRange, summaryNotification)
 
@@ -109,14 +113,17 @@ abstract class OneSignalNotification(val notificationType: String,
         return fetLifeApplication.userSessionManager.activeUserPreferences.getBoolean(preferenceKey, true)
     }
 
-    protected fun getDefaultNotificationBuilder(notificationChannelId: String, fetLifeApplication: FetLifeApplication, contentIntent: PendingIntent?, title: String?, text: String?): NotificationCompat.Builder {
-        return NotificationCompat.Builder(fetLifeApplication, notificationChannelId).apply {
+
+    protected fun getDefaultNotificationBuilder(notificationChannelId: String, groupId: String, fetLifeApplication: FetLifeApplication, contentIntent: PendingIntent?, title: String?, text: String?): NotificationCompat.Builder {
+        val builder = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) NotificationCompat.Builder(fetLifeApplication, notificationChannelId) else NotificationCompat.Builder(fetLifeApplication)
+        return builder.apply {
             setAutoCancel(true)
             setContentIntent(contentIntent)
 
             setContentTitle(title)
             setContentText(text)
-            setGroup(notificationType)
+
+            setGroup(groupId)
 
             setLargeIcon(BitmapFactory.decodeResource(fetLifeApplication.resources, R.mipmap.app_icon_kinky))
             setSmallIcon(R.drawable.ic_stat_onesignal_default)
@@ -124,7 +131,7 @@ abstract class OneSignalNotification(val notificationType: String,
             setSound(fetLifeApplication.userSessionManager.notificationRingtone)
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                setChannelId(NOTIFICATION_CHANNEL_DEFUALT)
+                setChannelId(notificationChannelId)
             }
 
             if (AppUtil.useAnonymNotifications(FetLifeApplication.getInstance())) {

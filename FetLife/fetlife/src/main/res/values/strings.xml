@@ -948,7 +948,7 @@
     <string name="title_activity_team">Meet the Team</string>
     <string name="title_activity_wallpapers">Wallpapers</string>
     <string name="notification_chanel_name_default">General Notifications</string>
-    <string name="notification_chanel_description_default">As of now all App notifications belong to this category</string>
+    <string name="notification_chanel_description_default">All other not specified notifications belong to this category</string>
     <string name="title_activity_review_questions">Review community content</string>
     <string name="title_activity_help">Help</string>
     <string name="title_activity_guidelines">Guidelines</string>
@@ -966,6 +966,10 @@
     </plurals>
     <string name="noification_text_questions_new_answer">to a question you asked</string>
 
+    <plurals name="noification_summary_title_messages_new_message">
+        <item quantity="one">You received a new private message</item>
+        <item quantity="other">Your received %d private messages</item>
+    </plurals>
     <plurals name="noification_summary_text_messages_new_message">
         <item quantity="one">sent a private messages</item>
         <item quantity="other">sent %d private messages</item>

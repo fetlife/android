@@ -43,4 +43,12 @@ class QuestionAnsweredNotification(notificationType: String, notificationIdRange
         return TaskStackBuilder.create(context).addNextIntentWithParentStack(baseIntent).addNextIntent(contentIntent).getPendingIntent(order, PendingIntent.FLAG_CANCEL_CURRENT)
     }
 
+    override fun getLegacySummaryIntent(context: Context): PendingIntent? {
+        val contentIntent = TurboLinksViewActivity.createIntent(context, "notifications", context.getString(R.string.title_activity_notifications), true, R.id.navigation_bottom_notifications, true).apply {
+            putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE, notificationType)
+            putExtra(BaseActivity.EXTRA_NOTIFICATION_MERGE_ID, mergeId)
+        }
+        return PendingIntent.getActivity(context,notificationIdRange,contentIntent,PendingIntent.FLAG_CANCEL_CURRENT)
+    }
+
 }

@@ -1,6 +1,8 @@
 package com.bitlove.fetlife;
 
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -51,6 +53,8 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
+import static com.bitlove.fetlife.inbound.onesignal.notification.OneSignalNotification.NOTIFICATION_CHANNEL_DEFUALT;
 
 /**
  * Main Application class. The lifecycle of the object of this class is the same as the App itself
@@ -142,7 +146,7 @@ public class FetLifeApplication extends MultiDexApplication {
         //Init Fresco image library
         initFrescoImageLibrary();
 
-        createNotificationChanels();
+        createDefaultNotificationChanel();
 
         PendingIntent restartIntent = PendingIntent.getActivity(this,42, LoginActivity.createIntent(this,getString(R.string.error_session_invalid)),PendingIntent.FLAG_ONE_SHOT);
         Thread.setDefaultUncaughtExceptionHandler(new FetLifeUncaughtExceptionHandler(Thread.getDefaultUncaughtExceptionHandler(),restartIntent));
@@ -183,20 +187,18 @@ public class FetLifeApplication extends MultiDexApplication {
         return actionCable;
     }
 
-    private void createNotificationChanels() {
-//        // Create the NotificationChannel, but only on API 26+ because
-//        // the NotificationChannel class is new and not in the support library
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            CharSequence name = getString(R.string.notification_chanel_name_default);
-//            String description = getString(R.string.notification_chanel_description_default);
-//            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-//            NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_DEFUALT, name, importance);
-//            channel.setDescription(description);
-//            // Register the channel with the system; you can't change the importance
-//            // or other notification behaviors after this
-//            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-//            notificationManager.createNotificationChannel(channel);
-//        }
+    private void createDefaultNotificationChanel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.notification_chanel_name_default);
+            String description = getString(R.string.notification_chanel_description_default);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_DEFUALT, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     private void initFrescoImageLibrary() {
