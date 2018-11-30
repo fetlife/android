@@ -71,7 +71,7 @@ public class UrlUtil {
                 baseActivity.finish();
                 return true;
             } else if (baseUriSegments.size() != 1 || !"q".equalsIgnoreCase(baseUriSegments.get(0))) {
-                TurboLinksViewActivity.startActivity(baseActivity,uri.toString(),baseActivity.getString(R.string.title_activity_questions), true, TurboLinksViewActivity.FAB_LINK_NEW_QUESTION,true);
+                TurboLinksViewActivity.startActivity(baseActivity,uri.toString(),baseActivity.getString(R.string.title_activity_questions), true, null,null,true);
                 return true;
             }
         }

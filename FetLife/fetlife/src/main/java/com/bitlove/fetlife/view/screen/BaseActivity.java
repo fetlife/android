@@ -94,7 +94,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     public static final String EXTRA_NOTIFICATION_SOURCE_TYPE = "EXTRA_NOTIFICATION_SOURCE_TYPE";
     public static final String EXTRA_NOTIFICATION_MERGE_ID = "EXTRA_NOTIFICATION_MERGE_ID";
     public static final String EXTRA_SELECTED_BOTTOM_NAV_ITEM = "EXTRA_SELECTED_BOTTOM_NAV_ITEM";
-    public static final String EXTRA_FAB_LINK = "EXTRA_FAB_LINK";
     public static final String EXTRA_HAS_BOTTOM_BAR = "EXTRA_HAS_BOTTOM_BAR";
 //    public static final String EXTRA_USE_BOTTOM_NAV_ITEM = "EXTRA_USE_BOTTOM_NAV_ITEM";
 
@@ -111,6 +110,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     protected Intent pendingNavigationIntent;
 
     List<ActivityComponent> activityComponentList = new ArrayList<>();
+    private FloatingActionButton fab;
 
     protected void addActivityComponent(ActivityComponent activityComponent) {
         activityComponentList.add(activityComponent);
@@ -158,22 +158,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             activityComponent.onActivityCreated(this, savedInstanceState);
         }
 
-        final String fabLink = getIntent().getStringExtra(EXTRA_FAB_LINK);
-        final FloatingActionButton fab = findViewById(R.id.fab);
-        if (fab != null) {
-            if (fabLink != null) {
-                fab.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (!UrlUtil.handleInternal(BaseActivity.this, Uri.parse(fabLink),false, null)) {
-                            UrlUtil.openUrl(BaseActivity.this, fabLink);
-                        }
-                    }
-                });
-                fab.show();
-            } else {
-                fab.hide();
-            }
+        final String fabLink = getFabLink();
+        fab = findViewById(R.id.fab);
+        if (fabLink != null) {
+            setUpFloatingActionButton(fabLink);
         }
 
         final BottomNavigationView bottomNavigation = findViewById(R.id.navigation_bottom);
@@ -316,6 +304,25 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         }
     }
 
+    protected void setUpFloatingActionButton(final String fabLink) {
+        if (fab != null) {
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!UrlUtil.handleInternal(BaseActivity.this, Uri.parse(fabLink),false, null)) {
+                        UrlUtil.openUrl(BaseActivity.this, fabLink);
+                    }
+                }
+            });
+            fab.show();
+        } else {
+            fab.hide();
+        }
+    }
+
+    protected String getFabLink() {
+        return null;
+    }
 
 
     private void setupSideMenu() {

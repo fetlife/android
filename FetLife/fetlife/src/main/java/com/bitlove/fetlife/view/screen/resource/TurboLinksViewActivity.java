@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,6 +44,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -90,14 +90,15 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
     private Set<String> requestedMediaIds = new HashSet<>();
 
     private String title;
-    private String pageUrl = null;
+    private String baseLocation = null;
+    private String currentLocation = null;
     private boolean hasBottomBar = true;
 
     private Consumer actionCableConsumer;
     private boolean clearHistory = false;
 
     public static void startActivity(BaseActivity menuActivity, String pageUrl, String title) {
-        menuActivity.startActivity(createIntent(menuActivity,pageUrl,title, true, (String)null, false));
+        menuActivity.startActivity(createIntent(menuActivity,pageUrl,title, true, null, false));
     }
 
     public static void startActivity(Context context, String pageUrl, String title, boolean hasBottomBar, Integer bottomNavId, Bundle options, boolean newTask) {
@@ -112,24 +113,6 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         intent.putExtra(EXTRA_HAS_BOTTOM_BAR, hasBottomBar);
         if (bottomNavId != null) {
             intent.putExtra(BaseActivity.EXTRA_SELECTED_BOTTOM_NAV_ITEM,bottomNavId);
-        }
-        if (newTask) {
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        }
-        return intent;
-    }
-
-    public static void startActivity(Context context, String pageUrl, String title, boolean hasBottomBar, String fabLink, boolean newTask) {
-        context.startActivity(createIntent(context,pageUrl,title,hasBottomBar,fabLink,newTask));
-    }
-
-    public static Intent createIntent(Context context, String pageUrl, String title, boolean hasBottomBar, String fabLink, boolean newTask) {
-        Intent intent = new Intent(context,TurboLinksViewActivity.class);
-        intent.putExtra(EXTRA_PAGE_URL, pageUrl);
-        intent.putExtra(EXTRA_PAGE_TITLE, title);
-        intent.putExtra(EXTRA_HAS_BOTTOM_BAR, hasBottomBar);
-        if (fabLink != null) {
-            intent.putExtra(EXTRA_FAB_LINK, fabLink);
         }
         if (newTask) {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -185,14 +168,14 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
 
     private void init() {
 
-        pageUrl = getIntent().getStringExtra(EXTRA_PAGE_URL);
+        String pageUrlParam = getIntent().getStringExtra(EXTRA_PAGE_URL);
         hasBottomBar = getIntent().getBooleanExtra(EXTRA_HAS_BOTTOM_BAR,true);
 
-        NotificationParser.Companion.clearNotificationTypeForUrl(pageUrl);
+        NotificationParser.Companion.clearNotificationTypeForUrl(pageUrlParam);
 
         title = getIntent().getStringExtra(EXTRA_PAGE_TITLE);
         if (title == null) {
-            Integer titleId = supportedBaseUrls.get(pageUrl);
+            Integer titleId = supportedBaseUrls.get(pageUrlParam);
             if (titleId != null) {
                 title = getString(titleId);
             }
@@ -210,17 +193,20 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
 
         turbolinksView = (TurbolinksView) findViewById(R.id.turbolinks_view);
 
-        final String location;
-        if (pageUrl == null) {
-            location = "about:blank";
-        } else if (pageUrl.startsWith("https://")) {
-            location = pageUrl;
+        if (pageUrlParam == null) {
+            baseLocation = "about:blank";
+        } else if (pageUrlParam.startsWith("https://")) {
+            baseLocation = pageUrlParam;
         } else {
-            location = FetLifeService.WEBVIEW_BASE_URL + "/" + pageUrl;
+            baseLocation = FetLifeService.WEBVIEW_BASE_URL + "/" + pageUrlParam;
         }
 
+        currentLocation = baseLocation;
+
+        setUpFloatingActionButton(getFabLinkForLocation(baseLocation));
+
         if (BuildConfig.DEBUG) {
-            Log.d("TBLocation",location);
+            Log.d("TBLocation",baseLocation);
         }
 
         showProgress();
@@ -245,12 +231,24 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
                         .addProgressObserver(TurboLinksViewActivity.this)
                         .addPageObserver(TurboLinksViewActivity.this)
                         .restoreWithCachedSnapshot(false)
-                        .visitWithAuthHeader(location, FetLifeService.AUTH_HEADER_PREFIX + accessToken);
+                        .visitWithAuthHeader(baseLocation, FetLifeService.AUTH_HEADER_PREFIX + accessToken);
 
                 getFetLifeApplication().getActionCable().tryConnect(TurboLinksViewActivity.this);
 
             }
         },33);
+    }
+
+    private String getFabLinkForLocation(String baseLocation) {
+        Uri baseUri = Uri.parse(baseLocation);
+        if (!baseUri.isHierarchical()) {
+            return null;
+        }
+        List<String> pathSegments = baseUri.getPathSegments();
+        if (pathSegments.size() != 1) {
+            return null;
+        }
+        return "q".equalsIgnoreCase(pathSegments.get(0)) ? FAB_LINK_NEW_QUESTION : null;
     }
 
     @Override
@@ -270,10 +268,6 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
             requestedMediaIds.add(mediaId);
             return true;
         } else {
-            String pageUrl = getIntent().getStringExtra(EXTRA_PAGE_URL);
-            Uri pageUri = Uri.parse(pageUrl);
-            String baseLocation = TextUtils.isEmpty(pageUri.getHost()) ? FetLifeService.WEBVIEW_BASE_URL + "/" + pageUrl : pageUrl;
-
             if (baseLocation.equalsIgnoreCase(location)) {
                 clearHistory = true;
                 return false;
@@ -315,7 +309,9 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
                 finish();
             } else if (!"about:blank".equalsIgnoreCase(TurbolinksSession.getDefault(this).getWebView().getUrl())){
 //                TurbolinksSession.getDefault(this).getWebView().setVisibility(View.INVISIBLE);
-                TurbolinksSession.getDefault(this).getWebView().loadUrl("about:blank");
+                currentLocation = "about:blank";
+                setUpFloatingActionButton(currentLocation);
+                TurbolinksSession.getDefault(this).getWebView().loadUrl(currentLocation);
             }
         }
     }
@@ -337,7 +333,9 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
                 if (!hasBottomBar) {
                     finish();
                 } else if (!"about:blank".equalsIgnoreCase(TurbolinksSession.getDefault(this).getWebView().getUrl())){
-                    TurbolinksSession.getDefault(this).getWebView().loadUrl("about:blank");
+                    currentLocation = "about:blank";
+                    setUpFloatingActionButton(currentLocation);
+                    TurbolinksSession.getDefault(this).getWebView().loadUrl(currentLocation);
 //                    TurbolinksSession.getDefault(this).getWebView().setVisibility(View.INVISIBLE);
                 }
             }
@@ -375,11 +373,11 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
     }
 
     private boolean isContentNotificationRelated() {
-        if (pageUrl != null && pageUrl.startsWith("https://fetlife.com/notifications")) {
+        if (baseLocation != null && baseLocation.startsWith("https://fetlife.com/notifications")) {
             return true;
-        } else if (pageUrl != null && pageUrl.startsWith("https://fetlife.com/requests")) {
+        } else if (baseLocation != null && baseLocation.startsWith("https://fetlife.com/requests")) {
             return true;
-        } else if (pageUrl != null && pageUrl.startsWith("https://fetlife.com/inbox")) {
+        } else if (baseLocation != null && baseLocation.startsWith("https://fetlife.com/inbox")) {
             return true;
         } else {
             return false;
@@ -391,10 +389,6 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         if (BuildConfig.DEBUG) {
             Log.d("TBLocation",location);
         }
-
-        String pageUrl = getIntent().getStringExtra(EXTRA_PAGE_URL);
-        Uri pageUri = Uri.parse(pageUrl);
-        String baseLocation = TextUtils.isEmpty(pageUri.getHost()) ? FetLifeService.WEBVIEW_BASE_URL + "/" + pageUrl : pageUrl;
 
 //        if (baseLocation.equalsIgnoreCase(location)) {
 //            return;
@@ -427,6 +421,9 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         }
 
         TurbolinksView turbolinksView = (TurbolinksView) findViewById(R.id.turbolinks_view);
+
+        currentLocation = location;
+        setUpFloatingActionButton(currentLocation);
 
         TurbolinksSession.getDefault(this)
                 .activity(this)
