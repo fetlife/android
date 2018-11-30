@@ -37,11 +37,11 @@ import com.bitlove.fetlife.view.screen.standalone.LoginActivity;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.hosopy.actioncable.Consumer;
-import com.stfalcon.frescoimageviewer.ImageViewer;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -536,8 +536,9 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
                 }
             }
         };
-        PictureUtil.setOverlayContent(overlay, picture, onPictureOverlayClickListener);
-        new ImageViewer.Builder(this, new String[]{picture.getDisplayUrl()}).setStartPosition(0).setOverlayView(overlay).show();
+        List<Picture> pictures = new ArrayList<>();
+        pictures.add(picture);
+        getFetLifeApplication().getImageViewerWrapper().show(this,pictures,0);
         init();
     }
 

@@ -128,10 +128,14 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 //        getWindow().setAllowReturnTransitionOverlap(false);
         logEvent();
 
+        if (savedInstanceState != null) {
+            getFetLifeApplication().getImageViewerWrapper().onConfigurationChanged(this);
+        }
+
         String notificationSourceType = getIntent().getStringExtra(EXTRA_NOTIFICATION_SOURCE_TYPE);
         String notificationMergeId = getIntent().getStringExtra(EXTRA_NOTIFICATION_MERGE_ID);
         if (notificationSourceType != null) {
-            OneSignalNotification.Companion.clearNotifications(notificationSourceType,notificationMergeId);
+            OneSignalNotification.Companion.clearNotifications(notificationSourceType, notificationMergeId);
         }
 
         onCreateActivityComponents();

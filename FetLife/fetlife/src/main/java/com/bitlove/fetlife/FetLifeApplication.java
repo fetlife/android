@@ -27,6 +27,7 @@ import com.bitlove.fetlife.session.UserSessionManager;
 import com.bitlove.fetlife.util.FileUtil;
 import com.bitlove.fetlife.view.screen.resource.ResourceListActivity;
 import com.bitlove.fetlife.view.screen.standalone.LoginActivity;
+import com.bitlove.fetlife.view.widget.ImageViewerWrapper;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -113,6 +114,7 @@ public class FetLifeApplication extends MultiDexApplication {
     private UserSessionManager userSessionManager;
     private InMemoryStorage inMemoryStorage;
     private ActionCable actionCable;
+    private ImageViewerWrapper imageViewerWrapper;
 
     private GitHubService gitHubService;
 
@@ -143,6 +145,7 @@ public class FetLifeApplication extends MultiDexApplication {
         //Init crash logging
         Fabric.with(this, new Crashlytics());
 
+        imageViewerWrapper = new ImageViewerWrapper();
         //Init Fresco image library
         initFrescoImageLibrary();
 
@@ -372,6 +375,11 @@ public class FetLifeApplication extends MultiDexApplication {
     //****
     //Getters for service classes
     //****
+
+
+    public ImageViewerWrapper getImageViewerWrapper() {
+        return imageViewerWrapper;
+    }
 
     public InMemoryStorage getInMemoryStorage() {
         return inMemoryStorage;
