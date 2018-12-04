@@ -20,15 +20,21 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.browser.customtabs.CustomTabsIntent;
+
 public class UrlUtil {
 
     private static final String QUERY_API_IDS = "api_ids";
 
-    public static void openUrl(Context context, String link) {
-        if (link != null) {
+    public static void openUrl(Context context, String link, boolean customTab) {
+        if (link != null && !customTab) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(link));
             context.startActivity(intent);
+        } else if (link != null) {
+            CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder().setToolbarColor(ColorUtil.retrieverColor(context,R.color.color_secondary_dark));
+            CustomTabsIntent customTabsIntent = builder.build();
+            customTabsIntent.launchUrl(context, Uri.parse(link));
         }
     }
 
@@ -72,6 +78,13 @@ public class UrlUtil {
                 return true;
             } else if (baseUriSegments.size() != 1 || !"q".equalsIgnoreCase(baseUriSegments.get(0))) {
                 TurboLinksViewActivity.startActivity(baseActivity,uri.toString(),baseActivity.getString(R.string.title_activity_questions), true, null,null,true);
+                return true;
+            }
+        }
+
+        if ("wallpapers".equals(urlSegments.get(0))) {
+            if (urlSegments.size()>1 && "download".equals(urlSegments.get(1))) {
+                UrlUtil.openUrl(baseActivity,uri.toString(),true);
                 return true;
             }
         }

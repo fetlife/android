@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
+import com.bitlove.fetlife.util.UrlUtil;
 import com.bitlove.fetlife.view.dialog.PictureUploadSelectionDialog;
 import com.bitlove.fetlife.view.dialog.VideoUploadSelectionDialog;
 import com.bitlove.fetlife.view.screen.BaseActivity;
@@ -256,6 +257,10 @@ public class MenuActivityComponent extends ActivityComponent {
             menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_groups) {
            pendingNavigationIntent = GroupsActivity.createIntent(menuActivity,false);
+            menuActivity.setFinishAfterNavigation(true);
+        } else if (id == R.id.nav_wallpaper) {
+//            UrlUtil.openUrl(menuActivity,"https://app.fetlife.com/wallpapers", true);
+            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"wallpapers",menuActivity.getString(R.string.title_activity_wallpapers), true, null,false);
             menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_updates) {
             logEvent("nav_updates");

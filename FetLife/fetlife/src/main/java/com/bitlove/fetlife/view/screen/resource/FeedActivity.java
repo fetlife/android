@@ -132,7 +132,7 @@ public class FeedActivity extends ResourceListActivity<Story> implements FeedRec
                 return;
             }
         }
-        UrlUtil.openUrl(this,url);
+        UrlUtil.openUrl(this,url, true);
     }
 
     @Override
@@ -167,17 +167,17 @@ public class FeedActivity extends ResourceListActivity<Story> implements FeedRec
             startActivity(intent);
             return;
         }
-        UrlUtil.openUrl(this,url);
+        UrlUtil.openUrl(this,url, true);
     }
 
     @Override
     public void onFeedImageLongClick(Story.FeedStoryType feedStoryType, String url, FeedEvent feedEvent, Member targetMember) {
-        UrlUtil.openUrl(this,url);
+        UrlUtil.openUrl(this,url, true);
     }
 
     @Override
     public void onVisitPicture(Picture picture, String url) {
-        UrlUtil.openUrl(this,url);
+        UrlUtil.openUrl(this,url, true);
     }
 
     @Override

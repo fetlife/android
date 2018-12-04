@@ -1047,4 +1047,5 @@
     <string name="noification_title_comments_requests_new_friendrequest">%d members</string>
     <string name="title_webview_questions_popular">Popular</string>
     <string name="title_webview_questions_tags">Tags</string>
+    <string name="menu_wallpaper">Wallpapers</string>
 </resources>

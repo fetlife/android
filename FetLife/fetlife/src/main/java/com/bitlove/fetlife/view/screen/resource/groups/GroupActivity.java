@@ -230,7 +230,7 @@ public class GroupActivity extends ResourceActivity implements AppBarLayout.OnOf
 
     public void onViewGroup(View v) {
         if (group != null) {
-            UrlUtil.openUrl(this,group.getUrl());
+            UrlUtil.openUrl(this,group.getUrl(), true);
         }
     }
 

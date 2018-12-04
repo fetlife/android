@@ -239,8 +239,16 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         },33);
     }
 
-    private String getFabLinkForLocation(String baseLocation) {
-        Uri baseUri = Uri.parse(baseLocation);
+    @Override
+    protected String getFabLink() {
+        return getFabLinkForLocation(currentLocation);
+    }
+
+    private String getFabLinkForLocation(String location) {
+        if (location == null) {
+            return null;
+        }
+        Uri baseUri = Uri.parse(location);
         if (!baseUri.isHierarchical()) {
             return null;
         }
@@ -407,7 +415,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
             } else if (UrlUtil.handleInternal(this,Uri.parse(location), false, baseLocation)){
                 return;
             } else {
-                UrlUtil.openUrl(this,UrlUtil.removeAppIds(location));
+                UrlUtil.openUrl(this,UrlUtil.removeAppIds(location), true);
                 return;
             }
         } else if (UrlUtil.handleInternal(this,Uri.parse(location), true, baseLocation)){
@@ -423,7 +431,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         TurbolinksView turbolinksView = (TurbolinksView) findViewById(R.id.turbolinks_view);
 
         currentLocation = location;
-        setUpFloatingActionButton(currentLocation);
+        setUpFloatingActionButton(getFabLink());
 
         TurbolinksSession.getDefault(this)
                 .activity(this)
@@ -525,7 +533,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
             }
             @Override
             public void onVisitPicture(Picture picture, String url) {
-                UrlUtil.openUrl(TurboLinksViewActivity.this,url);
+                UrlUtil.openUrl(TurboLinksViewActivity.this,url, true);
             }
             @Override
             public void onSharePicture(Picture picture, String url) {

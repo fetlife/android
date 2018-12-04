@@ -29,6 +29,7 @@ import androidx.core.app.ActivityOptionsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.transition.Transition;
 
@@ -49,26 +50,11 @@ import android.widget.Toast;
 import com.bitlove.fetlife.BuildConfig;
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
-import com.bitlove.fetlife.event.NotificationCountUpdatedEvent;
-import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
 import com.bitlove.fetlife.inbound.onesignal.notification.OneSignalNotification;
-import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
-import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
-import com.bitlove.fetlife.session.UserSessionManager;
-import com.bitlove.fetlife.util.UrlUtil;
 import com.bitlove.fetlife.view.screen.component.ActivityComponent;
-import com.bitlove.fetlife.view.screen.resource.ConversationsActivity;
-import com.bitlove.fetlife.view.screen.resource.FeedActivity;
-import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity;
-import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.google.android.material.bottomnavigation.BottomNavigationItemView;
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
 import com.mikepenz.iconics.utils.IconicsMenuInflaterUtil;
 
@@ -81,9 +67,6 @@ import java.util.List;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 
 public abstract class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -162,11 +145,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             activityComponent.onActivityCreated(this, savedInstanceState);
         }
 
-        final String fabLink = getFabLink();
         fab = findViewById(R.id.fab);
-        if (fabLink != null) {
-            setUpFloatingActionButton(fabLink);
-        }
+        setUpFloatingActionButton(getFabLink());
 
         final BottomNavigationView bottomNavigation = findViewById(R.id.navigation_bottom);
         boolean hasBottomBar = getIntent().getBooleanExtra(EXTRA_HAS_BOTTOM_BAR,true);
@@ -250,9 +230,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                                         bottomNavigation.setOnNavigationItemSelectedListener(this);
                                     }
                                     drawerLayout.closeDrawer(Gravity.RIGHT);
-                                    if (fab != null && fabLink != null) {
-                                        fab.show();
-                                    }
+                                    setUpFloatingActionButton(getFabLink());
                                 } else {
                                     bottomNavigation.setOnNavigationItemSelectedListener(null);
                                     bottomNavigation.setSelectedItemId(R.id.navigation_bottom_menu_drawer);
@@ -295,9 +273,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                         bottomNavigation.setSelectedItemId(selectedMenuItem);
                         bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
                     }
-                    if (fab != null && fabLink != null) {
-                        fab.show();
-                    }
+                    setUpFloatingActionButton(getFabLink());
                 }
 
                 @Override
@@ -309,17 +285,17 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     }
 
     protected void setUpFloatingActionButton(final String fabLink) {
-        if (fab != null) {
+        if (fab != null && !TextUtils.isEmpty(fabLink)) {
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (!UrlUtil.handleInternal(BaseActivity.this, Uri.parse(fabLink),false, null)) {
-                        UrlUtil.openUrl(BaseActivity.this, fabLink);
+                        UrlUtil.openUrl(BaseActivity.this, fabLink, true);
                     }
                 }
             });
             fab.show();
-        } else {
+        } else if (fab != null){
             fab.hide();
         }
     }
@@ -347,6 +323,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             greyOutMenuItem(menu.findItem(R.id.nav_help));
             greyOutMenuItem(menu.findItem(R.id.nav_guidelines));
             greyOutMenuItem(menu.findItem(R.id.nav_contact));
+            greyOutMenuItem(menu.findItem(R.id.nav_wallpaper));
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
