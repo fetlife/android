@@ -136,7 +136,8 @@
 
         <item
             android:id="@+id/nav_wallpaper"
-            android:title="@string/menu_wallpaper" />
+            android:title="@string/menu_wallpaper"
+            android:visible="false"/>
 
         <item
             android:id="@+id/nav_guidelines"

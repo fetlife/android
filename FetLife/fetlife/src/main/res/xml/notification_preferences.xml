@@ -41,6 +41,17 @@
     </com.bitlove.fetlife.view.widget.BoldPreferenceCategory>
 
     <com.bitlove.fetlife.view.widget.BoldPreferenceCategory
+        android:title="@string/settings_category_notification_gouping">
+
+        <CheckBoxPreference
+            android:key="@string/settings_key_notification_grouping_enabled"
+            android:defaultValue="@string/settings_default_notification_grouping_enabled"
+            android:title="@string/settings_title_notification_grouping"
+            android:summary="@string/settings_summary_notification_grouping" />
+
+    </com.bitlove.fetlife.view.widget.BoldPreferenceCategory>
+
+    <com.bitlove.fetlife.view.widget.BoldPreferenceCategory
         android:title="@string/settings_category_notification_enablement">
         
         <CheckBoxPreference

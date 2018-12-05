@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.StrictMode;
@@ -148,6 +149,10 @@ public class FetLifeApplication extends MultiDexApplication {
         imageViewerWrapper = new ImageViewerWrapper();
         //Init Fresco image library
         initFrescoImageLibrary();
+
+//        if (BuildConfig.DEBUG) {
+//            Debug.waitForDebugger();
+//        }
 
         createDefaultNotificationChanel();
 

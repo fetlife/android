@@ -29,6 +29,11 @@
 
             <p><b><br/>Version History</b></p>
 
+            <p/>v2.19.2<br/>
+                    <ul>
+                        <li>Crash fixes</li>
+                    </ul>
+
             <p/>v2.19.0<br/>
                     <ul>
                         <li>Keeping pictures open after orientation changes</li>
@@ -1048,4 +1053,7 @@
     <string name="title_webview_questions_popular">Popular</string>
     <string name="title_webview_questions_tags">Tags</string>
     <string name="menu_wallpaper">Wallpapers</string>
+    <string name="settings_category_notification_gouping">Notification grouping</string>
+    <string name="settings_title_notification_grouping">Notification Grouping</string>
+    <string name="settings_summary_notification_grouping">Enable grouping of similar notifications in the notification bar</string>
 </resources>

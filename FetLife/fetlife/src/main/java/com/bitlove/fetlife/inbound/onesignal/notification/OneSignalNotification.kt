@@ -46,6 +46,8 @@ abstract class OneSignalNotification(val notificationType: String,
 
     open fun display(fetLifeApplication: FetLifeApplication) {
 
+        val groupingEnabled = fetLifeApplication.userSessionManager.activeUserPreferences.getBoolean(fetLifeApplication.getString(R.string.settings_key_notification_grouping_enabled),true);
+
         //Selecting storage
         var liveNotifications = liveNotificationMap[notificationType] ?: ArrayList()
         if (liveNotifications.isEmpty()) liveNotificationMap[notificationType] = liveNotifications
@@ -81,7 +83,8 @@ abstract class OneSignalNotification(val notificationType: String,
             val text = getNotificationText(referenceNotification,groupCount,fetLifeApplication)
             val pendingIntent = getNotificationIntent(referenceNotification, fetLifeApplication, i++)
 
-            val groupedNotification = getDefaultNotificationBuilder(channelId, notificationType, fetLifeApplication, pendingIntent, title, text).build()
+            val groupId = if (groupingEnabled) notificationType else null
+            val groupedNotification = getDefaultNotificationBuilder(channelId, groupId, fetLifeApplication, pendingIntent, title, text).build()
             notificationManager.notify(i++, groupedNotification)
             inboxStyle.addLine("$title $text")
         }
@@ -93,7 +96,9 @@ abstract class OneSignalNotification(val notificationType: String,
                 setContentIntent(getLegacySummaryIntent(fetLifeApplication))
             }
         }.build()
-        notificationManager.notify(notificationIdRange, summaryNotification)
+        if (groupingEnabled) {
+            notificationManager.notify(notificationIdRange, summaryNotification)
+        }
 
         //Saving notification item
         saveNotificationItem(notificationIdRange)
@@ -114,7 +119,7 @@ abstract class OneSignalNotification(val notificationType: String,
     }
 
 
-    protected fun getDefaultNotificationBuilder(notificationChannelId: String, groupId: String, fetLifeApplication: FetLifeApplication, contentIntent: PendingIntent?, title: String?, text: String?): NotificationCompat.Builder {
+    protected fun getDefaultNotificationBuilder(notificationChannelId: String, groupId: String?, fetLifeApplication: FetLifeApplication, contentIntent: PendingIntent?, title: String?, text: String?): NotificationCompat.Builder {
         val builder = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) NotificationCompat.Builder(fetLifeApplication, notificationChannelId) else NotificationCompat.Builder(fetLifeApplication)
         return builder.apply {
             setAutoCancel(true)
