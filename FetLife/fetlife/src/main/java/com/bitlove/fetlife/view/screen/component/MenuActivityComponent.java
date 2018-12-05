@@ -211,6 +211,9 @@ public class MenuActivityComponent extends ActivityComponent {
             //menuActivity.setFinishAfterNavigation(true);
 //        } else if (id == R.id.nav_feed) {
 //            FeedActivity.startActivity(menuActivity);
+        } else if (id == R.id.nav_websettings) {
+            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"settings/account",menuActivity.getString(R.string.title_activity_websettings), true, null, false);
+            menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_stuff_you_love) {
             pendingNavigationIntent = ExploreActivity.createIntent(menuActivity, ExploreActivity.Explore.STUFF_YOU_LOVE);
             menuActivity.setFinishAfterNavigation(true);
