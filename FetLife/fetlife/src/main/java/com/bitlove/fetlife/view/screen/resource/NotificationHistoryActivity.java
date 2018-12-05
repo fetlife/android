@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.event.NotificationReceivedEvent;
+import com.bitlove.fetlife.inbound.onesignal.notification.OneSignalNotification;
 import com.bitlove.fetlife.model.pojos.fetlife.db.NotificationHistoryItem;
 import com.bitlove.fetlife.view.adapter.NotificationHistoryRecyclerAdapter;
 import com.bitlove.fetlife.view.adapter.ResourceListRecyclerAdapter;
@@ -70,6 +71,9 @@ public class NotificationHistoryActivity extends ResourceListActivity<Notificati
     public void onItemClick(NotificationHistoryItem notificationHistoryItem) {
         String launchUrl = notificationHistoryItem.getLaunchUrl();
         if (launchUrl != null && launchUrl.trim().length() != 0) {
+            if (launchUrl.startsWith(OneSignalNotification.LAUNCH_URL_PREFIX)) {
+                launchUrl = launchUrl.substring(OneSignalNotification.LAUNCH_URL_PREFIX.length());
+            }
 //            if (launchUrl.startsWith(OneSignalNotification.LAUNCH_URL_PREFIX)) {
 //                handleInnerLaunchUrl(this,launchUrl);
 //            } else {
