@@ -29,10 +29,11 @@
 
             <p><b><br/>Version History</b></p>
 
-            <p/>v2.19.0<br/>
+            <p/>v2.19.2<br/>
                     <ul>
                         <li>Keeping pictures open after orientation changes</li>
                         <li>Fix of not opening notifications for devices below Android 7.0</li>
+                        <li>Crash fixes</li>
                     </ul>
 
             <p/>v2.18.5<br/>
@@ -643,7 +644,7 @@
     <string name="input_message_description">Your Message</string>
     <string name="button_new_conversation_discription">New Conversation</string>
     <string name="button_send_description">Send Message</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Android Settings</string>
     <string name="settings_title_general">General Settings</string>
     <string name="settings_summary_general">Manage general App settings</string>
     <string name="notification_title_new_release">New FetLife App - Stable Version</string>
