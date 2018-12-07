@@ -112,7 +112,7 @@ public class ActivityFeedFragment extends LoadFragment implements FeedRecyclerAd
                 return;
             }
         }
-        UrlUtil.openUrl(getActivity(),url, true);
+        UrlUtil.openUrl(getActivity(),url, true, false);
     }
 
     @Override
@@ -147,17 +147,17 @@ public class ActivityFeedFragment extends LoadFragment implements FeedRecyclerAd
             startActivity(intent);
             return;
         }
-        UrlUtil.openUrl(getActivity(),url, true);
+        UrlUtil.openUrl(getActivity(),url, true, false);
     }
 
     @Override
     public void onFeedImageLongClick(Story.FeedStoryType feedStoryType, String url, FeedEvent feedEvent, Member targetMember) {
-        UrlUtil.openUrl(getActivity(),url, true);
+        UrlUtil.openUrl(getActivity(),url, true, false);
     }
 
     @Override
     public void onVisitPicture(Picture picture, String url) {
-        UrlUtil.openUrl(getActivity(),url, true);
+        UrlUtil.openUrl(getActivity(),url, true, false);
     }
 
     @Override

@@ -424,7 +424,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
             } else if (UrlUtil.handleInternal(this,Uri.parse(location), false, baseLocation)){
                 return;
             } else {
-                UrlUtil.openUrl(this,UrlUtil.removeAppIds(location), true);
+                UrlUtil.openUrl(this,UrlUtil.removeAppIds(location), true, false);
                 return;
             }
         } else if (UrlUtil.handleInternal(this,Uri.parse(location), true, baseLocation)){
@@ -553,7 +553,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
             }
             @Override
             public void onVisitPicture(Picture picture, String url) {
-                UrlUtil.openUrl(TurboLinksViewActivity.this,url, true);
+                UrlUtil.openUrl(TurboLinksViewActivity.this,url, true, false);
             }
             @Override
             public void onSharePicture(Picture picture, String url) {

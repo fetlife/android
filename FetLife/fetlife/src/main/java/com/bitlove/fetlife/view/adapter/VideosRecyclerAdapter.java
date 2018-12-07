@@ -93,7 +93,7 @@ public class VideosRecyclerAdapter extends RecyclerView.Adapter<VideoViewHolder>
         holder.imageView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                UrlUtil.openUrl(view.getContext(),video.getUrl(), true);
+                UrlUtil.openUrl(view.getContext(),video.getUrl(), true, false);
                 return true;
             }
         });

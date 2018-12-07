@@ -191,7 +191,7 @@ public class GroupMessagesRecyclerAdapter extends RecyclerView.Adapter<GroupMess
 
                 @Override
                 public void onVisitPicture(Picture picture, String url) {
-                    UrlUtil.openUrl(FetLifeApplication.getInstance(),url, true);
+                    UrlUtil.openUrl(FetLifeApplication.getInstance(),url, true, false);
                 }
 
                 @Override

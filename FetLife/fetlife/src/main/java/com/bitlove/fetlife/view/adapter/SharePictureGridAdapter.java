@@ -122,7 +122,7 @@ public class SharePictureGridAdapter extends BaseAdapter {
 
                     @Override
                     public void onVisitPicture(Picture picture, String url) {
-                        UrlUtil.openUrl(v.getContext(),url, true);
+                        UrlUtil.openUrl(v.getContext(),url, true, false);
                     }
 
                     @Override

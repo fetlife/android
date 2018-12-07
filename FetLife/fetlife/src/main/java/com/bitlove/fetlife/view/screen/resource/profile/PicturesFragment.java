@@ -72,7 +72,7 @@ public class PicturesFragment extends LoadFragment implements PictureUtil.OnPict
 
     @Override
     public void onVisitPicture(Picture picture, String url) {
-        UrlUtil.openUrl(getActivity(),url, true);
+        UrlUtil.openUrl(getActivity(),url, true, false);
     }
 
     @Override

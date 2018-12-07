@@ -59,6 +59,11 @@
         </activity>
 
         <activity
+            android:name=".inbound.CusomTabs.CustomTabLauncherActivity"
+            android:theme="@style/AppTheme.Transparent">
+        </activity>
+
+        <activity
             android:name=".view.screen.resource.PictureShareActivity"
             android:label="@string/title_activity_pictureshare"
             android:theme="@style/AppTheme.NoActionBar">

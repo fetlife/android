@@ -224,6 +224,7 @@ public class MenuActivityComponent extends ActivityComponent {
             pendingNavigationIntent = ExploreActivity.createIntent(menuActivity, ExploreActivity.Explore.KINKY_AND_POPULAR);
             menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_help) {
+//            UrlUtil.openUrl(menuActivity,"https://app.fetlife.com/help",true,true);
             pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"help",menuActivity.getString(R.string.title_activity_help), true, null, false);
             menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_guidelines) {

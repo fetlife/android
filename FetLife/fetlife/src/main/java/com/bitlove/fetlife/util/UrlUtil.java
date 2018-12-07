@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.net.Uri;
 
 import com.basecamp.turbolinks.TurbolinksSession;
+import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
+import com.bitlove.fetlife.inbound.CusomTabs.CustomTabLauncherActivity;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.resource.EventActivity;
@@ -26,15 +28,21 @@ public class UrlUtil {
 
     private static final String QUERY_API_IDS = "api_ids";
 
-    public static void openUrl(Context context, String link, boolean customTab) {
+    public static void openUrl(Context context, String link, boolean customTab, boolean finishAfterNavigation) {
+        customTab = customTab && FetLifeApplication.getInstance().isCustomTabsSupported();
         if (link != null && !customTab) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse(link));
             context.startActivity(intent);
         } else if (link != null) {
-            CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder().setToolbarColor(ColorUtil.retrieverColor(context,R.color.color_secondary_dark));
-            CustomTabsIntent customTabsIntent = builder.build();
-            customTabsIntent.launchUrl(context, Uri.parse(link));
+            if (finishAfterNavigation) {
+                FetLifeApplication.getInstance().setCloseCustomTabAfterNavigation(true);
+                CustomTabLauncherActivity.Companion.launchUrl(link,context);
+            } else {
+                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder(FetLifeApplication.getInstance().getCustomTabsSession()).setToolbarColor(ColorUtil.retrieverColor(context,R.color.color_secondary_dark));
+                CustomTabsIntent customTabsIntent = builder.build();
+                customTabsIntent.launchUrl(context, Uri.parse(link));
+            }
         }
     }
 
@@ -84,9 +92,19 @@ public class UrlUtil {
 
         if ("wallpapers".equals(urlSegments.get(0))) {
             if (urlSegments.size()>1 && "download".equals(urlSegments.get(1))) {
-                UrlUtil.openUrl(baseActivity,uri.toString(),true);
+                UrlUtil.openUrl(baseActivity,uri.toString(),true, false);
                 return true;
             }
+        }
+        if ("android".equals(urlSegments.get(0))) {
+            if (urlSegments.size()>1 && "download".equals(urlSegments.get(1))) {
+                UrlUtil.openUrl(baseActivity,uri.toString(),true, false);
+                return true;
+            }
+        }
+        if (urlSegments.size() > 0 && "download".equals(urlSegments.get(urlSegments.size()-1))) {
+            UrlUtil.openUrl(baseActivity,uri.toString(),true, false);
+            return true;
         }
 
         if (sameBaseLocation) {

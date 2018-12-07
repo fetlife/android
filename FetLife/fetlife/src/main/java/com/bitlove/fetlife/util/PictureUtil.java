@@ -59,7 +59,7 @@ public class PictureUtil {
         imageVisit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UrlUtil.openUrl(v.getContext(),picture.getUrl(), true);
+                UrlUtil.openUrl(v.getContext(),picture.getUrl(), true, false);
             }
         });
 
