@@ -310,7 +310,11 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
         if (navigationView != null) {
             Menu menu = navigationView.getMenu();
-            boolean showQuestions = getFetLifeApplication().getUserSessionManager().getActiveUserPreferences().getBoolean(UserSessionManager.PREF_KEY_QUESTIONS_ENABLED,false);
+            SharedPreferences userPreferences = getFetLifeApplication().getUserSessionManager().getActiveUserPreferences();
+            if (userPreferences == null) {
+                return;
+            }
+            boolean showQuestions = userPreferences.getBoolean(UserSessionManager.PREF_KEY_QUESTIONS_ENABLED,false);
             MenuItem menuItem = menu.findItem(R.id.nav_questions);
             if (menuItem != null) {
                 menuItem.setVisible(showQuestions);

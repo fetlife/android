@@ -74,13 +74,24 @@ public class NotificationHistoryActivity extends ResourceListActivity<Notificati
             if (launchUrl.startsWith(OneSignalNotification.LAUNCH_URL_PREFIX)) {
                 launchUrl = launchUrl.substring(OneSignalNotification.LAUNCH_URL_PREFIX.length());
             }
+            //temporary fix
+            if (!launchUrl.startsWith("http")) {
+                int urlStart = launchUrl.indexOf("http");
+                if (urlStart >= 0) {
+                    launchUrl = launchUrl.substring(urlStart);
+                }
+            }
 //            if (launchUrl.startsWith(OneSignalNotification.LAUNCH_URL_PREFIX)) {
 //                handleInnerLaunchUrl(this,launchUrl);
 //            } else {
                 Intent intent = new Intent(Intent.ACTION_VIEW);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setData(Uri.parse(launchUrl));
-                startActivity(intent);
+                try {
+                    startActivity(intent);
+                } catch (Throwable t) {
+                    Crashlytics.logException(t);
+                }
 //            }
         }
     }

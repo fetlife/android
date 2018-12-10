@@ -179,7 +179,7 @@ class NotificationParser {
         const val JSON_VALUE_TYPE_GROUP_POST = "group_post"
 
 
-        fun clearNotificationTypeForUrl(location: String) {
+        fun clearNotificationTypeForUrl(location: String?) {
             val uri = Uri.parse(location)
             val definingSegment = if (uri.isHierarchical) uri.pathSegments.getOrNull(0) else location
             when (definingSegment) {
