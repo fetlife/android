@@ -13,6 +13,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Group;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.GroupPost;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Picture;
+import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Status;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Writing;
 import com.bitlove.fetlife.model.pojos.fetlife.json.FeedEvent;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Story;
@@ -102,6 +103,14 @@ public class FeedActivity extends ResourceListActivity<Story> implements FeedRec
                 targetWriting.save();
 //                WritingActivity.startActivity(this,targetWriting.getId(), targetWriting.getMemberId());
                 TurboLinksViewActivity.startActivity(this,targetWriting.getUrl(),targetWriting.getTitle());
+                return;
+            }
+        } else if (feedStoryType == Story.FeedStoryType.STATUS_COMMENT_CREATED || feedStoryType == Story.FeedStoryType.STATUS_CREATED) {
+            Status targetStatus = feedItemResourceHelper.getStatus(feedEvent);
+            if (targetStatus != null) {
+                targetStatus.save();
+                Member member = targetStatus.getMember();
+                TurboLinksViewActivity.startActivity(this,targetStatus.getUrl(),member!=null ? member.getNickname() : null);
                 return;
             }
         } else if (feedStoryType == Story.FeedStoryType.RSVP_CREATED) {

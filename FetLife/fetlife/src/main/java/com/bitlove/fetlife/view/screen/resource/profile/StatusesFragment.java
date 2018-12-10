@@ -6,15 +6,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitlove.fetlife.R;
+import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
+import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Status;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
+import com.bitlove.fetlife.view.adapter.ResourceListRecyclerAdapter;
 import com.bitlove.fetlife.view.adapter.StatusesRecyclerAdapter;
 import com.bitlove.fetlife.view.screen.resource.LoadFragment;
+import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class StatusesFragment extends LoadFragment {
+public class StatusesFragment extends LoadFragment implements ResourceListRecyclerAdapter.OnResourceClickListener<Status> {
 
     public static StatusesFragment newInstance(String memberId) {
         StatusesFragment statusesFragment = new StatusesFragment();
@@ -32,6 +36,7 @@ public class StatusesFragment extends LoadFragment {
         LinearLayoutManager recyclerLayoutManager = new LinearLayoutManager(getFetLifeApplication());
         recyclerView.setLayoutManager(recyclerLayoutManager);
         StatusesRecyclerAdapter adapter = new StatusesRecyclerAdapter(getArguments().getString(ARG_REFERENCE_ID));
+        adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
         return view;
     }
@@ -46,5 +51,17 @@ public class StatusesFragment extends LoadFragment {
             StatusesRecyclerAdapter recyclerViewAdapter = (StatusesRecyclerAdapter) recyclerView.getAdapter();
             recyclerViewAdapter.refresh();
         }
+    }
+
+    @Override
+    public void onItemClick(Status status) {
+        Member member = Member.loadMember(getArguments().getString(ARG_REFERENCE_ID));
+        String nickname = member != null ? member.getNickname() : "";
+        TurboLinksViewActivity.startActivity(getBaseActivity(),status.getUrl(),nickname);
+    }
+
+    @Override
+    public void onAvatarClick(Status status) {
+
     }
 }

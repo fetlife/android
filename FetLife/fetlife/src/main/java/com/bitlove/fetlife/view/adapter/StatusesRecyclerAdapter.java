@@ -24,7 +24,7 @@ import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-public class StatusesRecyclerAdapter extends RecyclerView.Adapter<StatusViewHolder> {
+public class StatusesRecyclerAdapter extends ResourceListRecyclerAdapter<Status, StatusViewHolder> {
 
     private String memberId;
     private List<Status> itemList;
@@ -75,7 +75,13 @@ public class StatusesRecyclerAdapter extends RecyclerView.Adapter<StatusViewHold
 
     @Override
     public void onBindViewHolder(StatusViewHolder holder, int position) {
-        Status status = itemList.get(position);
+        final Status status = itemList.get(position);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onResourceClickListener.onItemClick(status);
+            }
+        });
         holder.statusText.setText(status.getHtmlBody());
         holder.statusDate.setText(SimpleDateFormat.getDateTimeInstance().format(new Date(status.getDate())));
     }
@@ -84,9 +90,14 @@ public class StatusesRecyclerAdapter extends RecyclerView.Adapter<StatusViewHold
     public int getItemCount() {
         return itemList != null ? itemList.size() : 0;
     }
+
+    @Override
+    protected void onItemRemove(StatusViewHolder viewHolder, RecyclerView recyclerView, boolean swipedRight) {
+
+    }
 }
 
-class StatusViewHolder extends RecyclerView.ViewHolder {
+class StatusViewHolder extends SwipeableViewHolder {
 
     TextView statusText, statusDate;
 
@@ -94,5 +105,20 @@ class StatusViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
         statusText = (TextView) itemView.findViewById(R.id.status_text);
         statusDate = (TextView) itemView.findViewById(R.id.status_date);
+    }
+
+    @Override
+    public View getSwipeableLayout() {
+        return null;
+    }
+
+    @Override
+    public View getSwipeRightBackground() {
+        return null;
+    }
+
+    @Override
+    public View getSwipeLeftBackground() {
+        return null;
     }
 }

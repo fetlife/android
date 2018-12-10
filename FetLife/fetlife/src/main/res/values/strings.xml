@@ -29,6 +29,15 @@
 
             <p><b><br/>Version History</b></p>
 
+            <p/>v2.20.0<br/>
+                    <ul>
+                        <li>Open Writings as Webviews</li>
+                        <li>Open Statuses as Webviews</li>
+                        <li>Update Settings from the App</li>
+                        <li>Reach Wallpapers from the App</li>
+                        <li>New App icon</li>
+                    </ul>
+
             <p/>v2.19.2<br/>
                     <ul>
                         <li>Keeping pictures open after orientation changes</li>
