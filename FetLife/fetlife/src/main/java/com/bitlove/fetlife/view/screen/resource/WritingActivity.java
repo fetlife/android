@@ -160,7 +160,7 @@ public class WritingActivity extends ResourceActivity implements AppBarLayout.On
 
     public void onViewWriting(View v) {
         if (writing != null) {
-            UrlUtil.openUrl(this,writing.getUrl(), true);
+            UrlUtil.openUrl(this,writing.getUrl(), true, false);
         }
     }
 

@@ -290,7 +290,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                 @Override
                 public void onClick(View v) {
                     if (!UrlUtil.handleInternal(BaseActivity.this, Uri.parse(fabLink),false, null)) {
-                        UrlUtil.openUrl(BaseActivity.this, fabLink, true);
+                        UrlUtil.openUrl(BaseActivity.this, fabLink, true, false);
                     }
                 }
             });

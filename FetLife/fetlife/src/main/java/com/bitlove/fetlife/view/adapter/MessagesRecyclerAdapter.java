@@ -129,7 +129,7 @@ public class MessagesRecyclerAdapter extends RecyclerView.Adapter<MessageViewHol
 
                 @Override
                 public void onVisitPicture(Picture picture, String url) {
-                    UrlUtil.openUrl(FetLifeApplication.getInstance(),url, true);
+                    UrlUtil.openUrl(FetLifeApplication.getInstance(),url, true, false);
                 }
 
                 @Override

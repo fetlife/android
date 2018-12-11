@@ -65,6 +65,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
     static {
 //        supportedBaseUrls.put("https://app.fetlife.com/q",R.string.title_activity_questions);
 //        supportedBaseUrls.put("https://fetlife.com/q",R.string.title_activity_questions);
+        supportedBaseUrls.put("https://fetlife.com/settings",R.string.title_activity_websettings);
         supportedBaseUrls.put("https://fetlife.com/ads",R.string.title_activity_ads);
         supportedBaseUrls.put("https://fetlife.com/support",R.string.title_activity_support);
         supportedBaseUrls.put("https://fetlife.com/glossary",R.string.title_activity_glossary);
@@ -203,10 +204,16 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
 
         currentLocation = baseLocation;
 
-        setUpFloatingActionButton(getFabLinkForLocation(baseLocation));
+        Uri baseUri = Uri.parse(baseLocation);
+        List<String> pathSegments = baseUri.getPathSegments();
+        if (pathSegments.size() > 0 && "settings".equals(pathSegments.get(0))) {
+            baseLocation = "https://app.fetlife.com/settings";
+        }
+
+        setUpFloatingActionButton(getFabLinkForLocation(currentLocation));
 
         if (BuildConfig.DEBUG) {
-            Log.d("TBLocation",baseLocation);
+            Log.d("TBLocation",currentLocation);
         }
 
         showProgress();
@@ -231,7 +238,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
                         .addProgressObserver(TurboLinksViewActivity.this)
                         .addPageObserver(TurboLinksViewActivity.this)
                         .restoreWithCachedSnapshot(false)
-                        .visitWithAuthHeader(baseLocation, FetLifeService.AUTH_HEADER_PREFIX + accessToken);
+                        .visitWithAuthHeader(currentLocation, FetLifeService.AUTH_HEADER_PREFIX + accessToken);
 
                 getFetLifeApplication().getActionCable().tryConnect(TurboLinksViewActivity.this);
 
@@ -398,6 +405,8 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
             Log.d("TBLocation",location);
         }
 
+        clearHistory = shouldClearHistory(location);
+
 //        if (baseLocation.equalsIgnoreCase(location)) {
 //            return;
 //        }
@@ -415,7 +424,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
             } else if (UrlUtil.handleInternal(this,Uri.parse(location), false, baseLocation)){
                 return;
             } else {
-                UrlUtil.openUrl(this,UrlUtil.removeAppIds(location), true);
+                UrlUtil.openUrl(this,UrlUtil.removeAppIds(location), true, false);
                 return;
             }
         } else if (UrlUtil.handleInternal(this,Uri.parse(location), true, baseLocation)){
@@ -439,6 +448,17 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
                 .view(turbolinksView)
                 .restoreWithCachedSnapshot(false)
                 .visitLocationWithAction(location,action);
+    }
+
+    private boolean shouldClearHistory(String location) {
+        List<String> uriSegments = Uri.parse(location).getPathSegments();
+        List<String> currentUriSegments = Uri.parse(currentLocation).getPathSegments();
+        if ("settings".equals(uriSegments.get(0)) && "settings".equals(currentUriSegments.get(0))) {
+            if (currentUriSegments.size() == 1 || !uriSegments.get(1).equals(currentUriSegments.get(1))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private Integer getTitleForSupportedLocation(String location) {
@@ -533,7 +553,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
             }
             @Override
             public void onVisitPicture(Picture picture, String url) {
-                UrlUtil.openUrl(TurboLinksViewActivity.this,url, true);
+                UrlUtil.openUrl(TurboLinksViewActivity.this,url, true, false);
             }
             @Override
             public void onSharePicture(Picture picture, String url) {

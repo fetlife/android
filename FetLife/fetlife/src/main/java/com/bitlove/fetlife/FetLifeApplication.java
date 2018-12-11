@@ -17,6 +17,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.bitlove.fetlife.inbound.ActionCable;
+import com.bitlove.fetlife.inbound.CusomTabs.CustomTabLauncherActivity;
+import com.bitlove.fetlife.inbound.CusomTabs.FetLifeCustomTabsServiceConnection;
 import com.bitlove.fetlife.inbound.onesignal.NotificationParser;
 import com.bitlove.fetlife.model.api.FetLifeService;
 import com.bitlove.fetlife.model.api.GitHubService;
@@ -49,6 +51,8 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
+import androidx.browser.customtabs.CustomTabsClient;
+import androidx.browser.customtabs.CustomTabsSession;
 import androidx.multidex.MultiDexApplication;
 import io.fabric.sdk.android.Fabric;
 import okhttp3.Interceptor;
@@ -89,6 +93,9 @@ public class FetLifeApplication extends MultiDexApplication {
     private long lastToastTime;
 
     private static final long MIN_TOAST_TRASHOLD = 5*1000l;
+    private boolean closeCustomTabAfterNavigation = false;
+    private boolean customTabsSupported;
+    private CustomTabsSession customTabsSession;
 
     public static FetLifeApplication getInstance() {
         return instance;
@@ -145,6 +152,13 @@ public class FetLifeApplication extends MultiDexApplication {
 
         //Init crash logging
         Fabric.with(this, new Crashlytics());
+
+        try {
+            customTabsSupported = CustomTabsClient.bindCustomTabsService(this, "com.android.chrome", new FetLifeCustomTabsServiceConnection());
+        } catch (Throwable t) {
+            customTabsSupported = false;
+            Crashlytics.logException(t);
+        }
 
         imageViewerWrapper = new ImageViewerWrapper();
         //Init Fresco image library
@@ -282,6 +296,29 @@ public class FetLifeApplication extends MultiDexApplication {
         }).build();
 
         Fresco.initialize(this, imagePipelineConfig);
+    }
+
+    public CustomTabsSession getCustomTabsSession() {
+        return customTabsSession;
+    }
+
+    public void setCustomTabsSession(CustomTabsSession customTabsSession) {
+        this.customTabsSession = customTabsSession;
+    }
+
+    public boolean isCustomTabsSupported() {
+        return customTabsSupported && customTabsSession != null;
+    }
+
+    public void setCloseCustomTabAfterNavigation(boolean closeCustomTabAfterNavigation) {
+        this.closeCustomTabAfterNavigation = closeCustomTabAfterNavigation;
+    }
+
+    public void onCustomTabFinishedNavigation() {
+        if (closeCustomTabAfterNavigation) {
+            closeCustomTabAfterNavigation = false;
+            CustomTabLauncherActivity.Companion.closeCustomTab(this);
+        }
     }
 
 

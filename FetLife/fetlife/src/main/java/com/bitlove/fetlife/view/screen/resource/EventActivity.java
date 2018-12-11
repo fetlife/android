@@ -298,7 +298,7 @@ public class EventActivity extends ResourceActivity implements AppBarLayout.OnOf
 
     public void onViewEvent(View v) {
         if (event != null) {
-            UrlUtil.openUrl(this, event.getUrl(), true);
+            UrlUtil.openUrl(this, event.getUrl(), true, false);
         }
     }
 

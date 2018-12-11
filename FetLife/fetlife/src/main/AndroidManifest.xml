@@ -43,14 +43,6 @@
         <meta-data
             android:name="com.onesignal.NotificationOpened.DEFAULT"
             android:value="DISABLE"/>
-
-        <receiver
-            android:name=".inbound.OneSignalBackgroundDataReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.onesignal.BackgroundBroadcast.RECEIVE"/>
-            </intent-filter>
-        </receiver>
         <receiver
             android:name=".model.service.ServiceCallCancelReceiver"
             android:exported="false">
@@ -67,6 +59,11 @@
         </activity>
 
         <activity
+            android:name=".inbound.CusomTabs.CustomTabLauncherActivity"
+            android:theme="@style/AppTheme.Transparent">
+        </activity>
+
+        <activity
             android:name=".view.screen.resource.PictureShareActivity"
             android:label="@string/title_activity_pictureshare"
             android:theme="@style/AppTheme.NoActionBar">
@@ -75,7 +72,7 @@
         <activity-alias
             android:name=".StartActivity_Kinky"
             android:enabled="true"
-            android:icon="@mipmap/app_icon_kinky"
+            android:icon="@mipmap/ic_launcher_fetlife"
             android:label="@string/app_name_kinky"
             android:targetActivity=".StartActivity">
             <intent-filter android:label="@string/app_name_kinky">

@@ -29,12 +29,14 @@
 
             <p><b><br/>Version History</b></p>
 
-            <p/>v2.19.3<br/>
+            <p/>v2.19.5br/>
                     <ul>
+                        <li>Update Settings from the App</li>
+                        <li>New App icon</li>
                         <li>Crash fixes</li>
                     </ul>
 
-            <p/>v2.19.0<br/>
+            <p/>v2.19.2<br/>
                     <ul>
                         <li>Keeping pictures open after orientation changes</li>
                         <li>Fix of not opening notifications for devices below Android 7.0</li>
@@ -385,13 +387,14 @@
     <string name="menu_upload_photo">Upload Photo</string>
     <string name="menu_upload_video">Upload Video</string>
     <string name="menu_conversations">Conversations</string>
-    <string name="menu_settings">Settings</string>
+    <string name="menu_settings">Android Settings</string>
+    <string name="menu_websettings">Update Settings</string>
     <string name="menu_logout">Logout</string>
     <string name="menu_feed">Feed</string>
 
     <!-- *** Screen header *** -->
 
-    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_websettings">Update Settings</string>
     <string name="title_activity_conversations">Conversations</string>
     <string name="title_activity_messages">Messages</string>
     <string name="title_activity_friends">Friends</string>
@@ -647,7 +650,7 @@
     <string name="input_message_description">Your Message</string>
     <string name="button_new_conversation_discription">New Conversation</string>
     <string name="button_send_description">Send Message</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Android Settings</string>
     <string name="settings_title_general">General Settings</string>
     <string name="settings_summary_general">Manage general App settings</string>
     <string name="notification_title_new_release">New FetLife App - Stable Version</string>
@@ -962,6 +965,7 @@
     <string name="notification_chanel_description_default">All other not specified notifications belong to this category</string>
     <string name="title_activity_review_questions">Review community content</string>
     <string name="title_activity_help">Help</string>
+    <string name="title_activity_settings">Android Settings</string>
     <string name="title_activity_guidelines">Guidelines</string>
     <string name="title_activity_contact">Contact Us</string>
     <string name="noification_title_groups">Group Conversations</string>
