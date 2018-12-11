@@ -14,6 +14,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.db.NotificationHistoryItem;
 import com.bitlove.fetlife.view.adapter.NotificationHistoryRecyclerAdapter;
 import com.bitlove.fetlife.view.adapter.ResourceListRecyclerAdapter;
 import com.bitlove.fetlife.view.screen.component.MenuActivityComponent;
+import com.bitlove.fetlife.view.screen.resource.groups.GroupMessagesActivity;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.navigation.NavigationView;
 import com.raizlabs.android.dbflow.sql.language.Delete;
@@ -22,6 +23,9 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.reflect.Method;
+
+import static com.bitlove.fetlife.inbound.onesignal.notification.OneSignalNotification.LAUNCH_URL_PARAM_SEPARATOR;
+import static com.bitlove.fetlife.inbound.onesignal.notification.OneSignalNotification.LAUNCH_URL_PREFIX;
 
 public class NotificationHistoryActivity extends ResourceListActivity<NotificationHistoryItem>
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -71,8 +75,15 @@ public class NotificationHistoryActivity extends ResourceListActivity<Notificati
     public void onItemClick(NotificationHistoryItem notificationHistoryItem) {
         String launchUrl = notificationHistoryItem.getLaunchUrl();
         if (launchUrl != null && launchUrl.trim().length() != 0) {
-            if (launchUrl.startsWith(OneSignalNotification.LAUNCH_URL_PREFIX)) {
-                launchUrl = launchUrl.substring(OneSignalNotification.LAUNCH_URL_PREFIX.length());
+            if (launchUrl.startsWith(LAUNCH_URL_PREFIX)) {
+                if (launchUrl.indexOf("com.bitlove.fetlife.notification.GroupMessageNotification") >=0) {
+                    //Temp for backward compatibility
+                    String[] params = launchUrl.substring(LAUNCH_URL_PREFIX.length()).split(LAUNCH_URL_PARAM_SEPARATOR);
+                    GroupMessagesActivity.startActivity(this, params[1], params[2], params[3], null, true);
+                    return;
+                } else {
+                    launchUrl = launchUrl.substring(LAUNCH_URL_PREFIX.length());
+                }
             }
             //temporary fix
             if (!launchUrl.startsWith("http")) {
