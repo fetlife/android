@@ -104,6 +104,6 @@ class GroupMessageNotification(notificationType: String, notificationIdRange: In
         return PendingIntent.getActivity(context,notificationIdRange, GroupsActivity.createIntent(context,true),PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
-    override fun saveNotificationItem(notificationId: Int) {}
+//    override fun saveNotificationItem(notificationId: Int) {}
 
 }

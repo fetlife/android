@@ -27,8 +27,6 @@ class MessageNotification(notificationType: String, notificationIdRange: Int, ti
             return false;
         }
 
-        saveNotificationItem(notificationIdRange)
-
         var conversationInForeground = false
         val appInForeground = fetLifeApplication.isAppInForeground
 
