@@ -83,6 +83,12 @@ public class StatusesRecyclerAdapter extends ResourceListRecyclerAdapter<Status,
             }
         });
         holder.statusText.setText(status.getHtmlBody());
+        holder.statusText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onResourceClickListener.onItemClick(status);
+            }
+        });
         holder.statusDate.setText(SimpleDateFormat.getDateTimeInstance().format(new Date(status.getDate())));
     }
 

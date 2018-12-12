@@ -19,9 +19,11 @@
         android:paddingTop="@dimen/listitem_vertical_margin"
         android:gravity="bottom"
         android:orientation="vertical"
+        android:focusableInTouchMode="false"
+        android:focusable="false"
         style="@style/MessageItem">
 
-        <com.bitlove.fetlife.view.widget.WorkaroundTextView
+        <TextView
             android:id="@+id/status_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
