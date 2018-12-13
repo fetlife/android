@@ -453,7 +453,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
     private boolean shouldClearHistory(String location) {
         List<String> uriSegments = Uri.parse(location).getPathSegments();
         List<String> currentUriSegments = Uri.parse(currentLocation).getPathSegments();
-        if ("settings".equals(uriSegments.get(0)) && "settings".equals(currentUriSegments.get(0))) {
+        if (uriSegments.size() > 0 && currentUriSegments.size() > 0 && "settings".equals(uriSegments.get(0)) && "settings".equals(currentUriSegments.get(0))) {
             if (currentUriSegments.size() == 1 || !uriSegments.get(1).equals(currentUriSegments.get(1))) {
                 return true;
             }
