@@ -102,7 +102,7 @@ public class FeedActivity extends ResourceListActivity<Story> implements FeedRec
             if (targetWriting != null) {
                 targetWriting.save();
 //                WritingActivity.startActivity(this,targetWriting.getId(), targetWriting.getMemberId());
-                TurboLinksViewActivity.startActivity(this,targetWriting.getUrl(),targetWriting.getTitle());
+                TurboLinksViewActivity.startActivity(this,targetWriting.getUrl(),targetWriting.getTitle(), false, null, null, false);
                 return;
             }
         } else if (feedStoryType == Story.FeedStoryType.STATUS_COMMENT_CREATED || feedStoryType == Story.FeedStoryType.STATUS_CREATED) {
@@ -110,7 +110,7 @@ public class FeedActivity extends ResourceListActivity<Story> implements FeedRec
             if (targetStatus != null) {
                 targetStatus.save();
                 Member member = targetStatus.getMember();
-                TurboLinksViewActivity.startActivity(this,targetStatus.getUrl(),member!=null ? member.getNickname() : null);
+                TurboLinksViewActivity.startActivity(this,targetStatus.getUrl(),member!=null ? member.getNickname() : null, false, null, null, false);
                 return;
             }
         } else if (feedStoryType == Story.FeedStoryType.RSVP_CREATED) {

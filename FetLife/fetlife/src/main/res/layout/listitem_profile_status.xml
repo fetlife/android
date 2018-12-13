@@ -30,6 +30,8 @@
             android:autoLink="web"
             android:singleLine="false"
             android:textIsSelectable="true"
+            android:focusableInTouchMode="false"
+            android:focusable="false"
             android:textColorLink="@color/text_color_link"
             android:textAppearance="@style/MessageText"/>
 

@@ -83,7 +83,7 @@ public class ActivityFeedFragment extends LoadFragment implements FeedRecyclerAd
             if (targetWriting != null) {
                 targetWriting.save();
 //                WritingActivity.startActivity((BaseActivity) getActivity(),targetWriting.getId(),targetWriting.getMemberId());
-                TurboLinksViewActivity.startActivity(getBaseActivity(),targetWriting.getUrl(),targetWriting.getTitle());
+                TurboLinksViewActivity.startActivity(getBaseActivity(),targetWriting.getUrl(),targetWriting.getTitle(), false, null, null, false);
                 return;
             }
         } else if (feedStoryType == Story.FeedStoryType.STATUS_COMMENT_CREATED || feedStoryType == Story.FeedStoryType.STATUS_CREATED) {
@@ -91,7 +91,7 @@ public class ActivityFeedFragment extends LoadFragment implements FeedRecyclerAd
             if (targetStatus != null) {
                 targetStatus.save();
                 Member member = targetStatus.getMember();
-                TurboLinksViewActivity.startActivity(getBaseActivity(),targetStatus.getUrl(),member!=null ? member.getNickname() : null);
+                TurboLinksViewActivity.startActivity(getBaseActivity(),targetStatus.getUrl(),member!=null ? member.getNickname() : null, false, null, null, false);
                 return;
             }
         } else if (feedStoryType == Story.FeedStoryType.RSVP_CREATED) {
