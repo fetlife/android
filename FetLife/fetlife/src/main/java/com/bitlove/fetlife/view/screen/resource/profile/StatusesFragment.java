@@ -56,7 +56,7 @@ public class StatusesFragment extends LoadFragment implements ResourceListRecycl
     @Override
     public void onItemClick(Status status) {
         Member member = Member.loadMember(getArguments().getString(ARG_REFERENCE_ID));
-        String nickname = member != null ? member.getNickname() : "";
+        String nickname = member != null ? getString(R.string.title_activity_status,member.getNickname()) : "";
         TurboLinksViewActivity.startActivity(getBaseActivity(),status.getUrl(),nickname, false, null, null, false);
     }
 

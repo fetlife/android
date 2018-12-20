@@ -1060,4 +1060,5 @@
     <string name="title_webview_questions_popular">Popular</string>
     <string name="title_webview_questions_tags">Tags</string>
     <string name="menu_wallpaper">Wallpapers</string>
+    <string name="title_activity_status">%s\'s status</string>
 </resources>
