@@ -146,6 +146,7 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.JobIntentService;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -154,12 +155,13 @@ import retrofit2.Response;
 
 
 //TODO use thread executor instead of new threads
-public class FetLifeApiIntentService extends IntentService {
+public class FetLifeApiIntentService extends JobIntentService {
 
     private static final String FEATURE_QUESTIONS = "questions";
+    private static final int JOB_ID = 42;
 
     public FetLifeApiIntentService() {
-        super(FetLifeApplication.getInstance().getPackageName());
+        super();
     }
 
     //****
@@ -271,11 +273,12 @@ public class FetLifeApiIntentService extends IntentService {
         intent.setAction(action);
         intent.putExtra(EXTRA_PARAMS, params);
         intent.putExtra(EXTRA_UID, UUID.randomUUID().toString());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.startForegroundService(intent);
-        } else {
-            context.startService(intent);
-        }
+        enqueueWork(context,FetLifeApiIntentService.class,JOB_ID,intent);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            context.startForegroundService(intent);
+//        } else {
+//            context.startService(intent);
+//        }
     }
 
     public static synchronized void startClearApiCall(Context context, String action, String... params) {
@@ -351,13 +354,13 @@ public class FetLifeApiIntentService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForeground(1,new Notification());
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            startForeground(1,new Notification());
+//        }
     }
 
     @Override
-    protected void onHandleIntent(@NonNull Intent intent) {
+    protected void onHandleWork(@NonNull Intent intent) {
 
         callCount++;
 
@@ -407,7 +410,7 @@ public class FetLifeApiIntentService extends IntentService {
                 if (refreshToken(currentUser)) {
                     //If token successfully refreshed restart the original request
                     //Note: this could end up in endless loop if the backend keep sending invalid tokens, but at this point we assume backend works properly from this point of view
-                    onHandleIntent(intent);
+                    onHandleWork(intent);
                 } else {
                     //Notify subscribers about failed authentication
                     sendAuthenticationFailedNotification();
@@ -591,7 +594,7 @@ public class FetLifeApiIntentService extends IntentService {
                 if (refreshToken(currentUser)) {
                     //If token refreshUi succeed restart the original request
                     //TODO think about if we can end up endless loop in here in case of not proper response from the backend.
-                    onHandleIntent(intent);
+                    onHandleWork(intent);
                 } else {
                     //Notify subscribers about failed authentication
                     sendAuthenticationFailedNotification();
