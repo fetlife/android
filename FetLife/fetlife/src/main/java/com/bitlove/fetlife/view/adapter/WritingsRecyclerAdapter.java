@@ -88,7 +88,7 @@ public class WritingsRecyclerAdapter extends ResourceListRecyclerAdapter<Writing
             }
         });
         holder.writingHeader.setText(writing.getTitle());
-        holder.writingBody.setText(writing.getBody());
+        holder.writingBody.setText(writing.getHtmlBody());
         long dateLong = DateUtil.parseDate(writing.getCreatedAt(),true);
         String dateText = SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.DEFAULT, SimpleDateFormat.SHORT).format(dateLong);
         holder.writingDate.setText(dateText);

@@ -107,6 +107,11 @@ public class UrlUtil {
             return true;
         }
 
+        if ("posts".equals(urlSegments.get(2)) && urlSegments.size() == 3) {
+            baseActivity.finish();
+            return true;
+        }
+
         if (sameBaseLocation) {
             return false;
         }
@@ -151,6 +156,10 @@ public class UrlUtil {
                 return false;
             }
             if ("posts".equals(urlSegments.get(2))) {
+                if (urlSegments.size() == 3) {
+                    baseActivity.finish();
+                    return true;
+                }
 //                String memberId = apiIds.length >= 2 ? apiIds[0] : ServerIdUtil.prefixServerId(urlSegments.get(1));
 //                String postId = apiIds.length >= 2 ? apiIds[1] : ServerIdUtil.prefixServerId(urlSegments.get(3));
 //                WritingActivity.startActivity(baseActivity,postId,memberId);

@@ -413,7 +413,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
 
         String mediaId = null;
 
-        if (!location.startsWith(baseLocation)) {
+        if (!location.startsWith(baseLocation) && !browsingThrough(baseLocation,location)) {
             Integer expectedTitleResourceId = getTitleForSupportedLocation(location);
             if (expectedTitleResourceId != null) {
                 TurboLinksViewActivity.startActivity(this,location,getString(expectedTitleResourceId));
@@ -450,10 +450,30 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
                 .visitLocationWithAction(location,action);
     }
 
+    private boolean browsingThrough(String baseLocation, String location) {
+        List<String> uriSegments = Uri.parse(location).getPathSegments();
+        List<String> currentUriSegments = Uri.parse(currentLocation).getPathSegments();
+        if (uriSegments.size() == 0 || currentUriSegments.size() == 0) {
+            return false;
+        }
+        if ("users".equals(uriSegments.get(0)) && "users".equals(currentUriSegments.get(0))) {
+            if (uriSegments.size() < 3 || currentUriSegments.size() < 3) {
+                return false;
+            }
+            if ("posts".equals(uriSegments.get(2)) && "posts".equals(currentUriSegments.get(2))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private boolean shouldClearHistory(String location) {
         List<String> uriSegments = Uri.parse(location).getPathSegments();
         List<String> currentUriSegments = Uri.parse(currentLocation).getPathSegments();
-        if (uriSegments.size() > 0 && currentUriSegments.size() > 0 && "settings".equals(uriSegments.get(0)) && "settings".equals(currentUriSegments.get(0))) {
+        if (uriSegments.size() == 0 || currentUriSegments.size() == 0) {
+            return false;
+        }
+        if ("settings".equals(uriSegments.get(0)) && "settings".equals(currentUriSegments.get(0))) {
             if (currentUriSegments.size() == 1 || !uriSegments.get(1).equals(currentUriSegments.get(1))) {
                 return true;
             }

@@ -12,6 +12,7 @@ import com.bitlove.fetlife.view.adapter.ResourceListRecyclerAdapter;
 import com.bitlove.fetlife.view.adapter.WritingsRecyclerAdapter;
 import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.resource.LoadFragment;
+import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity;
 import com.bitlove.fetlife.view.screen.resource.WritingActivity;
 
 import androidx.annotation.Nullable;
@@ -55,8 +56,8 @@ public class WritingsFragment extends LoadFragment implements ResourceListRecycl
     @Override
     public void onItemClick(Writing writing) {
         writing.save();
-        WritingActivity.startActivity((BaseActivity) getActivity(),writing.getId(), writing.getMemberId());
-//        TurboLinksViewActivity.startActivity(getBaseActivity(),writing.getUrl(),writing.getTitle());
+//        WritingActivity.startActivity((BaseActivity) getActivity(),writing.getId(), writing.getMemberId());
+        TurboLinksViewActivity.startActivity(getBaseActivity(),writing.getUrl(),writing.getTitle(), false, null, null, false);
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Group;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.GroupPost;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Picture;
+import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Status;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Writing;
 import com.bitlove.fetlife.model.pojos.fetlife.json.FeedEvent;
 import com.bitlove.fetlife.model.pojos.fetlife.json.PeopleInto;
@@ -231,6 +232,24 @@ public class FeedItemResourceHelper {
                         writing = feedEvent.getSecondaryTarget() != null ? feedEvent.getSecondaryTarget().getWriting() : null;
                     }
                     return writing;
+                default:
+                    return null;
+            }
+        } catch (NullPointerException npe) {
+            return null;
+        }
+    }
+
+    public Status getStatus(FeedEvent feedEvent) {
+        try {
+            switch (feedStoryType) {
+                case STATUS_COMMENT_CREATED:
+                case STATUS_CREATED:
+                    Status status = feedEvent.getTarget() != null ? feedEvent.getTarget().getStatus() : null;
+                    if (status == null) {
+                        status = feedEvent.getSecondaryTarget() != null ? feedEvent.getSecondaryTarget().getStatus() : null;
+                    }
+                    return status;
                 default:
                     return null;
             }

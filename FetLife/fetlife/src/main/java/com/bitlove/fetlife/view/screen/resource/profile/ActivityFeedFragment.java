@@ -13,6 +13,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Group;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.GroupPost;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Picture;
+import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Status;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Writing;
 import com.bitlove.fetlife.model.pojos.fetlife.json.FeedEvent;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Story;
@@ -23,6 +24,7 @@ import com.bitlove.fetlife.view.adapter.feed.FeedRecyclerAdapter;
 import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.resource.EventActivity;
 import com.bitlove.fetlife.view.screen.resource.LoadFragment;
+import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity;
 import com.bitlove.fetlife.view.screen.resource.WritingActivity;
 import com.bitlove.fetlife.view.screen.resource.groups.GroupActivity;
 import com.bitlove.fetlife.view.screen.resource.groups.GroupMessagesActivity;
@@ -80,8 +82,17 @@ public class ActivityFeedFragment extends LoadFragment implements FeedRecyclerAd
             Writing targetWriting = feedItemResourceHelper.getWriting(feedEvent);
             if (targetWriting != null) {
                 targetWriting.save();
-                WritingActivity.startActivity((BaseActivity) getActivity(),targetWriting.getId(),targetWriting.getMemberId());
-//                TurboLinksViewActivity.startActivity(getBaseActivity(),targetWriting.getUrl(),targetWriting.getTitle());
+//                WritingActivity.startActivity((BaseActivity) getActivity(),targetWriting.getId(),targetWriting.getMemberId());
+                TurboLinksViewActivity.startActivity(getBaseActivity(),targetWriting.getUrl(),targetWriting.getTitle(), false, null, null, false);
+                return;
+            }
+        } else if (feedStoryType == Story.FeedStoryType.STATUS_COMMENT_CREATED || feedStoryType == Story.FeedStoryType.STATUS_CREATED) {
+            Status targetStatus = feedItemResourceHelper.getStatus(feedEvent);
+            if (targetStatus != null) {
+                targetStatus.save();
+                Member member = targetStatus.getMember();
+                String nickname = member != null ? getString(R.string.title_activity_status,member.getNickname()) : "";
+                TurboLinksViewActivity.startActivity(getBaseActivity(),targetStatus.getUrl(),nickname, false, null, null, false);
                 return;
             }
         } else if (feedStoryType == Story.FeedStoryType.RSVP_CREATED) {

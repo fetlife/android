@@ -29,6 +29,13 @@
 
             <p><b><br/>Version History</b></p>
 
+            <p/>v2.20.0<br/>
+                    <ul>
+                        <li>Open Writings as Webviews</li>
+                        <li>Open Statuses as Webviews</li>
+                        <li>Fix for extra notification issues on Android 9 devices</li>
+                    </ul>
+
             <p/>v2.19.7br/>
                     <ul>
                         <li>Crash fix</li>
@@ -1066,4 +1073,5 @@
     <string name="settings_category_notification_gouping">Notification grouping</string>
     <string name="settings_title_notification_grouping">Notification Grouping</string>
     <string name="settings_summary_notification_grouping">Enable grouping of similar notifications in the notification bar</string>
+    <string name="title_activity_status">%s\'s status</string>
 </resources>
