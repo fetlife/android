@@ -91,7 +91,8 @@ public class ActivityFeedFragment extends LoadFragment implements FeedRecyclerAd
             if (targetStatus != null) {
                 targetStatus.save();
                 Member member = targetStatus.getMember();
-                TurboLinksViewActivity.startActivity(getBaseActivity(),targetStatus.getUrl(),member!=null ? member.getNickname() : null, false, null, null, false);
+                String nickname = member != null ? getString(R.string.title_activity_status,member.getNickname()) : "";
+                TurboLinksViewActivity.startActivity(getBaseActivity(),targetStatus.getUrl(),nickname, false, null, null, false);
                 return;
             }
         } else if (feedStoryType == Story.FeedStoryType.RSVP_CREATED) {

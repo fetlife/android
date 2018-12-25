@@ -110,7 +110,8 @@ public class FeedActivity extends ResourceListActivity<Story> implements FeedRec
             if (targetStatus != null) {
                 targetStatus.save();
                 Member member = targetStatus.getMember();
-                TurboLinksViewActivity.startActivity(this,targetStatus.getUrl(),member!=null ? member.getNickname() : null, false, null, null, false);
+                String nickname = member != null ? getString(R.string.title_activity_status,member.getNickname()) : "";
+                TurboLinksViewActivity.startActivity(this,targetStatus.getUrl(),nickname, false, null, null, false);
                 return;
             }
         } else if (feedStoryType == Story.FeedStoryType.RSVP_CREATED) {
