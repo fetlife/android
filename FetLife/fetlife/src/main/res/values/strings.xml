@@ -29,6 +29,12 @@
 
             <p><b><br/>Version History</b></p>
 
+            <p/>v2.20.2<br/>
+                    <ul>
+                        <li>Crash fixes</li>
+                        <li>Event map fix</li>
+                    </ul>
+
             <p/>v2.20.0<br/>
                     <ul>
                         <li>Open Writings as Webviews</li>
@@ -36,13 +42,13 @@
                         <li>Fix for extra notification issues on Android 9 devices</li>
                     </ul>
 
-            <p/>v2.19.7br/>
+            <p/>v2.19.7<br/>
                     <ul>
                         <li>Crash fix</li>
                         <li>Wallpapers menu item</li>
                     </ul>
 
-            <p/>v2.19.5br/>
+            <p/>v2.19.5<br/>
                     <ul>
                         <li>Update Settings from the App</li>
                         <li>New App icon</li>
