@@ -288,7 +288,7 @@ public class FetLifeApiIntentService extends JobIntentService {
         String uid = UUID.randomUUID().toString();
         intent.putExtra(EXTRA_UID, uid);
         clearUidsPerAction.put(action,uid);
-        context.startService(intent);
+        enqueueWork(context,FetLifeApiIntentService.class,JOB_ID,intent);
     }
 
     public static synchronized Intent getActionIntent(Context context, String action, String... params) {
