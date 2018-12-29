@@ -107,7 +107,7 @@ public class UrlUtil {
             return true;
         }
 
-        if ("posts".equals(urlSegments.get(2)) && urlSegments.size() == 3) {
+        if (urlSegments.size() == 3 && "posts".equals(urlSegments.get(2))) {
             baseActivity.finish();
             return true;
         }
