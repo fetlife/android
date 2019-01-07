@@ -61,6 +61,11 @@
             android:icon="@drawable/ic_search_black_24dp"
             android:title="@string/menu_members" />
 
+        <item
+            android:id="@+id/nav_search"
+            android:icon="@drawable/ic_search_black_24dp"
+            android:title="@string/menu_search" />
+
         <!--<item-->
             <!--android:id="@+id/nav_friendrequests"-->
             <!--android:icon="@android:drawable/ic_menu_my_calendar"-->

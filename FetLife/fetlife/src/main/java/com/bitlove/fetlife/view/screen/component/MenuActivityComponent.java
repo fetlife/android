@@ -174,6 +174,8 @@ public class MenuActivityComponent extends ActivityComponent {
             return false;
 //        } else if (id == R.id.nav_conversations) {
 //            ConversationsActivity.startActivity(menuActivity, false);
+        } else if (id == R.id.nav_search) {
+            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"search",menuActivity.getString(R.string.title_activity_search), true, null, false);
         } else if (id == R.id.nav_members) {
             pendingNavigationIntent = MembersActivity.createIntent(menuActivity,false);
             menuActivity.setFinishAfterNavigation(true);

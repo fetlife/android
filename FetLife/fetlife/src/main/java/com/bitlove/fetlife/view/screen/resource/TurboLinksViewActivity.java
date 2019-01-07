@@ -478,6 +478,15 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
                 return true;
             }
         }
+        if ("search".equals(uriSegments.get(0)) && "search".equals(currentUriSegments.get(0))) {
+            if (uriSegments.size() < 2) {
+                return currentUriSegments.size() >= 2;
+            } else if (currentUriSegments.size() < 2) {
+                return true;
+            } else {
+                return !uriSegments.get(1).equalsIgnoreCase(currentUriSegments.get(1));
+            }
+        }
         return false;
     }
 
