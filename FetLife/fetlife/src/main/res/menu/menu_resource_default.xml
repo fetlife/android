@@ -59,7 +59,8 @@
         <item
             android:id="@+id/nav_members"
             android:icon="@drawable/ic_search_black_24dp"
-            android:title="@string/menu_members" />
+            android:title="@string/menu_members"
+            android:visible="false"/>
 
         <item
             android:id="@+id/nav_search"
