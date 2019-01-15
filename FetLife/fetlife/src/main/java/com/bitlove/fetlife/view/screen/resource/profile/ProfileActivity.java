@@ -170,7 +170,7 @@ public class ProfileActivity extends ResourceActivity implements AppBarLayout.On
         });
 
         SlidingTabLayout slidingTab = (SlidingTabLayout) findViewById(R.id.navigation_tabs);
-        slidingTab.setDividerColorResource(R.color.color_accent);
+        slidingTab.setDividerColorResource(R.color.area_background_dark_invert);
         slidingTab.setSelectedIndicatorColorResource(R.color.color_accent);
         slidingTab.setViewPager(viewPager);
 

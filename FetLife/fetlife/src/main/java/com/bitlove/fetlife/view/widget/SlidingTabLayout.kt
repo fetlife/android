@@ -1,6 +1,7 @@
 package com.bitlove.fetlife.view.widget
 
 import android.content.Context
+import android.graphics.Rect
 import android.graphics.Typeface
 import android.os.Build
 import android.util.AttributeSet
@@ -11,8 +12,11 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.HorizontalScrollView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.viewpager.widget.ViewPager
+import com.bitlove.fetlife.R
 
+//https://stackoverflow.com/questions/26362555/custom-selected-tab-text-color-in-slidingtablayout
 /**
  * To be used with ViewPager to provide a tab indicator component which give constant feedback as to
  * the user's scroll progress.
@@ -173,6 +177,8 @@ class SlidingTabLayout @JvmOverloads constructor(context: Context, attrs: Attrib
         val padding = (TAB_VIEW_PADDING_DIPS * resources.displayMetrics.density).toInt()
         textView.setPadding(padding, padding, padding, padding)
 
+        textView.setTextColor(ContextCompat.getColor(context, R.color.sliding_tab_title_color));
+
         return textView
     }
 
@@ -214,6 +220,8 @@ class SlidingTabLayout @JvmOverloads constructor(context: Context, attrs: Attrib
         }
     }
 
+    var currentSelection: View? = null // new field indicating old selected item
+
     private fun scrollToTab(tabIndex: Int, positionOffset: Int) {
         val tabStripChildCount = mTabStrip.getChildCount()
         if (tabStripChildCount == 0 || tabIndex < 0 || tabIndex >= tabStripChildCount) {
@@ -222,14 +230,39 @@ class SlidingTabLayout @JvmOverloads constructor(context: Context, attrs: Attrib
 
         val selectedChild = mTabStrip.getChildAt(tabIndex)
         if (selectedChild != null) {
-            var targetScrollX = selectedChild!!.getLeft() + positionOffset
 
-            if (tabIndex > 0 || positionOffset > 0) {
-                // If we're not at the first child and are mid-scroll, make sure we obey the offset
-                targetScrollX -= mTitleOffset
+            if(positionOffset == 0 && selectedChild != currentSelection) { // added part
+                selectedChild.isSelected = true;
+                (selectedChild as? TextView)?.setTextColor(resources.getColor(R.color.text_color_primary))
+                currentSelection?.isSelected = false;
+                (currentSelection as? TextView)?.setTextColor(resources.getColor(R.color.text_color_secondary))
+                currentSelection = selectedChild;
             }
 
-            scrollTo(targetScrollX, 0)
+            var targetScrollX = selectedChild!!.getLeft() + positionOffset
+
+//            if (tabIndex > 0 || positionOffset > 0) {
+//                // If we're not at the first child and are mid-scroll, make sure we obey the offset
+//                targetScrollX -= mTitleOffset
+//            }
+//
+//            scrollTo(targetScrollX, 0)
+
+            var targetScrollX2 = selectedChild!!.right + positionOffset
+
+            val visibleRect = Rect()
+            getGlobalVisibleRect(visibleRect)
+
+            left = scrollX + visibleRect.left
+            right = left + visibleRect.right - visibleRect.left
+
+            if (targetScrollX < left) {
+                scrollBy(targetScrollX - left, 0);
+            } else if (targetScrollX2 > right) {
+                scrollBy(targetScrollX2 - right, 0);
+            } else {
+                //skip
+            }
         }
     }
 
@@ -249,7 +282,7 @@ class SlidingTabLayout @JvmOverloads constructor(context: Context, attrs: Attrib
                 (positionOffset * selectedTitle!!.getWidth()).toInt()
             else
                 0
-            scrollToTab(position, extraOffset)
+//            scrollToTab(position, extraOffset)
 
             if (mViewPagerPageChangeListener != null) {
                 mViewPagerPageChangeListener!!.onPageScrolled(position, positionOffset,
