@@ -929,7 +929,7 @@
     <string name="menu_glossary">Glossary</string>
     <string name="menu_ads">Advertise on FetLife</string>
     <string name="title_activity_webview">FetLife</string>
-    <string name="title_activity_search">Search</string>
+    <string name="title_activity_search">Search on FetLife</string>
     <string name="title_activity_support">Support FetLife</string>
     <string name="title_activity_ads">Advertise on FetLife</string>
     <string name="title_activity_glossary">Glossary</string>
@@ -974,7 +974,7 @@
     <string name="title_activity_fresh_and_pervy"><![CDATA[Fresh & Pervy]]></string>
     <string name="message_sending_not_members">Only group members can send message to a Group Conversation</string>
     <string name="feed_title_new_video">Uploaded a new Video</string>
-    <string name="menu_search">Search</string>
+    <string name="menu_search">Search on FetLife</string>
     <string name="message_member_forbidden">Sending messsage to this member is not possible, beceause either the member is inactive/deleted or one of you has blocked the other</string>
     <string name="menu_team">Meet the Team</string>
     <string name="menu_wallpapers">Wallpapers</string>
