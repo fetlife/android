@@ -65,6 +65,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
     static {
 //        supportedBaseUrls.put("https://app.fetlife.com/q",R.string.title_activity_questions);
 //        supportedBaseUrls.put("https://fetlife.com/q",R.string.title_activity_questions);
+        supportedBaseUrls.put("https://fetlife.com/places",R.string.title_activity_places);
         supportedBaseUrls.put("https://fetlife.com/settings",R.string.title_activity_websettings);
         supportedBaseUrls.put("https://fetlife.com/ads",R.string.title_activity_ads);
         supportedBaseUrls.put("https://fetlife.com/support",R.string.title_activity_support);

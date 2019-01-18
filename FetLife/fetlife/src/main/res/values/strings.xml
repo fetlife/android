@@ -1080,4 +1080,6 @@
     <string name="settings_title_notification_grouping">Notification Grouping</string>
     <string name="settings_summary_notification_grouping">Enable grouping of similar notifications in the notification bar</string>
     <string name="title_activity_status">%s\'s status</string>
+    <string name="menu_places">Places</string>
+    <string name="title_activity_places">Places</string>
 </resources>
