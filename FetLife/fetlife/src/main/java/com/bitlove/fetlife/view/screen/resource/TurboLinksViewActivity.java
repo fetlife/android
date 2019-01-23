@@ -376,7 +376,9 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
             if (separatorPos >= 0) {
                 title = title.substring(0,separatorPos);
             }
-            setTitle(title);
+            if (!TextUtils.isEmpty(title)) {
+                setTitle(title);
+            }
         }
     }
 
@@ -435,6 +437,8 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
             Integer expectedTitleResourceId = getTitleForSupportedLocation(location);
             if (expectedTitleResourceId != null) {
                 setTitle(expectedTitleResourceId);
+            } else {
+                title = null;
             }
         }
 
@@ -457,6 +461,9 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         if (uriSegments.size() == 0 || currentUriSegments.size() == 0) {
             return false;
         }
+        if ("places".equals(uriSegments.get(0)) || "administrative_areas".equals(uriSegments.get(0)) && ("places".equals(currentUriSegments.get(0)) || "administrative_areas".equals(currentUriSegments.get(0)))) {
+            return true;
+        }
         if ("users".equals(uriSegments.get(0)) && "users".equals(currentUriSegments.get(0))) {
             if (uriSegments.size() < 3 || currentUriSegments.size() < 3) {
                 return false;
@@ -478,6 +485,9 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
             if (currentUriSegments.size() == 1 || !uriSegments.get(1).equals(currentUriSegments.get(1))) {
                 return true;
             }
+        }
+        if ("places".equals(uriSegments.get(0)) && "settings".equals(currentUriSegments.get(0))) {
+            return true;
         }
         return false;
     }
