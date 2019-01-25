@@ -12,6 +12,7 @@ import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.resource.EventActivity;
 import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity;
+import com.bitlove.fetlife.view.screen.resource.WritingActivity;
 import com.bitlove.fetlife.view.screen.resource.groups.GroupActivity;
 import com.bitlove.fetlife.view.screen.resource.groups.GroupMessagesActivity;
 import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity;
@@ -167,10 +168,11 @@ public class UrlUtil {
                     baseActivity.finish();
                     return true;
                 }
+                TurboLinksViewActivity.startActivity(baseActivity,uri.toString(),null, false, null, null, false);
 //                String memberId = apiIds.length >= 2 ? apiIds[0] : ServerIdUtil.prefixServerId(urlSegments.get(1));
 //                String postId = apiIds.length >= 2 ? apiIds[1] : ServerIdUtil.prefixServerId(urlSegments.get(3));
 //                WritingActivity.startActivity(baseActivity,postId,memberId);
-                return false;
+                return true;
             }
             return false;
         }
