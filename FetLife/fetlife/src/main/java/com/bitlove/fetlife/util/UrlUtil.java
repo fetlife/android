@@ -90,6 +90,13 @@ public class UrlUtil {
             }
         }
 
+        if (isPlaces(urlSegments.get(0))) {
+            if (baseUriSegments.size() > 0 && isPlaces(baseUriSegments.get(0))) {
+                TurboLinksViewActivity.startActivity(baseActivity,uri.toString(), null, false, null, null, false);
+                return true;
+            }
+        }
+
         if ("wallpapers".equals(urlSegments.get(0))) {
             if (urlSegments.size()>1 && "download".equals(urlSegments.get(1))) {
                 UrlUtil.openUrl(baseActivity,uri.toString(),true, false);
@@ -167,6 +174,13 @@ public class UrlUtil {
             }
             return false;
         }
+        return false;
+    }
+
+    public static boolean isPlaces(String uriSegment) {
+        if ("administrative_areas".equalsIgnoreCase(uriSegment)) return true;
+        if ("countries".equalsIgnoreCase(uriSegment)) return true;
+        if ("places".equalsIgnoreCase(uriSegment)) return true;
         return false;
     }
 

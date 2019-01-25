@@ -54,7 +54,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
 
     private static final Map<String,Integer> supportedBaseUrls = new HashMap<>();
 
-    public static final String FAB_LINK_NEW_QUESTION = "https://app.fetlife.com/q/new";
+    public static final String FAB_LINK_NEW_QUESTION = FetLifeService.WEBVIEW_BASE_URL + "/q/new";
 
     public static final String URL_QUESTIONS_POPULAR = "https://fetlife.com/q?filter=popular";
     public static final String URL_QUESTIONS_TAGS = "https://fetlife.com/q/tags";
@@ -208,7 +208,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         Uri baseUri = Uri.parse(baseLocation);
         List<String> pathSegments = baseUri.getPathSegments();
         if (pathSegments.size() > 0 && "settings".equals(pathSegments.get(0))) {
-            baseLocation = "https://app.fetlife.com/settings";
+            baseLocation = FetLifeService.WEBVIEW_BASE_URL + "/" + "settings";
         }
 
         setUpFloatingActionButton(getFabLinkForLocation(currentLocation));
@@ -437,8 +437,8 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
             Integer expectedTitleResourceId = getTitleForSupportedLocation(location);
             if (expectedTitleResourceId != null) {
                 setTitle(expectedTitleResourceId);
-            } else {
-                title = null;
+//            } else {
+//                title = null;
             }
         }
 
@@ -461,7 +461,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
         if (uriSegments.size() == 0 || currentUriSegments.size() == 0) {
             return false;
         }
-        if ("places".equals(uriSegments.get(0)) || "administrative_areas".equals(uriSegments.get(0)) && ("places".equals(currentUriSegments.get(0)) || "administrative_areas".equals(currentUriSegments.get(0)))) {
+        if (UrlUtil.isPlaces(uriSegments.get(0)) && (UrlUtil.isPlaces(currentUriSegments.get(0)))) {
             return true;
         }
         if ("users".equals(uriSegments.get(0)) && "users".equals(currentUriSegments.get(0))) {
@@ -493,7 +493,7 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
     }
 
     private Integer getTitleForSupportedLocation(String location) {
-        location = location.replace("//app.fetlife.com","//fetlife.com");
+        location = location.replace(FetLifeService.WEBVIEW_BASE_URL,"https://fetlife.com");
         if (location.startsWith(URL_QUESTIONS_POPULAR)) {
             return R.string.title_webview_questions_popular;
         }
