@@ -27,6 +27,8 @@ import com.bitlove.fetlife.view.screen.resource.FriendRequestsActivity;
 import com.bitlove.fetlife.view.screen.resource.MessagesActivity;
 import com.bitlove.fetlife.view.screen.resource.ResourceActivity;
 import com.bitlove.fetlife.view.widget.FlingBehavior;
+import com.bitlove.fetlife.view.widget.SlideControlViewPager;
+import com.bitlove.fetlife.view.widget.SlidingTabLayout;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.material.appbar.AppBarLayout;
@@ -49,7 +51,7 @@ public class ProfileActivity extends ResourceActivity implements AppBarLayout.On
     private static final int PAGE_NUMBER_PICTURES = 4;
     private static final String MENMTION_PREFEIX = "@";
 
-    private ViewPager viewPager;
+    private SlideControlViewPager viewPager;
     private TextView nickNameView,metaView;
     private SimpleDraweeView avatarView,imageHeaderView,toolbarHeaderView;
     private ImageView friendIconView,followIconView,messageIconView,viewIconView;
@@ -94,7 +96,8 @@ public class ProfileActivity extends ResourceActivity implements AppBarLayout.On
 
         setMemberDetails(member);
 
-        viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager = (SlideControlViewPager) findViewById(R.id.pager);
+        viewPager.setSlideEnabled(false);
         viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
@@ -165,6 +168,11 @@ public class ProfileActivity extends ResourceActivity implements AppBarLayout.On
                 }
             }
         });
+
+        SlidingTabLayout slidingTab = (SlidingTabLayout) findViewById(R.id.navigation_tabs);
+        slidingTab.setDividerColorResource(R.color.area_background_dark_invert);
+        slidingTab.setSelectedIndicatorColorResource(R.color.color_accent);
+        slidingTab.setViewPager(viewPager);
 
         AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.app_bar);
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams)appBarLayout.getLayoutParams();
