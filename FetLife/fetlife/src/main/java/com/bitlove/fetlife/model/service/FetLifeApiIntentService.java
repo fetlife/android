@@ -649,9 +649,9 @@ public class FetLifeApiIntentService extends JobIntentService {
                 }
             });
             for (Release release : releases) {
-                if (release.isPrerelease()) {
+                if (release.isPrerelease() && latestPreRelease == null) {
                     latestPreRelease = release;
-                } else {
+                } else if (latestRelease == null) {
                     latestRelease = release;
                 }
                 if (latestRelease != null && latestPreRelease != null) {
