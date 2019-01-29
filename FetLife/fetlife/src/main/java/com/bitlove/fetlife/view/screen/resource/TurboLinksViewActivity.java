@@ -130,8 +130,11 @@ public class TurboLinksViewActivity extends ResourceActivity implements Turbolin
 
     protected void logEvent() {
         String pageUrl = getIntent().getStringExtra(EXTRA_PAGE_URL);
-        Answers.getInstance().logCustom(
-                new CustomEvent(getClass().getSimpleName() + ":" + pageUrl));
+        String eventName = getClass().getSimpleName() + ":" + pageUrl;
+        if (eventName.length() > 42) {
+            eventName = eventName.substring(0,42);
+        }
+        Answers.getInstance().logCustom(new CustomEvent(eventName));
     }
 
     @Override
