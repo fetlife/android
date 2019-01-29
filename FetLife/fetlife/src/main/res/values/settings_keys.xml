@@ -27,4 +27,6 @@
     <string name="settings_key_feed_auto_expand_media">settings_key_feed_auto_expand_media</string>
     <string name="settings_key_notification_questions_enabled">settings_key_notification_questions_enabled</string>
     <string name="settings_key_notification_grouping_enabled">settings_key_notification_groupping_enabled</string>
+
+    <string name="settings_key_lock_screen_asked">settings_key_lock_screen_asked</string>
 </resources>

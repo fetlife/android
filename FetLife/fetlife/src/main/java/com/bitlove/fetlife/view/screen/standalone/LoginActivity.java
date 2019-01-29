@@ -26,7 +26,8 @@ import com.bitlove.fetlife.event.LoginFailedEvent;
 import com.bitlove.fetlife.event.LoginFinishedEvent;
 import com.bitlove.fetlife.event.LoginStartedEvent;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
-import com.bitlove.fetlife.util.PreferenceKeys;
+import com.bitlove.fetlife.util.PreferenceUtils;
+import com.bitlove.fetlife.view.dialog.LockScreenConfirmationDialog;
 import com.bitlove.fetlife.view.dialog.MessageDialog;
 import com.bitlove.fetlife.view.screen.resource.ConversationsActivity;
 
@@ -53,6 +54,8 @@ public class LoginActivity extends Activity {
             showToast(getIntent().getStringExtra(EXTRA_OPTIONAL_TOAST));
         }
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getFetLifeApplication());
+
         TextView previewText = (TextView)findViewById(R.id.text_preview);
         if (previewText != null) {
             if (BuildConfig.PREVIEW) {
@@ -64,8 +67,6 @@ public class LoginActivity extends Activity {
             }
         }
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getFetLifeApplication());
-
         boolean vanilla = sharedPreferences.getBoolean(getFetLifeApplication().getString(R.string.settings_key_general_vanilla),false);
         if (vanilla) {
             TextView loginHeader = (TextView) findViewById(R.id.login_header);
@@ -74,12 +75,12 @@ public class LoginActivity extends Activity {
             loginText.setText(getString(R.string.logon_title_vanilla));
         }
 
-        int lastVersionNotification = sharedPreferences.getInt(PreferenceKeys.MAIN_PREF_KEY_LAST_VERSION_NOTIFICATION,0);
+        int lastVersionNotification = sharedPreferences.getInt(PreferenceUtils.MAIN_PREF_KEY_LAST_VERSION_NOTIFICATION,0);
         if (lastVersionNotification < 20620) {
             if (lastVersionNotification != 0) {
                 MessageDialog.show(this,getString(R.string.title_dialog_reset_settings),getString(R.string.message_dialog_reset_settings));
             }
-            sharedPreferences.edit().putInt(PreferenceKeys.MAIN_PREF_KEY_LAST_VERSION_NOTIFICATION,getFetLifeApplication().getVersionNumber()).apply();
+            sharedPreferences.edit().putInt(PreferenceUtils.MAIN_PREF_KEY_LAST_VERSION_NOTIFICATION,getFetLifeApplication().getVersionNumber()).apply();
         }
 
 
@@ -122,6 +123,14 @@ public class LoginActivity extends Activity {
         getFetLifeApplication().getEventBus().register(this);
         if (FetLifeApiIntentService.isActionInProgress(FetLifeApiIntentService.ACTION_APICALL_LOGON_USER)) {
             showProgress();
+        } else {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getFetLifeApplication());
+            String prefKey = getFetLifeApplication().getString(R.string.settings_key_lock_screen_asked);
+            boolean lockScreenAsked = sharedPreferences.getBoolean(prefKey,false);
+            if (!lockScreenAsked) {
+                sharedPreferences.edit().putBoolean(prefKey,true).apply();
+                new LockScreenConfirmationDialog().show(getFragmentManager());
+            }
         }
     }
 

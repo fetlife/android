@@ -1,5 +1,6 @@
 package com.bitlove.fetlife.view.screen.resource;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;

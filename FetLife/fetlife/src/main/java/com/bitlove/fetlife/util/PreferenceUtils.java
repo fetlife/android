@@ -1,6 +1,6 @@
 package com.bitlove.fetlife.util;
 
-public class PreferenceKeys {
+public class PreferenceUtils {
 
     public static final String PREF_KEY_PASSWORD_ALWAYS = "preference_password_always";
 

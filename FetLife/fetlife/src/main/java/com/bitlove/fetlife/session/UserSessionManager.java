@@ -12,7 +12,7 @@ import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.model.db.FetLifeDatabase;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
-import com.bitlove.fetlife.util.PreferenceKeys;
+import com.bitlove.fetlife.util.PreferenceUtils;
 import com.bitlove.fetlife.util.SecurityUtil;
 import com.bitlove.fetlife.util.StringUtil;
 import com.bitlove.fetlife.view.screen.standalone.SettingsActivity;
@@ -89,7 +89,7 @@ public class UserSessionManager {
 
     private void applyVersionUpgrade() {
         SharedPreferences mainPreferences = PreferenceManager.getDefaultSharedPreferences(fetLifeApplication);
-        int lastVersionUpgrade = mainPreferences.getInt(PreferenceKeys.MAIN_PREF_KEY_LAST_VERSION_UPGRADE,0);
+        int lastVersionUpgrade = mainPreferences.getInt(PreferenceUtils.MAIN_PREF_KEY_LAST_VERSION_UPGRADE,0);
         if (lastVersionUpgrade < 20711) {
             resetAllUserDatabase();
         }
@@ -100,15 +100,15 @@ public class UserSessionManager {
         fetLifeApplication.deleteAllDatabases();
 
         SharedPreferences mainPreferences = PreferenceManager.getDefaultSharedPreferences(fetLifeApplication);
-        int lastVersionUpgrade = mainPreferences.getInt(PreferenceKeys.MAIN_PREF_KEY_LAST_VERSION_UPGRADE,0);
+        int lastVersionUpgrade = mainPreferences.getInt(PreferenceUtils.MAIN_PREF_KEY_LAST_VERSION_UPGRADE,0);
         SharedPreferences.Editor preferenceEditor = mainPreferences.edit();
         if (lastVersionUpgrade != 0) {
-            preferenceEditor.putInt(PreferenceKeys.MAIN_PREF_KEY_LAST_VERSION_NOTIFICATION,lastVersionUpgrade);
+            preferenceEditor.putInt(PreferenceUtils.MAIN_PREF_KEY_LAST_VERSION_NOTIFICATION,lastVersionUpgrade);
         }
         preferenceEditor
-                .putBoolean(PreferenceKeys.MAIN_PREF_KEY_USER_SESSION_STATE,false)
-                .putString(PreferenceKeys.MAIN_PREF_KEY_USER_SESSION_META_INFO, null)
-                .putInt(PreferenceKeys.MAIN_PREF_KEY_LAST_VERSION_UPGRADE,fetLifeApplication.getVersionNumber())
+                .putBoolean(PreferenceUtils.MAIN_PREF_KEY_USER_SESSION_STATE,false)
+                .putString(PreferenceUtils.MAIN_PREF_KEY_USER_SESSION_META_INFO, null)
+                .putInt(PreferenceUtils.MAIN_PREF_KEY_LAST_VERSION_UPGRADE,fetLifeApplication.getVersionNumber())
                 .apply();
     }
 
@@ -226,13 +226,13 @@ public class UserSessionManager {
 
 
     public boolean keepUserSignedIn() {
-        boolean askAlwaysForPassword = activePreferences.getBoolean(PreferenceKeys.PREF_KEY_PASSWORD_ALWAYS, true);
+        boolean askAlwaysForPassword = activePreferences.getBoolean(PreferenceUtils.PREF_KEY_PASSWORD_ALWAYS, true);
         return !askAlwaysForPassword;
     }
 
     private void setKeepUserSignedIn(boolean keepUserSignedIn) {
         boolean askAlwaysForPassword = !keepUserSignedIn;
-        activePreferences.edit().putBoolean(PreferenceKeys.PREF_KEY_PASSWORD_ALWAYS, askAlwaysForPassword).apply();
+        activePreferences.edit().putBoolean(PreferenceUtils.PREF_KEY_PASSWORD_ALWAYS, askAlwaysForPassword).apply();
     }
 
     public long[] getNotificationVibration() {
@@ -346,12 +346,12 @@ public class UserSessionManager {
 
     private boolean isUserLoggedIn(){
         SharedPreferences mainPreferences = PreferenceManager.getDefaultSharedPreferences(fetLifeApplication);
-        return mainPreferences.getBoolean(PreferenceKeys.MAIN_PREF_KEY_USER_SESSION_STATE,false);
+        return mainPreferences.getBoolean(PreferenceUtils.MAIN_PREF_KEY_USER_SESSION_STATE,false);
     }
 
     private void setUserLoggedIn(boolean loggedIn) {
         SharedPreferences mainPreferences = PreferenceManager.getDefaultSharedPreferences(fetLifeApplication);
-        mainPreferences.edit().putBoolean(PreferenceKeys.MAIN_PREF_KEY_USER_SESSION_STATE,loggedIn).commit();
+        mainPreferences.edit().putBoolean(PreferenceUtils.MAIN_PREF_KEY_USER_SESSION_STATE,loggedIn).commit();
     }
 
     private String getLastLoggedInUserId() {
@@ -359,7 +359,7 @@ public class UserSessionManager {
             Log.d("UserSession","Retrieving User Session Meta Info");
         }
         SharedPreferences mainPreferences = PreferenceManager.getDefaultSharedPreferences(fetLifeApplication);
-        String sessionMetaInfo = mainPreferences.getString(PreferenceKeys.MAIN_PREF_KEY_USER_SESSION_META_INFO,null);
+        String sessionMetaInfo = mainPreferences.getString(PreferenceUtils.MAIN_PREF_KEY_USER_SESSION_META_INFO,null);
         if (BuildConfig.DEBUG) {
             Log.d("UserSession","Session Meta Info: " + sessionMetaInfo);
         }
@@ -399,7 +399,7 @@ public class UserSessionManager {
 
     private void setUserInMetaInfo(String userId, boolean removeOnly) {
         SharedPreferences mainPreferences = PreferenceManager.getDefaultSharedPreferences(fetLifeApplication);
-        String sessionMetaInfo = mainPreferences.getString(PreferenceKeys.MAIN_PREF_KEY_USER_SESSION_META_INFO,null);
+        String sessionMetaInfo = mainPreferences.getString(PreferenceUtils.MAIN_PREF_KEY_USER_SESSION_META_INFO,null);
         String[] loggedInUsers = sessionMetaInfo != null ? sessionMetaInfo.split(SEPARATOR_SESSION_META_INFO_USER) : new String[0];
         if (BuildConfig.DEBUG) {
             Log.d("UserSession","User Session Meta Info Session History length: " + loggedInUsers.length);
@@ -421,7 +421,7 @@ public class UserSessionManager {
         if (BuildConfig.DEBUG) {
             Log.d("UserSession","New Session Meta Info: " + newSessionMeta);
         }
-        mainPreferences.edit().putString(PreferenceKeys.MAIN_PREF_KEY_USER_SESSION_META_INFO, newSessionMeta).commit();
+        mainPreferences.edit().putString(PreferenceUtils.MAIN_PREF_KEY_USER_SESSION_META_INFO, newSessionMeta).commit();
     }
 
     //*** Push message registration managing calls
