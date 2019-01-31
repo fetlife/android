@@ -55,19 +55,19 @@ public abstract class LoadFragment extends BaseFragment {
     }
 
     public void refresh() {
-        if (!isVisible()) {
-            return;
-        }
+//        if (!isVisible()) {
+//            return;
+//        }
         requestedPage = 1;
         requestedItems = getPageCount();
         startResourceCall(getPageCount(),requestedPage);
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        refresh();
-    }
+//    @Override
+//    public void setUserVisibleHint(boolean isVisibleToUser) {
+//        super.setUserVisibleHint(isVisibleToUser);
+//        refresh();
+//    }
 
     @Override
     public void onPause() {

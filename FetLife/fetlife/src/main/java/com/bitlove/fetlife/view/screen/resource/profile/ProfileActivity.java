@@ -97,7 +97,7 @@ public class ProfileActivity extends ResourceActivity implements AppBarLayout.On
         setMemberDetails(member);
 
         viewPager = (SlideControlViewPager) findViewById(R.id.pager);
-        viewPager.setSlideEnabled(false);
+        viewPager.setSlideEnabled(true);
         viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
