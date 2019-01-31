@@ -19,8 +19,8 @@ import androidx.annotation.Nullable;
 public class ConfirmationDialog extends DialogFragment {
 
     private static final String FRAGMENT_TAG = ConfirmationDialog.class.getSimpleName();
-    private static final String ARG_TITLE = "ARG_TITLE";
-    private static final String ARG_MESSAGE = "ARG_MESSAGE";
+    protected static final String ARG_TITLE = "ARG_TITLE";
+    protected static final String ARG_MESSAGE = "ARG_MESSAGE";
 
     private String leftButtonText = "";
     private String rightButtonText = "";

@@ -37,6 +37,7 @@ import org.greenrobot.eventbus.ThreadMode;
 public class LoginActivity extends Activity {
 
     private static final String EXTRA_OPTIONAL_TOAST = "EXTRA_OPTIONAL_TOAST";
+    private static final int REQUEST_CODE_CREATE_LOCK = 532145321;
 
     private EditText mUserNameView;
     private EditText mPasswordView;
@@ -129,7 +130,7 @@ public class LoginActivity extends Activity {
             boolean lockScreenAsked = sharedPreferences.getBoolean(prefKey,false);
             if (!lockScreenAsked) {
                 sharedPreferences.edit().putBoolean(prefKey,true).apply();
-                new LockScreenConfirmationDialog().show(getFragmentManager());
+                new LockScreenConfirmationDialog().newInstance(this,REQUEST_CODE_CREATE_LOCK).show(getFragmentManager());
             }
         }
     }

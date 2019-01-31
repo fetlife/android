@@ -108,6 +108,10 @@
             android:label="@string/title_activity_conversations"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
+            android:name=".view.screen.standalone.lock.CreateLockActivity"
+            android:label=""
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
             android:name=".view.screen.resource.TurboLinksViewActivity"
             android:windowSoftInputMode="adjustResize"
             android:label=""

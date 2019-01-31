@@ -1090,4 +1090,7 @@
     <string name="title_activity_status">%s\'s status</string>
     <string name="menu_places">Places</string>
     <string name="title_activity_places">Places</string>
+    <string name="title_dialog_use_lock">Lock Screen</string>
+    <string name="message_dialog_use_lock">Would you like to set up an extra app-locking pin code to protect your privacy?</string>
+    <string name="message_toast_lock_created">Privacy Lock created</string>
 </resources>
