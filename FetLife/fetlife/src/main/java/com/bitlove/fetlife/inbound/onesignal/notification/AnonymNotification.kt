@@ -9,12 +9,17 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.StartActivity
 import com.bitlove.fetlife.inbound.onesignal.NotificationParser
 
 class AnonymNotification {
+
+    companion object {
+        var notificationId : Int = NotificationParser.NOTIFICATION_ID_ANONYM
+    }
 
     fun display(fetLifeApplication: FetLifeApplication) {
 
@@ -27,7 +32,6 @@ class AnonymNotification {
             val channel = NotificationChannel(channelId, channelName, channelImportance).apply { if (channelDescription != null) this.description = channelDescription }
             fetLifeApplication.getSystemService(NotificationManager::class.java)!!.createNotificationChannel(channel)
         }
-
 
         val notificationBuilder = NotificationCompat.Builder(fetLifeApplication, channelId).apply {
             setAutoCancel(true)
@@ -53,6 +57,9 @@ class AnonymNotification {
                 setDefaults(Notification.DEFAULT_VIBRATE)
             }
         }
+
+        val notificationManager = NotificationManagerCompat.from(fetLifeApplication)
+        notificationManager.notify(notificationId,notificationBuilder.build());
     }
 
     private fun getContentIntent(context: Context): PendingIntent? {

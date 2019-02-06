@@ -182,6 +182,7 @@ public class UrlUtil {
     public static boolean isPlaces(String uriSegment) {
         if ("administrative_areas".equalsIgnoreCase(uriSegment)) return true;
         if ("countries".equalsIgnoreCase(uriSegment)) return true;
+        if ("cities".equalsIgnoreCase(uriSegment)) return true;
         if ("places".equalsIgnoreCase(uriSegment)) return true;
         return false;
     }
