@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
-import com.bitlove.fetlife.util.UrlUtil;
 import com.bitlove.fetlife.view.dialog.PictureUploadSelectionDialog;
 import com.bitlove.fetlife.view.dialog.VideoUploadSelectionDialog;
 import com.bitlove.fetlife.view.screen.BaseActivity;
@@ -52,7 +51,7 @@ public class MenuActivityComponent extends ActivityComponent {
 
         Toolbar toolbar = (Toolbar) menuActivity.findViewById(R.id.toolbar);
         DrawerLayout drawer = (DrawerLayout) menuActivity.findViewById(R.id.drawer_layout);
-        navigationView = (NavigationView) menuActivity.findViewById(R.id.nav_view);
+        navigationView = (NavigationView) menuActivity.findViewById(R.id.navigation_side_layout);
 //        navigationView.getMenu().findItem(R.id.nav_feed).setIcon(
 //                MaterialDrawableBuilder.with(menuActivity)
 //                        .setIcon(MaterialDrawableBuilder.IconValue.VIEW_LIST)

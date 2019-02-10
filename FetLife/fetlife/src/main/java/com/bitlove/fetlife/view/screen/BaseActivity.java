@@ -145,7 +145,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             activityComponent.onActivityCreated(this, savedInstanceState);
         }
 
-        fab = findViewById(R.id.fab);
+        fab = findViewById(R.id.floating_action_button);
         setUpFloatingActionButton(getFabLink());
 
         final BottomNavigationView bottomNavigation = findViewById(R.id.navigation_bottom);
@@ -306,7 +306,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
 
     private void setupSideMenu() {
-        final NavigationView navigationView = findViewById(R.id.nav_view);
+        final NavigationView navigationView = findViewById(R.id.navigation_side_layout);
 
         if (navigationView != null) {
             Menu menu = navigationView.getMenu();

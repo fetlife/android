@@ -50,6 +50,7 @@ import java.util.Set;
 
 import androidx.appcompat.widget.Toolbar;
 
+@Deprecated
 public class TurboLinksViewActivity extends ResourceActivity implements TurbolinksAdapter, TurbolinksSession.ProgressObserver, TurbolinksSession.PageObserver {
 
     private static final Map<String,Integer> supportedBaseUrls = new HashMap<>();

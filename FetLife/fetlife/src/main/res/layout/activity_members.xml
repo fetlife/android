@@ -15,10 +15,10 @@
             android:transitionName="bottomNavBar"
             app:labelVisibilityMode="labeled"
             app:itemHorizontalTranslationEnabled="false"
-            app:itemIconTint="@drawable/selector_bottom_navigation"
-            app:itemTextColor="@drawable/selector_bottom_navigation"
-            app:itemTextAppearanceActive="@style/BottomNavBarLabel"
-            app:itemTextAppearanceInactive="@style/BottomNavBarLabel"
+            app:itemIconTint="@drawable/webapp_selector_bottom_navigation"
+            app:itemTextColor="@drawable/webapp_selector_bottom_navigation"
+            app:itemTextAppearanceActive="@style/navigation_bottom"
+            app:itemTextAppearanceInactive="@style/navigation_bottom"
             android:layout_alignParentBottom="true"/>
 
         <View
@@ -53,7 +53,7 @@
                 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
                 <com.google.android.material.navigation.NavigationView
-                    android:id="@+id/nav_view"
+                    android:id="@+id/navigation_side_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="end"
@@ -62,8 +62,8 @@
                     app:itemIconTint="@color/side_menu_icon"
                     android:background="@color/side_menu_background_main"
                     app:itemTextColor="@color/side_menu_label"
-                    app:headerLayout="@layout/nav_header_resource"
-                    app:menu="@menu/menu_resource_default"/>
+                    app:headerLayout="@layout/navigation_side_header"
+                    app:menu="@menu/menu_side"/>
 
         </androidx.drawerlayout.widget.DrawerLayout>
 

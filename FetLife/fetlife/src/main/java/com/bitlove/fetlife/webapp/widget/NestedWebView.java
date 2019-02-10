@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.bitlove.fetlife.view.widget;
+package com.bitlove.fetlife.webapp.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
