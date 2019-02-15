@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
@@ -11,6 +13,7 @@ import com.bitlove.fetlife.model.api.FetLifeService
 import com.bitlove.fetlife.webapp.communication.WebViewInterface
 import com.bitlove.fetlife.webapp.kotlin.getStringArgument
 import com.bitlove.fetlife.webapp.navigation.FetLifeWebViewClient
+import kotlinx.android.synthetic.main.tool_bar_default.view.*
 import kotlinx.android.synthetic.main.webapp_fragment_webview.*
 import kotlinx.android.synthetic.main.webapp_fragment_webview.view.*
 
@@ -33,7 +36,15 @@ class FetLifeWebViewFragment : Fragment() {
         return inflater.inflate(R.layout.webapp_fragment_webview,container,false).apply {
             web_view.settings.javaScriptEnabled = true
             web_view.addJavascriptInterface(WebViewInterface(context), "Android")
-            web_view.webViewClient = FetLifeWebViewClient()
+            web_view.webViewClient = object : WebViewClient() {
+                override fun onPageFinished(view: WebView?, url: String?) {
+                    //TODO(WEBAPP): set title if known earlier
+                    val navigationTitleId = FetLifeApplication.getInstance().webAppNavigation.getTitle(url!!)
+                    val navigationTitle = if (navigationTitleId != null) view?.context?.getString(navigationTitleId) else null
+                    toolbar_title.text = navigationTitle?: view?.title
+                    super.onPageFinished(view, url)
+                }
+            }
             //TODO(WEBAPP): set title / move to navigation, remove as a parameter
 
             val headers = HashMap<String,String>()

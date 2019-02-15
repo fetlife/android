@@ -7,6 +7,7 @@ import android.webkit.WebViewClient
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.model.api.FetLifeService
 
+@Deprecated
 class FetLifeWebViewClient : WebViewClient() {
 
     override fun shouldInterceptRequest(view: WebView?, request: WebResourceRequest?): WebResourceResponse? {
