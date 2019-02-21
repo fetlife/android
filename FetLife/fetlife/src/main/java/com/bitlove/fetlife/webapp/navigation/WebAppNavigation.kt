@@ -1,26 +1,356 @@
 package com.bitlove.fetlife.webapp.navigation
 
+import android.content.Context
+import android.net.Uri
+import android.webkit.WebView
+import androidx.browser.customtabs.CustomTabsIntent
+import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
+import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Group
+import com.bitlove.fetlife.model.pojos.fetlife.dbjson.GroupPost
+import com.bitlove.fetlife.util.ColorUtil
+import com.bitlove.fetlife.view.screen.resource.EventActivity
+import com.bitlove.fetlife.view.screen.resource.groups.GroupActivity
+import com.bitlove.fetlife.view.screen.resource.groups.GroupMessagesActivity
+import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity
+import com.bitlove.fetlife.webapp.kotlin.openInBrowser
+import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity
 
 class WebAppNavigation {
 
     companion object {
-        private const val WEB_APP_BASE_URL = "https://staging.fetlife.com"
-        private const val URL_REGEX_TEAM = "^$WEB_APP_BASE_URL/team/?"
-    }
 
+        private var totalTimeSpent : Long = 0
+
+        const val WEBAPP_BASE_URL = "https://staging.fetlife.com"
+
+        //Base constants
+        internal const val WEB_TITLE_SEPARATOR = " |"
+        internal const val WEB_COUNTER_SEPARATOR = ") "
+        //NOTE: Temporarily duplicated with native code area TODO(WEBAPP): decoupling
+        private const val QUERY_PARAM_API_IDS = "api_ids"
+        private const val SERVER_ID_PREFIX = "SERVER_ID_PREFIX:"
+
+        private const val REGEX_BASE_URL = "https:\\/\\/staging\\.fetlife\\.com"
+
+        // * FetLife Urls
+        private const val URL_REGEX_INTERNAL_LINK = "^$REGEX_BASE_URL.*\$"
+
+        // * Download Urls
+        private const val URL_REGEX_DOWNLOAD_LINK = "^$REGEX_BASE_URL\\/.*\\/download[^\\/]*\$"
+
+        // * Native Supported Urls
+        private const val URL_REGEX_EVENT = "^$REGEX_BASE_URL\\/events\\/(\\w+)[^\\/]*\$"
+        private const val URL_REGEX_GROUP = "^$REGEX_BASE_URL\\/groups\\/(\\w+)[^\\/]*\$"
+        private const val URL_REGEX_GROUP_POST = "^$REGEX_BASE_URL\\/groups\\/(\\w+)\\/posts\\/(\\w+)[^\\/]*\$"
+        private const val URL_REGEX_USER_PROFILE = "^$REGEX_BASE_URL\\/users\\/(\\w+)[^\\/]*\$"
+        //private const val URL_REGEX_USER_PICTURE = "^$REGEX_BASE_URL\\/users\\/(\\w+)\\/pictures\\/(\\w+)[^\\/]*\$"
+
+        // * New WebView Flow Urls
+        //private const val URL_REGEX_TEAM_TEMPLATE = "^$REGEX_BASE_URL\\/TEMPLATE\\/?[^\\/]*\$"
+        private const val URL_REGEX_NOTIFICATIONS_MAIN = "^$REGEX_BASE_URL\\/notifications\\/?[^\\/]*\$"
+        private const val URL_REGEX_REQUESTS_MAIN = "^$REGEX_BASE_URL\\/requests\\/?[^\\/]*\$"
+        private const val URL_REGEX_TEAM_MAIN = "^$REGEX_BASE_URL\\/team\\/?[^\\/]*\$"
+        private const val URL_REGEX_SUPPORT_MAIN = "^$REGEX_BASE_URL\\/support\\/?[^\\/]*\$"
+        private const val URL_REGEX_WALLPAPERS_MAIN = "^$REGEX_BASE_URL\\/wallpapers\\/?[^\\/]*\$"
+        private const val URL_REGEX_GLOSSARY_MAIN = "^$REGEX_BASE_URL\\/glossary\\/?[^\\/]*\$"
+        private const val URL_REGEX_ADS_MAIN = "^$REGEX_BASE_URL\\/ads\\/?[^\\/]*\$"
+        private const val URL_REGEX_CONTACT_MAIN = "^$REGEX_BASE_URL\\/contact\\/?[^\\/]*\$"
+        private const val URL_REGEX_GUIDELINES_MAIN = "^$REGEX_BASE_URL\\/guidelines\\/?[^\\/]*\$"
+        private const val URL_REGEX_HELP_MAIN = "^$REGEX_BASE_URL\\/help\\/?[^\\/]*\$"
+        private const val URL_REGEX_ANDROID_MAIN = "^$REGEX_BASE_URL\\/android\\/?[^\\/]*\$"
+        //places
+        private const val URL_REGEX_PLACES_MAIN = "^$REGEX_BASE_URL\\/(p|places)\\/?[^\\/]*\$"
+        //user content
+        private const val URL_REGEX_USER_POST = "^$REGEX_BASE_URL\\/users\\/(\\w+)\\/posts\\/(\\w+)[^\\/]*\$"
+        //qna
+        private const val URL_REGEX_QNA_REVIEW = "^$REGEX_BASE_URL\\/q\\/review\\/?[^\\/]*\$"
+
+        // *  Open with No History Urls
+        private const val URL_REGEX_SETTINGS_ACCOUNT = "^$REGEX_BASE_URL\\/settings\\/account\\/?.*\$"
+        private const val URL_REGEX_SETTINGS_PRIVACY = "^$REGEX_BASE_URL\\/settings\\/privacy\\/?.*\$"
+        private const val URL_REGEX_SETTINGS_NOTIFICATIONS = "^$REGEX_BASE_URL\\/settings\\/notifications\\/?.*\$"
+        private const val URL_REGEX_SETTINGS_BLOCKED = "^$REGEX_BASE_URL\\/settings\\/blocked\\/?.*\$"
+        //search
+        private const val URL_REGEX_SEARCH_MAIN = "^$REGEX_BASE_URL\\/search[^\\/]*\$"
+        private const val URL_REGEX_SEARCH_KINKSTERS = "^$REGEX_BASE_URL\\/search\\/kinksters\\/?.*\$"
+        private const val URL_REGEX_SEARCH_PICTURES = "^$REGEX_BASE_URL\\/search\\/pictures\\/?.*\$"
+        private const val URL_REGEX_SEARCH_WRITINGS = "^$REGEX_BASE_URL\\/search\\/writings\\/?.*\$"
+        private const val URL_REGEX_SEARCH_VIDEOS = "^$REGEX_BASE_URL\\/search\\/videos\\/?.*\$"
+        private const val URL_REGEX_SEARCH_GROUPS = "^$REGEX_BASE_URL\\/search\\/groups\\/?.*\$"
+        private const val URL_REGEX_SEARCH_DISCUSSIONS = "^$REGEX_BASE_URL\\/search\\/discussions\\/?.*\$"
+        private const val URL_REGEX_SEARCH_EVENTS = "^$REGEX_BASE_URL\\/search\\/events\\/?.*\$"
+        private const val URL_REGEX_SEARCH_FETISHES = "^$REGEX_BASE_URL\\/search\\/fetishes\\/?.*\$"
+        private const val URL_REGEX_SEARCH_PLACES = "^$REGEX_BASE_URL\\/search\\/places\\/?.*\$"
+        //qna
+        private const val URL_REGEX_QNA_MAIN = "^$REGEX_BASE_URL\\/q[^\\/\\?]*\$"
+        private const val URL_REGEX_QNA_FETLIFE = "^$REGEX_BASE_URL\\/q\\/fetlife.*\$"
+        private const val URL_REGEX_QNA_TAGS = "^$REGEX_BASE_URL\\/q\\/tags.*\$"
+        private const val URL_REGEX_QNA_POPULAR = "^$REGEX_BASE_URL\\/q(\\/fetlife)?\\?filter=popular.*\$"
+        private const val URL_REGEX_QNA_UNANSWERED = "^$REGEX_BASE_URL\\/q(\\/fetlife)?\\?filter=unanswered.*\$"
+        private const val URL_REGEX_QNA_MINE = "^$REGEX_BASE_URL\\/q(\\/fetlife)?\\?filter=mine.*\$"
+
+        // * Other WebView Supported Urls
+        //private const val URL_REGEX_TEMPLATE = "^$REGEX_BASE_URL\\/TEMPLATE\\/?.*\$"
+        private const val URL_REGEX_TEAM = "^$REGEX_BASE_URL\\/team\\/?.*\$"
+        private const val URL_REGEX_SUPPORT = "^$REGEX_BASE_URL\\/support\\/?.*\$"
+
+        private const val URL_REGEX_WALLPAPERS = "^$REGEX_BASE_URL\\/wallpapers\\/?.*\$"
+        private const val URL_REGEX_GLOSSARY = "^$REGEX_BASE_URL\\/glossary\\/?.*\$"
+        private const val URL_REGEX_ADS = "^$REGEX_BASE_URL\\/ads\\/?.*\$"
+        private const val URL_REGEX_CONTACT = "^$REGEX_BASE_URL\\/contact\\/?.*\$"
+        private const val URL_REGEX_GUIDELINES = "^$REGEX_BASE_URL\\/guidelines\\/?.*\$"
+        private const val URL_REGEX_HELP = "^$REGEX_BASE_URL\\/help\\/?.*\$"
+        private const val URL_REGEX_ANDROID = "^$REGEX_BASE_URL\\/android\\/?.*\$"
+        //places
+        private const val URL_REGEX_PLACES = "^$REGEX_BASE_URL\\/(p|places)\\/?.*\$"
+        private const val URL_REGEX_CITIES = "^$REGEX_BASE_URL\\/cities\\/?.*\$"
+        private const val URL_REGEX_COUNTRIES = "^$REGEX_BASE_URL\\/countries\\/?.*\$"
+        private const val URL_REGEX_ADMINISTRATIVE_AREAS = "^$REGEX_BASE_URL\\/administrative_areas\\/?.*\$"
+        //settings
+        private const val URL_REGEX_SETTINGS = "^$REGEX_BASE_URL\\/settings\\/?.*\$"
+        //search
+        private const val URL_REGEX_SEARCH = "^$REGEX_BASE_URL\\/search\\/?.*\$"
+        //search
+        private const val URL_REGEX_QNA = "^$REGEX_BASE_URL\\/q\\/?.*\$"
+
+        private const val URL_REGEX_NOTIFICATIONS = "^$REGEX_BASE_URL\\/notifications\\/?.*\$"
+        private const val URL_REGEX_REQUESTS = "^$REGEX_BASE_URL\\/requests\\/?.*\$"
+
+        //back arrow
+
+
+    }
 
     private val titleMap = LinkedHashMap<String,Int>().apply {
-        put(URL_REGEX_TEAM, R.string.url_title_team)
+        put(URL_REGEX_TEAM_MAIN, R.string.url_title_team)
+        put(URL_REGEX_SUPPORT_MAIN, R.string.url_title_support)
+        put(URL_REGEX_WALLPAPERS_MAIN, R.string.url_title_wallpapers)
+        put(URL_REGEX_GLOSSARY_MAIN, R.string.url_title_glossary)
+        put(URL_REGEX_ADS_MAIN, R.string.url_title_ads)
+        put(URL_REGEX_CONTACT_MAIN, R.string.url_title_contact)
+        put(URL_REGEX_GUIDELINES_MAIN, R.string.url_title_guidelines)
+        put(URL_REGEX_HELP_MAIN, R.string.url_title_help)
+        put(URL_REGEX_ANDROID_MAIN, R.string.url_title_android)
+        put(URL_REGEX_PLACES_MAIN, R.string.url_title_places)
+        put(URL_REGEX_SEARCH_MAIN, R.string.url_title_search)
+        put(URL_REGEX_QNA_MAIN, R.string.url_title_questions)
+        put(URL_REGEX_NOTIFICATIONS_MAIN, R.string.url_title_notifications)
+        put(URL_REGEX_REQUESTS_MAIN, R.string.url_title_requests)
     }
 
-    fun getTitle(url: String) : Int? {
+    private val newWebViewFlowLinkSetSet = LinkedHashSet<String>().apply {
+        add(URL_REGEX_TEAM_MAIN)
+        add(URL_REGEX_SUPPORT_MAIN)
+        add(URL_REGEX_WALLPAPERS_MAIN)
+        add(URL_REGEX_GLOSSARY_MAIN)
+        add(URL_REGEX_ADS_MAIN)
+        add(URL_REGEX_CONTACT_MAIN)
+        add(URL_REGEX_GUIDELINES_MAIN)
+        add(URL_REGEX_HELP_MAIN)
+        add(URL_REGEX_ANDROID_MAIN)
+
+        add(URL_REGEX_PLACES_MAIN)
+        add(URL_REGEX_USER_POST)
+        add(URL_REGEX_QNA_REVIEW)
+
+        add(URL_REGEX_NOTIFICATIONS_MAIN)
+        add(URL_REGEX_REQUESTS_MAIN)
+    }
+
+    private val inPlaceOpenLinkSet = LinkedHashSet<String>().apply {
+        add(URL_REGEX_TEAM)
+        add(URL_REGEX_SUPPORT)
+        add(URL_REGEX_WALLPAPERS)
+        add(URL_REGEX_GLOSSARY)
+        add(URL_REGEX_ADS)
+        add(URL_REGEX_CONTACT)
+        add(URL_REGEX_GUIDELINES)
+        add(URL_REGEX_HELP)
+        add(URL_REGEX_ANDROID)
+
+        add(URL_REGEX_PLACES)
+        add(URL_REGEX_COUNTRIES)
+        add(URL_REGEX_CITIES)
+        add(URL_REGEX_ADMINISTRATIVE_AREAS)
+
+        add(URL_REGEX_SETTINGS)
+        add(URL_REGEX_SEARCH)
+        add(URL_REGEX_QNA)
+        add(URL_REGEX_NOTIFICATIONS)
+        add(URL_REGEX_REQUESTS)
+    }
+
+    private val inPlaceOpenWithNoHistoryLinkSet = LinkedHashSet<String>().apply {
+        add(URL_REGEX_SETTINGS_ACCOUNT)
+        add(URL_REGEX_SETTINGS_PRIVACY)
+        add(URL_REGEX_SETTINGS_NOTIFICATIONS)
+        add(URL_REGEX_SETTINGS_BLOCKED)
+
+        add(URL_REGEX_SEARCH_MAIN)
+        add(URL_REGEX_SEARCH_KINKSTERS)
+        add(URL_REGEX_SEARCH_PICTURES)
+        add(URL_REGEX_SEARCH_WRITINGS)
+        add(URL_REGEX_SEARCH_VIDEOS)
+        add(URL_REGEX_SEARCH_GROUPS)
+        add(URL_REGEX_SEARCH_DISCUSSIONS)
+        add(URL_REGEX_SEARCH_EVENTS)
+        add(URL_REGEX_SEARCH_FETISHES)
+        add(URL_REGEX_SEARCH_PLACES)
+
+        add(URL_REGEX_QNA_MAIN)
+        add(URL_REGEX_QNA_FETLIFE)
+        add(URL_REGEX_QNA_TAGS)
+        add(URL_REGEX_QNA_POPULAR)
+        add(URL_REGEX_QNA_UNANSWERED)
+        add(URL_REGEX_QNA_MINE)
+    }
+
+    private val nativeNavigationMap = LinkedHashMap<String,String>().apply {
+        put(URL_REGEX_USER_PROFILE, ProfileActivity::class.java.simpleName)
+        put(URL_REGEX_EVENT, EventActivity::class.java.simpleName)
+        put(URL_REGEX_GROUP, GroupActivity::class.java.simpleName)
+        put(URL_REGEX_GROUP_POST, GroupMessagesActivity::class.java.simpleName)
+    }
+
+    fun getTitle(url: String?) : Int? {
+        if (url == null) {
+            return null
+        }
         for ((key,value) in titleMap) {
-            if (url.matches(key.toRegex())) {
+            if (key.toRegex().matches(url)) {
                 return value
             }
         }
         return null
     }
 
+    fun navigate(targetUri: Uri?, webView: WebView?): Boolean {
+
+        targetUri ?: return false
+        val context = webView?.context ?: return false
+        val currentUrl = webView.url
+
+        webView.tag = false
+
+        if (!isFetLifeLink(targetUri)) {
+            targetUri.openInBrowser()
+            return true
+        }
+
+        if (isDownloadLink(targetUri)) {
+            openInCustomTab(targetUri,context)
+            return true
+        }
+
+        if (handleNativeSupportedLink(targetUri, context)) {
+            return true
+        }
+
+        if (openAsNewWebViewFlow(targetUri, currentUrl)) {
+            FetLifeWebViewActivity.startActivity(webView.context, targetUri.toString(), false, null, false, null)
+            return true
+        }
+
+
+        if (openInPlaceWithNoHistory(targetUri, currentUrl)) {
+            //TODO(WEBAPP): keep track own back track list, add or not to history
+            webView.clearHistory()
+            webView.tag = true
+            return false
+        }
+
+        if (openInPlace(targetUri)) {
+            return false
+        }
+
+        //if (not supported as webview yet)
+        openInCustomTab(targetUri,context)
+        return true
+    }
+
+    private fun openInCustomTab(uri: Uri, context: Context) {
+        val builder = CustomTabsIntent.Builder(FetLifeApplication.getInstance().customTabsSession).setToolbarColor(ColorUtil.retrieverColor(context, R.color.toolbar_chrome_custom_tab))
+        val customTabsIntent = builder.build()
+        customTabsIntent.launchUrl(context, uri)
+    }
+
+    private fun isFetLifeLink(uri: Uri): Boolean {
+        return URL_REGEX_INTERNAL_LINK.toRegex().matches(uri.toString())
+    }
+
+    private fun isDownloadLink(uri: Uri): Boolean {
+        return URL_REGEX_DOWNLOAD_LINK.toRegex().containsMatchIn(uri.toString())
+    }
+
+    private fun handleNativeSupportedLink(uri: Uri, context: Context): Boolean {
+
+        var nativeClassIdentifier : String? = null
+        for ((uriRegex,classIdentifier) in nativeNavigationMap) {
+            if (uriRegex.toRegex().containsMatchIn(uri.toString())) {
+                nativeClassIdentifier = classIdentifier
+                break
+            }
+        }
+        if (nativeClassIdentifier == null) {
+            return false
+        }
+
+        val apiIdsParam = uri.getQueryParameter(QUERY_PARAM_API_IDS)
+        val apiIds = apiIdsParam?.split(",".toRegex())?.dropLastWhile{it.isEmpty()}?.toTypedArray() ?: arrayOfNulls<String>(0)
+
+        return when (nativeClassIdentifier) {
+            ProfileActivity::class.java.simpleName -> {
+                val memberId = apiIds.getOrNull(0) ?: SERVER_ID_PREFIX + uri.lastPathSegment
+                ProfileActivity.startActivity(context, memberId)
+                true
+            }
+            EventActivity::class.java.simpleName -> {
+                val eventId = apiIds.getOrNull(0) ?: SERVER_ID_PREFIX + uri.lastPathSegment
+                EventActivity.startActivity(context, eventId)
+                true
+            }
+            GroupActivity::class.java.simpleName -> {
+                val groupId = apiIds.getOrNull(0) ?: SERVER_ID_PREFIX + uri.lastPathSegment
+                val group = Group.loadGroup(groupId)
+                GroupActivity.startActivity(context, groupId, group?.name, false)
+                true
+            }
+            GroupMessagesActivity::class.java.simpleName -> {
+                val groupId = apiIds.getOrNull(0) ?: SERVER_ID_PREFIX + uri.lastPathSegment
+                val groupDiscussionId = apiIds.getOrNull(1) ?: SERVER_ID_PREFIX + uri.lastPathSegment
+                val groupPost = GroupPost.loadGroupPost(groupDiscussionId)
+                GroupMessagesActivity.startActivity(context, groupId, groupDiscussionId, groupPost?.title, groupPost?.avatarLink, false)
+                true
+            }
+            else -> false
+        }
+    }
+
+    private fun openAsNewWebViewFlow(uri: Uri, currentUrl: String): Boolean {
+        for (uriRegex in newWebViewFlowLinkSetSet) {
+            if (uriRegex.toRegex().matches(uri.toString()) && !uriRegex.toRegex().matches(currentUrl)) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun openInPlaceWithNoHistory(uri: Uri, currentUrl: String): Boolean {
+        for (uriRegex in inPlaceOpenWithNoHistoryLinkSet) {
+            if (uriRegex.toRegex().matches(uri.toString()) && !uriRegex.toRegex().matches(currentUrl)) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun openInPlace(uri: Uri): Boolean {
+        for (uriRegex in inPlaceOpenLinkSet) {
+            if (uriRegex.toRegex().matches(uri.toString())) {
+                return true
+            }
+        }
+        return false
+    }
 }

@@ -5,19 +5,31 @@ import android.content.Intent
 import android.content.Intent.*
 import android.os.Bundle
 import android.view.KeyEvent
-import androidx.fragment.app.FragmentActivity
+import android.view.MenuItem
 import com.bitlove.fetlife.R
+import com.bitlove.fetlife.view.screen.BaseActivity
+import com.bitlove.fetlife.view.screen.component.MenuActivityComponent
+import com.bitlove.fetlife.webapp.kotlin.getBooleanExtra
 import com.bitlove.fetlife.webapp.kotlin.getStringExtra
+import kotlinx.android.synthetic.main.tool_bar_default.*
 
-class FetLifeWebViewActivity : FragmentActivity() {
+class FetLifeWebViewActivity : BaseActivity() {
+
+    override fun onCreateActivityComponents() {
+        addActivityComponent(MenuActivityComponent())
+    }
+
+    override fun onSetContentView() {
+        setContentView(R.layout.webapp_activity_webview)
+    }
 
     companion object {
         private const val EXTRA_PAGE_URL = "EXTRA_PAGE_URL"
-        private const val EXTRA_HAS_BOTTOM_NAVIGATION = "EXTRA_HAS_BOTTOM_NAVIGATION"
-        private const val EXTRA_SELECTED_BOTTOM_NAV_ITEM = "EXTRA_SELECTED_BOTTOM_NAV_ITEM"
+        private const val EXTRA_HAS_BOTTOM_NAVIGATION = BaseActivity.EXTRA_HAS_BOTTOM_BAR
+        private const val EXTRA_SELECTED_BOTTOM_NAV_ITEM = BaseActivity.EXTRA_SELECTED_BOTTOM_NAV_ITEM
 
-        fun startActivity(context: Context, pageUrl: String, hasBottomNavigation: Boolean, selectedBottomNavigationItem: Int?, newTask: Boolean) {
-            context.startActivity(createIntent(context, pageUrl, hasBottomNavigation, selectedBottomNavigationItem, newTask))
+        fun startActivity(context: Context, pageUrl: String, hasBottomNavigation: Boolean = false, selectedBottomNavigationItem: Int? = null, newTask: Boolean = false, options: Bundle?) {
+            context.startActivity(createIntent(context, pageUrl, hasBottomNavigation, selectedBottomNavigationItem, newTask), options)
         }
 
         fun createIntent(context: Context, pageUrl: String, hasBottomNavigation: Boolean, selectedBottomNavigationItem: Int?, newTask: Boolean): Intent {
@@ -36,13 +48,23 @@ class FetLifeWebViewActivity : FragmentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.webapp_activity_webview)
+//        setContentView(R.layout.webapp_activity_webview)
 
         if (savedInstanceState == null) {
             supportFragmentManager
                     .beginTransaction()
-                    .add(R.id.content_layout, FetLifeWebViewFragment.newInstance(getStringExtra(EXTRA_PAGE_URL)!!), "FetLifeWebViewFragment")
+                    .add(R.id.content_layout, FetLifeWebViewFragment.newInstance(getStringExtra(EXTRA_PAGE_URL)!!, getBooleanExtra(EXTRA_HAS_BOTTOM_NAVIGATION) != true), "FetLifeWebViewFragment")
                     .commit()
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 

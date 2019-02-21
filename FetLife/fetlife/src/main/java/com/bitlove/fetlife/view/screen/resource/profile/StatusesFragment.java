@@ -13,6 +13,7 @@ import com.bitlove.fetlife.view.adapter.ResourceListRecyclerAdapter;
 import com.bitlove.fetlife.view.adapter.StatusesRecyclerAdapter;
 import com.bitlove.fetlife.view.screen.resource.LoadFragment;
 import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity;
+import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -57,7 +58,8 @@ public class StatusesFragment extends LoadFragment implements ResourceListRecycl
     public void onItemClick(Status status) {
         Member member = Member.loadMember(getArguments().getString(ARG_REFERENCE_ID));
         String nickname = member != null ? getString(R.string.title_activity_status,member.getNickname()) : "";
-        TurboLinksViewActivity.startActivity(getBaseActivity(),status.getUrl(),nickname, false, null, null, false);
+        FetLifeWebViewActivity.Companion.startActivity(getBaseActivity(),status.getUrl(),false,null, false, null);
+//        TurboLinksViewActivity.startActivity(getBaseActivity(),status.getUrl(),nickname, false, null, null, false);
     }
 
     @Override

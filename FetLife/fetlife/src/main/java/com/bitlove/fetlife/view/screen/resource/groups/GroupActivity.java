@@ -55,8 +55,8 @@ public class GroupActivity extends ResourceActivity implements AppBarLayout.OnOf
         return intent;
     }
 
-    public static void startActivity(BaseActivity baseActivity, String groupId, String groupTitle, boolean newTask) {
-        baseActivity.startActivity(createIntent(baseActivity,groupId,groupTitle,newTask));
+    public static void startActivity(Context Context, String groupId, String groupTitle, boolean newTask) {
+        Context.startActivity(createIntent(Context,groupId,groupTitle,newTask));
     }
 
     @Override
@@ -79,6 +79,7 @@ public class GroupActivity extends ResourceActivity implements AppBarLayout.OnOf
             setGroupDetails(group);
         } else if (groupTitle != null){
             setGroupDetails(groupTitle,-1);
+            FetLifeApiIntentService.startApiCall(this, FetLifeApiIntentService.ACTION_APICALL_GROUP, groupId);
         }
         findViewById(R.id.group_menu_icon_view_container).setOnClickListener(new View.OnClickListener() {
             @Override

@@ -199,6 +199,8 @@ public class FetLifeApplication extends MultiDexApplication {
             gitHubService = null;
         }
 
+        webAppNavigation = new WebAppNavigation();
+
         notificationParser = new NotificationParser();
         eventBus = EventBus.getDefault();
         inMemoryStorage = new InMemoryStorage();

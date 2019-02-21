@@ -6,6 +6,7 @@ import java.util.Map;
 
 public class ServerIdUtil {
 
+    //Note: Temporarily duplicated
     private static final String SERVER_ID_PREFIX = "SERVER_ID_PREFIX:";
 
     private static Map<String,String> idCache = Collections.synchronizedMap(new HashMap<String,String>());

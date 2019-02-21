@@ -28,6 +28,7 @@ import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity;
 import com.bitlove.fetlife.view.screen.resource.WritingActivity;
 import com.bitlove.fetlife.view.screen.resource.groups.GroupActivity;
 import com.bitlove.fetlife.view.screen.resource.groups.GroupMessagesActivity;
+import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -83,7 +84,8 @@ public class ActivityFeedFragment extends LoadFragment implements FeedRecyclerAd
             if (targetWriting != null) {
                 targetWriting.save();
 //                WritingActivity.startActivity((BaseActivity) getActivity(),targetWriting.getId(),targetWriting.getMemberId());
-                TurboLinksViewActivity.startActivity(getBaseActivity(),targetWriting.getUrl(),targetWriting.getTitle(), false, null, null, false);
+                FetLifeWebViewActivity.Companion.startActivity(getBaseActivity(),targetWriting.getUrl(),false,null, false, null);
+//                TurboLinksViewActivity.startActivity(getBaseActivity(),targetWriting.getUrl(),targetWriting.getTitle(), false, null, null, false);
                 return;
             }
         } else if (feedStoryType == Story.FeedStoryType.STATUS_COMMENT_CREATED || feedStoryType == Story.FeedStoryType.STATUS_CREATED) {
@@ -92,7 +94,8 @@ public class ActivityFeedFragment extends LoadFragment implements FeedRecyclerAd
                 targetStatus.save();
                 Member member = targetStatus.getMember();
                 String nickname = member != null ? getString(R.string.title_activity_status,member.getNickname()) : "";
-                TurboLinksViewActivity.startActivity(getBaseActivity(),targetStatus.getUrl(),nickname, false, null, null, false);
+                FetLifeWebViewActivity.Companion.startActivity(getBaseActivity(),targetStatus.getUrl(),false,null, false, null);
+//                TurboLinksViewActivity.startActivity(getBaseActivity(),targetStatus.getUrl(),nickname, false, null, null, false);
                 return;
             }
         } else if (feedStoryType == Story.FeedStoryType.RSVP_CREATED) {

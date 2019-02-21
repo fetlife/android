@@ -8,4 +8,5 @@
     <color name="navigation_bottom_separator">#555</color>
 
     <color name="button_floating_label">#ffffffff</color>
+    <color name="toolbar_chrome_custom_tab">#000000</color>
 </resources>
