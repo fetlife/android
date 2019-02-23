@@ -47,7 +47,9 @@ class WebAppNavigation {
         //private const val URL_REGEX_USER_PICTURE = "^$REGEX_BASE_URL\\/users\\/(\\w+)\\/pictures\\/(\\w+)[^\\/]*\$"
 
         // * New WebView Flow Urls
-        //private const val URL_REGEX_TEAM_TEMPLATE = "^$REGEX_BASE_URL\\/TEMPLATE\\/?[^\\/]*\$"
+        //private const val URL_REGEX_TEMPLATE = "^$REGEX_BASE_URL\\/TEMPLATE\\/?[^\\/]*\$"
+        private const val URL_REGEX_INBOX_MAIN = "^$REGEX_BASE_URL\\/inbox\\/?[^\\/]*\$"
+        private const val URL_REGEX_CONVERSATION_MAIN = "^$REGEX_BASE_URL\\/conversations\\/(\\w+)[^\\/]*\$"
         private const val URL_REGEX_NOTIFICATIONS_MAIN = "^$REGEX_BASE_URL\\/notifications\\/?[^\\/]*\$"
         private const val URL_REGEX_REQUESTS_MAIN = "^$REGEX_BASE_URL\\/requests\\/?[^\\/]*\$"
         private const val URL_REGEX_TEAM_MAIN = "^$REGEX_BASE_URL\\/team\\/?[^\\/]*\$"
@@ -116,10 +118,10 @@ class WebAppNavigation {
 
         private const val URL_REGEX_NOTIFICATIONS = "^$REGEX_BASE_URL\\/notifications\\/?.*\$"
         private const val URL_REGEX_REQUESTS = "^$REGEX_BASE_URL\\/requests\\/?.*\$"
+        private const val URL_REGEX_INBOX = "^$REGEX_BASE_URL\\/inbox\\/?.*\$"
+        private const val URL_REGEX_CONVERSATION = "^$REGEX_BASE_URL\\/conversations\\/(\\w+).*\$"
 
-        //back arrow
-
-
+        private const val URL_REGEX_FAB_QA = URL_REGEX_QNA_MAIN
     }
 
     private val titleMap = LinkedHashMap<String,Int>().apply {
@@ -156,6 +158,8 @@ class WebAppNavigation {
 
         add(URL_REGEX_NOTIFICATIONS_MAIN)
         add(URL_REGEX_REQUESTS_MAIN)
+        add(URL_REGEX_INBOX_MAIN)
+        add(URL_REGEX_CONVERSATION_MAIN)
     }
 
     private val inPlaceOpenLinkSet = LinkedHashSet<String>().apply {
@@ -179,6 +183,8 @@ class WebAppNavigation {
         add(URL_REGEX_QNA)
         add(URL_REGEX_NOTIFICATIONS)
         add(URL_REGEX_REQUESTS)
+        add(URL_REGEX_INBOX)
+        add(URL_REGEX_CONVERSATION)
     }
 
     private val inPlaceOpenWithNoHistoryLinkSet = LinkedHashSet<String>().apply {
@@ -211,6 +217,10 @@ class WebAppNavigation {
         put(URL_REGEX_EVENT, EventActivity::class.java.simpleName)
         put(URL_REGEX_GROUP, GroupActivity::class.java.simpleName)
         put(URL_REGEX_GROUP_POST, GroupMessagesActivity::class.java.simpleName)
+    }
+
+    private val fabMap = LinkedHashMap<String,Int>().apply {
+        put(URL_REGEX_FAB_QA, )
     }
 
     fun getTitle(url: String?) : Int? {

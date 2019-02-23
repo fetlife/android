@@ -206,7 +206,8 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                             bottomNavigation.setOnNavigationItemSelectedListener(null);
                             intent = new Intent(BaseActivity.this, ConversationsActivity.class);
                             intent.putExtra(EXTRA_SELECTED_BOTTOM_NAV_ITEM,menuItem.getItemId());
-                            BaseActivity.this.startActivity(intent,navOptions.toBundle());
+                            FetLifeWebViewActivity.Companion.startActivity(BaseActivity.this, WebAppNavigation.WEBAPP_BASE_URL + "/inbox", true,null,false, navOptions.toBundle());
+//                            BaseActivity.this.startActivity(intent,navOptions.toBundle());
 //                                finishAfterTransition();
 //                            ConversationsActivity.startActivity(BaseActivity.this, null, false, bottomNavigation, "bottomNavBar");
                             setFinishAfterNavigation(true);
