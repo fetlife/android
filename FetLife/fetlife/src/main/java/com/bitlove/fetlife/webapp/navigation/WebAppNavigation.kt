@@ -1,20 +1,27 @@
 package com.bitlove.fetlife.webapp.navigation
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
+import android.view.LayoutInflater
 import android.webkit.WebView
 import androidx.browser.customtabs.CustomTabsIntent
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
-import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Group
-import com.bitlove.fetlife.model.pojos.fetlife.dbjson.GroupPost
+import com.bitlove.fetlife.model.pojos.fetlife.dbjson.*
+import com.bitlove.fetlife.model.service.FetLifeApiIntentService
 import com.bitlove.fetlife.util.ColorUtil
+import com.bitlove.fetlife.util.PictureUtil
+import com.bitlove.fetlife.util.ServerIdUtil
+import com.bitlove.fetlife.util.UrlUtil
 import com.bitlove.fetlife.view.screen.resource.EventActivity
 import com.bitlove.fetlife.view.screen.resource.groups.GroupActivity
 import com.bitlove.fetlife.view.screen.resource.groups.GroupMessagesActivity
 import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity
+import com.bitlove.fetlife.view.widget.ImageViewerWrapper
 import com.bitlove.fetlife.webapp.kotlin.openInBrowser
 import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity
+import java.util.ArrayList
 
 class WebAppNavigation {
 
@@ -27,6 +34,7 @@ class WebAppNavigation {
         //Base constants
         internal const val WEB_TITLE_SEPARATOR = " |"
         internal const val WEB_COUNTER_SEPARATOR = ") "
+        internal const val WEB_EXTRA_SEPARATOR = " -"
         //NOTE: Temporarily duplicated with native code area TODO(WEBAPP): decoupling
         private const val QUERY_PARAM_API_IDS = "api_ids"
         private const val SERVER_ID_PREFIX = "SERVER_ID_PREFIX:"
@@ -44,23 +52,24 @@ class WebAppNavigation {
         private const val URL_REGEX_GROUP = "^$REGEX_BASE_URL\\/groups\\/(\\w+)[^\\/]*\$"
         private const val URL_REGEX_GROUP_POST = "^$REGEX_BASE_URL\\/groups\\/(\\w+)\\/posts\\/(\\w+)[^\\/]*\$"
         private const val URL_REGEX_USER_PROFILE = "^$REGEX_BASE_URL\\/users\\/(\\w+)[^\\/]*\$"
-        //private const val URL_REGEX_USER_PICTURE = "^$REGEX_BASE_URL\\/users\\/(\\w+)\\/pictures\\/(\\w+)[^\\/]*\$"
+        private const val URL_REGEX_USER_PICTURE = "^$REGEX_BASE_URL\\/users\\/(\\w+)\\/pictures\\/(\\w+)[^\\/]*\$"
+        private const val URL_REGEX_USER_VIDEO = "^$REGEX_BASE_URL\\/users\\/(\\w+)\\/videos\\/(\\w+)[^\\/]*\$"
 
         // * New WebView Flow Urls
-        //private const val URL_REGEX_TEAM_TEMPLATE = "^$REGEX_BASE_URL\\/TEMPLATE\\/?[^\\/]*\$"
-        private const val URL_REGEX_NOTIFICATIONS_MAIN = "^$REGEX_BASE_URL\\/notifications\\/?[^\\/]*\$"
-        private const val URL_REGEX_REQUESTS_MAIN = "^$REGEX_BASE_URL\\/requests\\/?[^\\/]*\$"
-        private const val URL_REGEX_TEAM_MAIN = "^$REGEX_BASE_URL\\/team\\/?[^\\/]*\$"
-        private const val URL_REGEX_SUPPORT_MAIN = "^$REGEX_BASE_URL\\/support\\/?[^\\/]*\$"
-        private const val URL_REGEX_WALLPAPERS_MAIN = "^$REGEX_BASE_URL\\/wallpapers\\/?[^\\/]*\$"
-        private const val URL_REGEX_GLOSSARY_MAIN = "^$REGEX_BASE_URL\\/glossary\\/?[^\\/]*\$"
-        private const val URL_REGEX_ADS_MAIN = "^$REGEX_BASE_URL\\/ads\\/?[^\\/]*\$"
-        private const val URL_REGEX_CONTACT_MAIN = "^$REGEX_BASE_URL\\/contact\\/?[^\\/]*\$"
-        private const val URL_REGEX_GUIDELINES_MAIN = "^$REGEX_BASE_URL\\/guidelines\\/?[^\\/]*\$"
-        private const val URL_REGEX_HELP_MAIN = "^$REGEX_BASE_URL\\/help\\/?[^\\/]*\$"
-        private const val URL_REGEX_ANDROID_MAIN = "^$REGEX_BASE_URL\\/android\\/?[^\\/]*\$"
+        //private const val URL_REGEX_TEAM_TEMPLATE = "^$REGEX_BASE_URL\\/TEMPLATE[^\\/]*\$"
+        private const val URL_REGEX_NOTIFICATIONS_MAIN = "^$REGEX_BASE_URL\\/notifications[^\\/]*\$"
+        private const val URL_REGEX_REQUESTS_MAIN = "^$REGEX_BASE_URL\\/requests[^\\/]*\$"
+        private const val URL_REGEX_TEAM_MAIN = "^$REGEX_BASE_URL\\/team[^\\/]*\$"
+        private const val URL_REGEX_SUPPORT_MAIN = "^$REGEX_BASE_URL\\/support[^\\/]*\$"
+        private const val URL_REGEX_WALLPAPERS_MAIN = "^$REGEX_BASE_URL\\/wallpapers[^\\/]*\$"
+        private const val URL_REGEX_GLOSSARY_MAIN = "^$REGEX_BASE_URL\\/glossary[^\\/]*\$"
+        private const val URL_REGEX_ADS_MAIN = "^$REGEX_BASE_URL\\/ads[^\\/]*\$"
+        private const val URL_REGEX_CONTACT_MAIN = "^$REGEX_BASE_URL\\/contact[^\\/]*\$"
+        private const val URL_REGEX_GUIDELINES_MAIN = "^$REGEX_BASE_URL\\/guidelines[^\\/]*\$"
+        private const val URL_REGEX_HELP_MAIN = "^$REGEX_BASE_URL\\/help[^\\/]*\$"
+        private const val URL_REGEX_ANDROID_MAIN = "^$REGEX_BASE_URL\\/android[^\\/]*\$"
         //places
-        private const val URL_REGEX_PLACES_MAIN = "^$REGEX_BASE_URL\\/(p|places)\\/?[^\\/]*\$"
+        private const val URL_REGEX_PLACES_MAIN = "^$REGEX_BASE_URL\\/(p|places)[^\\/]*\$"
         //user content
         private const val URL_REGEX_USER_POST = "^$REGEX_BASE_URL\\/users\\/(\\w+)\\/posts\\/(\\w+)[^\\/]*\$"
         //qna
@@ -111,14 +120,18 @@ class WebAppNavigation {
         private const val URL_REGEX_SETTINGS = "^$REGEX_BASE_URL\\/settings\\/?.*\$"
         //search
         private const val URL_REGEX_SEARCH = "^$REGEX_BASE_URL\\/search\\/?.*\$"
-        //search
+        //qna
         private const val URL_REGEX_QNA = "^$REGEX_BASE_URL\\/q\\/?.*\$"
+
+        private const val URL_REGEX_QNA_QUESTION = "^$REGEX_BASE_URL\\/q\\/.*\\/.*\$"
+
 
         private const val URL_REGEX_NOTIFICATIONS = "^$REGEX_BASE_URL\\/notifications\\/?.*\$"
         private const val URL_REGEX_REQUESTS = "^$REGEX_BASE_URL\\/requests\\/?.*\$"
 
-        //back arrow
+        //FAB links
 
+        private const val URL_QNA_NEW = "$WEBAPP_BASE_URL/q/new"
 
     }
 
@@ -156,6 +169,8 @@ class WebAppNavigation {
 
         add(URL_REGEX_NOTIFICATIONS_MAIN)
         add(URL_REGEX_REQUESTS_MAIN)
+
+        add(URL_REGEX_QNA_QUESTION)
     }
 
     private val inPlaceOpenLinkSet = LinkedHashSet<String>().apply {
@@ -211,6 +226,12 @@ class WebAppNavigation {
         put(URL_REGEX_EVENT, EventActivity::class.java.simpleName)
         put(URL_REGEX_GROUP, GroupActivity::class.java.simpleName)
         put(URL_REGEX_GROUP_POST, GroupMessagesActivity::class.java.simpleName)
+        put(URL_REGEX_USER_PICTURE, ImageViewerWrapper::class.java.simpleName)
+        put(URL_REGEX_USER_VIDEO, Video::class.java.simpleName)
+    }
+
+    private val fabLinkMap = LinkedHashMap<String,String>().apply {
+        put(URL_REGEX_QNA_MAIN, URL_QNA_NEW)
     }
 
     fun getTitle(url: String?) : Int? {
@@ -243,7 +264,7 @@ class WebAppNavigation {
             return true
         }
 
-        if (handleNativeSupportedLink(targetUri, context)) {
+        if (handleNativeSupportedLink(targetUri, currentUrl, context)) {
             return true
         }
 
@@ -275,6 +296,17 @@ class WebAppNavigation {
         customTabsIntent.launchUrl(context, uri)
     }
 
+
+    fun getFabLink(url: String?): String? {
+        url ?: return null
+        for ((uriRegex,fabLink) in fabLinkMap) {
+            if (uriRegex.toRegex().matches(url)) {
+                return fabLink
+            }
+        }
+        return null
+    }
+
     private fun isFetLifeLink(uri: Uri): Boolean {
         return URL_REGEX_INTERNAL_LINK.toRegex().matches(uri.toString())
     }
@@ -283,7 +315,7 @@ class WebAppNavigation {
         return URL_REGEX_DOWNLOAD_LINK.toRegex().containsMatchIn(uri.toString())
     }
 
-    private fun handleNativeSupportedLink(uri: Uri, context: Context): Boolean {
+    private fun handleNativeSupportedLink(uri: Uri, currentUrl: String, context: Context): Boolean {
 
         var nativeClassIdentifier : String? = null
         for ((uriRegex,classIdentifier) in nativeNavigationMap) {
@@ -323,6 +355,18 @@ class WebAppNavigation {
                 GroupMessagesActivity.startActivity(context, groupId, groupDiscussionId, groupPost?.title, groupPost?.avatarLink, false)
                 true
             }
+            ImageViewerWrapper::class.java.simpleName -> {
+                val memberId = apiIds.getOrNull(0) ?: SERVER_ID_PREFIX + uri.lastPathSegment
+                val pictureId = apiIds.getOrNull(1) ?: SERVER_ID_PREFIX + uri.lastPathSegment
+                FetLifeApiIntentService.startApiCall(context, FetLifeApiIntentService.ACTION_APICALL_MEMBER_PICTURE, memberId, pictureId, currentUrl)
+                true
+            }
+            Video::class.java.simpleName -> {
+                val memberId = apiIds.getOrNull(0) ?: SERVER_ID_PREFIX + uri.lastPathSegment
+                val videoId = apiIds.getOrNull(1) ?: SERVER_ID_PREFIX + uri.lastPathSegment
+                FetLifeApiIntentService.startApiCall(context, FetLifeApiIntentService.ACTION_APICALL_MEMBER_VIDEO, memberId, videoId, currentUrl)
+                true
+            }
             else -> false
         }
     }
@@ -353,4 +397,43 @@ class WebAppNavigation {
         }
         return false
     }
+
+    fun showPicture(context: Context?, mediaId: String) {
+        if (context == null) return
+        val picture = Picture.loadPicture(mediaId)
+        val inflater = LayoutInflater.from(context)
+        val overlay = inflater.inflate(R.layout.overlay_feed_imageswipe, null)
+        val onPictureOverlayClickListener = object : PictureUtil.OnPictureOverlayClickListener {
+            override fun onMemberClick(member: Member) {
+                member.mergeSave()
+                ProfileActivity.startActivity(context, member.id)
+            }
+
+            override fun onVisitPicture(picture: Picture, url: String) {
+                UrlUtil.openUrl(context, url, true, false)
+            }
+
+            override fun onSharePicture(picture: Picture, url: String) {
+                if (picture.isOnShareList) {
+                    Picture.unsharePicture(picture)
+                } else {
+                    Picture.sharePicture(picture)
+                }
+            }
+        }
+        val pictures = ArrayList<Picture>()
+        pictures.add(picture)
+        FetLifeApplication.getInstance().imageViewerWrapper.show(context, pictures, 0)
+    }
+
+    fun showVideo(context: Context?, mediaId: String) {
+        if (context == null) return
+        val video = Video.loadVideo(mediaId)
+        val uri = Uri.parse(video!!.videoUrl)
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        intent.setDataAndType(uri, "video/*")
+        context.startActivity(intent)
+    }
+
+
 }

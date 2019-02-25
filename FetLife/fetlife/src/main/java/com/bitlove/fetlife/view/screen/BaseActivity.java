@@ -160,7 +160,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             final ActivityOptionsCompat navOptions = ActivityOptionsCompat.
                     makeSceneTransitionAnimation(BaseActivity.this, bottomNavigation, "bottomNavBar");
 
-            Menu menu = bottomNavigation.getMenu();
+            final Menu menu = bottomNavigation.getMenu();
             IconicsMenuInflaterUtil.inflate(getMenuInflater(), this, R.menu.menu_navigation_bottom, menu);
             final int selectedMenuItem = getIntent().getIntExtra(EXTRA_SELECTED_BOTTOM_NAV_ITEM,-1);
             if (!getFetLifeApplication().getActionCable().isConnected()) {
@@ -213,14 +213,14 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                             break;
                         case R.id.navigation_bottom_requests:
                             bottomNavigation.setOnNavigationItemSelectedListener(null);
-                            FetLifeWebViewActivity.Companion.startActivity(BaseActivity.this, WebAppNavigation.WEBAPP_BASE_URL + "/requests", true,null,false, navOptions.toBundle());
+                            FetLifeWebViewActivity.Companion.startActivity(BaseActivity.this, WebAppNavigation.WEBAPP_BASE_URL + "/requests", true,menuItem.getItemId(),false, navOptions.toBundle());
 //                            TurboLinksViewActivity.startActivity(BaseActivity.this,"requests",BaseActivity.this.getString(R.string.title_activity_friendrequests), true, R.id.navigation_bottom_requests, navOptions.toBundle(), false);
 //                                finishAfterTransition();
                             setFinishAfterNavigation(true);
                             break;
                         case R.id.navigation_bottom_notifications:
                             bottomNavigation.setOnNavigationItemSelectedListener(null);
-                            FetLifeWebViewActivity.Companion.startActivity(BaseActivity.this, WebAppNavigation.WEBAPP_BASE_URL + "/notifications", true,null,false, navOptions.toBundle());
+                            FetLifeWebViewActivity.Companion.startActivity(BaseActivity.this, WebAppNavigation.WEBAPP_BASE_URL + "/notifications", true,menuItem.getItemId(),false, navOptions.toBundle());
 //                            TurboLinksViewActivity.startActivity(BaseActivity.this,"notifications",BaseActivity.this.getString(R.string.title_activity_notifications), true, R.id.navigation_bottom_notifications, navOptions.toBundle(), false);
 //                              finishAfterTransition();
                             setFinishAfterNavigation(true);

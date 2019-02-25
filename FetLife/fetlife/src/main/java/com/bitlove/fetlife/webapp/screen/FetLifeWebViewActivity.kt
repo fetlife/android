@@ -6,10 +6,12 @@ import android.content.Intent.*
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.MenuItem
+import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.view.screen.BaseActivity
 import com.bitlove.fetlife.view.screen.component.MenuActivityComponent
 import com.bitlove.fetlife.webapp.kotlin.getBooleanExtra
+import com.bitlove.fetlife.webapp.kotlin.getStringArgument
 import com.bitlove.fetlife.webapp.kotlin.getStringExtra
 import kotlinx.android.synthetic.main.tool_bar_default.*
 
@@ -81,5 +83,9 @@ class FetLifeWebViewActivity : BaseActivity() {
         }
     }
 
+    override fun getFabLink(): String? {
+        return (supportFragmentManager.fragments.getOrNull(0) as? FetLifeWebViewFragment)?.getFabLink() ?:
+            FetLifeApplication.getInstance().webAppNavigation.getFabLink(getStringExtra(EXTRA_PAGE_URL))
+    }
 
 }
