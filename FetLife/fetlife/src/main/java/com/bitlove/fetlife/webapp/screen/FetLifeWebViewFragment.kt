@@ -10,16 +10,25 @@ import android.webkit.*
 import androidx.fragment.app.Fragment
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
+import com.bitlove.fetlife.event.ServiceCallFailedEvent
+import com.bitlove.fetlife.event.ServiceCallFinishedEvent
+import com.bitlove.fetlife.event.ServiceCallStartedEvent
 import com.bitlove.fetlife.model.api.FetLifeService
+import com.bitlove.fetlife.model.service.FetLifeApiIntentService
+import com.bitlove.fetlife.util.ServerIdUtil
 import com.bitlove.fetlife.webapp.communication.WebViewInterface
 import com.bitlove.fetlife.webapp.kotlin.getBooleanArgument
 import com.bitlove.fetlife.webapp.kotlin.getStringArgument
+import com.bitlove.fetlife.webapp.kotlin.getStringExtra
 import com.bitlove.fetlife.webapp.kotlin.showToast
 import com.bitlove.fetlife.webapp.navigation.WebAppNavigation
 import kotlinx.android.synthetic.main.tool_bar_default.*
 import kotlinx.android.synthetic.main.tool_bar_default.view.*
 import kotlinx.android.synthetic.main.webapp_fragment_webview.*
 import kotlinx.android.synthetic.main.webapp_fragment_webview.view.*
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
+import java.util.HashSet
 
 
 class FetLifeWebViewFragment : Fragment() {
@@ -80,6 +89,10 @@ class FetLifeWebViewFragment : Fragment() {
                     if (counterPos >= 0 && counterPos < title.length-1) {
                         title = title.substring(counterPos+1, separatorPos)
                     }
+                    val extraPos = title.indexOf(WebAppNavigation.WEB_EXTRA_SEPARATOR)
+                    if (extraPos >= 0) {
+                        title = title.substring(0, extraPos)
+                    }
                     return title
                 }
 
@@ -133,6 +146,67 @@ class FetLifeWebViewFragment : Fragment() {
         toolbar_progress_indicator.visibility = View.INVISIBLE
     }
 
+    //Media backup load
+    override fun onStart() {
+        super.onStart()
+        FetLifeApplication.getInstance().eventBus.register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        FetLifeApplication.getInstance().eventBus.unregister(this)
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onResourceListCallStarted(serviceCallStartedEvent: ServiceCallStartedEvent) {
+        if (isRelatedCall(serviceCallStartedEvent.serviceCallAction, serviceCallStartedEvent.params)) {
+            showProgress()
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun callFinished(serviceCallFinishedEvent: ServiceCallFinishedEvent) {
+        if (!isRelatedCall(FetLifeApiIntentService.getActionInProgress(), FetLifeApiIntentService.getInProgressActionParams())) {
+            dismissProgress()
+        }
+        if (isRelatedCall(serviceCallFinishedEvent.serviceCallAction, serviceCallFinishedEvent.params)) {
+            var url = serviceCallFinishedEvent.params[2]
+            if (url != web_view.url) {
+                //user navigated further
+                //TODO(WEBAPP): think about edge case when request initiated earlier, different place
+                return
+            }
+
+            var mediaId = serviceCallFinishedEvent.params[1]
+            if (ServerIdUtil.isServerId(mediaId)) {
+                mediaId = ServerIdUtil.getLocalId(mediaId)
+            }
+
+            if (serviceCallFinishedEvent.serviceCallAction === FetLifeApiIntentService.ACTION_APICALL_MEMBER_PICTURE) {
+                FetLifeApplication.getInstance().webAppNavigation.showPicture(context,mediaId)
+            } else if (serviceCallFinishedEvent.serviceCallAction === FetLifeApiIntentService.ACTION_APICALL_MEMBER_VIDEO) {
+                FetLifeApplication.getInstance().webAppNavigation.showVideo(context,mediaId)
+            }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun callFailed(serviceCallFailedEvent: ServiceCallFailedEvent) {
+        if (isRelatedCall(serviceCallFailedEvent.serviceCallAction, serviceCallFailedEvent.params)) {
+            dismissProgress()
+        }
+    }
+
+    private fun isRelatedCall(serviceCallAction: String?, params: Array<String>?): Boolean {
+        if (params == null || params.size < 3) {
+            return false
+        }
+        if (FetLifeApiIntentService.ACTION_APICALL_MEMBER_PICTURE == serviceCallAction) {
+            return true
+        }
+        return FetLifeApiIntentService.ACTION_APICALL_MEMBER_VIDEO == serviceCallAction
+    }
+
     fun onKeyBack() : Boolean{
         return if (web_view.canGoBack()) {
             web_view.goBack()
@@ -141,6 +215,11 @@ class FetLifeWebViewFragment : Fragment() {
             false
         }
 
+    }
+
+    fun getFabLink(): String? {
+        //TODO(WEBAPP): implement to be more dynamic
+        return FetLifeApplication.getInstance().webAppNavigation.getFabLink(getStringArgument(ARG_PAGE_URL))
     }
 
 }
