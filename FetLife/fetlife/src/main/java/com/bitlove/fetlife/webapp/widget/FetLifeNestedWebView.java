@@ -26,25 +26,30 @@ import androidx.core.view.NestedScrollingChild;
 import androidx.core.view.NestedScrollingChildHelper;
 import androidx.core.view.ViewCompat;
 
-public class NestedWebView extends WebView implements NestedScrollingChild {
+public class FetLifeNestedWebView extends WebView implements NestedScrollingChild {
     private int mLastY;
     private final int[] mScrollOffset = new int[2];
     private final int[] mScrollConsumed = new int[2];
     private int mNestedOffsetY;
     private NestedScrollingChildHelper mChildHelper;
 
-    public NestedWebView(Context context) {
+    public FetLifeNestedWebView(Context context) {
         this(context, null);
     }
 
-    public NestedWebView(Context context, AttributeSet attrs) {
+    public FetLifeNestedWebView(Context context, AttributeSet attrs) {
         this(context, attrs, android.R.attr.webViewStyle);
     }
 
-    public NestedWebView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public FetLifeNestedWebView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mChildHelper = new NestedScrollingChildHelper(this);
         setNestedScrollingEnabled(true);
+    }
+
+    @Override
+    public void goBack() {
+        super.goBack();
     }
 
     @Override
