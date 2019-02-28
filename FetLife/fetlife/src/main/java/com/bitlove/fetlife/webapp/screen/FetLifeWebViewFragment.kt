@@ -19,7 +19,6 @@ import com.bitlove.fetlife.util.ServerIdUtil
 import com.bitlove.fetlife.webapp.communication.WebViewInterface
 import com.bitlove.fetlife.webapp.kotlin.getBooleanArgument
 import com.bitlove.fetlife.webapp.kotlin.getStringArgument
-import com.bitlove.fetlife.webapp.kotlin.getStringExtra
 import com.bitlove.fetlife.webapp.kotlin.showToast
 import com.bitlove.fetlife.webapp.navigation.WebAppNavigation
 import kotlinx.android.synthetic.main.tool_bar_default.*
@@ -28,7 +27,6 @@ import kotlinx.android.synthetic.main.webapp_fragment_webview.*
 import kotlinx.android.synthetic.main.webapp_fragment_webview.view.*
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.HashSet
 
 
 class FetLifeWebViewFragment : Fragment() {
@@ -97,7 +95,7 @@ class FetLifeWebViewFragment : Fragment() {
                 }
 
                 override fun shouldOverrideUrlLoading(webView: WebView?, request: WebResourceRequest?): Boolean {
-                    val navigated = FetLifeApplication.getInstance().webAppNavigation.navigate(request?.url, webView)
+                    val navigated = FetLifeApplication.getInstance().webAppNavigation.navigate(request?.url, webView, activity)
                     return if (navigated) {
                         true
                     } else {
@@ -106,8 +104,11 @@ class FetLifeWebViewFragment : Fragment() {
                     }
                 }
 
-                override fun shouldInterceptRequest(webView: WebView?, request: WebResourceRequest?): WebResourceResponse? {
-                    return super.shouldInterceptRequest(webView, request)
+                override fun onPageCommitVisible(webView: WebView?, url: String?) {
+                    super.onPageCommitVisible(webView, url)
+                    val navigationTitleId = FetLifeApplication.getInstance().webAppNavigation.getTitle(url)
+                    val navigationTitle = if (navigationTitleId != null) webView?.context?.getString(navigationTitleId) else null
+                    toolbar_title.text = navigationTitle?: getWebViewTitle(webView)
                 }
 
                 override fun onReceivedError(webView: WebView?, request: WebResourceRequest?, error: WebResourceError?) {

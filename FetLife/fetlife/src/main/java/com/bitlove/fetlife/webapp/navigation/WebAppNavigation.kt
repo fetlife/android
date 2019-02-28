@@ -1,5 +1,6 @@
 package com.bitlove.fetlife.webapp.navigation
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -12,8 +13,8 @@ import com.bitlove.fetlife.model.pojos.fetlife.dbjson.*
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService
 import com.bitlove.fetlife.util.ColorUtil
 import com.bitlove.fetlife.util.PictureUtil
-import com.bitlove.fetlife.util.ServerIdUtil
 import com.bitlove.fetlife.util.UrlUtil
+import com.bitlove.fetlife.view.screen.BaseActivity
 import com.bitlove.fetlife.view.screen.resource.EventActivity
 import com.bitlove.fetlife.view.screen.resource.groups.GroupActivity
 import com.bitlove.fetlife.view.screen.resource.groups.GroupMessagesActivity
@@ -50,7 +51,7 @@ class WebAppNavigation {
         // * Native Supported Urls
         private const val URL_REGEX_EVENT = "^$REGEX_BASE_URL\\/events\\/(\\w+)[^\\/]*\$"
         private const val URL_REGEX_GROUP = "^$REGEX_BASE_URL\\/groups\\/(\\w+)[^\\/]*\$"
-        private const val URL_REGEX_GROUP_POST = "^$REGEX_BASE_URL\\/groups\\/(\\w+)\\/posts\\/(\\w+)[^\\/]*\$"
+        private const val URL_REGEX_GROUP_POST = "^$REGEX_BASE_URL\\/groups\\/(\\w+)\\/group_posts\\/(\\w+)[^\\/]*\$"
         private const val URL_REGEX_USER_PROFILE = "^$REGEX_BASE_URL\\/users\\/(\\w+)[^\\/]*\$"
         private const val URL_REGEX_USER_PICTURE = "^$REGEX_BASE_URL\\/users\\/(\\w+)\\/pictures\\/(\\w+)[^\\/]*\$"
         private const val URL_REGEX_USER_VIDEO = "^$REGEX_BASE_URL\\/users\\/(\\w+)\\/videos\\/(\\w+)[^\\/]*\$"
@@ -127,13 +128,16 @@ class WebAppNavigation {
 
         private const val URL_REGEX_QNA_QUESTION = "^$REGEX_BASE_URL\\/q\\/.*\\/.*\$"
 
-
         private const val URL_REGEX_NOTIFICATIONS = "^$REGEX_BASE_URL\\/notifications\\/?.*\$"
         private const val URL_REGEX_REQUESTS = "^$REGEX_BASE_URL\\/requests\\/?.*\$"
         private const val URL_REGEX_INBOX = "^$REGEX_BASE_URL\\/inbox\\/?.*\$"
         private const val URL_REGEX_CONVERSATION = "^$REGEX_BASE_URL\\/conversations\\/(\\w+).*\$"
 
         private const val URL_QNA_NEW = "$WEBAPP_BASE_URL/q/new"
+    }
+
+    private val parentMap = LinkedHashMap<String,String>().apply {
+        put(URL_QNA_NEW, URL_REGEX_QNA_MAIN)
     }
 
     private val titleMap = LinkedHashMap<String,Int>().apply {
@@ -250,7 +254,7 @@ class WebAppNavigation {
         return null
     }
 
-    fun navigate(targetUri: Uri?, webView: WebView?): Boolean {
+    fun navigate(targetUri: Uri?, webView: WebView?, activity: Activity?): Boolean {
 
         targetUri ?: return false
         val context = webView?.context ?: return false
@@ -269,6 +273,15 @@ class WebAppNavigation {
         }
 
         if (handleNativeSupportedLink(targetUri, currentUrl, context)) {
+            return true
+        }
+
+        if (isParent(targetUri,webView)) {
+            if (webView.canGoBack()) {
+                webView.goBack()
+            } else {
+                activity?.finish()
+            }
             return true
         }
 
@@ -292,6 +305,26 @@ class WebAppNavigation {
         //if (not supported as webview yet)
         openInCustomTab(targetUri,context)
         return true
+    }
+
+    private fun isParent(targetUri: Uri, webView: WebView): Boolean {
+        var currentUrl = webView.url
+        //workaround to deal with synonyms
+        var targetUrl = targetUri.toString()
+        currentUrl = currentUrl.replace("places","p")
+        targetUrl = targetUrl.replace("places","p")
+
+        for ((uriRegex,parentRegex) in parentMap) {
+            if (uriRegex.toRegex().matches(currentUrl) && parentRegex.toRegex().matches(targetUrl)) {
+                return true
+            }
+        }
+
+        if (currentUrl.startsWith(targetUrl)) {
+            return webView.canGoBack()
+        }
+
+        return false
     }
 
     private fun openInCustomTab(uri: Uri, context: Context) {

@@ -294,9 +294,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!UrlUtil.handleInternal(BaseActivity.this, Uri.parse(fabLink),false, null)) {
-                        UrlUtil.openUrl(BaseActivity.this, fabLink, true, false);
-                    }
+                    FetLifeWebViewActivity.Companion.startActivity(BaseActivity.this, fabLink, false,null,false, null);
+//                    if (!UrlUtil.handleInternal(BaseActivity.this, Uri.parse(fabLink),false, null)) {
+//                        UrlUtil.openUrl(BaseActivity.this, fabLink, true, false);
+//                    }
                 }
             });
             fab.show();
