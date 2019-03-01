@@ -31,7 +31,6 @@ Installation of FetLife App is a bit different than for Apps from the Google Pla
 
 Just download our latest stable version [fetlife-2.20.0.apk](https://github.com/fetlife/android/releases/download/v2.20.0/fetlife-2.20.0.apk) and follow the on-screen prompts on your device.
 
-Wa
 
 For more details please check out [FetLife Android App Installation Guide](https://github.com/fetlife/android/files/1127920/FetLifeAndroidAppInstallationGuide.pdf)
 
@@ -48,15 +47,15 @@ To get the fastest response we suggest you to look first at [FetLife Android App
 
 If did not find a solution or you find a bug or you have a nice idea hot to improve please start by reading through the current list of [open issues](https://github.com/fetlife/fetlife-android/issues) and if you can't find anything about your bug or suggestion please [submit a new issue](https://github.com/fetlife/fetlife-android/issues/new).
 
-If you prefer not registering to GitHub you can still send your remark or question either to our caretakers (caretakers@fetlife.com) or directly to our Android developer (dreamlite@fetlife.com).
+If you prefer not to register with GitHub, you can still send your remark or question either to our caretakers (caretakers@fetlife.com) or directly to our Android developer (dreamlite@fetlife.com).
 
 
-### Want to Contribute
+### Want to Contribute?
 
-We are appreciate any feedback or comment you have about our Android App, but if you feel like even going further and have a jump into our code you are more than welcome to do so.
+We are appreciate any feedback or comments you have about our Android App, but if you feel like even going further and have a jump into our code you are more than welcome to do so.
 
 Just pick up any issue from the [open issues](https://github.com/fetlife/android/projects/1) (issues marked with open and/or help wanted flags) add yourself as an assignee and go!
-Please use also the progress flags to make it clear if your are currently working on the specific issue.
+Please use flags so others know that you’re working on the issue.
 
 We also encourage you to start chatting about your progress and idea of the solution at the chat session of the issue, so we can make sure that merging of the outcome with our code base will go smoothly.
 
