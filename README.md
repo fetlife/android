@@ -18,7 +18,7 @@ With official FetLife Android App you can...
 - Android OS version 5.0 or newer
 
 Latest stable version supporting older OS version is 2.16.7
-For installation instruction please follow this link: https://github.com/fetlife/android/issues/503
+Please see our [installation instructions](https://github.com/fetlife/android/issues/503)
 
 ### Screenshots
 
@@ -27,11 +27,9 @@ For installation instruction please follow this link: https://github.com/fetlife
 
 ### Installing the App on your Android Device
 
-Installation of FetLife App is a bit different than for Apps from the Google Play store, but it is still pretty straightforward, Android OS will guide you through the whole process. 
+Installation of FetLife App is a bit different than for Apps from the Google Play store, but it is still pretty straightforward, Android OS will guide you through the whole process.
 
 Just download our latest stable version [fetlife-2.20.0.apk](https://github.com/fetlife/android/releases/download/v2.20.0/fetlife-2.20.0.apk) and follow the on-screen prompts on your device.
-
-Wa
 
 For more details please check out [FetLife Android App Installation Guide](https://github.com/fetlife/android/files/1127920/FetLifeAndroidAppInstallationGuide.pdf)
 
@@ -48,15 +46,14 @@ To get the fastest response we suggest you to look first at [FetLife Android App
 
 If did not find a solution or you find a bug or you have a nice idea hot to improve please start by reading through the current list of [open issues](https://github.com/fetlife/fetlife-android/issues) and if you can't find anything about your bug or suggestion please [submit a new issue](https://github.com/fetlife/fetlife-android/issues/new).
 
-If you prefer not registering to GitHub you can still send your remark or question either to our caretakers (caretakers@fetlife.com) or directly to our Android developer (dreamlite@fetlife.com).
+If you prefer not to register with GitHub, you can still send your remark or question either to our caretakers (caretakers@fetlife.com) or directly to our Android developer (dreamlite@fetlife.com).
 
+### Want to Contribute?
 
-### Want to Contribute
-
-We are appreciate any feedback or comment you have about our Android App, but if you feel like even going further and have a jump into our code you are more than welcome to do so.
+We appreciate any feedback or comments you have about our Android App. If you feel like going even further and jumping into our code, you are more than welcome to do so.
 
 Just pick up any issue from the [open issues](https://github.com/fetlife/android/projects/1) (issues marked with open and/or help wanted flags) add yourself as an assignee and go!
-Please use also the progress flags to make it clear if your are currently working on the specific issue.
+Please use flags so others know that you’re working on the issue.
 
 We also encourage you to start chatting about your progress and idea of the solution at the chat session of the issue, so we can make sure that merging of the outcome with our code base will go smoothly.
 
@@ -68,11 +65,10 @@ To get the code running just follow the following steps:
 - [Run the code with Gradle Task: install_debug](https://developer.android.com/studio/run/index.html#gradle-console)
 
 Note: To protect our users for any malicious modification of the App, FetLife keeps its signature keys private.
-For you as a contributor it means you will only be able to build a debug (signed) version of the App. 
+For you as a contributor it means you will only be able to build a debug (signed) version of the App.
 Apps signed with debug keys are fully functional, but because of the signature clash they cannot be installed on top of and existing release version. To be able to run your debug version you have to remove your official FetLife App from your device first.
 
 Should you have any further questions about contributing to FetLife Android Open Source project feel free to [submit a new GitHib issue](https://github.com/fetlife/fetlife-android/issues/new) or get in contact with our Android Developer directly via dreamlite@fetlife.com.
-
 
 ### License
 
