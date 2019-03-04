@@ -74,6 +74,9 @@ class FetLifeWebViewFragment : Fragment() {
                         webView.tag = false
                         webView.clearHistory()
                     }
+                    url?.let {
+                        FetLifeApplication.getInstance().actionCable.tryConnect(context,url)
+                    }
                     super.onPageFinished(webView, url)
                 }
 
@@ -136,6 +139,9 @@ class FetLifeWebViewFragment : Fragment() {
             headers.put("X-Fetlife-Webview", "1")
             headers.put("Authorization", authHeader)
             web_view.loadUrl(url,headers)
+            url?.let {
+                FetLifeApplication.getInstance().actionCable.tryConnect(context,url)
+            }
         }
     }
 

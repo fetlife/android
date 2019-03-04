@@ -6,7 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.view.screen.BaseActivity
-import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity
+import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity
 import org.json.JSONObject
 
 class InfoNotification(notificationType: String, notificationIdRange: Int, title: String, message: String, launchUrl: String, mergeId: String?, collapseId: String?, additionalData: JSONObject, preferenceKey: String?) : OneSignalNotification(notificationType, notificationIdRange, title, message, launchUrl, mergeId, collapseId, additionalData, preferenceKey) {
@@ -34,7 +34,7 @@ class InfoNotification(notificationType: String, notificationIdRange: Int, title
                 data = Uri.parse(launchUrl)
             }
         } else {
-            TurboLinksViewActivity.createIntent(context, "notifications", context.getString(R.string.title_activity_notifications), true, R.id.navigation_bottom_notifications, true).apply {
+            FetLifeWebViewActivity.createIntent(context, "notifications",true, R.id.navigation_bottom_notifications, true).apply {
                 addFlags(Intent.FLAG_RECEIVER_FOREGROUND)
                 putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE, oneSignalNotification.notificationType)
                 putExtra(BaseActivity.EXTRA_NOTIFICATION_MERGE_ID, oneSignalNotification.mergeId)

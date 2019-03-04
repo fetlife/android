@@ -6,7 +6,8 @@ import android.content.Context
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.model.api.FetLifeService
 import com.bitlove.fetlife.view.screen.BaseActivity
-import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity
+import com.bitlove.fetlife.webapp.navigation.WebAppNavigation
+import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity
 import org.json.JSONObject
 
 class QuestionAnsweredNotification(notificationType: String, notificationIdRange: Int, title: String, message: String, launchUrl: String, mergeId: String?, collapseId: String?, additionalData: JSONObject, preferenceKey: String?) : OneSignalNotification(notificationType, notificationIdRange, title, message, launchUrl, mergeId, collapseId, additionalData, preferenceKey) {
@@ -36,16 +37,16 @@ class QuestionAnsweredNotification(notificationType: String, notificationIdRange
     }
 
     override fun getNotificationIntent(oneSignalNotification: OneSignalNotification, context: Context, order: Int): PendingIntent? {
-        val baseIntent = TurboLinksViewActivity.createIntent(context, "q", context.getString(R.string.title_activity_questions), true, null, true)
-        val contentIntent = TurboLinksViewActivity.createIntent(context, oneSignalNotification.launchUrl?.replace("https://fetlife.com".toRegex(), FetLifeService.WEBVIEW_BASE_URL), null, false, null as Int, false)
+        val baseIntent = FetLifeWebViewActivity.createIntent(context, "q", true, null, true)
+        val contentIntent = FetLifeWebViewActivity.createIntent(context, oneSignalNotification.launchUrl?.replace("https://fetlife.com".toRegex(), WebAppNavigation.WEBAPP_BASE_URL) ?: WebAppNavigation.WEBAPP_BASE_URL, false, null, false)
         contentIntent.putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE, oneSignalNotification.notificationType)
         contentIntent.putExtra(BaseActivity.EXTRA_NOTIFICATION_MERGE_ID, oneSignalNotification.mergeId)
-        //return PendingIntent.getActivity(context, order, contentIntent, PendingIntent.FLAG_IMMUTABLE)
+        //return PendingIntent.gentActivity(context, order, contentIntent, PendingIntent.FLAG_IMMUTABLE)
         return TaskStackBuilder.create(context).addNextIntentWithParentStack(baseIntent).addNextIntent(contentIntent).getPendingIntent(order, PendingIntent.FLAG_CANCEL_CURRENT)
     }
 
     override fun getLegacySummaryIntent(context: Context): PendingIntent? {
-        val contentIntent = TurboLinksViewActivity.createIntent(context, "notifications", context.getString(R.string.title_activity_notifications), true, R.id.navigation_bottom_notifications, true).apply {
+        val contentIntent = FetLifeWebViewActivity.createIntent(context, "notifications", true, R.id.navigation_bottom_notifications, true).apply {
             putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE, notificationType)
             putExtra(BaseActivity.EXTRA_NOTIFICATION_MERGE_ID, mergeId)
         }

@@ -209,7 +209,6 @@ dependencies {
 
     implementation 'com.github.hosopy:actioncable-client-java:0.1.2'
 
-    implementation project(path: ':turbolinks', configuration: 'default')
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
 }
 

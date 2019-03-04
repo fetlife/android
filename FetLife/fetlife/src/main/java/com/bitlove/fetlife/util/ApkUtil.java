@@ -42,7 +42,7 @@ public class ApkUtil {
             //set downloadmanager
             DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
             request.setDescription(context.getString(R.string.notification_description_apk_download));
-            request.setTitle(context.getString(R.string.app_name));
+            request.setTitle(context.getString(AppUtil.isVanilla(context) ? R.string.app_name_vanilla : R.string.app_name_kinky));
 
             //set destination
             request.setDestinationUri(uri);
