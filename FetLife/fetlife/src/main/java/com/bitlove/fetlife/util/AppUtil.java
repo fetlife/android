@@ -18,7 +18,7 @@ public class AppUtil {
         }
     }
 
-    private static boolean isVanilla(Context context) {
+    public static boolean isVanilla(Context context) {
         return PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext()).getBoolean(context.getApplicationContext().getString(R.string.settings_key_general_vanilla),false);
     }
 

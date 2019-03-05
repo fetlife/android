@@ -12,7 +12,6 @@ import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.view.adapter.ResourceListRecyclerAdapter;
 import com.bitlove.fetlife.view.adapter.StatusesRecyclerAdapter;
 import com.bitlove.fetlife.view.screen.resource.LoadFragment;
-import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity;
 import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity;
 
 import androidx.annotation.Nullable;

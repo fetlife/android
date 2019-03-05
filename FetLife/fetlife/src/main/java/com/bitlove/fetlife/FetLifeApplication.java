@@ -207,7 +207,6 @@ public class FetLifeApplication extends MultiDexApplication {
 
         //Init actionCable
         actionCable = new ActionCable();
-        actionCable.tryConnect(this);
     }
 
     public ActionCable getActionCable() {

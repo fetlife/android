@@ -158,24 +158,8 @@ class WebAppNavigation {
     }
 
     private val newWebViewFlowLinkSetSet = LinkedHashSet<String>().apply {
-        add(URL_REGEX_TEAM_MAIN)
-        add(URL_REGEX_SUPPORT_MAIN)
-        add(URL_REGEX_WALLPAPERS_MAIN)
-        add(URL_REGEX_GLOSSARY_MAIN)
-        add(URL_REGEX_ADS_MAIN)
-        add(URL_REGEX_CONTACT_MAIN)
-        add(URL_REGEX_GUIDELINES_MAIN)
-        add(URL_REGEX_HELP_MAIN)
-        add(URL_REGEX_ANDROID_MAIN)
-
-        add(URL_REGEX_PLACES_MAIN)
         add(URL_REGEX_USER_POST)
         add(URL_REGEX_QNA_REVIEW)
-
-        add(URL_REGEX_NOTIFICATIONS_MAIN)
-        add(URL_REGEX_REQUESTS_MAIN)
-        add(URL_REGEX_INBOX_MAIN)
-        add(URL_REGEX_CONVERSATION_MAIN)
         add(URL_REGEX_QNA_QUESTION)
     }
 
@@ -205,6 +189,19 @@ class WebAppNavigation {
     }
 
     private val inPlaceOpenWithNoHistoryLinkSet = LinkedHashSet<String>().apply {
+        add(URL_REGEX_TEAM_MAIN)
+        add(URL_REGEX_SUPPORT_MAIN)
+        add(URL_REGEX_WALLPAPERS_MAIN)
+        add(URL_REGEX_GLOSSARY_MAIN)
+        add(URL_REGEX_ADS_MAIN)
+        add(URL_REGEX_CONTACT_MAIN)
+        add(URL_REGEX_GUIDELINES_MAIN)
+        add(URL_REGEX_HELP_MAIN)
+        add(URL_REGEX_ANDROID_MAIN)
+        add(URL_REGEX_PLACES_MAIN)
+        add(URL_REGEX_NOTIFICATIONS_MAIN)
+        add(URL_REGEX_REQUESTS_MAIN)
+
         add(URL_REGEX_SETTINGS_ACCOUNT)
         add(URL_REGEX_SETTINGS_PRIVACY)
         add(URL_REGEX_SETTINGS_NOTIFICATIONS)

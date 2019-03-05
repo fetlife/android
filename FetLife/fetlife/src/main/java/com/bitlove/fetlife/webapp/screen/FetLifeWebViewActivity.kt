@@ -3,6 +3,7 @@ package com.bitlove.fetlife.webapp.screen
 import android.content.Context
 import android.content.Intent
 import android.content.Intent.*
+import android.net.Uri
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.MenuItem
@@ -13,6 +14,7 @@ import com.bitlove.fetlife.view.screen.component.MenuActivityComponent
 import com.bitlove.fetlife.webapp.kotlin.getBooleanExtra
 import com.bitlove.fetlife.webapp.kotlin.getStringArgument
 import com.bitlove.fetlife.webapp.kotlin.getStringExtra
+import com.bitlove.fetlife.webapp.navigation.WebAppNavigation
 import kotlinx.android.synthetic.main.tool_bar_default.*
 
 class FetLifeWebViewActivity : BaseActivity() {
@@ -36,7 +38,12 @@ class FetLifeWebViewActivity : BaseActivity() {
 
         fun createIntent(context: Context, pageUrl: String, hasBottomNavigation: Boolean, selectedBottomNavigationItem: Int?, newTask: Boolean): Intent {
             return Intent(context, FetLifeWebViewActivity::class.java).apply {
-                putExtra(EXTRA_PAGE_URL, pageUrl)
+                val pageUri = Uri.parse(pageUrl)
+                if (pageUri.isAbsolute) {
+                    putExtra(EXTRA_PAGE_URL, pageUrl)
+                } else {
+                    putExtra(EXTRA_PAGE_URL, WebAppNavigation.WEBAPP_BASE_URL + "/" + pageUrl)
+                }
                 putExtra(EXTRA_HAS_BOTTOM_NAVIGATION, hasBottomNavigation)
                 putExtra(EXTRA_SELECTED_BOTTOM_NAV_ITEM, selectedBottomNavigationItem)
                 flags = if (newTask) {

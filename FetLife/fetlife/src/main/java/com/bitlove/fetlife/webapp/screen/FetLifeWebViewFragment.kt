@@ -3,11 +3,13 @@ package com.bitlove.fetlife.webapp.screen
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.*
 import androidx.fragment.app.Fragment
+import com.bitlove.fetlife.BuildConfig
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.event.ServiceCallFailedEvent
@@ -63,6 +65,14 @@ class FetLifeWebViewFragment : Fragment() {
             web_view.settings.javaScriptEnabled = true
             web_view.setBackgroundColor(Color.TRANSPARENT)
             web_view.addJavascriptInterface(WebViewInterface(context), "Android")
+            web_view.webChromeClient = object : WebChromeClient() {
+                override fun onConsoleMessage(consoleMessage: ConsoleMessage?): Boolean {
+                    if (BuildConfig.DEBUG) {
+                        Log.d("[WEBVIEW][CONSOLE]",consoleMessage?.toString())
+                    }
+                    return super.onConsoleMessage(consoleMessage)
+                }
+            }
             web_view.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(webView: WebView?, url: String?) {
                     //web_view_progress_bar.visibility = View.GONE
@@ -73,6 +83,9 @@ class FetLifeWebViewFragment : Fragment() {
                     if (webView?.tag == true) {
                         webView.tag = false
                         webView.clearHistory()
+                    }
+                    url?.let {
+                        FetLifeApplication.getInstance().actionCable.tryConnect(context,url)
                     }
                     super.onPageFinished(webView, url)
                 }
@@ -136,6 +149,9 @@ class FetLifeWebViewFragment : Fragment() {
             headers.put("X-Fetlife-Webview", "1")
             headers.put("Authorization", authHeader)
             web_view.loadUrl(url,headers)
+            url?.let {
+                FetLifeApplication.getInstance().actionCable.tryConnect(context,url)
+            }
         }
     }
 
