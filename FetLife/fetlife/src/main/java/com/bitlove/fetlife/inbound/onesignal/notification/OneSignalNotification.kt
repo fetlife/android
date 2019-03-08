@@ -129,6 +129,7 @@ abstract class OneSignalNotification(val notificationType: String,
             setContentText(text)
 
             setGroup(groupId)
+            setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
 
             setLargeIcon(BitmapFactory.decodeResource(fetLifeApplication.resources, R.mipmap.app_icon_kinky))
             setSmallIcon(R.drawable.ic_stat_onesignal_default)
