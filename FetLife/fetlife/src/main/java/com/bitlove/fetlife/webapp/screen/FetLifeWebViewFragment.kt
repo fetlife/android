@@ -156,11 +156,11 @@ class FetLifeWebViewFragment : Fragment() {
     }
 
     private fun showProgress() {
-        toolbar_progress_indicator.visibility = View.VISIBLE
+        toolbar_progress_indicator?.visibility = View.VISIBLE
     }
 
     private fun dismissProgress() {
-        toolbar_progress_indicator.visibility = View.INVISIBLE
+        toolbar_progress_indicator?.visibility = View.INVISIBLE
     }
 
     //Media backup load

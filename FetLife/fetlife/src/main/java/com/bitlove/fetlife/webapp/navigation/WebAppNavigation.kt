@@ -71,8 +71,9 @@ class WebAppNavigation {
         private const val URL_REGEX_GUIDELINES_MAIN = "^$REGEX_BASE_URL\\/guidelines[^\\/]*\$"
         private const val URL_REGEX_HELP_MAIN = "^$REGEX_BASE_URL\\/help[^\\/]*\$"
         private const val URL_REGEX_ANDROID_MAIN = "^$REGEX_BASE_URL\\/android[^\\/]*\$"
+        private const val URL_REGEX_PRIVACY_MAIN = "^$REGEX_BASE_URL\\/(privacy)[^\\/]*\$"
         //places
-        private const val URL_REGEX_PLACES_MAIN = "^$REGEX_BASE_URL\\/(p|places)[^\\/]*\$"
+        private const val URL_REGEX_PLACES_MAIN = "^$REGEX_BASE_URL\\/(p|places)[^\\/]*\$" //WARNING: Also matches with privacy TODO(WEBAPP): find better
         //user content
         private const val URL_REGEX_USER_POST = "^$REGEX_BASE_URL\\/users\\/(\\w+)\\/posts\\/(\\w+)[^\\/]*\$"
         //qna
@@ -114,6 +115,8 @@ class WebAppNavigation {
         private const val URL_REGEX_GUIDELINES = "^$REGEX_BASE_URL\\/guidelines\\/?.*\$"
         private const val URL_REGEX_HELP = "^$REGEX_BASE_URL\\/help\\/?.*\$"
         private const val URL_REGEX_ANDROID = "^$REGEX_BASE_URL\\/android\\/?.*\$"
+        private const val URL_REGEX_PRIVACY = "^$REGEX_BASE_URL\\/privacy\\/?.*\$"
+        private const val URL_REGEX_LEGALESE = "^$REGEX_BASE_URL\\/legalese\\/?.*\$"
         //places
         private const val URL_REGEX_PLACES = "^$REGEX_BASE_URL\\/(p|places)\\/?.*\$"
         private const val URL_REGEX_CITIES = "^$REGEX_BASE_URL\\/cities\\/?.*\$"
@@ -150,6 +153,7 @@ class WebAppNavigation {
         put(URL_REGEX_GUIDELINES_MAIN, R.string.url_title_guidelines)
         put(URL_REGEX_HELP_MAIN, R.string.url_title_help)
         put(URL_REGEX_ANDROID_MAIN, R.string.url_title_android)
+        put(URL_REGEX_PRIVACY_MAIN, R.string.url_title_privacy)
         put(URL_REGEX_PLACES_MAIN, R.string.url_title_places)
         put(URL_REGEX_SEARCH_MAIN, R.string.url_title_search)
         put(URL_REGEX_QNA_MAIN, R.string.url_title_questions)
@@ -173,6 +177,7 @@ class WebAppNavigation {
         add(URL_REGEX_GUIDELINES)
         add(URL_REGEX_HELP)
         add(URL_REGEX_ANDROID)
+        add(URL_REGEX_PRIVACY)
 
         add(URL_REGEX_PLACES)
         add(URL_REGEX_COUNTRIES)
@@ -186,6 +191,8 @@ class WebAppNavigation {
         add(URL_REGEX_REQUESTS)
         add(URL_REGEX_INBOX)
         add(URL_REGEX_CONVERSATION)
+
+        add(URL_REGEX_LEGALESE)
     }
 
     private val inPlaceOpenWithNoHistoryLinkSet = LinkedHashSet<String>().apply {
@@ -415,6 +422,10 @@ class WebAppNavigation {
     }
 
     private fun openInPlaceWithNoHistory(uri: Uri, currentUrl: String): Boolean {
+        //TODO(WEBAPP): FIND BETTER THAN THIS WORKAROUND
+        if (URL_REGEX_PRIVACY_MAIN.toRegex().matches(uri.toString())) {
+            return false
+        }
         for (uriRegex in inPlaceOpenWithNoHistoryLinkSet) {
             if (uriRegex.toRegex().matches(uri.toString()) && !uriRegex.toRegex().matches(currentUrl)) {
                 return true
