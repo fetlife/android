@@ -24,7 +24,6 @@ import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.util.ViewUtil;
 import com.bitlove.fetlife.view.dialog.ConfirmationDialog;
 import com.bitlove.fetlife.view.screen.resource.FriendRequestsActivity;
-import com.bitlove.fetlife.view.screen.resource.MessagesActivity;
 import com.bitlove.fetlife.view.screen.resource.ResourceActivity;
 import com.bitlove.fetlife.view.widget.FlingBehavior;
 import com.bitlove.fetlife.view.widget.SlideControlViewPager;
@@ -355,7 +354,8 @@ public class ProfileActivity extends ResourceActivity implements AppBarLayout.On
     private void onMenuIconMessage() {
         Member member = Member.loadMember(memberId);
         if (member != null) {
-            MessagesActivity.startActivity(this, Conversation.createLocalConversation(member), member.getNickname(), member.getAvatarLink(), false);
+            //TODO(WEBAPP): implement start new conversation
+//            MessagesActivity.startActivity(this, Conversation.createLocalConversation(member), member.getNickname(), member.getAvatarLink(), false);
         }
     }
 

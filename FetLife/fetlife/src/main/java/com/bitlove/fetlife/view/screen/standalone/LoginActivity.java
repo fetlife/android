@@ -28,7 +28,9 @@ import com.bitlove.fetlife.event.LoginStartedEvent;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.util.PreferenceKeys;
 import com.bitlove.fetlife.view.dialog.MessageDialog;
-import com.bitlove.fetlife.view.screen.resource.ConversationsActivity;
+import com.bitlove.fetlife.view.screen.BaseActivity;
+import com.bitlove.fetlife.webapp.navigation.WebAppNavigation;
+import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -207,7 +209,7 @@ public class LoginActivity extends Activity {
     public void onLoginFinished(LoginFinishedEvent loginFinishedEvent) {
         //dismissProgress();
         apply_v1_5_pwd_decision();
-        ConversationsActivity.startActivity(this, false);
+        FetLifeWebViewActivity.Companion.startActivity(this, WebAppNavigation.WEBAPP_BASE_URL + "/inbox", true, R.id.navigation_bottom_inbox,false, null);
         finish();
     }
 

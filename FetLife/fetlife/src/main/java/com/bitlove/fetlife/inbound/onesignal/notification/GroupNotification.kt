@@ -15,7 +15,6 @@ import com.bitlove.fetlife.model.pojos.fetlife.dbjson.GroupPost
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService
 import com.bitlove.fetlife.util.ServerIdUtil
 import com.bitlove.fetlife.view.screen.BaseActivity
-import com.bitlove.fetlife.view.screen.resource.ConversationsActivity
 import com.bitlove.fetlife.view.screen.resource.groups.GroupActivity
 import com.bitlove.fetlife.view.screen.resource.groups.GroupMessagesActivity
 import com.bitlove.fetlife.view.screen.resource.groups.GroupsActivity
