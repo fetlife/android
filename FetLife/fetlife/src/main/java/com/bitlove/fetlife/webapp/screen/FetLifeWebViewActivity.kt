@@ -59,10 +59,21 @@ class FetLifeWebViewActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 //        setContentView(R.layout.webapp_activity_webview)
 
+        var hasBottomNavigation = getBooleanExtra(EXTRA_HAS_BOTTOM_NAVIGATION) != true
+        var pageUrl = getStringExtra(EXTRA_PAGE_URL)
+
+
+        if (pageUrl == null) {
+            pageUrl = intent.data.toString()
+            hasBottomNavigation = false
+            // if opened externally, logout user for security reasons
+            FetLifeApplication.getInstance().userSessionManager.onUserLogOut()
+        }
+
         if (savedInstanceState == null) {
             supportFragmentManager
                     .beginTransaction()
-                    .add(R.id.content_layout, FetLifeWebViewFragment.newInstance(getStringExtra(EXTRA_PAGE_URL)!!, getBooleanExtra(EXTRA_HAS_BOTTOM_NAVIGATION) != true), "FetLifeWebViewFragment")
+                    .add(R.id.content_layout, FetLifeWebViewFragment.newInstance(pageUrl, hasBottomNavigation), "FetLifeWebViewFragment")
                     .commit()
         }
     }

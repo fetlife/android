@@ -150,7 +150,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         setUpFloatingActionButton(getFabLink());
 
         final BottomNavigationView bottomNavigation = findViewById(R.id.navigation_bottom);
-        boolean hasBottomBar = getIntent().getBooleanExtra(EXTRA_HAS_BOTTOM_BAR,true);
+        boolean hasBottomBar = getIntent().getBooleanExtra(EXTRA_HAS_BOTTOM_BAR,false);
         if (bottomNavigation != null && !hasBottomBar) {
             bottomNavigation.setVisibility(View.GONE);
         } else if (bottomNavigation !=null){

@@ -145,11 +145,13 @@ class FetLifeWebViewFragment : Fragment() {
             }
 
             val headers = HashMap<String,String>()
-            val accessToken = FetLifeApplication.getInstance().userSessionManager.currentUser.accessToken
-            val authHeader = FetLifeService.AUTH_HEADER_PREFIX + accessToken
+            val accessToken = FetLifeApplication.getInstance().userSessionManager.currentUser?.accessToken
+            if (accessToken != null) {
+                val authHeader = FetLifeService.AUTH_HEADER_PREFIX + accessToken
+                headers.put("Authorization", authHeader)
+            }
             headers.put("X-Fetlife-Webview", "1")
             headers.put("X-Fetlife-Android", VersionUtil.getCurrentVersionInt(context).toString())
-            headers.put("Authorization", authHeader)
             web_view.loadUrl(url,headers)
             url?.let {
                 FetLifeApplication.getInstance().actionCable.tryConnect(context,url)
