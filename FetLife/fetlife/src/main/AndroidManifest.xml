@@ -99,7 +99,6 @@
         <activity
             android:name=".view.screen.standalone.LoginActivity"
             android:label="@string/app_name_kinky"
-            android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateAlwaysVisible"/>
         <activity
