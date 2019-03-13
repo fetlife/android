@@ -30,7 +30,7 @@ class WebAppNavigation {
 
         private var totalTimeSpent : Long = 0
 
-        const val WEBAPP_BASE_URL = "https://staging.fetlife.com"
+        const val WEBAPP_BASE_URL = "https://fetlife.com"
 
         //Base constants
         internal const val WEB_TITLE_SEPARATOR = " |"
@@ -40,7 +40,7 @@ class WebAppNavigation {
         private const val QUERY_PARAM_API_IDS = "api_ids"
         private const val SERVER_ID_PREFIX = "SERVER_ID_PREFIX:"
 
-        private const val REGEX_BASE_URL = "https:\\/\\/staging\\.fetlife\\.com"
+        private const val REGEX_BASE_URL = "https:\\/\\/(staging\\.)?fetlife\\.com"
 
         // * FetLife Urls
         private const val URL_REGEX_INTERNAL_LINK = "^$REGEX_BASE_URL.*\$"

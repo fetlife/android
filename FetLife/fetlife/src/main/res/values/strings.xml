@@ -29,6 +29,12 @@
 
             <p><b><br/>Version History</b></p>
 
+            <p/>v2.22.0<br/>
+                    <ul>
+                        <li>Bug fixes</li>
+                        <li>Major internal code changes</li>
+                    </ul>
+
             <p/>v2.21.2<br/>
                     <ul>
                         <li>Smaller Bug fixes</li>
