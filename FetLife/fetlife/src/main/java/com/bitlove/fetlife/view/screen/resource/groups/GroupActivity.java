@@ -77,8 +77,10 @@ public class GroupActivity extends ResourceActivity implements AppBarLayout.OnOf
         String groupTitle = getIntent().getStringExtra(EXTRA_GROUP_TITLE);
         if (group != null) {
             setGroupDetails(group);
-        } else if (groupTitle != null){
-            setGroupDetails(groupTitle,-1);
+        } else {
+            if (groupTitle != null){
+                setGroupDetails(groupTitle,-1);
+            }
             FetLifeApiIntentService.startApiCall(this, FetLifeApiIntentService.ACTION_APICALL_GROUP, groupId);
         }
         findViewById(R.id.group_menu_icon_view_container).setOnClickListener(new View.OnClickListener() {
@@ -153,6 +155,7 @@ public class GroupActivity extends ResourceActivity implements AppBarLayout.OnOf
 
     private void setGroupDetails(Group group) {
         this.group = group;
+        this.groupId = group.getId();
         setGroupDetails(group.getName(),group.getMemberCount());
         if (group.isDetailLoaded()) {
             membershipIcon.setVisibility(View.VISIBLE);
@@ -210,7 +213,6 @@ public class GroupActivity extends ResourceActivity implements AppBarLayout.OnOf
     }
 
     private boolean isRelatedCall(String serviceCallAction, String[] params) {
-        String groupId = group.getId();
         if (params != null && params.length > 0 && groupId != null && !groupId.equals(params[0])) {
             return false;
         }
