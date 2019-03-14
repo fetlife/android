@@ -31,6 +31,7 @@ import com.bitlove.fetlife.util.FileUtil;
 import com.bitlove.fetlife.view.screen.resource.ResourceListActivity;
 import com.bitlove.fetlife.view.screen.standalone.LoginActivity;
 import com.bitlove.fetlife.view.widget.ImageViewerWrapper;
+import com.bitlove.fetlife.webapp.navigation.WebAppNavigation;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -124,6 +125,8 @@ public class FetLifeApplication extends MultiDexApplication {
     private ActionCable actionCable;
     private ImageViewerWrapper imageViewerWrapper;
 
+    private WebAppNavigation webAppNavigation;
+
     private GitHubService gitHubService;
 
     @Override
@@ -196,13 +199,14 @@ public class FetLifeApplication extends MultiDexApplication {
             gitHubService = null;
         }
 
+        webAppNavigation = new WebAppNavigation();
+
         notificationParser = new NotificationParser();
         eventBus = EventBus.getDefault();
         inMemoryStorage = new InMemoryStorage();
 
         //Init actionCable
         actionCable = new ActionCable();
-        actionCable.tryConnect(this);
     }
 
     public ActionCable getActionCable() {
@@ -445,6 +449,10 @@ public class FetLifeApplication extends MultiDexApplication {
 
     public GitHubService getGitHubService() {
         return gitHubService;
+    }
+
+    public WebAppNavigation getWebAppNavigation() {
+        return webAppNavigation;
     }
 
     //****

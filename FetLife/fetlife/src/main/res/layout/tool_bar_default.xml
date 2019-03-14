@@ -30,6 +30,7 @@
             android:paddingRight="4dp"
             android:paddingTop="2dp"
             android:text="Preview"
+            android:visibility="gone"
             android:textColor="@android:color/white" />
 
         <com.facebook.drawee.view.SimpleDraweeView

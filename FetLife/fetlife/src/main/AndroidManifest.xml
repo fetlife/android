@@ -256,6 +256,16 @@
             android:label="@string/title_activity_group"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+
+        <!-- WebApp -->
+        <activity
+            android:name=".webapp.screen.FetLifeWebViewActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label=""
+            android:windowSoftInputMode="adjustResize">
+        </activity>
+
+
     </application>
 
 </manifest>

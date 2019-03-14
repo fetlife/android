@@ -3,7 +3,6 @@ package com.bitlove.fetlife.inbound
 import android.content.Context
 import android.text.TextUtils
 import android.webkit.CookieManager
-import com.basecamp.turbolinks.TurbolinksSession
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.event.NotificationCountUpdatedEvent
 import com.bitlove.fetlife.session.UserSessionManager
@@ -30,7 +29,7 @@ class ActionCable {
         connected = false
     }
 
-    fun tryConnect(context: Context) {
+    fun tryConnect(context: Context, url: String) {
 
         if (connected) {
             return
@@ -40,7 +39,7 @@ class ActionCable {
 
         var cookies: String?
         try {
-            cookies = CookieManager.getInstance().getCookie(TurbolinksSession.getDefault(context).location.toString())
+            cookies = CookieManager.getInstance().getCookie(url)
         } catch (t: Throwable) {cookies = null}
 
         if (TextUtils.isEmpty(cookies)) {

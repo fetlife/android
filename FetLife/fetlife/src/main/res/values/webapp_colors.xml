@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="navigation_side_background">#1b1b1b</color>
+    <color name="navigation_side_icon">#555</color>
+    <color name="navigation_side_label">#d3d3d3</color>
+
+    <color name="navigation_bottom_background">#0c0c0c</color>
+    <color name="navigation_bottom_separator">#555</color>
+
+    <color name="button_floating_label">#ffffffff</color>
+    <color name="toolbar_chrome_custom_tab">#000000</color>
+</resources>

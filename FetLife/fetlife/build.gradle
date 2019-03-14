@@ -2,6 +2,7 @@ apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'io.fabric'
+apply plugin: 'kotlin-android-extensions'
 
 buildscript {
     repositories {
@@ -31,8 +32,8 @@ android {
         targetSdkVersion 26
         multiDexEnabled true
 
-        versionCode 22102
-        versionName "2.21.2"
+        versionCode 22200
+        versionName "2.22.0"
 
         vectorDrawables.useSupportLibrary = true
 
@@ -208,7 +209,6 @@ dependencies {
 
     implementation 'com.github.hosopy:actioncable-client-java:0.1.2'
 
-    implementation project(path: ':turbolinks', configuration: 'default')
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
 }
 

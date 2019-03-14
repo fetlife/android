@@ -1,1 +1,1 @@
-include ':fetlife', ':turbolinks'
+include ':fetlife'

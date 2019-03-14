@@ -239,6 +239,9 @@ public class GroupMessagesActivity extends ResourceActivity
         memberId = null;
 
         group = Group.loadGroup(groupId);
+        if (group == null) {
+            FetLifeApiIntentService.startApiCall(this,FetLifeApiIntentService.ACTION_APICALL_GROUP,groupId);
+        }
         messagesAdapter = new GroupMessagesRecyclerAdapter(groupId,groupDiscussionId,this);
         groupDiscussion = messagesAdapter.getGroupPost();
         if (groupDiscussion != null) {

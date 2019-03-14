@@ -17,7 +17,8 @@ import com.bitlove.fetlife.util.ColorUtil;
 import com.bitlove.fetlife.util.UrlUtil;
 import com.bitlove.fetlife.view.screen.resource.ConversationsActivity;
 import com.bitlove.fetlife.view.screen.resource.FeedActivity;
-import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity;
+import com.bitlove.fetlife.webapp.navigation.WebAppNavigation;
+import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
@@ -145,7 +146,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             activityComponent.onActivityCreated(this, savedInstanceState);
         }
 
-        fab = findViewById(R.id.fab);
+        fab = findViewById(R.id.floating_action_button);
         setUpFloatingActionButton(getFabLink());
 
         final BottomNavigationView bottomNavigation = findViewById(R.id.navigation_bottom);
@@ -158,7 +159,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             final ActivityOptionsCompat navOptions = ActivityOptionsCompat.
                     makeSceneTransitionAnimation(BaseActivity.this, bottomNavigation, "bottomNavBar");
 
-            Menu menu = bottomNavigation.getMenu();
+            final Menu menu = bottomNavigation.getMenu();
             IconicsMenuInflaterUtil.inflate(getMenuInflater(), this, R.menu.menu_navigation_bottom, menu);
             final int selectedMenuItem = getIntent().getIntExtra(EXTRA_SELECTED_BOTTOM_NAV_ITEM,-1);
             if (!getFetLifeApplication().getActionCable().isConnected()) {
@@ -211,13 +212,15 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                             break;
                         case R.id.navigation_bottom_requests:
                             bottomNavigation.setOnNavigationItemSelectedListener(null);
-                            TurboLinksViewActivity.startActivity(BaseActivity.this,"requests",BaseActivity.this.getString(R.string.title_activity_friendrequests), true, R.id.navigation_bottom_requests, navOptions.toBundle(), false);
+                            FetLifeWebViewActivity.Companion.startActivity(BaseActivity.this, WebAppNavigation.WEBAPP_BASE_URL + "/requests", true,menuItem.getItemId(),false, navOptions.toBundle());
+//                            TurboLinksViewActivity.startActivity(BaseActivity.this,"requests",BaseActivity.this.getString(R.string.title_activity_friendrequests), true, R.id.navigation_bottom_requests, navOptions.toBundle(), false);
 //                                finishAfterTransition();
                             setFinishAfterNavigation(true);
                             break;
                         case R.id.navigation_bottom_notifications:
                             bottomNavigation.setOnNavigationItemSelectedListener(null);
-                            TurboLinksViewActivity.startActivity(BaseActivity.this,"notifications",BaseActivity.this.getString(R.string.title_activity_notifications), true, R.id.navigation_bottom_notifications, navOptions.toBundle(), false);
+                            FetLifeWebViewActivity.Companion.startActivity(BaseActivity.this, WebAppNavigation.WEBAPP_BASE_URL + "/notifications", true,menuItem.getItemId(),false, navOptions.toBundle());
+//                            TurboLinksViewActivity.startActivity(BaseActivity.this,"notifications",BaseActivity.this.getString(R.string.title_activity_notifications), true, R.id.navigation_bottom_notifications, navOptions.toBundle(), false);
 //                              finishAfterTransition();
                             setFinishAfterNavigation(true);
                             break;
@@ -289,9 +292,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             fab.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!UrlUtil.handleInternal(BaseActivity.this, Uri.parse(fabLink),false, null)) {
-                        UrlUtil.openUrl(BaseActivity.this, fabLink, true, false);
-                    }
+                    FetLifeWebViewActivity.Companion.startActivity(BaseActivity.this, fabLink, false,null,false, null);
+//                    if (!UrlUtil.handleInternal(BaseActivity.this, Uri.parse(fabLink),false, null)) {
+//                        UrlUtil.openUrl(BaseActivity.this, fabLink, true, false);
+//                    }
                 }
             });
             fab.show();
@@ -306,7 +310,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
 
     private void setupSideMenu() {
-        final NavigationView navigationView = findViewById(R.id.nav_view);
+        final NavigationView navigationView = findViewById(R.id.navigation_side_layout);
 
         if (navigationView != null) {
             Menu menu = navigationView.getMenu();

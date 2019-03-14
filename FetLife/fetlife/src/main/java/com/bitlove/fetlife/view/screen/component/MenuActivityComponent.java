@@ -13,20 +13,20 @@ import android.widget.TextView;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
-import com.bitlove.fetlife.util.UrlUtil;
 import com.bitlove.fetlife.view.dialog.PictureUploadSelectionDialog;
 import com.bitlove.fetlife.view.dialog.VideoUploadSelectionDialog;
 import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.resource.EventsActivity;
 import com.bitlove.fetlife.view.screen.resource.ExploreActivity;
 import com.bitlove.fetlife.view.screen.resource.NotificationHistoryActivity;
-import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity;
 import com.bitlove.fetlife.view.screen.resource.groups.GroupsActivity;
 import com.bitlove.fetlife.view.screen.resource.members.MembersActivity;
 import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity;
 import com.bitlove.fetlife.view.screen.standalone.LoginActivity;
 import com.bitlove.fetlife.view.screen.standalone.ReleaseNotesActivity;
 import com.bitlove.fetlife.view.screen.standalone.SettingsActivity;
+import com.bitlove.fetlife.webapp.navigation.WebAppNavigation;
+import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -52,7 +52,7 @@ public class MenuActivityComponent extends ActivityComponent {
 
         Toolbar toolbar = (Toolbar) menuActivity.findViewById(R.id.toolbar);
         DrawerLayout drawer = (DrawerLayout) menuActivity.findViewById(R.id.drawer_layout);
-        navigationView = (NavigationView) menuActivity.findViewById(R.id.nav_view);
+        navigationView = (NavigationView) menuActivity.findViewById(R.id.navigation_side_layout);
 //        navigationView.getMenu().findItem(R.id.nav_feed).setIcon(
 //                MaterialDrawableBuilder.with(menuActivity)
 //                        .setIcon(MaterialDrawableBuilder.IconValue.VIEW_LIST)
@@ -175,10 +175,12 @@ public class MenuActivityComponent extends ActivityComponent {
 //        } else if (id == R.id.nav_conversations) {
 //            ConversationsActivity.startActivity(menuActivity, false);
         } else if (id == R.id.nav_places) {
-            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"places",menuActivity.getString(R.string.title_activity_places), true, null, false);
+//            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"places",menuActivity.getString(R.string.title_activity_places), true, null, false);
+            pendingNavigationIntent = FetLifeWebViewActivity.Companion.createIntent(menuActivity, WebAppNavigation.WEBAPP_BASE_URL + "/places", true,null,false);
             menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_search) {
-            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"search",menuActivity.getString(R.string.title_activity_search), true, null, false);
+//            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"search",menuActivity.getString(R.string.title_activity_search), true, null, false);
+            pendingNavigationIntent = FetLifeWebViewActivity.Companion.createIntent(menuActivity, WebAppNavigation.WEBAPP_BASE_URL + "/search", true,null,false);
             menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_members) {
             pendingNavigationIntent = MembersActivity.createIntent(menuActivity,false);
@@ -189,7 +191,9 @@ public class MenuActivityComponent extends ActivityComponent {
 //            logEvent("nav_introduce");
 //            AddNfcFriendActivity.startActivity(menuActivity);
         } else if (id == R.id.nav_about) {
-            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"android",menuActivity.getString(R.string.title_activity_about), true, null, false);
+//            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"android",menuActivity.getString(R.string.title_activity_about), true, null, false);
+            pendingNavigationIntent = FetLifeWebViewActivity.Companion.createIntent(menuActivity, WebAppNavigation.WEBAPP_BASE_URL + "/android", true,null,false);
+            menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_relnotes) {
             pendingNavigationIntent = ReleaseNotesActivity.createIntent(menuActivity);
             menuActivity.setFinishAfterNavigation(true);
@@ -218,7 +222,8 @@ public class MenuActivityComponent extends ActivityComponent {
 //        } else if (id == R.id.nav_feed) {
 //            FeedActivity.startActivity(menuActivity);
         } else if (id == R.id.nav_websettings) {
-            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"settings/account",menuActivity.getString(R.string.title_activity_websettings), true, null, false);
+//            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"settings/account",menuActivity.getString(R.string.title_activity_websettings), true, null, false);
+            pendingNavigationIntent = FetLifeWebViewActivity.Companion.createIntent(menuActivity, WebAppNavigation.WEBAPP_BASE_URL + "/settings/account", true,null,false);
             menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_stuff_you_love) {
             pendingNavigationIntent = ExploreActivity.createIntent(menuActivity, ExploreActivity.Explore.STUFF_YOU_LOVE);
@@ -231,27 +236,34 @@ public class MenuActivityComponent extends ActivityComponent {
             menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_help) {
 //            UrlUtil.openUrl(menuActivity,"https://app.fetlife.com/help",true,true);
-            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"help",menuActivity.getString(R.string.title_activity_help), true, null, false);
+//            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"help",menuActivity.getString(R.string.title_activity_help), true, null, false);
+            pendingNavigationIntent = FetLifeWebViewActivity.Companion.createIntent(menuActivity, WebAppNavigation.WEBAPP_BASE_URL + "/help", true,null,false);
             menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_guidelines) {
-            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"guidelines",menuActivity.getString(R.string.title_activity_guidelines), true, null, false);
+//            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"guidelines",menuActivity.getString(R.string.title_activity_guidelines), true, null, false);
+            pendingNavigationIntent = FetLifeWebViewActivity.Companion.createIntent(menuActivity, WebAppNavigation.WEBAPP_BASE_URL + "/guidelines", true,null,false);
             menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_contact) {
-            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"contact",menuActivity.getString(R.string.title_activity_contact), true, null, false);
+//            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"contact",menuActivity.getString(R.string.title_activity_contact), true, null, false);
+            pendingNavigationIntent = FetLifeWebViewActivity.Companion.createIntent(menuActivity, WebAppNavigation.WEBAPP_BASE_URL + "/contact", true,null,false);
             menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_support) {
-            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"support",menuActivity.getString(R.string.title_activity_support), true, null, false);
+//            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"support",menuActivity.getString(R.string.title_activity_support), true, null, false);
+            pendingNavigationIntent = FetLifeWebViewActivity.Companion.createIntent(menuActivity, WebAppNavigation.WEBAPP_BASE_URL + "/support", true,null,false);
             menuActivity.setFinishAfterNavigation(true);
 //        } else if (id == R.id.nav_search) {
 //            TurboLinksViewActivity.startActivity(menuActivity,"search",menuActivity.getString(R.string.title_activity_search));
         } else if (id == R.id.nav_ads) {
-            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"ads",menuActivity.getString(R.string.title_activity_ads), true, null, false);
+//            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"ads",menuActivity.getString(R.string.title_activity_ads), true, null, false);
+            pendingNavigationIntent = FetLifeWebViewActivity.Companion.createIntent(menuActivity, WebAppNavigation.WEBAPP_BASE_URL + "/ads", true,null,false);
             menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_glossary) {
-            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"glossary",menuActivity.getString(R.string.title_activity_glossary), true, null, false);
+//            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"glossary",menuActivity.getString(R.string.title_activity_glossary), true, null, false);
+            pendingNavigationIntent = FetLifeWebViewActivity.Companion.createIntent(menuActivity, WebAppNavigation.WEBAPP_BASE_URL + "/glossary", true,null,false);
             menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_team) {
-            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"team",menuActivity.getString(R.string.title_activity_team), true, null, false);
+//            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"team",menuActivity.getString(R.string.title_activity_team), true, null, false);
+            pendingNavigationIntent = FetLifeWebViewActivity.Companion.createIntent(menuActivity, WebAppNavigation.WEBAPP_BASE_URL + "/team", true,null,false);
             menuActivity.setFinishAfterNavigation(true);
 //        } else if (id == R.id.nav_wallpapers) {
 //            TurboLinksViewActivity.startActivity(menuActivity,"wallpapers",menuActivity.getString(R.string.title_activity_wallpapers));
@@ -263,14 +275,16 @@ public class MenuActivityComponent extends ActivityComponent {
                 requestLocationPermission(BaseActivity.PERMISSION_REQUEST_LOCATION);
             }
         } else if (id == R.id.nav_questions) {
-            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"q",menuActivity.getString(R.string.title_activity_questions), true, null,false);
+//            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"q",menuActivity.getString(R.string.title_activity_questions), true, null,false);
+            pendingNavigationIntent = FetLifeWebViewActivity.Companion.createIntent(menuActivity, WebAppNavigation.WEBAPP_BASE_URL + "/q", true,null,false);
             menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_groups) {
            pendingNavigationIntent = GroupsActivity.createIntent(menuActivity,false);
             menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_wallpaper) {
 //            UrlUtil.openUrl(menuActivity,"https://app.fetlife.com/wallpapers", true);
-            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"wallpapers",menuActivity.getString(R.string.title_activity_wallpapers), true, null,false);
+//            pendingNavigationIntent = TurboLinksViewActivity.createIntent(menuActivity,"wallpapers",menuActivity.getString(R.string.title_activity_wallpapers), true, null,false);
+            pendingNavigationIntent = FetLifeWebViewActivity.Companion.createIntent(menuActivity, WebAppNavigation.WEBAPP_BASE_URL + "/wallpapers", true,null,false);
             menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_updates) {
             logEvent("nav_updates");

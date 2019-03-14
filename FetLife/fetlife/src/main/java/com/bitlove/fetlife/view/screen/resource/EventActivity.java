@@ -1,5 +1,6 @@
 package com.bitlove.fetlife.view.screen.resource;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -45,11 +46,11 @@ public class EventActivity extends ResourceActivity implements AppBarLayout.OnOf
     private ViewPager viewPager;
     private Event event;
 
-    public static void startActivity(BaseActivity baseActivity, String eventId) {
-        Intent intent = new Intent(baseActivity, EventActivity.class);
+    public static void startActivity(Context context, String eventId) {
+        Intent intent = new Intent(context, EventActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         intent.putExtra(EXTRA_EVENTID, eventId);
-        baseActivity.startActivity(intent);
+        context.startActivity(intent);
     }
 
     @Override
@@ -66,6 +67,8 @@ public class EventActivity extends ResourceActivity implements AppBarLayout.OnOf
 
         if (event != null ) {
             setEventDetails(event);
+        } else {
+            FetLifeApiIntentService.startApiCall(this,FetLifeApiIntentService.ACTION_APICALL_EVENT,eventId);
         }
 
         viewPager = (ViewPager) findViewById(R.id.pager);

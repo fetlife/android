@@ -27,6 +27,7 @@ import com.bitlove.fetlife.view.screen.component.MenuActivityComponent;
 import com.bitlove.fetlife.view.screen.resource.groups.GroupActivity;
 import com.bitlove.fetlife.view.screen.resource.groups.GroupMessagesActivity;
 import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity;
+import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity;
 
 import androidx.core.app.ActivityOptionsCompat;
 
@@ -102,7 +103,8 @@ public class FeedActivity extends ResourceListActivity<Story> implements FeedRec
             if (targetWriting != null) {
                 targetWriting.save();
 //                WritingActivity.startActivity(this,targetWriting.getId(), targetWriting.getMemberId());
-                TurboLinksViewActivity.startActivity(this,targetWriting.getUrl(),targetWriting.getTitle(), false, null, null, false);
+                FetLifeWebViewActivity.Companion.startActivity(this,targetWriting.getUrl(),false,null, false, null);
+//                TurboLinksViewActivity.startActivity(this,targetWriting.getUrl(),targetWriting.getTitle(), false, null, null, false);
                 return;
             }
         } else if (feedStoryType == Story.FeedStoryType.STATUS_COMMENT_CREATED || feedStoryType == Story.FeedStoryType.STATUS_CREATED) {
@@ -111,7 +113,8 @@ public class FeedActivity extends ResourceListActivity<Story> implements FeedRec
                 targetStatus.save();
                 Member member = targetStatus.getMember();
                 String nickname = member != null ? getString(R.string.title_activity_status,member.getNickname()) : "";
-                TurboLinksViewActivity.startActivity(this,targetStatus.getUrl(),nickname, false, null, null, false);
+                FetLifeWebViewActivity.Companion.startActivity(this,targetStatus.getUrl(),false,null, false, null);
+//                TurboLinksViewActivity.startActivity(this,targetStatus.getUrl(),nickname, false, null, null, false);
                 return;
             }
         } else if (feedStoryType == Story.FeedStoryType.RSVP_CREATED) {

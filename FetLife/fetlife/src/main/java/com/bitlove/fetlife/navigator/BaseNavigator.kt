@@ -6,12 +6,12 @@ import com.bitlove.fetlife.model.service.FetLifeApiIntentService
 import com.bitlove.fetlife.view.screen.BaseActivity
 import com.bitlove.fetlife.view.screen.resource.ExploreActivity
 import com.bitlove.fetlife.view.screen.resource.NotificationHistoryActivity
-import com.bitlove.fetlife.view.screen.resource.TurboLinksViewActivity
 import com.bitlove.fetlife.view.screen.resource.groups.GroupsActivity
 import com.bitlove.fetlife.view.screen.resource.members.MembersActivity
 import com.bitlove.fetlife.view.screen.standalone.LoginActivity
 import com.bitlove.fetlife.view.screen.standalone.ReleaseNotesActivity
 import com.bitlove.fetlife.view.screen.standalone.SettingsActivity
+import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity
 
 open class BaseNavigator (val baseActivity: BaseActivity){
 
@@ -29,7 +29,7 @@ open class BaseNavigator (val baseActivity: BaseActivity){
             }
 //            R.id.nav_conversations -> ConversationsActivity.startActivity(baseActivity, false)
             R.id.nav_members -> MembersActivity.startActivity(baseActivity, false)
-            R.id.nav_about -> TurboLinksViewActivity.startActivity(baseActivity,"android",baseActivity.getString(R.string.title_activity_about))
+            R.id.nav_about -> FetLifeWebViewActivity.startActivity(baseActivity,"android",true,null, false, null)
 //            R.id.nav_friendrequests -> TurboLinksViewActivity.startActivity(baseActivity,"requests",baseActivity.getString(R.string.title_activity_friendrequests))
             R.id.nav_relnotes -> ReleaseNotesActivity.startActivity(baseActivity)
 //            R.id.nav_notifications -> TurboLinksViewActivity.startActivity(baseActivity,"notifications",baseActivity.getString(R.string.title_activity_notifications))
@@ -53,10 +53,10 @@ open class BaseNavigator (val baseActivity: BaseActivity){
             R.id.nav_stuff_you_love -> ExploreActivity.startActivity(baseActivity, ExploreActivity.Explore.STUFF_YOU_LOVE)
             R.id.nav_fresh_and_pervy -> ExploreActivity.startActivity(baseActivity, ExploreActivity.Explore.FRESH_AND_PERVY)
             R.id.nav_kinky_and_popular -> ExploreActivity.startActivity(baseActivity, ExploreActivity.Explore.KINKY_AND_POPULAR)
-            R.id.nav_support -> TurboLinksViewActivity.startActivity(baseActivity,"support",baseActivity.getString(R.string.title_activity_support))
-            R.id.nav_ads -> TurboLinksViewActivity.startActivity(baseActivity,"ads",baseActivity.getString(R.string.title_activity_ads))
-            R.id.nav_glossary -> TurboLinksViewActivity.startActivity(baseActivity,"glossary",baseActivity.getString(R.string.title_activity_glossary))
-            R.id.nav_team -> TurboLinksViewActivity.startActivity(baseActivity,"team",baseActivity.getString(R.string.title_activity_team))
+            R.id.nav_support -> FetLifeWebViewActivity.startActivity(baseActivity,"support",true,null, false, null)
+            R.id.nav_ads -> FetLifeWebViewActivity.startActivity(baseActivity,"ads",true,null, false, null)
+            R.id.nav_glossary -> FetLifeWebViewActivity.startActivity(baseActivity,"glossary",true,null, false, null)
+            R.id.nav_team -> FetLifeWebViewActivity.startActivity(baseActivity,"team",true,null, false, null)
             R.id.nav_events -> {
 //                if (isLocationPermissionGranted()) {
 //                    EventsActivity.startActivity(menuActivity);
