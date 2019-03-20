@@ -54,7 +54,7 @@ class WebAppNavigation {
         private const val URL_REGEX_EVENT = "^$REGEX_BASE_URL\\/events\\/(\\w+)[^\\/]*\$"
         private const val URL_REGEX_GROUP = "^$REGEX_BASE_URL\\/groups\\/(\\w+)[^\\/]*\$"
         private const val URL_REGEX_GROUP_POST = "^$REGEX_BASE_URL\\/groups\\/(\\w+)\\/group_posts\\/(\\w+)[^\\/]*\$"
-        private const val URL_REGEX_USER_PROFILE = "^$REGEX_BASE_URL\\/users\\/(\\w+)[^\\/]*\$"
+        private const val URL_REGEX_USER_PROFILE = "^$REGEX_BASE_URL\\/users\\/([0-9]+)[^\\/]*\$"
         private const val URL_REGEX_USER_PICTURE = "^$REGEX_BASE_URL\\/users\\/(\\w+)\\/pictures\\/(\\w+)[^\\/]*\$"
         private const val URL_REGEX_USER_VIDEO = "^$REGEX_BASE_URL\\/users\\/(\\w+)\\/videos\\/(\\w+)[^\\/]*\$"
 
