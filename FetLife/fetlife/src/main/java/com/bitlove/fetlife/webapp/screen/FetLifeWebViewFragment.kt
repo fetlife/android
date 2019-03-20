@@ -113,8 +113,10 @@ class FetLifeWebViewFragment : Fragment() {
                     return if (navigated) {
                         true
                     } else {
-                        //TODO(WEBAPP): remove App Ids
-                        super.shouldOverrideUrlLoading(webView, request)
+                        request?.url.toString().let {
+                            webView?.loadUrl(it,createRequestHeaders())
+                        }
+                        true
                     }
                 }
 
@@ -144,18 +146,22 @@ class FetLifeWebViewFragment : Fragment() {
                 }
             }
 
-            val headers = HashMap<String,String>()
-            val accessToken = FetLifeApplication.getInstance().userSessionManager.currentUser?.accessToken
-            if (accessToken != null) {
-                val authHeader = FetLifeService.AUTH_HEADER_PREFIX + accessToken
-                headers.put("Authorization", authHeader)
-            }
-            headers.put("X-Fetlife-Webview", "1")
-            headers.put("X-Fetlife-Android", VersionUtil.getCurrentVersionInt(context).toString())
-            web_view.loadUrl(url,headers)
+            web_view.loadUrl(url,createRequestHeaders())
             url?.let {
                 FetLifeApplication.getInstance().actionCable.tryConnect(context,url)
             }
+        }
+    }
+
+    private fun createRequestHeaders(): MutableMap<String, String>? {
+        return HashMap<String,String>().apply {
+            val accessToken = FetLifeApplication.getInstance().userSessionManager.currentUser?.accessToken
+            if (accessToken != null) {
+                val authHeader = FetLifeService.AUTH_HEADER_PREFIX + accessToken
+                put("Authorization", authHeader)
+            }
+            put("X-Fetlife-Webview", "1")
+            put("X-Fetlife-Android", VersionUtil.getCurrentVersionInt(context).toString())
         }
     }
 
