@@ -58,6 +58,7 @@ public class ConversationsActivity extends ResourceListActivity<Conversation> {
         if (shareUrl != null) {
             intent.putExtra(EXTRA_SHARE_URL, shareUrl);
         }
+        intent.putExtra(BaseActivity.EXTRA_HAS_BOTTOM_BAR,true);
         intent.putExtra(BaseActivity.EXTRA_SELECTED_BOTTOM_NAV_ITEM,R.id.navigation_bottom_inbox);
         return intent;
     }
