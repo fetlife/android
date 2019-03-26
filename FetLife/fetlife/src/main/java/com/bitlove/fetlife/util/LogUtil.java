@@ -21,12 +21,13 @@ public class LogUtil {
             return;
         }
 
+        String log = DateUtil.toServerString(System.currentTimeMillis()) + " - " + message + "\n";
+        localLog += log;
+
         try {
             File file = new File(FetLifeApplication.getInstance().getExternalFilesDir(null),"extra.log");
             if (!file.exists()) file.createNewFile();
             FileOutputStream fos = new FileOutputStream(file,true);
-            String log = DateUtil.toServerString(System.currentTimeMillis()) + " - " + message + "\n";
-            localLog += log;
             fos.write(log.getBytes());
             fos.close();
         } catch (Throwable t) {
