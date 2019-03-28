@@ -4,6 +4,7 @@
     <string name="settings_key_notification_color">settings_key_notification_color</string>
     <string name="settings_key_notification_vibrate">settings_key_notification_vibrate</string>
     <string name="settings_key_general_feed_as_start">settings_key_general_feed_as_start</string>
+    <string name="settings_key_general_update_auto_download">settings_key_general_update_auto_download</string>
     <string name="settings_key_general_vanilla">settings_key_general_vanilla</string>
     <string name="settings_key_notification_anonymtext">notification_text_anonym</string>
     <string name="settings_key_notification_messages_enabled">notification_messages_enabled</string>

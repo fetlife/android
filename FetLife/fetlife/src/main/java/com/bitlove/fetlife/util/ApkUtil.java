@@ -25,7 +25,7 @@ public class ApkUtil {
 
             //get destination to update file and set Uri
             //TODO: First I wanted to store my update .apk file on internal storage for my app but apparently android does not allow you to open and install
-            //aplication with existing package from there. So for me, alternative solution is Download directory in external storage. If there is better
+            //application with existing package from there. So for me, alternative solution is Download directory in external storage. If there is better
             //solution, please inform us in comment
             String destination = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/";
             String[] urlParts = url.split("/");

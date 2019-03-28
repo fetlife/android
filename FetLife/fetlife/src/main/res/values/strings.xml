@@ -452,6 +452,10 @@
 
     <!-- *** Settings texts *** -->
 
+
+    <string name="settings_category_general_update">App update Setting</string>
+    <string name="settings_title_general_update_auto_download">Auto download available updates</string>
+    <string name="settings_summary_general_update_auto_download">Enable downloading updated version of this App automatically. You will be still prompted to start installation after download.</string>
     <string name="settings_category_general_start">Start Screen Setting</string>
     <string name="settings_title_general_feed_as_start">Use Activity Feed as start screen</string>
     <string name="settings_summary_general_feed_as_start">Show Activity Feed Screen after opening the App</string>
@@ -691,12 +695,16 @@
     <string name="action_settings">Android Settings</string>
     <string name="settings_title_general">General Settings</string>
     <string name="settings_summary_general">Manage general App settings</string>
-    <string name="notification_title_new_release">New FetLife App - Stable Version</string>
-    <string name="notification_toast_new_release">New FetLife App Stable Version is available</string>
-    <string name="notification_text_new_release">Click to Download version %1$s</string>
-    <string name="notification_title_new_prerelease">New FetLife App - Preview Version</string>
-    <string name="notification_toast_new_prerelease">New FetLife App Preview version is available</string>
-    <string name="notification_text_new_prerelease">Click to download version %1$s\n</string>
+    <string name="notification_title_new_release_download">New stable version is available to download</string>
+    <!--<string name="notification_toast_new_release">New FetLife App Stable Version is available</string>-->
+    <string name="notification_text_new_release_download">Would you like to download it now?</string>
+    <string name="notification_title_new_prerelease_download">New beta version is available to download</string>
+    <!--<string name="notification_toast_new_prerelease">New FetLife App Preview version is available</string>-->
+    <string name="notification_text_new_prerelease_download">Would you like to download it now?</string>
+    <string name="notification_title_new_release_install">New stable version has been downloaded</string>
+    <string name="notification_text_new_release_install">Would you like to install it now?</string>
+    <string name="notification_title_new_prerelease_install">New beta version has been downloaded</string>
+    <string name="notification_text_new_prerelease_install">Would you like to install it now?</string>
     <string name="message_friend_request_sent">Friend Request has been sent to %1$s</string>
     <string name="message_follow_set">You are following %1$s</string>
     <string name="message_unfollow_set">You are no longer following %1$s</string>

@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
+import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.event.AuthenticationFailedEvent;
 import com.bitlove.fetlife.event.LatestReleaseEvent;
@@ -27,8 +28,10 @@ import com.bitlove.fetlife.model.pojos.fetlife.db.NotificationHistoryItem;
 import com.bitlove.fetlife.model.pojos.github.Release;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.model.service.ServiceCallCancelReceiver;
+import com.bitlove.fetlife.util.ApkUtil;
 import com.bitlove.fetlife.util.NotificationUtil;
 import com.bitlove.fetlife.util.VersionUtil;
+import com.bitlove.fetlife.view.dialog.ConfirmationDialog;
 import com.bitlove.fetlife.view.screen.BaseActivity;
 
 import java.util.HashMap;
@@ -146,9 +149,20 @@ public class EventDisplayHandler {
     }
 
     private void notifyAboutNewRelease(BaseActivity baseActivity, Release release) {
-        String header = baseActivity.getString(release.isPrerelease() ? R.string.notification_title_new_prerelease : R.string.notification_title_new_release);
-        String message = baseActivity.getString(release.isPrerelease() ? R.string.notification_text_new_prerelease : R.string.notification_text_new_release,release.getTag());
-        String url = release.getReleaseUrl();
+        boolean isUpdateDownloaded = false;
+
+        String header = null;
+        String message = null;
+
+        if (isUpdateDownloaded) {
+            header = baseActivity.getString(release.isPrerelease() ? R.string.notification_title_new_prerelease_install : R.string.notification_title_new_release_install);
+            message = baseActivity.getString(release.isPrerelease() ? R.string.notification_text_new_prerelease_install : R.string.notification_text_new_release_install,release.getTag());
+        } else {
+            header = baseActivity.getString(release.isPrerelease() ? R.string.notification_title_new_prerelease_download : R.string.notification_title_new_release_download);
+            message = baseActivity.getString(release.isPrerelease() ? R.string.notification_text_new_prerelease_download : R.string.notification_text_new_release_download,release.getTag());
+        }
+
+        final String url = release.getReleaseUrl();
 
 //        NotificationHistoryItem notificationHistoryItem = new NotificationHistoryItem();
 //        notificationHistoryItem.setTimeStamp(System.currentTimeMillis());
@@ -157,12 +171,21 @@ public class EventDisplayHandler {
 //        notificationHistoryItem.setLaunchUrl(UpdateNotification.getInnerLaunchUrl(url));
 //        notificationHistoryItem.save();
 
-        Intent notificationIntent = new Intent(baseActivity, UpdateBroadcastReceiver.class);
-        notificationIntent.putExtra(UpdateBroadcastReceiver.EXTRA_URL,url);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(baseActivity, 0, notificationIntent, 0);
-        NotificationUtil.showMessageNotification(baseActivity.getFetLifeApplication(),NotificationUtil.RELEASE_NOTIFICATION_ID,header,message,pendingIntent);
+//        Intent notificationIntent = new Intent(baseActivity, UpdateBroadcastReceiver.class);
+//        notificationIntent.putExtra(UpdateBroadcastReceiver.EXTRA_URL,url);
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(baseActivity, 0, notificationIntent, 0);
+//        NotificationUtil.showMessageNotification(baseActivity.getFetLifeApplication(),NotificationUtil.RELEASE_NOTIFICATION_ID,header,message,pendingIntent);
+//
+//        baseActivity.showToast(baseActivity.getString(release.isPrerelease() ? R.string.notification_toast_new_prerelease : R.string.notification_toast_new_release));
 
-        baseActivity.showToast(baseActivity.getString(release.isPrerelease() ? R.string.notification_toast_new_prerelease : R.string.notification_toast_new_release));
+        String positiveButtonText = baseActivity.getString(R.string.button_dialog_yes);
+        ConfirmationDialog.OnClickListener positiveButtonClickListener = new ConfirmationDialog.OnClickListener() {
+            @Override
+            public void onClick(ConfirmationDialog profileConfirmationDialog) {
+                ApkUtil.installApk(FetLifeApplication.getInstance(),url);
+            }
+        };
+        ConfirmationDialog.newInstance(header,message,true).setRightButton(positiveButtonText,positiveButtonClickListener);
     }
 
     private int getNotificationIdFromMediaId(String mediaId) {

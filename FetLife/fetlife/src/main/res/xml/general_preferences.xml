@@ -23,4 +23,15 @@
 
     </com.bitlove.fetlife.view.widget.BoldPreferenceCategory>
 
+    <com.bitlove.fetlife.view.widget.BoldPreferenceCategory
+        android:title="@string/settings_category_general_update">
+
+        <CheckBoxPreference
+            android:key="@string/settings_key_general_update_auto_download"
+            android:defaultValue="@string/settings_default_general_update_auto_download"
+            android:title="@string/settings_title_general_update_auto_download"
+            android:summary="@string/settings_summary_general_update_auto_download"/>
+
+    </com.bitlove.fetlife.view.widget.BoldPreferenceCategory>
+
 </PreferenceScreen>

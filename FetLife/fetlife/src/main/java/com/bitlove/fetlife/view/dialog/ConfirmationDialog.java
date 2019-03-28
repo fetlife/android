@@ -21,6 +21,7 @@ public class ConfirmationDialog extends DialogFragment {
     private static final String FRAGMENT_TAG = ConfirmationDialog.class.getSimpleName();
     private static final String ARG_TITLE = "ARG_TITLE";
     private static final String ARG_MESSAGE = "ARG_MESSAGE";
+    private static final String ARG_ADD_CANCEL_BUTTON = "ARG_ADD_CANCEL_BUTTON";
 
     private String leftButtonText = "";
     private String rightButtonText = "";
@@ -28,10 +29,15 @@ public class ConfirmationDialog extends DialogFragment {
     private OnClickListener rightButtonListener = null;
 
     public static ConfirmationDialog newInstance(String title, String message) {
+        return newInstance(title, message, false);
+    }
+
+    public static ConfirmationDialog newInstance(String title, String message, boolean addCancelButton) {
         ConfirmationDialog profileConfirmationDialog = new ConfirmationDialog();
         Bundle args = new Bundle();
         args.putString(ARG_TITLE, title);
         args.putString(ARG_MESSAGE, message);
+        args.putBoolean(ARG_ADD_CANCEL_BUTTON, addCancelButton);
         profileConfirmationDialog.setArguments(args);
         return profileConfirmationDialog;
     }
@@ -92,6 +98,16 @@ public class ConfirmationDialog extends DialogFragment {
                 @Override
                 public void onClick(View v) {
                     leftButtonListener.onClick(ConfirmationDialog.this);
+                }
+            });
+        } else if (getArguments().getBoolean(ARG_ADD_CANCEL_BUTTON,false)) {
+            Button leftButton = (Button) view.findViewById(R.id.dialogNegativeButton);
+            leftButton.setText(getActivity().getString(android.R.string.cancel));
+            leftButton.setVisibility(View.VISIBLE);
+            leftButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dismissAllowingStateLoss();
                 }
             });
         }

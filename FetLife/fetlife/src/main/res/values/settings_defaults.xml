@@ -2,6 +2,7 @@
 <resources>
     <string name="settings_default_general_vanilla">false</string>
     <string name="settings_default_general_feed_as_start">false</string>
+    <string name="settings_default_general_update_auto_download">false</string>
     <string name="settings_default_notification_anonymtext">false</string>
     <string name="settings_default_notification_ringtone">default</string>
     <string name="settings_default_notification_color">none</string>
