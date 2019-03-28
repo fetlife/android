@@ -3,7 +3,6 @@ package com.bitlove.fetlife.view.screen.component;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
@@ -23,12 +22,10 @@ import com.bitlove.fetlife.event.VideoChunkUploadFailedEvent;
 import com.bitlove.fetlife.event.VideoChunkUploadFinishedEvent;
 import com.bitlove.fetlife.event.VideoChunkUploadStartedEvent;
 import com.bitlove.fetlife.event.VideoUploadFailedEvent;
-import com.bitlove.fetlife.inbound.onesignal.update.UpdateBroadcastReceiver;
-import com.bitlove.fetlife.model.pojos.fetlife.db.NotificationHistoryItem;
 import com.bitlove.fetlife.model.pojos.github.Release;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.model.service.ServiceCallCancelReceiver;
-import com.bitlove.fetlife.util.ApkUtil;
+import com.bitlove.fetlife.util.UpdateUtil;
 import com.bitlove.fetlife.util.NotificationUtil;
 import com.bitlove.fetlife.util.VersionUtil;
 import com.bitlove.fetlife.view.dialog.ConfirmationDialog;
@@ -148,21 +145,43 @@ public class EventDisplayHandler {
         }
     }
 
-    private void notifyAboutNewRelease(BaseActivity baseActivity, Release release) {
-        boolean isUpdateDownloaded = false;
-
-        String header = null;
-        String message = null;
-
-        if (isUpdateDownloaded) {
-            header = baseActivity.getString(release.isPrerelease() ? R.string.notification_title_new_prerelease_install : R.string.notification_title_new_release_install);
-            message = baseActivity.getString(release.isPrerelease() ? R.string.notification_text_new_prerelease_install : R.string.notification_text_new_release_install,release.getTag());
-        } else {
-            header = baseActivity.getString(release.isPrerelease() ? R.string.notification_title_new_prerelease_download : R.string.notification_title_new_release_download);
-            message = baseActivity.getString(release.isPrerelease() ? R.string.notification_text_new_prerelease_download : R.string.notification_text_new_release_download,release.getTag());
-        }
+    private void notifyAboutNewRelease(Context context, final Release release) {
 
         final String url = release.getReleaseUrl();
+        final String version = release.getTag();
+
+        if (UpdateUtil.isVersionDownloaded(version)) {
+            String header = context.getString(release.isPrerelease() ? R.string.notification_title_new_prerelease_install : R.string.notification_title_new_release_install);
+            String message = context.getString(release.isPrerelease() ? R.string.notification_text_new_prerelease_install : R.string.notification_text_new_release_install,release.getTag());
+            String positiveButtonText = context.getString(R.string.button_dialog_yes);
+            ConfirmationDialog.OnClickListener positiveButtonClickListener = new ConfirmationDialog.OnClickListener() {
+                @Override
+                public void onClick(ConfirmationDialog profileConfirmationDialog) {
+                    //TODO: check permissions
+                    UpdateUtil.installApk(version);
+                }
+            };
+            ConfirmationDialog.newInstance(header,message,true).setRightButton(positiveButtonText,positiveButtonClickListener);
+        } else {
+            boolean autoDownloadUpdates = FetLifeApplication.getInstance().getUserSessionManager().getActiveUserPreferences().getBoolean(context.getString(R.string.settings_key_general_update_auto_download),false);
+            if (autoDownloadUpdates) {
+                //TODO: check permissions
+                UpdateUtil.downloadApk(url,version);
+                return;
+            } else {
+                String header = context.getString(release.isPrerelease() ? R.string.notification_title_new_prerelease_download : R.string.notification_title_new_release_download);
+                String message = context.getString(release.isPrerelease() ? R.string.notification_text_new_prerelease_download : R.string.notification_text_new_release_download,release.getTag());
+                String positiveButtonText = context.getString(R.string.button_dialog_yes);
+                ConfirmationDialog.OnClickListener positiveButtonClickListener = new ConfirmationDialog.OnClickListener() {
+                    @Override
+                    public void onClick(ConfirmationDialog profileConfirmationDialog) {
+                        //TODO: check permissions
+                        UpdateUtil.downloadApk(url,version);
+                    }
+                };
+                ConfirmationDialog.newInstance(header,message,true).setRightButton(positiveButtonText,positiveButtonClickListener);
+            }
+        }
 
 //        NotificationHistoryItem notificationHistoryItem = new NotificationHistoryItem();
 //        notificationHistoryItem.setTimeStamp(System.currentTimeMillis());
@@ -178,14 +197,6 @@ public class EventDisplayHandler {
 //
 //        baseActivity.showToast(baseActivity.getString(release.isPrerelease() ? R.string.notification_toast_new_prerelease : R.string.notification_toast_new_release));
 
-        String positiveButtonText = baseActivity.getString(R.string.button_dialog_yes);
-        ConfirmationDialog.OnClickListener positiveButtonClickListener = new ConfirmationDialog.OnClickListener() {
-            @Override
-            public void onClick(ConfirmationDialog profileConfirmationDialog) {
-                ApkUtil.installApk(FetLifeApplication.getInstance(),url);
-            }
-        };
-        ConfirmationDialog.newInstance(header,message,true).setRightButton(positiveButtonText,positiveButtonClickListener);
     }
 
     private int getNotificationIdFromMediaId(String mediaId) {

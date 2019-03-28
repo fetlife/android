@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 
 import com.bitlove.fetlife.FetLifeApplication;
-import com.bitlove.fetlife.util.ApkUtil;
+import com.bitlove.fetlife.util.UpdateUtil;
 import com.crashlytics.android.Crashlytics;
 
 import androidx.annotation.NonNull;
@@ -19,6 +19,8 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 
 public class UpdatePermissionActivity extends Activity {
+
+    //Todo make generic for download / install invoked separate
 
     private static final String EXTRA_URL = "EXTRA_URL";
 
@@ -107,7 +109,7 @@ public class UpdatePermissionActivity extends Activity {
 
     private void startInternalApkInstall() {
         String url = getIntent().getStringExtra(EXTRA_URL);
-        ApkUtil.installApk(FetLifeApplication.getInstance(),url);
+        UpdateUtil.installApk(url);
         finish();
     }
 
