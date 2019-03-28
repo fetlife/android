@@ -3,9 +3,12 @@ package com.bitlove.fetlife.util;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
+import android.widget.Toast;
 
 import com.bitlove.fetlife.BuildConfig;
 import com.bitlove.fetlife.FetLifeApplication;
+import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.crashlytics.android.Crashlytics;
 
 import java.io.File;
@@ -44,8 +47,18 @@ public class LogUtil {
         ClipboardManager clipboard = (ClipboardManager) FetLifeApplication.getInstance().getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("FetLife Log", localLog);
         clipboard.setPrimaryClip(clip);
+
+        Toast.makeText(FetLifeApplication.getInstance(),"Your logs copied to your clipboard", Toast.LENGTH_LONG).show();
         
         return localLog;
+    }
+
+    public static void shareLogs(Context context) {
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        sharingIntent.setType("text/plain");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "FetLife Logs");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, localLog);
+        context.startActivity(Intent.createChooser(sharingIntent, "Share FetLife Logs"));
     }
 
 }
