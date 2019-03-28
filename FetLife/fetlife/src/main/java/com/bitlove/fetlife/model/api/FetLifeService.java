@@ -40,6 +40,7 @@ public class FetLifeService {
     private final FetLifeMultipartUploadApi fetLifeMultipartUploadApi;
 
     private int lastResponseCode = -1;
+    private String lastResponseBody = "null";
 
     public FetLifeService(final FetLifeApplication fetLifeApplication) throws Exception {
 
@@ -115,6 +116,7 @@ public class FetLifeService {
                 Response response = chain.proceed(request);
                 //response.body().string();
                 lastResponseCode = response.code();
+                lastResponseBody = response.body() != null ? response.body().string() : "null";
                 return response;
             }
         });
@@ -137,6 +139,10 @@ public class FetLifeService {
 
     public int getLastResponseCode() {
         return lastResponseCode;
+    }
+
+    public String getLastResponseBody() {
+        return lastResponseBody;
     }
 
     private Certificate loadCertificate(Context context) {
