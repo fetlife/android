@@ -2,6 +2,7 @@ package com.bitlove.fetlife.webapp.screen
 
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,6 +18,7 @@ import com.bitlove.fetlife.event.ServiceCallFinishedEvent
 import com.bitlove.fetlife.event.ServiceCallStartedEvent
 import com.bitlove.fetlife.model.api.FetLifeService
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService
+import com.bitlove.fetlife.util.LogUtil
 import com.bitlove.fetlife.util.ServerIdUtil
 import com.bitlove.fetlife.util.VersionUtil
 import com.bitlove.fetlife.webapp.communication.WebViewInterface
@@ -76,6 +78,7 @@ class FetLifeWebViewFragment : Fragment() {
             }
             web_view.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(webView: WebView?, url: String?) {
+                    LogUtil.writeLog("onPageFinished($url)")
                     //web_view_progress_bar.visibility = View.GONE
                     dismissProgress()
                     val navigationTitleId = FetLifeApplication.getInstance().webAppNavigation.getTitle(url)
@@ -109,6 +112,7 @@ class FetLifeWebViewFragment : Fragment() {
                 }
 
                 override fun shouldOverrideUrlLoading(webView: WebView?, request: WebResourceRequest?): Boolean {
+                    LogUtil.writeLog("shouldOverrideUrlLoading(${request?.url})")
                     val navigated = FetLifeApplication.getInstance().webAppNavigation.navigate(request?.url, webView, activity)
                     return if (navigated) {
                         true
@@ -119,6 +123,7 @@ class FetLifeWebViewFragment : Fragment() {
                 }
 
                 override fun onPageCommitVisible(webView: WebView?, url: String?) {
+                    LogUtil.writeLog("onPageCommitVisible($url)")
                     super.onPageCommitVisible(webView, url)
                     val navigationTitleId = FetLifeApplication.getInstance().webAppNavigation.getTitle(url)
                     val navigationTitle = if (navigationTitleId != null) webView?.context?.getString(navigationTitleId) else null
@@ -126,9 +131,14 @@ class FetLifeWebViewFragment : Fragment() {
                 }
 
                 override fun onReceivedError(webView: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        LogUtil.writeLog("onReceivedError(${request?.url},${error?.errorCode}:${error?.description})")
+                    } else {
+                        LogUtil.writeLog("onReceivedError(${request?.url},${error?.toString()}")
+                    }
                     super.onReceivedError(webView, request, error)
                     dismissProgress()
-                    if (activity?.isFinishing != true) {
+                    if (activity?.isFinishing == false) {
                         webView?.let {
                             it.context.showToast(getString(R.string.error_webview_failed))
                             it.clearCache(false)
@@ -139,6 +149,7 @@ class FetLifeWebViewFragment : Fragment() {
                 }
 
                 override fun onPageStarted(webView: WebView?, url: String?, favicon: Bitmap?) {
+                    LogUtil.writeLog("onPageStarted($url)")
                     super.onPageStarted(webView, url, favicon)
                     showProgress()
                 }

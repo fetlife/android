@@ -12,6 +12,7 @@ import com.bitlove.fetlife.R
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.*
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService
 import com.bitlove.fetlife.util.ColorUtil
+import com.bitlove.fetlife.util.LogUtil
 import com.bitlove.fetlife.util.PictureUtil
 import com.bitlove.fetlife.util.UrlUtil
 import com.bitlove.fetlife.view.screen.BaseActivity
@@ -317,14 +318,18 @@ class WebAppNavigation {
 
         for ((uriRegex,parentRegex) in parentMap) {
             if (uriRegex.toRegex().matches(currentUrl) && parentRegex.toRegex().matches(targetUrl)) {
+                LogUtil.writeLog("isParent($targetUrl,$currentUrl) = true")
                 return true
             }
         }
 
         if (currentUrl.startsWith(targetUrl)) {
-            return webView.canGoBack()
+            return webView.canGoBack().apply {
+                LogUtil.writeLog("isParent($targetUrl,$currentUrl) = $this")
+            }
         }
 
+        LogUtil.writeLog("isParent($targetUrl,$currentUrl) = false")
         return false
     }
 
@@ -346,14 +351,19 @@ class WebAppNavigation {
     }
 
     private fun isFetLifeLink(uri: Uri): Boolean {
-        return URL_REGEX_INTERNAL_LINK.toRegex().matches(uri.toString())
+        return URL_REGEX_INTERNAL_LINK.toRegex().matches(uri.toString()).apply {
+            LogUtil.writeLog("isFetLifeLink(${uri?.toString()}) = $this")
+        }
     }
 
     private fun isDownloadLink(uri: Uri): Boolean {
-        return URL_REGEX_DOWNLOAD_LINK.toRegex().containsMatchIn(uri.toString())
+        return URL_REGEX_DOWNLOAD_LINK.toRegex().containsMatchIn(uri.toString()).apply {
+            LogUtil.writeLog("isDownloadLink(${uri?.toString()}) = $this")
+        }
     }
 
     private fun handleNativeSupportedLink(uri: Uri, currentUrl: String, context: Context): Boolean {
+
 
         var nativeClassIdentifier : String? = null
         for ((uriRegex,classIdentifier) in nativeNavigationMap) {
@@ -362,6 +372,9 @@ class WebAppNavigation {
                 break
             }
         }
+
+        LogUtil.writeLog("handleNativeSupportedLink(${uri?.toString()},$currentUrl) = $nativeClassIdentifier")
+
         if (nativeClassIdentifier == null) {
             return false
         }
@@ -412,31 +425,38 @@ class WebAppNavigation {
     private fun openAsNewWebViewFlow(uri: Uri, currentUrl: String): Boolean {
         for (uriRegex in newWebViewFlowLinkSetSet) {
             if (uriRegex.toRegex().matches(uri.toString()) && !uriRegex.toRegex().matches(currentUrl)) {
+                LogUtil.writeLog("openAsNewWebViewFlow(${uri?.toString()},$currentUrl) = true")
                 return true
             }
         }
+        LogUtil.writeLog("openAsNewWebViewFlow(${uri?.toString()},$currentUrl) = false")
         return false
     }
 
     private fun openInPlaceWithNoHistory(uri: Uri, currentUrl: String): Boolean {
         //TODO(WEBAPP): FIND BETTER THAN THIS WORKAROUND
         if (URL_REGEX_PRIVACY_MAIN.toRegex().matches(uri.toString())) {
+            LogUtil.writeLog("openInPlaceWithNoHistory(${uri?.toString()},$currentUrl) = false")
             return false
         }
         for (uriRegex in inPlaceOpenWithNoHistoryLinkSet) {
             if (uriRegex.toRegex().matches(uri.toString()) && !uriRegex.toRegex().matches(currentUrl)) {
+                LogUtil.writeLog("openInPlaceWithNoHistory(${uri?.toString()},$currentUrl) = true")
                 return true
             }
         }
+        LogUtil.writeLog("openInPlaceWithNoHistory(${uri?.toString()},$currentUrl) = false")
         return false
     }
 
     private fun openInPlace(uri: Uri): Boolean {
         for (uriRegex in inPlaceOpenLinkSet) {
             if (uriRegex.toRegex().matches(uri.toString())) {
+                LogUtil.writeLog("openInPlace(${uri?.toString()}) = true")
                 return true
             }
         }
+        LogUtil.writeLog("openInPlace(${uri?.toString()}) = false")
         return false
     }
 

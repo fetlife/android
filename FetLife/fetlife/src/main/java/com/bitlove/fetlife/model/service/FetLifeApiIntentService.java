@@ -105,6 +105,7 @@ import com.bitlove.fetlife.session.UserSessionManager;
 import com.bitlove.fetlife.util.BytesUtil;
 import com.bitlove.fetlife.util.DateUtil;
 import com.bitlove.fetlife.util.FileUtil;
+import com.bitlove.fetlife.util.LogUtil;
 import com.bitlove.fetlife.util.MapUtil;
 import com.bitlove.fetlife.util.MessageDuplicationDebugUtil;
 import com.bitlove.fetlife.util.NetworkUtil;
@@ -2771,6 +2772,7 @@ public class FetLifeApiIntentService extends JobIntentService {
     }
 
     private void sendLoadFailedNotification(String action, String... params) {
+        LogUtil.writeLog("sendLoadFailedNotification("+action+"):"+getFetLifeApplication().getFetLifeService().getLastResponseCode()+":"+getFetLifeApplication().getFetLifeService().getLastResponseBody());
         switch (action) {
             case ACTION_APICALL_LOGON_USER:
                 getFetLifeApplication().getEventBus().post(new LoginFailedEvent());
@@ -2785,6 +2787,7 @@ public class FetLifeApiIntentService extends JobIntentService {
     }
 
     private void sendConnectionFailedNotification(String action, String... params) {
+        LogUtil.writeLog("sendConnectionFailedNotification("+action+"):"+getFetLifeApplication().getFetLifeService().getLastResponseCode()+":"+getFetLifeApplication().getFetLifeService().getLastResponseBody());
         switch (action) {
             case ACTION_APICALL_LOGON_USER:
                 getFetLifeApplication().getEventBus().post(new LoginFailedEvent(true));

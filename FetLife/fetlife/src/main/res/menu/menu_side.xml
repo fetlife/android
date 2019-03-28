@@ -16,6 +16,12 @@
             <!--android:title="@string/menu_feed" />-->
 
         <item
+            android:id="@+id/nav_show_logs"
+            android:icon="@drawable/ic_view"
+            android:iconTint="@color/side_menu_icon"
+            android:title="Share Logs" />
+
+        <item
             android:id="@+id/nav_kinky_and_popular"
             android:icon="@drawable/ic_view_day_black_24dp"
             android:iconTint="@color/side_menu_icon"
