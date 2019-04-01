@@ -46,4 +46,4 @@ Otherwise if you are 100% there is no sensitive information appear on the screen
  - App version. [e.g. 2.22.1]
 
 **Additional context**
-If you have anything to add the information above, please do it here
+If you have anything else to add to the information above, please do it here
