@@ -2,6 +2,7 @@ package com.bitlove.fetlife.webapp.screen
 
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -24,6 +25,7 @@ import com.bitlove.fetlife.webapp.kotlin.getBooleanArgument
 import com.bitlove.fetlife.webapp.kotlin.getStringArgument
 import com.bitlove.fetlife.webapp.kotlin.showToast
 import com.bitlove.fetlife.webapp.navigation.WebAppNavigation
+import com.crashlytics.android.Crashlytics
 import kotlinx.android.synthetic.main.tool_bar_default.*
 import kotlinx.android.synthetic.main.tool_bar_default.view.*
 import kotlinx.android.synthetic.main.webapp_fragment_webview.*
@@ -129,15 +131,20 @@ class FetLifeWebViewFragment : Fragment() {
 
                 override fun onReceivedError(webView: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
                     super.onReceivedError(webView, request, error)
-                    dismissProgress()
-                    if (activity?.isFinishing != true) {
-                        webView?.let {
-                            it.context.showToast(getString(R.string.error_webview_failed))
-                            it.clearCache(false)
-                            it.clearHistory()
-                            it.loadUrl("about:blank")
-                        }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        Crashlytics.logException(Exception("request: ${request?.url}, error: ${error?.errorCode}-${error?.description}"))
+                    } else {
+                        Crashlytics.logException(Exception("onReceivedError"))
                     }
+//                    dismissProgress()
+//                    if (activity?.isFinishing != true) {
+//                        webView?.let {
+//                            it.context.showToast(getString(R.string.error_webview_failed))
+//                            it.clearCache(false)
+//                            it.clearHistory()
+//                            it.loadUrl("about:blank")
+//                        }
+//                    }
                 }
 
                 override fun onPageStarted(webView: WebView?, url: String?, favicon: Bitmap?) {
