@@ -137,15 +137,15 @@ class FetLifeWebViewFragment : Fragment() {
                         LogUtil.writeLog("onReceivedError(${request?.url},${error?.toString()}")
                     }
                     super.onReceivedError(webView, request, error)
-                    dismissProgress()
-                    if (activity?.isFinishing == false) {
-                        webView?.let {
-                            it.context.showToast(getString(R.string.error_webview_failed))
-                            it.clearCache(false)
-                            it.clearHistory()
-                            it.loadUrl("about:blank")
-                        }
-                    }
+//                    dismissProgress()
+//                    if (activity?.isFinishing == false) {
+//                        webView?.let {
+//                            it.context.showToast(getString(R.string.error_webview_failed))
+//                            it.clearCache(false)
+//                            it.clearHistory()
+//                            it.loadUrl("about:blank")
+//                        }
+//                    }
                 }
 
                 override fun onPageStarted(webView: WebView?, url: String?, favicon: Bitmap?) {
