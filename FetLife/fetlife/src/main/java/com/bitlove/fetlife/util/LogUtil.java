@@ -20,12 +20,9 @@ public class LogUtil {
 
     public static void writeLog(String message) {
 
-        if (!BuildConfig.DEBUG) {
-            return;
-        }
-
         String log = DateUtil.toServerString(System.currentTimeMillis()) + " - " + message + "\n";
         localLog += log;
+        Toast.makeText(FetLifeApplication.getInstance(), log, Toast.LENGTH_SHORT).show();
 
         try {
             File file = new File(FetLifeApplication.getInstance().getExternalFilesDir(null),"extra.log");
