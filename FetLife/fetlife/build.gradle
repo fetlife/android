@@ -130,7 +130,8 @@ def dbflow_version = "4.2.4"
 
 dependencies {
 
-    implementation 'com.google.android.gms:play-services-gcm:15.0.1'
+    implementation 'com.google.firebase:firebase-messaging:17.5.0'
+
     implementation 'com.google.android.gms:play-services-analytics:16.0.1'
     implementation 'com.google.android.gms:play-services-places:15.0.1'
     implementation 'com.google.android.gms:play-services-location:15.0.1'
