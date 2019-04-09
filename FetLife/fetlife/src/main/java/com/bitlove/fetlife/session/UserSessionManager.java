@@ -305,7 +305,12 @@ public class UserSessionManager {
     }
 
     public void deleteCurrentUserDb() {
-        fetLifeApplication.deleteDatabase(getUserDatabaseName(currentUser.getId()));
+        String userId = currentUser.getId();
+        if (userId != null) {
+            fetLifeApplication.deleteDatabase(getUserDatabaseName(userId));
+        } else {
+            Crashlytics.logException(new Exception("User not available"));
+        }
         FlowManager.reset();
         FlowManager.destroy();
         FlowManager.init(fetLifeApplication);
