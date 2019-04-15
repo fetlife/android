@@ -71,10 +71,13 @@ public class VersionUtil {
 
     public static int getCurrentVersionInt(Context context) {
         try {
+            if (context == null) {
+                return -1;
+            }
             PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
             return pInfo.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
-            return 0;
+            return -1;
         }
     }
 }

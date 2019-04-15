@@ -115,6 +115,7 @@ public class FetLifeService {
                 Response response = chain.proceed(request);
                 //response.body().string();
                 lastResponseCode = response.code();
+//                lastResponseBody = response.body() != null ? response.body().string() : "null";
                 return response;
             }
         });

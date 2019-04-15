@@ -10,7 +10,7 @@ import com.bitlove.fetlife.FetLifeApplication
 
 //Activity functions
 fun Activity.getStringExtra(name: String) : String? {
-    return intent.extras.getString(name)
+    return intent.extras?.getString(name)
 }
 
 fun Activity.getIntExtra(name: String) : Int? {

@@ -86,7 +86,7 @@ class ActionCable {
             else -> return
         }
 
-        val prefs = FetLifeApplication.getInstance().userSessionManager.activeUserPreferences
+        val prefs = FetLifeApplication.getInstance().userSessionManager.activeUserPreferences ?: return
         val currentCount = prefs.getInt(preferenceKey,-1);
 
         if (currentCount == count) {

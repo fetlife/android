@@ -105,14 +105,16 @@ public class ConfirmationDialog extends DialogFragment {
         getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
     }
 
-    public void setLeftButton(String text, final OnClickListener clickListener) {
+    public ConfirmationDialog setLeftButton(String text, final OnClickListener clickListener) {
         leftButtonText = text;
         leftButtonListener = clickListener;
+        return this;
     }
 
-    public void setRightButton(String text, final OnClickListener clickListener) {
+    public ConfirmationDialog setRightButton(String text, final OnClickListener clickListener) {
         rightButtonText = text;
         rightButtonListener = clickListener;
+        return this;
     }
 
     public interface OnClickListener {

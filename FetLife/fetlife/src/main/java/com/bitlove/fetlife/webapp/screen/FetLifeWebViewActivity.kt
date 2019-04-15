@@ -11,11 +11,10 @@ import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.view.screen.BaseActivity
 import com.bitlove.fetlife.view.screen.component.MenuActivityComponent
+import com.bitlove.fetlife.view.screen.standalone.LoginActivity
 import com.bitlove.fetlife.webapp.kotlin.getBooleanExtra
-import com.bitlove.fetlife.webapp.kotlin.getStringArgument
 import com.bitlove.fetlife.webapp.kotlin.getStringExtra
 import com.bitlove.fetlife.webapp.navigation.WebAppNavigation
-import kotlinx.android.synthetic.main.tool_bar_default.*
 
 class FetLifeWebViewActivity : BaseActivity() {
 
@@ -59,10 +58,20 @@ class FetLifeWebViewActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 //        setContentView(R.layout.webapp_activity_webview)
 
+        var hasHomeNavigation = getBooleanExtra(EXTRA_HAS_BOTTOM_NAVIGATION) != true
+        var pageUrl = getStringExtra(EXTRA_PAGE_URL)
+
+        if (pageUrl == null) {
+            pageUrl = intent.data.toString()
+            hasHomeNavigation = true
+            // if opened externally, logout user for security reasons
+            FetLifeApplication.getInstance().userSessionManager.onUserLogOut()
+        }
+
         if (savedInstanceState == null) {
             supportFragmentManager
                     .beginTransaction()
-                    .add(R.id.content_layout, FetLifeWebViewFragment.newInstance(getStringExtra(EXTRA_PAGE_URL)!!, getBooleanExtra(EXTRA_HAS_BOTTOM_NAVIGATION) != true), "FetLifeWebViewFragment")
+                    .add(R.id.content_layout, FetLifeWebViewFragment.newInstance(pageUrl, hasHomeNavigation), "FetLifeWebViewFragment")
                     .commit()
         }
     }
@@ -70,6 +79,10 @@ class FetLifeWebViewActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
+                var pageUrl = getStringExtra(EXTRA_PAGE_URL)
+                if (pageUrl == null) {
+                    LoginActivity.startLogin(fetLifeApplication)
+                }
                 finish()
                 true
             }
