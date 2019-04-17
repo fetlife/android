@@ -1,5 +1,6 @@
 package com.bitlove.fetlife.model.pojos.fetlife.dbjson;
 
+import android.net.Uri;
 import android.text.TextUtils;
 
 import com.bitlove.fetlife.model.db.FetLifeDatabase;
@@ -145,6 +146,8 @@ public class Member extends BaseModel {
     }
 
     public String getServerId() {
+        if (serverId != null || link == null) return serverId;
+        serverId = Uri.parse(link).getLastPathSegment();
         return serverId;
     }
 

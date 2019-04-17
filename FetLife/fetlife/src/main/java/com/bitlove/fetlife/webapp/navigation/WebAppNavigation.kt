@@ -61,6 +61,8 @@ class WebAppNavigation {
         // * New WebView Flow Urls
         //private const val URL_REGEX_TEMPLATE = "^$REGEX_BASE_URL\\/TEMPLATE\\/?[^\\/]*\$"
         private const val URL_REGEX_INBOX_MAIN = "^$REGEX_BASE_URL\\/inbox[^\\/]*\$"
+        private const val URL_REGEX_INBOX_ALL = "^$REGEX_BASE_URL\\/inbox\\/all[^\\/]*\$"
+        private const val URL_REGEX_INBOX_ARCHIVED = "^$REGEX_BASE_URL\\/inbox\\/archived[^\\/]*\$"
         private const val URL_REGEX_CONVERSATION_MAIN = "^$REGEX_BASE_URL\\/conversations\\/(\\w+)[^\\/]*\$"
         private const val URL_REGEX_NOTIFICATIONS_MAIN = "^$REGEX_BASE_URL\\/notifications[^\\/]*\$"
         private const val URL_REGEX_REQUESTS_MAIN = "^$REGEX_BASE_URL\\/requests[^\\/]*\$"
@@ -145,6 +147,7 @@ class WebAppNavigation {
         private const val URL_REGEX_REQUESTS = "^$REGEX_BASE_URL\\/requests\\/?.*\$"
         private const val URL_REGEX_INBOX = "^$REGEX_BASE_URL\\/inbox\\/?.*\$"
         private const val URL_REGEX_CONVERSATION = "^$REGEX_BASE_URL\\/conversations\\/(\\w+).*\$"
+        private const val URL_REGEX_CONVERSATION_NEW = "^$REGEX_BASE_URL\\/conversations\\/new\\?with=[0-9]+.*\$"
 
         private const val URL_REGEX_LOGIN_PASSWORD_SENT = "^$REGEX_BASE_URL\\/sent_login_information[^\\/]*\$"
 
@@ -201,7 +204,6 @@ class WebAppNavigation {
         add(URL_REGEX_QNA)
         add(URL_REGEX_NOTIFICATIONS)
         add(URL_REGEX_REQUESTS)
-        add(URL_REGEX_INBOX)
         add(URL_REGEX_CONVERSATION)
 
         add(URL_REGEX_LEGALESE)
@@ -229,6 +231,9 @@ class WebAppNavigation {
         add(URL_REGEX_PLACES_MAIN)
         add(URL_REGEX_NOTIFICATIONS_MAIN)
         add(URL_REGEX_REQUESTS_MAIN)
+        add(URL_REGEX_INBOX_MAIN)
+        add(URL_REGEX_INBOX_ALL)
+        add(URL_REGEX_INBOX_ARCHIVED)
 
         add(URL_REGEX_SETTINGS_ACCOUNT)
         add(URL_REGEX_SETTINGS_PRIVACY)
@@ -302,7 +307,7 @@ class WebAppNavigation {
             return true
         }
 
-        if (handleNativeSupportedLink(targetUri, currentUrl, context)) {
+        if (handleNativeSupportedLink(targetUri, currentUrl, activity)) {
             return true
         }
 
@@ -343,6 +348,10 @@ class WebAppNavigation {
         var targetUrl = targetUri.toString()
         currentUrl = currentUrl.replace("places","p")
         targetUrl = targetUrl.replace("places","p")
+        //workaround to deal with inbox
+        if (URL_REGEX_INBOX_MAIN.toRegex().matches(currentUrl) || URL_REGEX_INBOX_MAIN.toRegex().matches(targetUrl)) {
+            return false
+        }
 
         for ((uriRegex,parentRegex) in parentMap) {
             if (uriRegex.toRegex().matches(currentUrl) && parentRegex.toRegex().matches(targetUrl)) {
@@ -382,7 +391,7 @@ class WebAppNavigation {
         return URL_REGEX_DOWNLOAD_LINK.toRegex().containsMatchIn(uri.toString())
     }
 
-    private fun handleNativeSupportedLink(uri: Uri, currentUrl: String, context: Context): Boolean {
+    private fun handleNativeSupportedLink(uri: Uri, currentUrl: String, activity: Activity?): Boolean {
 
         var nativeClassIdentifier : String? = null
         for ((uriRegex,classIdentifier) in nativeNavigationMap) {
@@ -401,42 +410,47 @@ class WebAppNavigation {
         return when (nativeClassIdentifier) {
             ProfileActivity::class.java.simpleName -> {
                 val memberId = apiIds.getOrNull(0) ?: SERVER_ID_PREFIX + uri.lastPathSegment
-                ProfileActivity.startActivity(context, memberId)
+                val fromNewConversation = URL_REGEX_CONVERSATION_NEW.toRegex().matches(currentUrl)
+                val toastMessage = if (fromNewConversation) {
+                    val memberName = Member.loadMember(memberId)?.nickname
+                    if (memberName != null) activity?.getString(R.string.toast_message_sent_successfully_to_user,memberName) else activity?.getString(R.string.toast_message_sent_successfully)
+                } else null
+                ProfileActivity.startActivity(activity, memberId, fromNewConversation, toastMessage)
                 true
             }
             EventActivity::class.java.simpleName -> {
                 val eventId = apiIds.getOrNull(0) ?: SERVER_ID_PREFIX + uri.lastPathSegment
-                EventActivity.startActivity(context, eventId)
+                EventActivity.startActivity(activity, eventId)
                 true
             }
             GroupActivity::class.java.simpleName -> {
                 val groupId = apiIds.getOrNull(0) ?: SERVER_ID_PREFIX + uri.lastPathSegment
                 val group = Group.loadGroup(groupId)
-                GroupActivity.startActivity(context, groupId, group?.name, false)
+                GroupActivity.startActivity(activity, groupId, group?.name, false)
                 true
             }
             GroupMessagesActivity::class.java.simpleName -> {
                 val groupId = apiIds.getOrNull(0) ?: SERVER_ID_PREFIX + uri.lastPathSegment
                 val groupDiscussionId = apiIds.getOrNull(1) ?: SERVER_ID_PREFIX + uri.lastPathSegment
                 val groupPost = GroupPost.loadGroupPost(groupDiscussionId)
-                GroupMessagesActivity.startActivity(context, groupId, groupDiscussionId, groupPost?.title, groupPost?.avatarLink, false)
+                GroupMessagesActivity.startActivity(activity, groupId, groupDiscussionId, groupPost?.title, groupPost?.avatarLink, false)
                 true
             }
             ImageViewerWrapper::class.java.simpleName -> {
                 val memberId = apiIds.getOrNull(0) ?: SERVER_ID_PREFIX + uri.lastPathSegment
                 val pictureId = apiIds.getOrNull(1) ?: SERVER_ID_PREFIX + uri.lastPathSegment
-                FetLifeApiIntentService.startApiCall(context, FetLifeApiIntentService.ACTION_APICALL_MEMBER_PICTURE, memberId, pictureId, currentUrl)
+                FetLifeApiIntentService.startApiCall(activity, FetLifeApiIntentService.ACTION_APICALL_MEMBER_PICTURE, memberId, pictureId, currentUrl)
                 true
             }
             Video::class.java.simpleName -> {
                 val memberId = apiIds.getOrNull(0) ?: SERVER_ID_PREFIX + uri.lastPathSegment
                 val videoId = apiIds.getOrNull(1) ?: SERVER_ID_PREFIX + uri.lastPathSegment
-                FetLifeApiIntentService.startApiCall(context, FetLifeApiIntentService.ACTION_APICALL_MEMBER_VIDEO, memberId, videoId, currentUrl)
+                FetLifeApiIntentService.startApiCall(activity, FetLifeApiIntentService.ACTION_APICALL_MEMBER_VIDEO, memberId, videoId, currentUrl)
                 true
             }
             LoginActivity::class.java.simpleName -> {
                 val toastMessage = if (URL_REGEX_PASSWORD_EDIT.toRegex().matches(currentUrl)) {
-                    context.getString(R.string.toast_password_reset_successfull);
+                    activity?.getString(R.string.toast_password_reset_successfull);
                 } else null
                 LoginActivity.startLogin(FetLifeApplication.getInstance(), toastMessage)
                 true
