@@ -62,6 +62,7 @@ class FetLifeWebViewFragment : Fragment() {
                     it.setSupportActionBar(toolbar)
                     it.supportActionBar?.setDisplayHomeAsUpEnabled(true)
                     it.supportActionBar?.setDisplayShowHomeEnabled(true)
+                    it.supportActionBar?.setDisplayShowTitleEnabled(false)
                 }
             }
 
