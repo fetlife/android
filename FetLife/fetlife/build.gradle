@@ -230,7 +230,7 @@ android.applicationVariants.all { variant ->
 
     def variantSuffix = variant.name.capitalize()
     def generateResourcesTask = project.tasks.getByName("fabricGenerateResources${variantSuffix}")
-    def generatePropertiesTask = task("fabricGenerateProperties${variantSuffix}") << {
+    def generatePropertiesTask = task("fabricGenerateProperties${variantSuffix}") {
         Properties properties = new Properties()
         properties.put("apiSecret", variant.buildType.fabricApiSecret)
         properties.put("apiKey", variant.buildType.fabricApiKey)
