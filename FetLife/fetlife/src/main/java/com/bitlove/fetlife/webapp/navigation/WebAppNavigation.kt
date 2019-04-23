@@ -390,7 +390,6 @@ class WebAppNavigation {
 
     private fun handleNativeSupportedLink(uri: Uri, currentUrl: String, context: Context): Boolean {
 
-
         var nativeClassIdentifier : String? = null
         for ((uriRegex,classIdentifier) in nativeNavigationMap) {
             if (uriRegex.toRegex().containsMatchIn(uri.toString())) {

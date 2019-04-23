@@ -2772,7 +2772,7 @@ public class FetLifeApiIntentService extends JobIntentService {
     }
 
     private void sendLoadFailedNotification(String action, String... params) {
-        LogUtil.writeLog("sendLoadFailedNotification("+action+"):"+getFetLifeApplication().getFetLifeService().getLastResponseCode()+":"+getFetLifeApplication().getFetLifeService().getLastResponseBody());
+        LogUtil.writeLog("sendLoadFailedNotification("+action+"):"+getFetLifeApplication().getFetLifeService().getLastResponseCode());
         switch (action) {
             case ACTION_APICALL_LOGON_USER:
                 getFetLifeApplication().getEventBus().post(new LoginFailedEvent());
@@ -2787,7 +2787,7 @@ public class FetLifeApiIntentService extends JobIntentService {
     }
 
     private void sendConnectionFailedNotification(String action, String... params) {
-        LogUtil.writeLog("sendConnectionFailedNotification("+action+"):"+getFetLifeApplication().getFetLifeService().getLastResponseCode()+":"+getFetLifeApplication().getFetLifeService().getLastResponseBody());
+        LogUtil.writeLog("sendConnectionFailedNotification("+action+"):"+getFetLifeApplication().getFetLifeService().getLastResponseCode());
         switch (action) {
             case ACTION_APICALL_LOGON_USER:
                 getFetLifeApplication().getEventBus().post(new LoginFailedEvent(true));

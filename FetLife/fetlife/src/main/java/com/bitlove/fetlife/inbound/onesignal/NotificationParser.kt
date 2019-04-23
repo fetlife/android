@@ -5,13 +5,16 @@ import android.net.Uri
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.inbound.onesignal.notification.*
+import com.bitlove.fetlife.util.LogUtil
 import com.onesignal.OSNotificationReceivedResult
 import org.json.JSONObject
 
 class NotificationParser {
 
     fun parseNotification(fetLifeApplication: FetLifeApplication, osNotificationReceivedResult: OSNotificationReceivedResult): OneSignalNotification {
+        LogUtil.writeLog("parseNotification")
         val osNotificationPayload = osNotificationReceivedResult.payload
+        LogUtil.writeLog("parseNotification:payload: is null:" + (osNotificationPayload == null).toString())
 
         val id = osNotificationPayload.notificationID
         val additionalData = osNotificationPayload.additionalData
@@ -27,6 +30,7 @@ class NotificationParser {
         checkMaxVersion(additionalData, fetLifeApplication) || return UnknownNotification(title,message,launchUrl,additionalData)
 
         val notificationType = additionalData?.optString(JSON_FIELD_STRING_TYPE)?.toLowerCase() ?: return UnknownNotification(title,message,launchUrl,additionalData)
+        LogUtil.writeLog("parseNotification:notificationType:" + notificationType)
         return when {
             notificationType == JSON_VALUE_TYPE_GROUP_POST -> GroupNotification(JSON_VALUE_TYPE_GROUP_POST, NOTIFICATION_ID_GROUP_DISCUSSION, title, message, launchUrl, getMergeId(notificationType, launchUrl, additionalData), collapseId, additionalData, getPreferenceKey(notificationType, fetLifeApplication))
             notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_COMMENT_GROUP) -> GroupMessageNotification(JSON_VALUE_TYPE_PREFIX_COMMENT_GROUP, NOTIFICATION_ID_GROUP_MESSAGE, title, message, launchUrl, getMergeId(notificationType, launchUrl, additionalData), collapseId, additionalData, getPreferenceKey(notificationType, fetLifeApplication))

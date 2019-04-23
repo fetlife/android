@@ -22,7 +22,7 @@ public class LogUtil {
 
         String log = DateUtil.toServerString(System.currentTimeMillis()) + " - " + message + "\n";
         localLog += log;
-        Toast.makeText(FetLifeApplication.getInstance(), log, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(FetLifeApplication.getInstance(), log, Toast.LENGTH_SHORT).show();
 
         try {
             File file = new File(FetLifeApplication.getInstance().getExternalFilesDir(null),"extra.log");

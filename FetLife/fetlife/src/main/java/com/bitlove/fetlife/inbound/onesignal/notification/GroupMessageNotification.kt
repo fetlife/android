@@ -11,6 +11,7 @@ import com.bitlove.fetlife.inbound.onesignal.NotificationParser
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Group
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.GroupPost
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService
+import com.bitlove.fetlife.util.LogUtil
 import com.bitlove.fetlife.view.screen.BaseActivity
 import com.bitlove.fetlife.view.screen.resource.groups.GroupActivity
 import com.bitlove.fetlife.view.screen.resource.groups.GroupMessagesActivity
@@ -36,6 +37,9 @@ class GroupMessageNotification(notificationType: String, notificationIdRange: In
     }
 
     override fun handle(fetLifeApplication: FetLifeApplication): Boolean {
+        LogUtil.writeLog("GroupMessageNotification.handle()")
+        LogUtil.writeLog("GroupMessageNotification.handle():groupId:"+groupId+";groupDiscussionId:" + groupDiscussionId);
+
         if (TextUtils.isEmpty(groupId) || TextUtils.isEmpty(groupDiscussionId)) {
             return false
         }
@@ -45,6 +49,7 @@ class GroupMessageNotification(notificationType: String, notificationIdRange: In
 
         val groupDiscussionInForeground = false
         val appInForeground = fetLifeApplication.isAppInForeground
+        LogUtil.writeLog("GroupMessageNotification.handle():appInForeground:" + appInForeground)
 
         if (appInForeground) {
             fetLifeApplication.eventBus.post(NewGroupMessageEvent(groupId, groupDiscussionId))
@@ -53,6 +58,8 @@ class GroupMessageNotification(notificationType: String, notificationIdRange: In
                 return groupId == foregroundActivity.groupId && groupDiscussionId == foregroundActivity.groupDiscussionId
             }
         }
+
+        LogUtil.writeLog("GroupMessageNotification.handle():groupDiscussionInForeground:" + groupDiscussionInForeground.toString())
 
         if (groupDiscussionInForeground) {
             //otherwise it will be saved in display

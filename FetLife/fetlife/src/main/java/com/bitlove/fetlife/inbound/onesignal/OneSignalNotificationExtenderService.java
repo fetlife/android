@@ -6,6 +6,7 @@ import com.bitlove.fetlife.inbound.onesignal.notification.AnonymNotification;
 import com.bitlove.fetlife.inbound.onesignal.notification.OneSignalNotification;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.util.AppUtil;
+import com.bitlove.fetlife.util.LogUtil;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
@@ -22,6 +23,8 @@ public class OneSignalNotificationExtenderService extends NotificationExtenderSe
     @Override
     protected boolean onNotificationProcessing(OSNotificationReceivedResult notification) {
 
+        LogUtil.writeLog("onNotificationProcessing");
+
         logTime(notification);
 
         FetLifeApplication fetLifeApplication = getFetLifeApplication();
@@ -35,6 +38,9 @@ public class OneSignalNotificationExtenderService extends NotificationExtenderSe
 
         //Handle the incoming notification to do what is needed at the state of onreceived.
         boolean handledInternally = oneSignalNotification.handle(fetLifeApplication);
+
+        LogUtil.writeLog("onNotificationProcessing:handledInternally:" + handledInternally);
+        LogUtil.writeLog("onNotificationProcessing:isEnabled:" + oneSignalNotification.isEnabled(fetLifeApplication));
 
         //Check if the Notification was not fully handled internally and if it is not disabled by the user settings
         if (!handledInternally && oneSignalNotification.isEnabled(fetLifeApplication)) {
