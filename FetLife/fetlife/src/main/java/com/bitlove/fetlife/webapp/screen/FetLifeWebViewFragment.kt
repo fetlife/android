@@ -26,6 +26,7 @@ import com.bitlove.fetlife.webapp.kotlin.getBooleanArgument
 import com.bitlove.fetlife.webapp.kotlin.getStringArgument
 import com.bitlove.fetlife.webapp.kotlin.showToast
 import com.bitlove.fetlife.webapp.navigation.WebAppNavigation
+import com.crashlytics.android.Crashlytics
 import kotlinx.android.synthetic.main.tool_bar_default.*
 import kotlinx.android.synthetic.main.tool_bar_default.view.*
 import kotlinx.android.synthetic.main.webapp_fragment_webview.*
@@ -117,8 +118,10 @@ class FetLifeWebViewFragment : Fragment() {
                     return if (navigated) {
                         true
                     } else {
-                        //TODO(WEBAPP): remove App Ids
-                        super.shouldOverrideUrlLoading(webView, request)
+                        request?.url.toString().let {
+                            webView?.loadUrl(it,createRequestHeaders())
+                        }
+                        true
                     }
                 }
 
@@ -131,14 +134,14 @@ class FetLifeWebViewFragment : Fragment() {
                 }
 
                 override fun onReceivedError(webView: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        LogUtil.writeLog("onReceivedError(${request?.url},${error?.errorCode}:${error?.description})")
-                    } else {
-                        LogUtil.writeLog("onReceivedError(${request?.url},${error?.toString()}")
-                    }
                     super.onReceivedError(webView, request, error)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        Crashlytics.logException(Exception("request: ${request?.url}, error: ${error?.errorCode}-${error?.description}"))
+                    } else {
+                        Crashlytics.logException(Exception("onReceivedError"))
+                    }
 //                    dismissProgress()
-//                    if (activity?.isFinishing == false) {
+//                    if (activity?.isFinishing != true) {
 //                        webView?.let {
 //                            it.context.showToast(getString(R.string.error_webview_failed))
 //                            it.clearCache(false)
@@ -155,16 +158,22 @@ class FetLifeWebViewFragment : Fragment() {
                 }
             }
 
-            val headers = HashMap<String,String>()
-            val accessToken = FetLifeApplication.getInstance().userSessionManager.currentUser.accessToken
-            val authHeader = FetLifeService.AUTH_HEADER_PREFIX + accessToken
-            headers.put("X-Fetlife-Webview", "1")
-            headers.put("X-Fetlife-Android", VersionUtil.getCurrentVersionInt(context).toString())
-            headers.put("Authorization", authHeader)
-            web_view.loadUrl(url,headers)
+            web_view.loadUrl(url,createRequestHeaders())
             url?.let {
                 FetLifeApplication.getInstance().actionCable.tryConnect(context,url)
             }
+        }
+    }
+
+    private fun createRequestHeaders(): MutableMap<String, String>? {
+        return HashMap<String,String>().apply {
+            val accessToken = FetLifeApplication.getInstance().userSessionManager.currentUser?.accessToken
+            if (accessToken != null) {
+                val authHeader = FetLifeService.AUTH_HEADER_PREFIX + accessToken
+                put("Authorization", authHeader)
+            }
+            put("X-Fetlife-Webview", "1")
+            put("X-Fetlife-Android", VersionUtil.getCurrentVersionInt(context).toString())
         }
     }
 

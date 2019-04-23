@@ -150,7 +150,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         setUpFloatingActionButton(getFabLink());
 
         final BottomNavigationView bottomNavigation = findViewById(R.id.navigation_bottom);
-        boolean hasBottomBar = getIntent().getBooleanExtra(EXTRA_HAS_BOTTOM_BAR,true);
+        boolean hasBottomBar = getIntent().getBooleanExtra(EXTRA_HAS_BOTTOM_BAR,false);
         if (bottomNavigation != null && !hasBottomBar) {
             bottomNavigation.setVisibility(View.GONE);
         } else if (bottomNavigation !=null){
@@ -195,6 +195,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                         case R.id.navigation_bottom_feed:
                             bottomNavigation.setOnNavigationItemSelectedListener(null);
                             intent = new Intent(BaseActivity.this, FeedActivity.class);
+                            intent.putExtra(EXTRA_HAS_BOTTOM_BAR,true);
                             intent.putExtra(EXTRA_SELECTED_BOTTOM_NAV_ITEM,menuItem.getItemId());
                             BaseActivity.this.startActivity(intent,navOptions.toBundle());
                             setFinishAfterNavigation(true);
@@ -204,6 +205,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                         case R.id.navigation_bottom_inbox:
                             bottomNavigation.setOnNavigationItemSelectedListener(null);
                             intent = new Intent(BaseActivity.this, ConversationsActivity.class);
+                            intent.putExtra(EXTRA_HAS_BOTTOM_BAR,true);
                             intent.putExtra(EXTRA_SELECTED_BOTTOM_NAV_ITEM,menuItem.getItemId());
                             BaseActivity.this.startActivity(intent,navOptions.toBundle());
 //                                finishAfterTransition();

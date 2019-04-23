@@ -100,7 +100,6 @@
         <activity
             android:name=".view.screen.standalone.LoginActivity"
             android:label="@string/app_name_kinky"
-            android:launchMode="singleInstance"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateAlwaysVisible"/>
         <activity
@@ -262,8 +261,22 @@
         <activity
             android:name=".webapp.screen.FetLifeWebViewActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:label=""
+            android:label="@string/app_name_kinky"
             android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+            <action
+                android:name="android.intent.action.VIEW" />
+            <category
+                android:name="android.intent.category.DEFAULT" />
+            <category
+                android:name="android.intent.category.BROWSABLE" />
+
+            <data
+                android:scheme="https"
+                android:host="click.pstmrk.it"
+                android:pathPattern="\\/2sm\\/fetlife\\.com.*" />
+            </intent-filter>
+
         </activity>
 
 

@@ -15,11 +15,11 @@ import com.bitlove.fetlife.util.ColorUtil
 import com.bitlove.fetlife.util.LogUtil
 import com.bitlove.fetlife.util.PictureUtil
 import com.bitlove.fetlife.util.UrlUtil
-import com.bitlove.fetlife.view.screen.BaseActivity
 import com.bitlove.fetlife.view.screen.resource.EventActivity
 import com.bitlove.fetlife.view.screen.resource.groups.GroupActivity
 import com.bitlove.fetlife.view.screen.resource.groups.GroupMessagesActivity
 import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity
+import com.bitlove.fetlife.view.screen.standalone.LoginActivity
 import com.bitlove.fetlife.view.widget.ImageViewerWrapper
 import com.bitlove.fetlife.webapp.kotlin.openInBrowser
 import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity
@@ -50,10 +50,12 @@ class WebAppNavigation {
         private const val URL_REGEX_DOWNLOAD_LINK = "^$REGEX_BASE_URL\\/.*\\/download[^\\/]*\$"
 
         // * Native Supported Urls
+        private const val URL_REGEX_LOGIN = "^$REGEX_BASE_URL\\/(users\\/sign_in|login)\\/?.*\$"
+
         private const val URL_REGEX_EVENT = "^$REGEX_BASE_URL\\/events\\/(\\w+)[^\\/]*\$"
         private const val URL_REGEX_GROUP = "^$REGEX_BASE_URL\\/groups\\/(\\w+)[^\\/]*\$"
         private const val URL_REGEX_GROUP_POST = "^$REGEX_BASE_URL\\/groups\\/(\\w+)\\/group_posts\\/(\\w+)[^\\/]*\$"
-        private const val URL_REGEX_USER_PROFILE = "^$REGEX_BASE_URL\\/users\\/(\\w+)[^\\/]*\$"
+        private const val URL_REGEX_USER_PROFILE = "^$REGEX_BASE_URL\\/users\\/([0-9]+)[^\\/]*\$"
         private const val URL_REGEX_USER_PICTURE = "^$REGEX_BASE_URL\\/users\\/(\\w+)\\/pictures\\/(\\w+)[^\\/]*\$"
         private const val URL_REGEX_USER_VIDEO = "^$REGEX_BASE_URL\\/users\\/(\\w+)\\/videos\\/(\\w+)[^\\/]*\$"
 
@@ -79,6 +81,9 @@ class WebAppNavigation {
         private const val URL_REGEX_QNA_REVIEW = "^$REGEX_BASE_URL\\/q\\/review\\/?[^\\/]*\$"
 
         // *  Open with No History Urls
+        private const val URL_REGEX_PASSWORD_NEW_EMAIL = "^$REGEX_BASE_URL\\/users\\/password\\/new\$"
+        private const val URL_REGEX_PASSWORD_NEW_MOBILE = "^$REGEX_BASE_URL\\/users\\/password\\/new_.*\$"
+
         private const val URL_REGEX_SETTINGS_ACCOUNT = "^$REGEX_BASE_URL\\/settings\\/account\\/?.*\$"
         private const val URL_REGEX_SETTINGS_PRIVACY = "^$REGEX_BASE_URL\\/settings\\/privacy\\/?.*\$"
         private const val URL_REGEX_SETTINGS_NOTIFICATIONS = "^$REGEX_BASE_URL\\/settings\\/notifications\\/?.*\$"
@@ -103,6 +108,11 @@ class WebAppNavigation {
         private const val URL_REGEX_QNA_MINE = "^$REGEX_BASE_URL\\/q(\\/fetlife)?\\?filter=mine.*\$"
 
         // * Other WebView Supported Urls
+        private const val URL_REGEX_PASSWORD_INCORRECT_EMAIL = "^$REGEX_BASE_URL\\/users\\/password[^\\/]*\$"
+        private const val URL_REGEX_PASSWORD_INCORRECT_PHONE = "^$REGEX_BASE_URL\\/users\\/password\\/via_phone[^\\/]*\$"
+        private const val URL_REGEX_PASSWORD_VERIFY_PHONE = "^$REGEX_BASE_URL\\/users\\/password\\/verify_phone[^\\/]*\$"
+        private const val URL_REGEX_PASSWORD_EDIT = "^$REGEX_BASE_URL\\/users\\/password\\/edit[^\\/]*\$"
+
         //private const val URL_REGEX_TEMPLATE = "^$REGEX_BASE_URL\\/TEMPLATE\\/?.*\$"
         private const val URL_REGEX_TEAM = "^$REGEX_BASE_URL\\/team\\/?.*\$"
         private const val URL_REGEX_SUPPORT = "^$REGEX_BASE_URL\\/support\\/?.*\$"
@@ -134,6 +144,8 @@ class WebAppNavigation {
         private const val URL_REGEX_REQUESTS = "^$REGEX_BASE_URL\\/requests\\/?.*\$"
 
         //FAB links
+
+        private const val URL_REGEX_LOGIN_PASSWORD_SENT = "^$REGEX_BASE_URL\\/sent_login_information[^\\/]*\$"
 
         private const val URL_QNA_NEW = "$WEBAPP_BASE_URL/q/new"
 
@@ -191,9 +203,18 @@ class WebAppNavigation {
         add(URL_REGEX_REQUESTS)
 
         add(URL_REGEX_LEGALESE)
+
+        add(URL_REGEX_LOGIN_PASSWORD_SENT)
+        add(URL_REGEX_PASSWORD_INCORRECT_EMAIL)
+        add(URL_REGEX_PASSWORD_INCORRECT_PHONE)
+        add(URL_REGEX_PASSWORD_VERIFY_PHONE)
+        add(URL_REGEX_PASSWORD_EDIT)
     }
 
     private val inPlaceOpenWithNoHistoryLinkSet = LinkedHashSet<String>().apply {
+        add(URL_REGEX_PASSWORD_NEW_EMAIL)
+        add(URL_REGEX_PASSWORD_NEW_MOBILE)
+
         add(URL_REGEX_TEAM_MAIN)
         add(URL_REGEX_SUPPORT_MAIN)
         add(URL_REGEX_WALLPAPERS_MAIN)
@@ -238,6 +259,7 @@ class WebAppNavigation {
         put(URL_REGEX_GROUP_POST, GroupMessagesActivity::class.java.simpleName)
         put(URL_REGEX_USER_PICTURE, ImageViewerWrapper::class.java.simpleName)
         put(URL_REGEX_USER_VIDEO, Video::class.java.simpleName)
+        put(URL_REGEX_LOGIN, LoginActivity::class.java.simpleName)
     }
 
     private val fabLinkMap = LinkedHashMap<String,String>().apply {
@@ -263,6 +285,10 @@ class WebAppNavigation {
         val currentUrl = webView.url
 
         webView.tag = false
+
+        if (targetUri.toString() == currentUrl) {
+            return true
+        }
 
         if (!isFetLifeLink(targetUri)) {
             targetUri.openInBrowser()
@@ -416,6 +442,13 @@ class WebAppNavigation {
                 val memberId = apiIds.getOrNull(0) ?: SERVER_ID_PREFIX + uri.lastPathSegment
                 val videoId = apiIds.getOrNull(1) ?: SERVER_ID_PREFIX + uri.lastPathSegment
                 FetLifeApiIntentService.startApiCall(context, FetLifeApiIntentService.ACTION_APICALL_MEMBER_VIDEO, memberId, videoId, currentUrl)
+                true
+            }
+            LoginActivity::class.java.simpleName -> {
+                val toastMessage = if (URL_REGEX_PASSWORD_EDIT.toRegex().matches(currentUrl)) {
+                    context.getString(R.string.toast_password_reset_successfull);
+                } else null
+                LoginActivity.startLogin(FetLifeApplication.getInstance(), toastMessage)
                 true
             }
             else -> false

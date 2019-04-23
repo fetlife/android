@@ -20,6 +20,7 @@ public class ReleaseNotesActivity extends BaseActivity {
 
     public static Intent createIntent(Context context) {
         Intent intent = new Intent(context, ReleaseNotesActivity.class);
+        intent.putExtra(EXTRA_HAS_BOTTOM_BAR,true);
         return intent;
     }
 

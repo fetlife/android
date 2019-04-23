@@ -38,6 +38,7 @@ public class GroupsActivity extends ResourceActivity {
     }
     public static Intent createIntent(Context context, boolean newTask) {
         Intent intent = new Intent(context, GroupsActivity.class);
+        intent.putExtra(EXTRA_HAS_BOTTOM_BAR,true);
         if (!newTask) {
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         } else {

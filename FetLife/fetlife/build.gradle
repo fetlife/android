@@ -3,24 +3,18 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'io.fabric'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.google.gms.google-services'
 
-buildscript {
-    repositories {
-        google()
-        maven { url 'https://plugins.gradle.org/m2/'}
-    }
-    dependencies {
-        classpath 'gradle.plugin.com.onesignal:onesignal-gradle-plugin:[0.11.0, 0.99.99]'
-    }
-}
+ext.releaseProperties = new Properties()
 
-def Properties releaseProperties = new Properties()
 def propFile = file('../../../android-release/release.properties')
 if (propFile.canRead()) {
     releaseProperties.load(new FileInputStream(propFile))
 } else {
     releaseProperties = null;
 }
+
+def versionTimeStamp = new Date().time.toInteger()
 
 android {
     compileSdkVersion 28
@@ -32,16 +26,24 @@ android {
         targetSdkVersion 26
         multiDexEnabled true
 
-        versionCode 22302
-        versionName "2.23.2"
+        versionCode versionTimeStamp
+        versionName "3.0.0-beta.1"
 
         vectorDrawables.useSupportLibrary = true
 
         buildConfigField "Boolean", "PREVIEW", "false"
-
     }
 
     signingConfigs {
+
+        internal {
+            if (releaseProperties != null) {
+                storeFile file(releaseProperties['ks.url'])
+                storePassword releaseProperties['ks.password']
+                keyAlias releaseProperties['ks.key.alias']
+                keyPassword releaseProperties['ks.key.password']
+            }
+        }
 
         release {
             if (releaseProperties != null) {
@@ -60,6 +62,8 @@ android {
     buildTypes {
 
         debug {
+
+            versionNameSuffix "+" + versionTimeStamp
 
             ext.fabricApiKey = "9458d1130328510f43f88f9262670d7f81276071"
             ext.fabricApiSecret = "44a9fb077adf858f979097d8315bd1de9124dda2c00b63a067015d3610315c0a"
@@ -80,7 +84,10 @@ android {
 
         }
 
-        release {
+        internal {
+
+            versionNameSuffix "+" + versionTimeStamp
+
             if (releaseProperties != null) {
 
                 ext.fabricApiKey = releaseProperties['fabric.apiKey']
@@ -94,7 +101,6 @@ android {
                 buildConfigField "String", "CLIENT_ID", releaseProperties['api.clientId']
                 buildConfigField "String", "CLIENT_SECRET", releaseProperties['api.clientSecret']
                 buildConfigField "String", "REDIRECT_URL", releaseProperties['api.redirectUrl']
-
                 buildConfigField "String", "SECURE_API_IV", releaseProperties['secureapi.iv']
             }
 
@@ -105,9 +111,31 @@ android {
 
         }
 
-//        sourceSets {
-//            main.java.srcDirs += 'src/main/kotlin'
-//        }
+        release {
+
+            if (releaseProperties != null) {
+
+                ext.fabricApiKey = releaseProperties['fabric.apiKey']
+                ext.fabricApiSecret = releaseProperties['fabric.apiSecret']
+
+                manifestPlaceholders = [manifestApplicationId          : "${defaultConfig.applicationId}",
+                                        onesignal_app_id               : releaseProperties['onesignal.appId'],
+                                        onesignal_google_project_number: releaseProperties['onesignal.projectNumber'],
+                                        fabricApiKey                   : releaseProperties['fabric.apiKey']]
+
+                buildConfigField "String", "CLIENT_ID", releaseProperties['api.clientId']
+                buildConfigField "String", "CLIENT_SECRET", releaseProperties['api.clientSecret']
+                buildConfigField "String", "REDIRECT_URL", releaseProperties['api.redirectUrl']
+                buildConfigField "String", "SECURE_API_IV", releaseProperties['secureapi.iv']
+            }
+
+            signingConfig signingConfigs.release
+
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+        }
+
     }
 
     packagingOptions {
@@ -130,7 +158,11 @@ def dbflow_version = "4.2.4"
 
 dependencies {
 
-    implementation 'com.google.android.gms:play-services-gcm:15.0.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+
+    implementation 'com.google.firebase:firebase-core:16.0.1'
+    implementation 'com.google.firebase:firebase-messaging:17.5.0'
+
     implementation 'com.google.android.gms:play-services-analytics:16.0.1'
     implementation 'com.google.android.gms:play-services-places:15.0.1'
     implementation 'com.google.android.gms:play-services-location:15.0.1'
@@ -146,34 +178,24 @@ dependencies {
 
     implementation 'com.google.android.material:material:1.0.0-beta01'
 
-    implementation 'com.google.firebase:firebase-core:16.0.1'
+    implementation 'com.google.maps.android:android-maps-utils:0.5+'
+
+    implementation('com.crashlytics.sdk.android:crashlytics:2.9.4@aar') {
+        transitive = true
+    }
 
     implementation "com.mikepenz:iconics-core:3.1.0-rc01"
     implementation "com.mikepenz:iconics-views:3.1.0-rc01"
     implementation 'com.mikepenz:google-material-typeface:3.0.1.2.original@aar'
 
-    implementation 'com.google.maps.android:android-maps-utils:0.5+'
-
-
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-
-    implementation('com.crashlytics.sdk.android:crashlytics:2.9.4@aar') {
-        transitive = true
-    }
-    implementation 'org.apache.commons:commons-lang3:3.8'
-    implementation 'org.greenrobot:eventbus:3.1.1'
-    implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.+'
+
+    implementation 'org.apache.commons:commons-lang3:3.8'
+
+    implementation 'org.greenrobot:eventbus:3.1.1'
+
+    implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'joda-time:joda-time:2.10'
-    //implementation 'net.danlew:android.joda:2.9.9.4'
-
-    //implementation 'com.vladsch.flexmark:flexmark-all:0.34.2'
-
-
-
-    //compile 'com.github.jd-alexander:LikeButton:0.2.0'
-
-    //compile 'androidx.mediarouter:mediarouter:1.0.0-beta01'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-jackson:2.4.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava:2.4.0'
@@ -183,35 +205,39 @@ dependencies {
     implementation 'com.facebook.fresco:fresco:1.10.0'
     implementation 'com.github.stfalcon:frescoimageviewer:0.5.0'
 
-//    compile 'com.squareup.picasso:picasso:2.5.2'
-    //dbflow
     // if Java use this. If using Kotlin do NOT use this.
     annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
-
-    // Use if Kotlin user.
-    //kapt "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
-
     implementation "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
     implementation "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
-
-    // kotlin extensions
+    //Kotlin extenion
     implementation "com.github.Raizlabs.DBFlow:dbflow-kotlinextensions:${dbflow_version}"
 
     implementation 'com.onesignal:OneSignal:[3.9.1, 3.99.99]'
-//    compile 'com.github.tiagohm.MarkdownView:library:0.17.0'
-//    compile 'ru.noties:markwon:1.0.5'
-    //compile 'com.squareup.okio:okio:1.10.0'
-    testImplementation 'junit:junit:4.12'
-    //compile project(':turbolinks')
-    //compile project(path: ':turbolinks', configuration: 'default')
-    //implementation 'com.mikepenz:material-design-iconic-typeface:2.2.0.4@aar'
-    //implementation 'com.google.android.material:material:1.0.0-beta01'
-
     implementation 'com.github.hosopy:actioncable-client-java:0.1.2'
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    testImplementation 'junit:junit:4.12'
 }
 
+//Build time command line operations
+task buildInternalApk(dependsOn:['assembleInternal']) {
+    doLast {
+        exec {
+            commandLine 'git', 'tag', "i" + project.android.defaultConfig.versionName
+        }
+    }
+}
+
+task buildReleaseApk(dependsOn:['assembleRelease']) {
+    doLast {
+        exec {
+            commandLine 'git', 'tag', "v" + project.android.defaultConfig.versionName + "+" + versionTimeStamp
+        }
+    }
+}
+
+//Build Time file operations
 
 import com.crashlytics.tools.utils.PropertiesUtils
 
@@ -221,24 +247,16 @@ android.applicationVariants.all { variant ->
     variant.outputs.all { output ->
         outputFileName = new File(
                 "release_build",
-                output.outputFile.name.replace(".apk", "-${variant.versionName}.apk").replace("-release", ""))
-
-//        variant.outputs.all {
-//        outputFileName = "${variant.name}-${variant.versionName}.apk"
+                output.outputFile.name.replace(".apk", "-${variant.versionName}.apk").replace("-release", "").replace("-internal", ""))
     }
 
     def variantSuffix = variant.name.capitalize()
     def generateResourcesTask = project.tasks.getByName("fabricGenerateResources${variantSuffix}")
-    def generatePropertiesTask = task("fabricGenerateProperties${variantSuffix}") << {
+    def generatePropertiesTask = task("fabricGenerateProperties${variantSuffix}") {
         Properties properties = new Properties()
         properties.put("apiSecret", variant.buildType.fabricApiSecret)
         properties.put("apiKey", variant.buildType.fabricApiKey)
         PropertiesUtils.injectPropertyInFile(crashlyticsProperties, properties, "")
     }
     generateResourcesTask.dependsOn generatePropertiesTask
-}
-
-apply plugin: 'com.google.gms.google-services'
-repositories {
-    mavenCentral()
 }

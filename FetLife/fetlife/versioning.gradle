@@ -1,0 +1,9 @@
+ext {
+
+    def targetVersion = "3.0.0"
+
+    getVersionCode = {
+        new Date().time.toString()
+    }
+
+}

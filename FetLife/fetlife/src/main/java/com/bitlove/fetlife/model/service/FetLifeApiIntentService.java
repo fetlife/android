@@ -1527,7 +1527,7 @@ public class FetLifeApiIntentService extends JobIntentService {
                     group.save();
                 }
                 GroupPost groupDiscussion = GroupPost.loadGroupPost(groupDiscussionId);
-                if (groupDiscussionId != null && groupDiscussion.getDate() < messageDate) {
+                if (groupDiscussion != null && groupDiscussion.getDate() < messageDate) {
                     groupDiscussion.setDate(messageDate);
                     groupDiscussion.save();
                 }

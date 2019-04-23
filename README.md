@@ -29,7 +29,7 @@ Please see our [installation instructions](https://github.com/fetlife/android/is
 
 Installation of FetLife App is a bit different than for Apps from the Google Play store, but it is still pretty straightforward, Android OS will guide you through the whole process.
 
-Just download our latest stable version [fetlife-2.20.0.apk](https://github.com/fetlife/android/releases/download/v2.20.0/fetlife-2.20.0.apk) and follow the on-screen prompts on your device.
+Just download our latest stable version [fetlife-2.23.14.apk](https://github.com/fetlife/android/releases/download/v2.23.14/fetlife-2.23.14.apk) version and follow the on-screen prompts on your device.
 
 For more details please check out [FetLife Android App Installation Guide](https://github.com/fetlife/android/files/1127920/FetLifeAndroidAppInstallationGuide.pdf)
 

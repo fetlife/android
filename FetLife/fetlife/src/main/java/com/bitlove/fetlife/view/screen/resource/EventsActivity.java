@@ -43,6 +43,7 @@ public class EventsActivity extends ResourceActivity {
 
     public static Intent createIntent(Context context) {
         Intent intent = new Intent(context, EventsActivity.class);
+        intent.putExtra(EXTRA_HAS_BOTTOM_BAR,true);
         return intent;
     }
 
@@ -52,6 +53,7 @@ public class EventsActivity extends ResourceActivity {
 
     public static Intent createIntent(Context context, Event event) {
         Intent intent = new Intent(context, EventsActivity.class);
+        intent.putExtra(EXTRA_HAS_BOTTOM_BAR,true);
         intent.putExtra(ARG_EVENT_ID,event.getId());
         intent.putExtra(ARG_EVENT_LONGITUDE,event.getLongitude());
         intent.putExtra(ARG_EVENT_LATITUDE,event.getLatitude());
