@@ -101,7 +101,7 @@ class FetLifeWebViewFragment : Fragment() {
                     }
                     val counterPos = title.indexOf(WebAppNavigation.WEB_COUNTER_SEPARATOR)
                     if (counterPos >= 0 && counterPos < title.length-1) {
-                        title = title.substring(counterPos+1, separatorPos)
+                        title = title.substring(counterPos+1)
                     }
                     val extraPos = title.indexOf(WebAppNavigation.WEB_EXTRA_SEPARATOR)
                     if (extraPos >= 0) {
