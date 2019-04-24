@@ -224,7 +224,7 @@ dependencies {
 task buildInternalApk(dependsOn:['assembleInternal']) {
     doLast {
         exec {
-            commandLine 'git', 'tag', "i" + project.android.defaultConfig.versionName
+            commandLine 'git', 'tag', "i" + project.android.defaultConfig.versionName + "+" + versionTimeStamp
         }
     }
 }
@@ -232,7 +232,7 @@ task buildInternalApk(dependsOn:['assembleInternal']) {
 task buildReleaseApk(dependsOn:['assembleRelease']) {
     doLast {
         exec {
-            commandLine 'git', 'tag', "v" + project.android.defaultConfig.versionName + "+" + versionTimeStamp
+            commandLine 'git', 'tag', "v" + project.android.defaultConfig.versionName
         }
     }
 }
