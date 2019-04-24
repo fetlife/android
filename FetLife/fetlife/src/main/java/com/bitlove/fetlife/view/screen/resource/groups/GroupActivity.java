@@ -20,6 +20,7 @@ import com.bitlove.fetlife.view.dialog.ConfirmationDialog;
 import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.resource.ResourceActivity;
 import com.bitlove.fetlife.view.widget.FlingBehavior;
+import com.crashlytics.android.Crashlytics;
 import com.google.android.material.appbar.AppBarLayout;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -77,11 +78,13 @@ public class GroupActivity extends ResourceActivity implements AppBarLayout.OnOf
         String groupTitle = getIntent().getStringExtra(EXTRA_GROUP_TITLE);
         if (group != null) {
             setGroupDetails(group);
-        } else {
+        } else if (groupId != null){
             if (groupTitle != null){
                 setGroupDetails(groupTitle,-1);
             }
             FetLifeApiIntentService.startApiCall(this, FetLifeApiIntentService.ACTION_APICALL_GROUP, groupId);
+        } else {
+            Crashlytics.logException(new Exception("groupId must not be null"));
         }
         findViewById(R.id.group_menu_icon_view_container).setOnClickListener(new View.OnClickListener() {
             @Override
