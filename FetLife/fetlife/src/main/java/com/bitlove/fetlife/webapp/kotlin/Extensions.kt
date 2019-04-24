@@ -10,15 +10,15 @@ import com.bitlove.fetlife.FetLifeApplication
 
 //Activity functions
 fun Activity.getStringExtra(name: String) : String? {
-    return intent.extras?.getString(name)
+    return intent?.extras?.getString(name)
 }
 
 fun Activity.getIntExtra(name: String) : Int? {
-    return intent.extras.getInt(name)
+    return intent?.extras?.getInt(name)
 }
 
 fun Activity.getBooleanExtra(name: String) : Boolean? {
-    return intent.extras.getBoolean(name)
+    return intent?.extras?.getBoolean(name)
 }
 
 fun Fragment.getStringArgument(name: String) : String? {
