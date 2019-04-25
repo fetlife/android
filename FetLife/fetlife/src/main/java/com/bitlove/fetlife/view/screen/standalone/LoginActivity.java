@@ -244,7 +244,7 @@ public class LoginActivity extends Activity {
     }
 
     public void onSignUp(View v) {
-        openLink("https://fetlife.com/signup_step1");
+        openLink(WebAppNavigation.WEBAPP_BASE_URL + "/signup_step1");
     }
 
     public void onForgotLogin(View v) {
