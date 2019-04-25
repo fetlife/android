@@ -238,10 +238,15 @@ public class GroupMessagesActivity extends ResourceActivity
         avatarUrl = intent.getStringExtra(EXTRA_AVATAR_RESOURCE_URL);
         memberId = null;
 
-        group = Group.loadGroup(groupId);
-        if (group == null) {
-            FetLifeApiIntentService.startApiCall(this,FetLifeApiIntentService.ACTION_APICALL_GROUP,groupId);
+        if (groupId != null) {
+            group = Group.loadGroup(groupId);
+            if (group == null) {
+                FetLifeApiIntentService.startApiCall(this,FetLifeApiIntentService.ACTION_APICALL_GROUP,groupId);
+            }
+        } else {
+            Crashlytics.logException(new Exception("groupId must not be null"));
         }
+
         messagesAdapter = new GroupMessagesRecyclerAdapter(groupId,groupDiscussionId,this);
         groupDiscussion = messagesAdapter.getGroupPost();
         if (groupDiscussion != null) {
@@ -372,6 +377,10 @@ public class GroupMessagesActivity extends ResourceActivity
     }
 
     private void startResourceCall(int pageCount, int requestedPage) {
+        if (groupId == null || groupDiscussionId == null) {
+            Crashlytics.logException(new Exception("groupId and groupDiscussionId must not be null"));
+            return;
+        }
         FetLifeApiIntentService.startApiCall(GroupMessagesActivity.this, FetLifeApiIntentService.ACTION_APICALL_GROUP, groupId);
         FetLifeApiIntentService.startApiCall(GroupMessagesActivity.this, FetLifeApiIntentService.ACTION_APICALL_GROUP_MESSAGES, groupId, groupDiscussionId, Integer.toString(pageCount), Integer.toString(requestedPage));
     }
