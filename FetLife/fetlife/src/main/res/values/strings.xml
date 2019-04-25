@@ -29,6 +29,15 @@
 
             <p><b><br/>Version History</b></p>
 
+            <p/>v3.0.0-beta.1<br/>
+                    <ul>
+                        <li>Inbox screens are displayed in webviews so they have the same design and feature set as the website</li>
+                        <li>Conversation screens are displayed in webviews so they have the same design and feature set as the website</li>
+                        <li>Start new conversation screen displayed in a webview so it has the same design and feature set as the website</li>
+                        <li>Fixed misleading text of Group Discussion notification setting</li>
+                        <li>Several crash fixes</li>
+                    </ul>
+
             <p/>v2.22.0<br/>
                     <ul>
                         <li>Bug fixes</li>
