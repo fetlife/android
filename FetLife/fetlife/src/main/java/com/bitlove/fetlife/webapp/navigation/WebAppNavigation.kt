@@ -164,6 +164,7 @@ class WebAppNavigation {
 
     private val parentMap = LinkedHashMap<String,String>().apply {
         put(URL_QNA_NEW, URL_REGEX_QNA_MAIN)
+        put(URL_REGEX_CONVERSATION, URL_REGEX_INBOX)
     }
 
     private val optionsMenuMap = LinkedHashMap<String,List<Int>>().apply {
@@ -400,15 +401,16 @@ class WebAppNavigation {
         var targetUrl = targetUri.toString()
         currentUrl = currentUrl.replace("places","p")
         targetUrl = targetUrl.replace("places","p")
-        //workaround to deal with inbox
-        if (URL_REGEX_INBOX_MAIN.toRegex().matches(currentUrl) || URL_REGEX_INBOX_MAIN.toRegex().matches(targetUrl)) {
-            return false
-        }
 
         for ((uriRegex,parentRegex) in parentMap) {
             if (uriRegex.toRegex().matches(currentUrl) && parentRegex.toRegex().matches(targetUrl)) {
                 return true
             }
+        }
+
+        //workaround to deal with inbox
+        if (URL_REGEX_INBOX_MAIN.toRegex().matches(currentUrl) || URL_REGEX_INBOX_MAIN.toRegex().matches(targetUrl)) {
+            return false
         }
 
         if (currentUrl.startsWith(targetUrl)) {
