@@ -474,7 +474,7 @@
     <string name="settings_title_notification_messages_enabled">Message Notifications</string>
     <string name="settings_summary_notification_messages_enabled">Notifications for incoming Messages</string>
     <string name="settings_title_notification_group_messages_enabled">Group Discussion Notifications</string>
-    <string name="settings_summary_notification_group_messages_enabled">Group discussions related notifications about new discussions, posts, comments and mentions</string>
+    <string name="settings_summary_notification_group_messages_enabled">Notifications for Group Discussion Comments and Mentions</string>
     <string name="settings_title_notification_friendrequests_enabled">Friend Request Notifications</string>
     <string name="settings_summary_notification_friendrequests_enabled">Notifications for incoming Friend Requests</string>
     <string name="settings_title_notification_prerelease_enabled">Pre-Release Notifications</string>
