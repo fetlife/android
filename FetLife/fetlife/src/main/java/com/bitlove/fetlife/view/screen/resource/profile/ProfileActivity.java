@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.event.ServiceCallFailedEvent;
@@ -24,11 +25,11 @@ import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.util.ViewUtil;
 import com.bitlove.fetlife.view.dialog.ConfirmationDialog;
 import com.bitlove.fetlife.view.screen.resource.FriendRequestsActivity;
-import com.bitlove.fetlife.view.screen.resource.MessagesActivity;
 import com.bitlove.fetlife.view.screen.resource.ResourceActivity;
 import com.bitlove.fetlife.view.widget.FlingBehavior;
 import com.bitlove.fetlife.view.widget.SlideControlViewPager;
 import com.bitlove.fetlife.view.widget.SlidingTabLayout;
+import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.material.appbar.AppBarLayout;
@@ -47,6 +48,7 @@ public class ProfileActivity extends ResourceActivity implements AppBarLayout.On
     private static final int PROFILE_MENU_HITREC_PADDING = 200;
 
     private static final String EXTRA_MEMBERID = "EXTRA_MEMBERID";
+    private static final String EXTRA_TOAST_MESSAGE = "EXTRA_TOAST_MESSAGE";
 
     private static final int PAGE_NUMBER_PICTURES = 4;
     private static final String MENMTION_PREFEIX = "@";
@@ -59,16 +61,24 @@ public class ProfileActivity extends ResourceActivity implements AppBarLayout.On
     private String memberId;
 
     public static void startActivity(Context context, String memberId) {
+        startActivity(context, memberId, false, null);
+    }
+
+    public static void startActivity(Context context, String memberId, boolean clearTop, String toastMessage) {
         if (context == null) {
             return;
         }
-        context.startActivity(createIntent(context,memberId));
+        context.startActivity(createIntent(context,memberId, clearTop,toastMessage));
     }
 
-    public static Intent createIntent(Context context, String memberId) {
+    public static Intent createIntent(Context context, String memberId, boolean clearTop, String toastMessage) {
         Intent intent = new Intent(context, ProfileActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION|Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        if (clearTop) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        }
         intent.putExtra(EXTRA_MEMBERID,memberId);
+        intent.putExtra(EXTRA_TOAST_MESSAGE,toastMessage);
         return intent;
     }
 
@@ -81,6 +91,7 @@ public class ProfileActivity extends ResourceActivity implements AppBarLayout.On
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        displayIntentMessage();
 
         Member member = Member.loadMember(getIntent().getStringExtra(EXTRA_MEMBERID));
         memberId = member != null ? member.getId() : getIntent().getStringExtra(EXTRA_MEMBERID);
@@ -182,6 +193,26 @@ public class ProfileActivity extends ResourceActivity implements AppBarLayout.On
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams)appBarLayout.getLayoutParams();
         params.setBehavior(new FlingBehavior());
         appBarLayout.addOnOffsetChangedListener(this);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Member member = Member.loadMember(getIntent().getStringExtra(EXTRA_MEMBERID));
+        memberId = member != null ? member.getId() : getIntent().getStringExtra(EXTRA_MEMBERID);
+
+        displayIntentMessage();
+        setMemberDetails(member);
+    }
+
+    private void displayIntentMessage() {
+        String toastMessage = getIntent().getStringExtra(EXTRA_TOAST_MESSAGE);
+        if (toastMessage != null) {
+            showToast(toastMessage);
+            Intent intent = getIntent();
+            intent.removeExtra(EXTRA_TOAST_MESSAGE);
+            setIntent(intent);
+        }
     }
 
     private void setMemberDetails(final Member member) {
@@ -355,7 +386,7 @@ public class ProfileActivity extends ResourceActivity implements AppBarLayout.On
     private void onMenuIconMessage() {
         Member member = Member.loadMember(memberId);
         if (member != null) {
-            MessagesActivity.startActivity(this, Conversation.createLocalConversation(member), member.getNickname(), member.getAvatarLink(), false);
+            FetLifeWebViewActivity.Companion.startActivity(this,"conversations/new?with="+member.getServerId(),false,null, false, null);
         }
     }
 

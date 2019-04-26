@@ -4,7 +4,6 @@ import android.app.PendingIntent
 import android.content.Context
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.view.screen.BaseActivity
-import com.bitlove.fetlife.view.screen.resource.ConversationsActivity
 import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity
 import org.json.JSONObject
 
