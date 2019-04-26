@@ -11,12 +11,13 @@ import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.view.screen.BaseActivity
 import com.bitlove.fetlife.view.screen.component.MenuActivityComponent
+import com.bitlove.fetlife.view.screen.resource.ResourceActivity
 import com.bitlove.fetlife.view.screen.standalone.LoginActivity
 import com.bitlove.fetlife.webapp.kotlin.getBooleanExtra
 import com.bitlove.fetlife.webapp.kotlin.getStringExtra
 import com.bitlove.fetlife.webapp.navigation.WebAppNavigation
 
-class FetLifeWebViewActivity : BaseActivity() {
+class FetLifeWebViewActivity : ResourceActivity() {
 
     override fun onCreateActivityComponents() {
         addActivityComponent(MenuActivityComponent())
@@ -54,8 +55,7 @@ class FetLifeWebViewActivity : BaseActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onResourceCreate(savedInstanceState: Bundle?) {
 //        setContentView(R.layout.webapp_activity_webview)
 
         var hasHomeNavigation = getBooleanExtra(EXTRA_HAS_BOTTOM_NAVIGATION) != true
@@ -74,6 +74,9 @@ class FetLifeWebViewActivity : BaseActivity() {
                     .add(R.id.content_layout, FetLifeWebViewFragment.newInstance(pageUrl, hasHomeNavigation), "FetLifeWebViewFragment")
                     .commit()
         }
+    }
+
+    override fun onResourceStart() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
