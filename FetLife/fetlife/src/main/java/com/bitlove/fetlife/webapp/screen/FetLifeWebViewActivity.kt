@@ -111,4 +111,9 @@ class FetLifeWebViewActivity : ResourceActivity() {
             FetLifeApplication.getInstance().webAppNavigation.getFabLink(getStringExtra(EXTRA_PAGE_URL))
     }
 
+    fun getCurrentUrl(): String? {
+        return (supportFragmentManager.fragments.getOrNull(0) as? FetLifeWebViewFragment)?.getCurrentUrl()
+    }
+
+
 }

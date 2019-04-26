@@ -16,7 +16,16 @@
     <string name="url_title_notifications">Notifications</string>
     <string name="url_title_glossary">Glossary</string>
     <string name="url_title_requests">Friend Requests</string>
+    <string name="url_title_inbox">Inbox</string>
+    <string name="url_title_inbox_archived">Archived</string>
+    <string name="url_title_inbox_all">All Mail</string>
+
+    <string name="menu_options_inbox_all">All Mail</string>
+    <string name="menu_options_inbox_archived">Archived</string>
+    <string name="menu_options_inbox_default">Inbox</string>
 
     <string name="error_webview_failed">Connection Failed. Please try again later</string>
     <string name="toast_password_reset_successfull">Your password has been changed successfully.</string>
+    <string name="toast_message_sent_successfully">Your message has been successfully sent</string>
+    <string name="toast_message_sent_successfully_to_user">Your message has been successfully sent to %s</string>
 </resources>

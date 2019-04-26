@@ -9,4 +9,8 @@
 
     <color name="button_floating_label">#ffffffff</color>
     <color name="toolbar_chrome_custom_tab">#000000</color>
+
+
+    <color name="background_menu_options">#C4C4C4</color>
+
 </resources>
