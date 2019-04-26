@@ -14,7 +14,7 @@ if (propFile.canRead()) {
     releaseProperties = null;
 }
 
-def versionTimeStamp = (new Date().time/1000).toInteger()
+def versionTimeStamp = (new Date().time / 1000).toInteger()
 
 android {
     compileSdkVersion 28
@@ -219,7 +219,7 @@ dependencies {
 }
 
 //Build time command line operations
-task buildInternalApk(dependsOn:['assembleInternal']) {
+task buildInternalApk(dependsOn: ['assembleInternal']) {
     doLast {
         exec {
             commandLine 'git', 'tag', "v" + project.android.defaultConfig.versionName + "+" + versionTimeStamp
@@ -227,7 +227,7 @@ task buildInternalApk(dependsOn:['assembleInternal']) {
     }
 }
 
-task buildReleaseApk(dependsOn:['assembleRelease']) {
+task buildReleaseApk(dependsOn: ['assembleRelease']) {
     doLast {
         exec {
             commandLine 'git', 'tag', "v" + project.android.defaultConfig.versionName
