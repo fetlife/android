@@ -34,7 +34,7 @@ import org.greenrobot.eventbus.ThreadMode
 
 
 class FetLifeWebViewFragment : Fragment() {
-    
+
     companion object {
         private const val ARG_PAGE_URL = "ARG_PAGE_URL"
         private const val ARG_USE_TOP_BACK_NAVIGATION = "ARG_USE_TOP_BACK_NAVIGATION"
@@ -176,7 +176,7 @@ class FetLifeWebViewFragment : Fragment() {
                 put("Authorization", authHeader)
             }
             put("X-Fetlife-Webview", "1")
-            put("X-Fetlife-Android", VersionUtil.getCurrentVersionInt(context).toString())
+            put("X-Fetlife-Android", VersionUtil.getCurrentVersionInt().toString())
         }
     }
 

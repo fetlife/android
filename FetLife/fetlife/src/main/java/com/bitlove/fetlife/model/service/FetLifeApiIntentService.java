@@ -642,12 +642,7 @@ public class FetLifeApiIntentService extends JobIntentService {
             Release latestRelease = null;
             Release latestPreRelease = null;
             final List<Release> releases = releasesCallResponse.body();
-            Collections.sort(releases, new Comparator<Release>() {
-                @Override
-                public int compare(Release o1, Release o2) {
-                    return VersionUtil.getVersionInt(o2.getTag())-VersionUtil.getVersionInt(o1.getTag());
-                }
-            });
+            Collections.sort(releases, VersionUtil.getReleaseComparator());
             for (Release release : releases) {
                 if (release.isPrerelease() && latestPreRelease == null) {
                     latestPreRelease = release;

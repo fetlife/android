@@ -12,6 +12,7 @@ import com.bitlove.fetlife.model.pojos.github.Release;
 import com.crashlytics.android.Crashlytics;
 
 import java.text.ParseException;
+import java.util.Comparator;
 
 public class VersionUtil {
 
@@ -87,5 +88,26 @@ public class VersionUtil {
         } catch (PackageManager.NameNotFoundException e) {
             return -1;
         }
+    }
+
+    public static Comparator<Release> getReleaseComparator() {
+        return new Comparator<Release>() {
+            @Override
+            public int compare(Release release1, Release release2) {
+                String versionName1 = release1.getTag();
+                String versionName2 = release2.getTag();
+                if (versionName1.startsWith(PREFIX_VERSION)) {
+                    versionName1 = versionName1.substring(PREFIX_VERSION.length());
+                }
+                if (versionName2.startsWith(PREFIX_VERSION)) {
+                    versionName2 = versionName2.substring(PREFIX_VERSION.length());
+                }
+                try {
+                    return new SemanticVersion(versionName1).compareTo(new SemanticVersion(versionName2));
+                } catch (ParseException pe) {
+                    return 0;
+                }
+            }
+        };
     }
 }
