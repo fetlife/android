@@ -23,7 +23,6 @@ import com.bitlove.fetlife.event.VideoChunkUploadFinishedEvent;
 import com.bitlove.fetlife.event.VideoChunkUploadStartedEvent;
 import com.bitlove.fetlife.event.VideoUploadFailedEvent;
 import com.bitlove.fetlife.inbound.onesignal.update.UpdateBroadcastReceiver;
-import com.bitlove.fetlife.model.pojos.fetlife.db.NotificationHistoryItem;
 import com.bitlove.fetlife.model.pojos.github.Release;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.model.service.ServiceCallCancelReceiver;
@@ -133,10 +132,10 @@ public class EventDisplayHandler {
         Release latestPreRelease = latestReleaseEvent.getLatestPreRelease();
         boolean forcedCheck = latestReleaseEvent.isForcedCheck();
         boolean notified = false;
-        if (VersionUtil.toBeNotified(baseActivity, latestPreRelease, forcedCheck)) {
+        if (VersionUtil.toBeNotified(latestPreRelease, forcedCheck)) {
             notifyAboutNewRelease(baseActivity, latestPreRelease);
             notified = true;
-        } else if (VersionUtil.toBeNotified(baseActivity, latestRelease, forcedCheck)) {
+        } else if (VersionUtil.toBeNotified(latestRelease, forcedCheck)) {
             notifyAboutNewRelease(baseActivity, latestRelease);
             notified = true;
         }
