@@ -5,10 +5,15 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.text.TextUtils
+import android.text.TextUtils.isEmpty
+import android.util.Log
 import android.view.LayoutInflater
+import android.webkit.CookieManager
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import androidx.browser.customtabs.CustomTabsIntent
+import com.bitlove.fetlife.BuildConfig
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.*
@@ -32,7 +37,7 @@ class WebAppNavigation {
 
     companion object {
 
-        private var totalTimeSpent : Long = 0
+        private var totalTimeSpent: Long = 0
 
         const val WEBAPP_BASE_URL = "https://fetlife.com"
 
@@ -40,6 +45,9 @@ class WebAppNavigation {
         internal const val WEB_TITLE_SEPARATOR = " |"
         internal const val WEB_COUNTER_SEPARATOR = ") "
         internal const val WEB_EXTRA_SEPARATOR = " -"
+
+        private const val NATIVE_NAVIGATION_LOGIN = "NATIVE_NAVIGATION_LOGIN"
+        private const val NATIVE_NAVIGATION_HOME = "NATIVE_NAVIGATION_HOME"
 
         //NOTE: Temporarily duplicated with native code area TODO(WEBAPP): decoupling
         private const val QUERY_PARAM_API_IDS = "api_ids"
@@ -145,7 +153,6 @@ class WebAppNavigation {
         private const val URL_REGEX_SEARCH = "^$REGEX_BASE_URL\\/search\\/?.*\$"
         //qna
         private const val URL_REGEX_QNA = "^$REGEX_BASE_URL\\/q\\/?.*\$"
-
         private const val URL_REGEX_QNA_QUESTION = "^$REGEX_BASE_URL\\/q\\/.*\\/.*\$"
 
         private const val URL_REGEX_NOTIFICATIONS = "^$REGEX_BASE_URL\\/notifications\\/?.*\$"
@@ -156,9 +163,10 @@ class WebAppNavigation {
 
         private const val URL_REGEX_LOGIN_PASSWORD_SENT = "^$REGEX_BASE_URL\\/sent_login_information[^\\/]*\$"
 
+        private const val URL_REGEX_HOME = "^$REGEX_BASE_URL\\/home[^\\/]*\$"
 
         //* Full Urls
-        const val URL_LOGIN = "$WEBAPP_BASE_URL/login"
+        const val URL_LOGIN = "$WEBAPP_BASE_URL/users/sign_in"
 
         private const val URL_QNA_NEW = "$WEBAPP_BASE_URL/q/new"
         private const val URL_INBOX_MAIN = "$WEBAPP_BASE_URL/inbox"
@@ -167,33 +175,33 @@ class WebAppNavigation {
 
     }
 
-    private val parentMap = LinkedHashMap<String,String>().apply {
+    private val parentMap = LinkedHashMap<String, String>().apply {
         put(URL_QNA_NEW, URL_REGEX_QNA_MAIN)
         put(URL_REGEX_CONVERSATION, URL_REGEX_INBOX)
     }
 
-    private val optionsMenuMap = LinkedHashMap<String,List<Int>>().apply {
-        put(URL_REGEX_INBOX_MAIN,ArrayList<Int>().apply {
+    private val optionsMenuMap = LinkedHashMap<String, List<Int>>().apply {
+        put(URL_REGEX_INBOX_MAIN, ArrayList<Int>().apply {
             add(R.string.menu_options_inbox_all)
             add(R.string.menu_options_inbox_archived)
         })
-        put(URL_REGEX_INBOX_ALL,ArrayList<Int>().apply {
+        put(URL_REGEX_INBOX_ALL, ArrayList<Int>().apply {
             add(R.string.menu_options_inbox_default)
             add(R.string.menu_options_inbox_archived)
         })
-        put(URL_REGEX_INBOX_ARCHIVED,ArrayList<Int>().apply {
+        put(URL_REGEX_INBOX_ARCHIVED, ArrayList<Int>().apply {
             add(R.string.menu_options_inbox_default)
             add(R.string.menu_options_inbox_all)
         })
     }
 
-    private val optionsMenuUrlMap = LinkedHashMap<Int,String>().apply {
+    private val optionsMenuUrlMap = LinkedHashMap<Int, String>().apply {
         put(R.string.menu_options_inbox_default, URL_INBOX_MAIN)
         put(R.string.menu_options_inbox_all, URL_INBOX_ALL)
         put(R.string.menu_options_inbox_archived, URL_INBOX_ARCHIVED)
     }
 
-    private val titleMap = LinkedHashMap<String,Int>().apply {
+    private val titleMap = LinkedHashMap<String, Int>().apply {
         put(URL_REGEX_INBOX_MAIN, R.string.url_title_inbox)
         put(URL_REGEX_INBOX_ARCHIVED, R.string.url_title_inbox_archived)
         put(URL_REGEX_INBOX_ALL, R.string.url_title_inbox_all)
@@ -298,25 +306,26 @@ class WebAppNavigation {
         add(URL_REGEX_QNA_MINE)
     }
 
-    private val nativeNavigationMap = LinkedHashMap<String,String>().apply {
+    private val nativeNavigationMap = LinkedHashMap<String, String>().apply {
         put(URL_REGEX_USER_PROFILE, ProfileActivity::class.java.simpleName)
         put(URL_REGEX_EVENT, EventActivity::class.java.simpleName)
         put(URL_REGEX_GROUP, GroupActivity::class.java.simpleName)
         put(URL_REGEX_GROUP_POST, GroupMessagesActivity::class.java.simpleName)
         put(URL_REGEX_USER_PICTURE, ImageViewerWrapper::class.java.simpleName)
         put(URL_REGEX_USER_VIDEO, Video::class.java.simpleName)
-        put(URL_REGEX_LOGIN, LoginActivity::class.java.simpleName)
+        put(URL_REGEX_LOGIN, NATIVE_NAVIGATION_LOGIN)
+        put(URL_REGEX_HOME, NATIVE_NAVIGATION_HOME)
     }
 
-    private val fabLinkMap = LinkedHashMap<String,String>().apply {
+    private val fabLinkMap = LinkedHashMap<String, String>().apply {
         put(URL_REGEX_QNA_MAIN, URL_QNA_NEW)
     }
 
-    fun getOptionsMenuNavigationList(url: String?) : List<Int>? {
+    fun getOptionsMenuNavigationList(url: String?): List<Int>? {
         if (url == null) {
             return null
         }
-        for ((key,value) in optionsMenuMap) {
+        for ((key, value) in optionsMenuMap) {
             if (key.toRegex().matches(url)) {
                 return value
             }
@@ -324,15 +333,15 @@ class WebAppNavigation {
         return null
     }
 
-    fun getOptionMenuNavigationUrl(itemId: Int) : String? {
+    fun getOptionMenuNavigationUrl(itemId: Int): String? {
         return optionsMenuUrlMap[itemId]
     }
 
-    fun getTitle(url: String?) : Int? {
+    fun getTitle(url: String?): Int? {
         if (url == null) {
             return null
         }
-        for ((key,value) in titleMap) {
+        for ((key, value) in titleMap) {
             if (key.toRegex().matches(url)) {
                 return value
             }
@@ -362,7 +371,7 @@ class WebAppNavigation {
         }
 
         if (isDownloadLink(targetUri)) {
-            openInCustomTab(targetUri,context)
+            openInCustomTab(targetUri, context)
             return true
         }
 
@@ -370,7 +379,7 @@ class WebAppNavigation {
             return true
         }
 
-        if (isParent(targetUri,webView)) {
+        if (isParent(targetUri, webView)) {
             if (webView.canGoBack()) {
                 webView.goBack()
             } else {
@@ -396,7 +405,7 @@ class WebAppNavigation {
         }
 
         //if (not supported as webview yet)
-        openInCustomTab(targetUri,context)
+        openInCustomTab(targetUri, context)
         return true
     }
 
@@ -404,10 +413,10 @@ class WebAppNavigation {
         var currentUrl = webView.url
         //workaround to deal with synonyms
         var targetUrl = targetUri.toString()
-        currentUrl = currentUrl.replace("places","p")
-        targetUrl = targetUrl.replace("places","p")
+        currentUrl = currentUrl.replace("places", "p")
+        targetUrl = targetUrl.replace("places", "p")
 
-        for ((uriRegex,parentRegex) in parentMap) {
+        for ((uriRegex, parentRegex) in parentMap) {
             if (uriRegex.toRegex().matches(currentUrl) && parentRegex.toRegex().matches(targetUrl)) {
                 return true
             }
@@ -434,7 +443,7 @@ class WebAppNavigation {
 
     fun getFabLink(url: String?): String? {
         url ?: return null
-        for ((uriRegex,fabLink) in fabLinkMap) {
+        for ((uriRegex, fabLink) in fabLinkMap) {
             if (uriRegex.toRegex().matches(url)) {
                 return fabLink
             }
@@ -451,9 +460,10 @@ class WebAppNavigation {
     }
 
     private fun handleNativeSupportedLink(uri: Uri, currentUrl: String, activity: Activity?, request: WebResourceRequest?): Boolean {
+        activity ?: return false
 
-        var nativeClassIdentifier : String? = null
-        for ((uriRegex,classIdentifier) in nativeNavigationMap) {
+        var nativeClassIdentifier: String? = null
+        for ((uriRegex, classIdentifier) in nativeNavigationMap) {
             if (uriRegex.toRegex().containsMatchIn(uri.toString())) {
                 nativeClassIdentifier = classIdentifier
                 break
@@ -464,7 +474,8 @@ class WebAppNavigation {
         }
 
         val apiIdsParam = uri.getQueryParameter(QUERY_PARAM_API_IDS)
-        val apiIds = apiIdsParam?.split(",".toRegex())?.dropLastWhile{it.isEmpty()}?.toTypedArray() ?: arrayOfNulls<String>(0)
+        val apiIds = apiIdsParam?.split(",".toRegex())?.dropLastWhile { it.isEmpty() }?.toTypedArray()
+                ?: arrayOfNulls<String>(0)
 
         return when (nativeClassIdentifier) {
             ProfileActivity::class.java.simpleName -> {
@@ -472,7 +483,7 @@ class WebAppNavigation {
                 val fromNewConversation = URL_REGEX_CONVERSATION_NEW.toRegex().matches(currentUrl)
                 val toastMessage = if (fromNewConversation && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && request?.isRedirect == true) {
                     val memberName = Member.loadMember(memberId)?.nickname
-                    if (memberName != null) activity?.getString(R.string.toast_message_sent_successfully_to_user,memberName) else activity?.getString(R.string.toast_message_sent_successfully)
+                    if (memberName != null) activity?.getString(R.string.toast_message_sent_successfully_to_user, memberName) else activity?.getString(R.string.toast_message_sent_successfully)
                 } else null
                 ProfileActivity.startActivity(activity, memberId, fromNewConversation, toastMessage)
                 true
@@ -507,11 +518,20 @@ class WebAppNavigation {
                 FetLifeApiIntentService.startApiCall(activity, FetLifeApiIntentService.ACTION_APICALL_MEMBER_VIDEO, memberId, videoId, currentUrl)
                 true
             }
-            LoginActivity::class.java.simpleName -> {
+            NATIVE_NAVIGATION_LOGIN -> {
                 val toastMessage = if (URL_REGEX_PASSWORD_EDIT.toRegex().matches(currentUrl)) {
                     activity?.getString(R.string.toast_password_reset_successfull);
                 } else null
                 FetLifeWebViewActivity.startLogin(FetLifeApplication.getInstance(), toastMessage)
+                true
+            }
+            NATIVE_NAVIGATION_HOME -> {
+                val cookies = CookieManager.getInstance().getCookie(uri.toString())
+                if (BuildConfig.DEBUG) {
+                    Log.d("Cookies",cookies.toString())
+                }
+                FetLifeWebViewActivity.startActivity(activity, URL_INBOX_MAIN, true, R.id.navigation_bottom_inbox)
+                activity.finish()
                 true
             }
             else -> false

@@ -33,7 +33,7 @@ class FetLifeWebViewActivity : ResourceActivity() {
             return createIntent(context, WebAppNavigation.URL_LOGIN, false, null, true, toastMessage)
         }
 
-        fun startActivity(context: Context, pageUrl: String, hasBottomNavigation: Boolean = false, selectedBottomNavigationItem: Int? = null, newTask: Boolean = false, options: Bundle?, toastMessage: String? = null) {
+        fun startActivity(context: Context, pageUrl: String, hasBottomNavigation: Boolean = false, selectedBottomNavigationItem: Int? = null, newTask: Boolean = false, options: Bundle? = null, toastMessage: String? = null) {
             context.startActivity(createIntent(context, pageUrl, hasBottomNavigation, selectedBottomNavigationItem, newTask, toastMessage), options)
         }
 
@@ -65,6 +65,14 @@ class FetLifeWebViewActivity : ResourceActivity() {
 
     override fun onSetContentView() {
         setContentView(R.layout.webapp_activity_webview)
+    }
+
+    override fun verifyUser(): Boolean {
+        if (getStringExtra(EXTRA_PAGE_URL) == WebAppNavigation.URL_LOGIN) {
+            return true
+        } else {
+            return super.verifyUser()
+        }
     }
 
     override fun onResourceCreate(savedInstanceState: Bundle?) {
