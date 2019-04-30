@@ -57,7 +57,7 @@ public class WritingsFragment extends LoadFragment implements ResourceListRecycl
     public void onItemClick(Writing writing) {
         writing.save();
 //        WritingActivity.startActivity((BaseActivity) getActivity(),writing.getId(), writing.getMemberId());
-        FetLifeWebViewActivity.Companion.startActivity(getBaseActivity(),writing.getUrl(),false,null, false, null);
+        FetLifeWebViewActivity.Companion.startActivity(getBaseActivity(),writing.getUrl(),false,null, false, null, null);
 //        TurboLinksViewActivity.startActivity(getBaseActivity(),writing.getUrl(),writing.getTitle(), false, null, null, false);
     }
 

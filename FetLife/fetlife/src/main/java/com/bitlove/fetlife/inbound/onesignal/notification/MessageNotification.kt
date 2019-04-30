@@ -75,8 +75,8 @@ class MessageNotification(notificationType: String, notificationIdRange: Int, ti
             Crashlytics.logException(Exception("Launch url is null"))
             return null
         }
-        val baseIntent = FetLifeWebViewActivity.createIntent(context, WebAppNavigation.WEBAPP_BASE_URL + "/inbox", true, R.id.navigation_bottom_inbox, false)
-        val contentIntent = FetLifeWebViewActivity.createIntent(context, oneSignalNotification.launchUrl!!, false, null, false).apply {
+        val baseIntent = FetLifeWebViewActivity.createIntent(context, WebAppNavigation.WEBAPP_BASE_URL + "/inbox", true, R.id.navigation_bottom_inbox, false, null)
+        val contentIntent = FetLifeWebViewActivity.createIntent(context, oneSignalNotification.launchUrl!!, false, null, false, null).apply {
             putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE, oneSignalNotification.notificationType)
             putExtra(BaseActivity.EXTRA_NOTIFICATION_MERGE_ID, oneSignalNotification.mergeId)
         }
@@ -84,7 +84,7 @@ class MessageNotification(notificationType: String, notificationIdRange: Int, ti
     }
 
     override fun getLegacySummaryIntent(context: Context): PendingIntent? {
-        return PendingIntent.getActivity(context,notificationIdRange,FetLifeWebViewActivity.createIntent(context, WebAppNavigation.WEBAPP_BASE_URL + "/inbox", true, R.id.navigation_bottom_inbox, false),PendingIntent.FLAG_UPDATE_CURRENT)
+        return PendingIntent.getActivity(context,notificationIdRange,FetLifeWebViewActivity.createIntent(context, WebAppNavigation.WEBAPP_BASE_URL + "/inbox", true, R.id.navigation_bottom_inbox, false, null),PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     override fun saveNotificationItem(notificationId: Int) {}

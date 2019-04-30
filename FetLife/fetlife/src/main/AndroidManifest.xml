@@ -45,12 +45,6 @@
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
-            android:name=".view.screen.standalone.LoginActivity"
-            android:label="@string/app_name_kinky"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateAlwaysVisible" />
-
-        <activity
             android:name=".view.screen.resource.NotificationHistoryActivity"
             android:label="@string/title_activity_app_notifications"
             android:theme="@style/AppTheme.NoActionBar" />

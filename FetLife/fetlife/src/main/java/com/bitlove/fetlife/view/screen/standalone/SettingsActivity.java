@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
+import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity;
 
 import java.util.List;
 
@@ -163,7 +164,7 @@ public class SettingsActivity extends PreferenceActivity {
                             .setPositiveButton(getString(R.string.button_delete_user_data_confirmation), new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int whichButton) {
                                     FetLifeApplication.getInstance().getUserSessionManager().onUserReset();
-                                    LoginActivity.startLogin(FetLifeApplication.getInstance());
+                                    FetLifeWebViewActivity.Companion.startLogin(FetLifeApplication.getInstance(), null);
                                 }
                             })
                             .setNegativeButton(getString(R.string.button_delete_user_data_cancel), new DialogInterface.OnClickListener() {

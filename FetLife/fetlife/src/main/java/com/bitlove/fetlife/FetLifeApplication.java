@@ -31,6 +31,7 @@ import com.bitlove.fetlife.view.screen.resource.ResourceListActivity;
 import com.bitlove.fetlife.view.screen.standalone.LoginActivity;
 import com.bitlove.fetlife.view.widget.ImageViewerWrapper;
 import com.bitlove.fetlife.webapp.navigation.WebAppNavigation;
+import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -172,7 +173,7 @@ public class FetLifeApplication extends MultiDexApplication {
 
         createDefaultNotificationChanel();
 
-        PendingIntent restartIntent = PendingIntent.getActivity(this,42, LoginActivity.createIntent(this,getString(R.string.error_session_invalid)),PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent restartIntent = PendingIntent.getActivity(this,42, FetLifeWebViewActivity.Companion.createLoginIntent(this,getString(R.string.error_session_invalid)),PendingIntent.FLAG_ONE_SHOT);
         Thread.setDefaultUncaughtExceptionHandler(new FetLifeUncaughtExceptionHandler(Thread.getDefaultUncaughtExceptionHandler(),restartIntent));
 
         //Init push notifications

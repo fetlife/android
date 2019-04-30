@@ -104,7 +104,7 @@ public class FeedActivity extends ResourceListActivity<Story> implements FeedRec
             if (targetWriting != null) {
                 targetWriting.save();
 //                WritingActivity.startActivity(this,targetWriting.getId(), targetWriting.getMemberId());
-                FetLifeWebViewActivity.Companion.startActivity(this,targetWriting.getUrl(),false,null, false, null);
+                FetLifeWebViewActivity.Companion.startActivity(this,targetWriting.getUrl(),false,null, false, null, null);
 //                TurboLinksViewActivity.startActivity(this,targetWriting.getUrl(),targetWriting.getTitle(), false, null, null, false);
                 return;
             }
@@ -114,7 +114,7 @@ public class FeedActivity extends ResourceListActivity<Story> implements FeedRec
                 targetStatus.save();
                 Member member = targetStatus.getMember();
                 String nickname = member != null ? getString(R.string.title_activity_status,member.getNickname()) : "";
-                FetLifeWebViewActivity.Companion.startActivity(this,targetStatus.getUrl(),false,null, false, null);
+                FetLifeWebViewActivity.Companion.startActivity(this,targetStatus.getUrl(),false,null, false, null, null);
 //                TurboLinksViewActivity.startActivity(this,targetStatus.getUrl(),nickname, false, null, null, false);
                 return;
             }

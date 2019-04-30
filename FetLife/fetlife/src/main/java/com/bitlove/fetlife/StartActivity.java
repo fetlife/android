@@ -22,12 +22,12 @@ public class StartActivity extends Activity {
 
         UserSessionManager userSessionManager = getFetLifeApplication().getUserSessionManager();
         if (userSessionManager.getCurrentUser() == null) {
-            LoginActivity.startLogin(getFetLifeApplication());
+            FetLifeWebViewActivity.Companion.startLogin(getFetLifeApplication(), null);
         } else {
             if (getFetLifeApplication().getUserSessionManager().getActiveUserPreferences().getBoolean(getString(R.string.settings_key_general_feed_as_start), false)) {
                 FeedActivity.startActivity(this);
             } else {
-                FetLifeWebViewActivity.Companion.startActivity(this, WebAppNavigation.WEBAPP_BASE_URL + "/inbox", true, R.id.navigation_bottom_inbox, false, null);
+                FetLifeWebViewActivity.Companion.startActivity(this, WebAppNavigation.WEBAPP_BASE_URL + "/inbox", true, R.id.navigation_bottom_inbox, false, null, null);
             }
         }
         finish();

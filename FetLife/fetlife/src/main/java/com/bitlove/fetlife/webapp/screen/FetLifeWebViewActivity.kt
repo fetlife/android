@@ -12,7 +12,6 @@ import com.bitlove.fetlife.R
 import com.bitlove.fetlife.view.screen.BaseActivity
 import com.bitlove.fetlife.view.screen.component.MenuActivityComponent
 import com.bitlove.fetlife.view.screen.resource.ResourceActivity
-import com.bitlove.fetlife.view.screen.standalone.LoginActivity
 import com.bitlove.fetlife.webapp.kotlin.getBooleanExtra
 import com.bitlove.fetlife.webapp.kotlin.getStringExtra
 import com.bitlove.fetlife.webapp.navigation.WebAppNavigation
@@ -20,30 +19,34 @@ import com.crashlytics.android.Crashlytics
 
 class FetLifeWebViewActivity : ResourceActivity() {
 
-    override fun onCreateActivityComponents() {
-        addActivityComponent(MenuActivityComponent())
-    }
-
-    override fun onSetContentView() {
-        setContentView(R.layout.webapp_activity_webview)
-    }
-
     companion object {
         private const val EXTRA_PAGE_URL = "EXTRA_PAGE_URL"
+        private const val EXTRA_OPTIONAL_TOAST = "EXTRA_OPTIONAL_TOAST"
         private const val EXTRA_HAS_BOTTOM_NAVIGATION = BaseActivity.EXTRA_HAS_BOTTOM_BAR
         private const val EXTRA_SELECTED_BOTTOM_NAV_ITEM = BaseActivity.EXTRA_SELECTED_BOTTOM_NAV_ITEM
 
-        fun startActivity(context: Context, pageUrl: String, hasBottomNavigation: Boolean = false, selectedBottomNavigationItem: Int? = null, newTask: Boolean = false, options: Bundle?) {
-            context.startActivity(createIntent(context, pageUrl, hasBottomNavigation, selectedBottomNavigationItem, newTask), options)
+        fun startLogin(context: Context, toastMessage: String? = null) {
+            context.startActivity(createLoginIntent(context, toastMessage))
         }
 
-        fun createIntent(context: Context, pageUrl: String, hasBottomNavigation: Boolean, selectedBottomNavigationItem: Int?, newTask: Boolean): Intent {
+        fun createLoginIntent(context: Context, toastMessage: String? = null): Intent {
+            return createIntent(context, WebAppNavigation.URL_LOGIN, false, null, true, toastMessage)
+        }
+
+        fun startActivity(context: Context, pageUrl: String, hasBottomNavigation: Boolean = false, selectedBottomNavigationItem: Int? = null, newTask: Boolean = false, options: Bundle?, toastMessage: String? = null) {
+            context.startActivity(createIntent(context, pageUrl, hasBottomNavigation, selectedBottomNavigationItem, newTask, toastMessage), options)
+        }
+
+        fun createIntent(context: Context, pageUrl: String, hasBottomNavigation: Boolean, selectedBottomNavigationItem: Int?, newTask: Boolean, toastMessage: String? = null): Intent {
             return Intent(context, FetLifeWebViewActivity::class.java).apply {
                 val pageUri = Uri.parse(pageUrl)
                 if (pageUri.isAbsolute) {
                     putExtra(EXTRA_PAGE_URL, pageUrl)
                 } else {
                     putExtra(EXTRA_PAGE_URL, WebAppNavigation.WEBAPP_BASE_URL + "/" + pageUrl)
+                }
+                if (toastMessage != null) {
+                    putExtra(EXTRA_OPTIONAL_TOAST, toastMessage);
                 }
                 putExtra(EXTRA_HAS_BOTTOM_NAVIGATION, hasBottomNavigation)
                 putExtra(EXTRA_SELECTED_BOTTOM_NAV_ITEM, selectedBottomNavigationItem)
@@ -56,9 +59,15 @@ class FetLifeWebViewActivity : ResourceActivity() {
         }
     }
 
-    override fun onResourceCreate(savedInstanceState: Bundle?) {
-//        setContentView(R.layout.webapp_activity_webview)
+    override fun onCreateActivityComponents() {
+        addActivityComponent(MenuActivityComponent())
+    }
 
+    override fun onSetContentView() {
+        setContentView(R.layout.webapp_activity_webview)
+    }
+
+    override fun onResourceCreate(savedInstanceState: Bundle?) {
         var hasHomeNavigation = getBooleanExtra(EXTRA_HAS_BOTTOM_NAVIGATION) != true
         var pageUrl = getStringExtra(EXTRA_PAGE_URL)
 
@@ -85,15 +94,14 @@ class FetLifeWebViewActivity : ResourceActivity() {
         }
     }
 
-    override fun onResourceStart() {
-    }
+    override fun onResourceStart() {}
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
                 var pageUrl = getStringExtra(EXTRA_PAGE_URL)
                 if (pageUrl == null) {
-                    LoginActivity.startLogin(fetLifeApplication)
+                    startLogin(fetLifeApplication)
                 }
                 finish()
                 true

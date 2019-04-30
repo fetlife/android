@@ -40,7 +40,7 @@ class CommentNotification(notificationType: String, notificationIdRange: Int, ti
     }
 
     override fun getNotificationIntent(oneSignalNotification: OneSignalNotification, context: Context, order: Int): PendingIntent? {
-        val contentIntent = FetLifeWebViewActivity.createIntent(context, "notifications", true, R.id.navigation_bottom_notifications, true).apply {
+        val contentIntent = FetLifeWebViewActivity.createIntent(context, "notifications", true, R.id.navigation_bottom_notifications, true, null).apply {
             putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE, oneSignalNotification.notificationType)
             putExtra(BaseActivity.EXTRA_NOTIFICATION_MERGE_ID, oneSignalNotification.mergeId)
         }

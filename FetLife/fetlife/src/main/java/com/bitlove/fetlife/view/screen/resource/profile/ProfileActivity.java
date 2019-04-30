@@ -386,7 +386,7 @@ public class ProfileActivity extends ResourceActivity implements AppBarLayout.On
     private void onMenuIconMessage() {
         Member member = Member.loadMember(memberId);
         if (member != null) {
-            FetLifeWebViewActivity.Companion.startActivity(this,"conversations/new?with="+member.getServerId(),false,null, false, null);
+            FetLifeWebViewActivity.Companion.startActivity(this,"conversations/new?with="+member.getServerId(),false,null, false, null, null);
         }
     }
 

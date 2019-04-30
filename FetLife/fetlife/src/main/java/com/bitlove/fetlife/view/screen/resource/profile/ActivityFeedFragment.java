@@ -83,7 +83,7 @@ public class ActivityFeedFragment extends LoadFragment implements FeedRecyclerAd
             if (targetWriting != null) {
                 targetWriting.save();
 //                WritingActivity.startActivity((BaseActivity) getActivity(),targetWriting.getId(),targetWriting.getMemberId());
-                FetLifeWebViewActivity.Companion.startActivity(getBaseActivity(),targetWriting.getUrl(),false,null, false, null);
+                FetLifeWebViewActivity.Companion.startActivity(getBaseActivity(),targetWriting.getUrl(),false,null, false, null, null);
 //                TurboLinksViewActivity.startActivity(getBaseActivity(),targetWriting.getUrl(),targetWriting.getTitle(), false, null, null, false);
                 return;
             }
@@ -93,7 +93,7 @@ public class ActivityFeedFragment extends LoadFragment implements FeedRecyclerAd
                 targetStatus.save();
                 Member member = targetStatus.getMember();
                 String nickname = member != null ? getString(R.string.title_activity_status,member.getNickname()) : "";
-                FetLifeWebViewActivity.Companion.startActivity(getBaseActivity(),targetStatus.getUrl(),false,null, false, null);
+                FetLifeWebViewActivity.Companion.startActivity(getBaseActivity(),targetStatus.getUrl(),false,null, false, null, null);
 //                TurboLinksViewActivity.startActivity(getBaseActivity(),targetStatus.getUrl(),nickname, false, null, null, false);
                 return;
             }

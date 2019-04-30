@@ -40,6 +40,7 @@ class WebAppNavigation {
         internal const val WEB_TITLE_SEPARATOR = " |"
         internal const val WEB_COUNTER_SEPARATOR = ") "
         internal const val WEB_EXTRA_SEPARATOR = " -"
+
         //NOTE: Temporarily duplicated with native code area TODO(WEBAPP): decoupling
         private const val QUERY_PARAM_API_IDS = "api_ids"
         private const val SERVER_ID_PREFIX = "SERVER_ID_PREFIX:"
@@ -154,6 +155,10 @@ class WebAppNavigation {
         private const val URL_REGEX_CONVERSATION_NEW = "^$REGEX_BASE_URL\\/conversations\\/new\\?with=[0-9]+.*\$"
 
         private const val URL_REGEX_LOGIN_PASSWORD_SENT = "^$REGEX_BASE_URL\\/sent_login_information[^\\/]*\$"
+
+
+        //* Full Urls
+        const val URL_LOGIN = "$WEBAPP_BASE_URL/login"
 
         private const val URL_QNA_NEW = "$WEBAPP_BASE_URL/q/new"
         private const val URL_INBOX_MAIN = "$WEBAPP_BASE_URL/inbox"
@@ -375,7 +380,7 @@ class WebAppNavigation {
         }
 
         if (openAsNewWebViewFlow(targetUri, currentUrl)) {
-            FetLifeWebViewActivity.startActivity(webView.context, targetUri.toString(), false, null, false, null)
+            FetLifeWebViewActivity.startActivity(webView.context, targetUri.toString(), false, null, false, null, null)
             return true
         }
 
@@ -506,7 +511,7 @@ class WebAppNavigation {
                 val toastMessage = if (URL_REGEX_PASSWORD_EDIT.toRegex().matches(currentUrl)) {
                     activity?.getString(R.string.toast_password_reset_successfull);
                 } else null
-                LoginActivity.startLogin(FetLifeApplication.getInstance(), toastMessage)
+                FetLifeWebViewActivity.startLogin(FetLifeApplication.getInstance(), toastMessage)
                 true
             }
             else -> false

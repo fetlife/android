@@ -18,8 +18,8 @@ import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
 import com.bitlove.fetlife.event.ServiceCallStartedEvent;
 import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.component.EventDisplayHandler;
-import com.bitlove.fetlife.view.screen.standalone.LoginActivity;
 import com.bitlove.fetlife.view.screen.standalone.ReleaseNotesActivity;
+import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -65,7 +65,7 @@ public abstract class ResourceActivity extends BaseActivity {
 
     protected boolean verifyUser() {
         if (getFetLifeApplication().getUserSessionManager().getCurrentUser() == null) {
-            LoginActivity.startLogin(getFetLifeApplication());
+            FetLifeWebViewActivity.Companion.startLogin(getFetLifeApplication(), null);
             finish();
             return false;
         }
@@ -100,7 +100,7 @@ public abstract class ResourceActivity extends BaseActivity {
             FetLifeApplication.getInstance().getUserSessionManager().resetAllUserDatabase();
         }
         getFetLifeApplication().getUserSessionManager().onUserLogOut();
-        LoginActivity.startLogin(getFetLifeApplication());
+        FetLifeWebViewActivity.Companion.startLogin(getFetLifeApplication(), null);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
