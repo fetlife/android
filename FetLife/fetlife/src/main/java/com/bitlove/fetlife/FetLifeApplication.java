@@ -9,7 +9,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.StrictMode;
@@ -17,8 +16,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.bitlove.fetlife.inbound.ActionCable;
-import com.bitlove.fetlife.inbound.CusomTabs.CustomTabLauncherActivity;
-import com.bitlove.fetlife.inbound.CusomTabs.FetLifeCustomTabsServiceConnection;
+import com.bitlove.fetlife.inbound.customtabs.CustomTabLauncherActivity;
+import com.bitlove.fetlife.inbound.customtabs.FetLifeCustomTabsServiceConnection;
 import com.bitlove.fetlife.inbound.onesignal.NotificationParser;
 import com.bitlove.fetlife.model.api.FetLifeService;
 import com.bitlove.fetlife.model.api.GitHubService;

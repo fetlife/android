@@ -6,12 +6,7 @@ import android.net.Uri;
 
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
-import com.bitlove.fetlife.inbound.CusomTabs.CustomTabLauncherActivity;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
+import com.bitlove.fetlife.inbound.customtabs.CustomTabLauncherActivity;
 
 import androidx.browser.customtabs.CustomTabsIntent;
 
