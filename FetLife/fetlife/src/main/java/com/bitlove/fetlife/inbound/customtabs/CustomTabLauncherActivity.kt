@@ -1,4 +1,4 @@
-package com.bitlove.fetlife.inbound.CusomTabs
+package com.bitlove.fetlife.inbound.customtabs
 
 import android.app.Activity
 import android.content.Context
