@@ -101,7 +101,7 @@ public class VideosRecyclerAdapter extends RecyclerView.Adapter<VideoViewHolder>
 
     @Override
     public int getItemCount() {
-        return itemList.size();
+        return itemList != null ? itemList.size() : 0;
     }
 }
 
