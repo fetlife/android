@@ -390,7 +390,7 @@ public class FetLifeApiIntentService extends JobIntentService {
         //Check current logged in user
         //Any communication with the Api is allowed only if the user is logged on, except of course the login process itself
         Member currentUser = getFetLifeApplication().getUserSessionManager().getCurrentUser();
-        if (currentUser == null && action != ACTION_APICALL_LOGON_USER) {
+        if (currentUser == null && action != ACTION_APICALL_LOGON_USER && action != ACTION_APICALL_FINALIZE_LOGIN) {
             return;
         }
 
@@ -408,7 +408,7 @@ public class FetLifeApiIntentService extends JobIntentService {
             sendLoadStartedNotification(action,params);
 
             //If we do not have any access token (for example because it is expired and removed) try to get new one with the stored refreshUi token
-            if (action != ACTION_APICALL_LOGON_USER && getAccessToken() == null) {
+            if (action != ACTION_APICALL_LOGON_USER && action != ACTION_APICALL_FINALIZE_LOGIN && getAccessToken() == null) {
                 if (refreshToken(currentUser)) {
                     //If token successfully refreshed restart the original request
                     //Note: this could end up in endless loop if the backend keep sending invalid tokens, but at this point we assume backend works properly from this point of view
@@ -429,7 +429,7 @@ public class FetLifeApiIntentService extends JobIntentService {
                     result = logonUser(params);
                     break;
                 case ACTION_APICALL_FINALIZE_LOGIN:
-                    result = logonUser(params);
+                    result = finalizeLogin(params);
                     break;
                 case ACTION_APICALL_FEED:
                     result = retrieveFeed(params);

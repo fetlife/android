@@ -733,11 +733,15 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     }
 
     public void showProgress() {
-        progressIndicator.setVisibility(View.VISIBLE);
+        if (progressIndicator != null) {
+            progressIndicator.setVisibility(View.VISIBLE);
+        }
     }
 
     public void dismissProgress() {
-        progressIndicator.setVisibility(View.INVISIBLE);
+        if (progressIndicator != null) {
+            progressIndicator.setVisibility(View.INVISIBLE);
+        }
     }
 
     public void showToast(final String text) {

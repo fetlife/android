@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.MenuItem
+import android.webkit.CookieManager
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.event.LoginFailedEvent
@@ -30,6 +31,7 @@ class FetLifeWebViewActivity : ResourceActivity() {
         private const val EXTRA_SELECTED_BOTTOM_NAV_ITEM = BaseActivity.EXTRA_SELECTED_BOTTOM_NAV_ITEM
 
         fun startLogin(context: Context, toastMessage: String? = null) {
+            CookieManager.getInstance().removeAllCookies(null)
             context.startActivity(createLoginIntent(context, toastMessage))
         }
 

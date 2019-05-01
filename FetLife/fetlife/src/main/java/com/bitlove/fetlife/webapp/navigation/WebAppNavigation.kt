@@ -525,7 +525,7 @@ class WebAppNavigation {
             }
             NATIVE_NAVIGATION_HOME -> {
                 val cookies = CookieManager.getInstance().getCookie(uri.toString())
-                val accessToken = ""
+                val accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJmZXRsaWZlIiwiaWF0IjoxNTU2NzIzNzQyLCJybmQiOiIzMWNiYzQwODRhZjQiLCJ1c2VyIjp7ImlkIjoiMTA2ZDNhYjQiLCJuaWNrIjoiRHJlYW1saXRlIn19.fctcn_h03jLrEB3D7d_R5q1jcOVEh2dCLtjcRAnnnmU"
                 val refreshToken = ""
                 val rememberMe = false
                 FetLifeApiIntentService.startApiCall(activity,FetLifeApiIntentService.ACTION_APICALL_FINALIZE_LOGIN, accessToken, refreshToken, rememberMe.toString())

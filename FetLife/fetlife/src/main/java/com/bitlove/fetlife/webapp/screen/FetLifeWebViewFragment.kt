@@ -19,6 +19,7 @@ import com.bitlove.fetlife.model.api.FetLifeService
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService
 import com.bitlove.fetlife.util.ServerIdUtil
 import com.bitlove.fetlife.util.VersionUtil
+import com.bitlove.fetlife.view.screen.BaseActivity
 import com.bitlove.fetlife.webapp.communication.WebViewInterface
 import com.bitlove.fetlife.webapp.kotlin.getBooleanArgument
 import com.bitlove.fetlife.webapp.kotlin.getStringArgument
@@ -118,7 +119,7 @@ class FetLifeWebViewFragment : Fragment() {
 
                 override fun shouldOverrideUrlLoading(webView: WebView?, request: WebResourceRequest?): Boolean {
                     request ?: return false
-                    val navigated = FetLifeApplication.getInstance().webAppNavigation.navigate(request, webView, activity)
+                    val navigated = FetLifeApplication.getInstance().webAppNavigation.navigate(request, webView, activity as BaseActivity)
                     return if (navigated) {
                         true
                     } else {
@@ -271,7 +272,7 @@ class FetLifeWebViewFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         item ?: return false
         val url = FetLifeApplication.getInstance().webAppNavigation.getOptionMenuNavigationUrl(item.itemId)
-        val navigated = FetLifeApplication.getInstance().webAppNavigation.navigate(Uri.parse(url), web_view, activity)
+        val navigated = FetLifeApplication.getInstance().webAppNavigation.navigate(Uri.parse(url), web_view, activity as BaseActivity)
         if (!navigated) {
             web_view?.loadUrl(url,createRequestHeaders())
             web_view?.postDelayed(Runnable{activity?.invalidateOptionsMenu()},100)
