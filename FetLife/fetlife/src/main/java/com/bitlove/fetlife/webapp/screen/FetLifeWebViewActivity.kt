@@ -9,6 +9,8 @@ import android.view.KeyEvent
 import android.view.MenuItem
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
+import com.bitlove.fetlife.event.LoginFailedEvent
+import com.bitlove.fetlife.event.LoginFinishedEvent
 import com.bitlove.fetlife.view.screen.BaseActivity
 import com.bitlove.fetlife.view.screen.component.MenuActivityComponent
 import com.bitlove.fetlife.view.screen.resource.ResourceActivity
@@ -16,6 +18,8 @@ import com.bitlove.fetlife.webapp.kotlin.getBooleanExtra
 import com.bitlove.fetlife.webapp.kotlin.getStringExtra
 import com.bitlove.fetlife.webapp.navigation.WebAppNavigation
 import com.crashlytics.android.Crashlytics
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 class FetLifeWebViewActivity : ResourceActivity() {
 
@@ -73,6 +77,19 @@ class FetLifeWebViewActivity : ResourceActivity() {
         } else {
             return super.verifyUser()
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onLoginFinished(loginFinishedEvent: LoginFinishedEvent) {
+        FetLifeWebViewActivity.Companion.startActivity(this, WebAppNavigation.WEBAPP_BASE_URL + "/inbox", true, R.id.navigation_bottom_inbox,false, null);
+        finish();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onLogonFailed(loginFailedEvent: LoginFailedEvent) {
+        dismissProgress();
+        FetLifeWebViewActivity.startLogin(this, getString(R.string.error_connection_failed))
+        finish()
     }
 
     override fun onResourceCreate(savedInstanceState: Bundle?) {

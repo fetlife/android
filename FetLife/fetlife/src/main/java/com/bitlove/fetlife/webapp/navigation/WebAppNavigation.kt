@@ -5,8 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
-import android.text.TextUtils
-import android.text.TextUtils.isEmpty
 import android.util.Log
 import android.view.LayoutInflater
 import android.webkit.CookieManager
@@ -21,11 +19,11 @@ import com.bitlove.fetlife.model.service.FetLifeApiIntentService
 import com.bitlove.fetlife.util.ColorUtil
 import com.bitlove.fetlife.util.PictureUtil
 import com.bitlove.fetlife.util.UrlUtil
+import com.bitlove.fetlife.view.screen.BaseActivity
 import com.bitlove.fetlife.view.screen.resource.EventActivity
 import com.bitlove.fetlife.view.screen.resource.groups.GroupActivity
 import com.bitlove.fetlife.view.screen.resource.groups.GroupMessagesActivity
 import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity
-import com.bitlove.fetlife.view.screen.standalone.LoginActivity
 import com.bitlove.fetlife.view.widget.ImageViewerWrapper
 import com.bitlove.fetlife.webapp.kotlin.openInBrowser
 import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity
@@ -349,11 +347,11 @@ class WebAppNavigation {
         return null
     }
 
-    fun navigate(request: WebResourceRequest, webView: WebView?, activity: Activity?): Boolean {
+    fun navigate(request: WebResourceRequest, webView: WebView?, activity: BaseActivity?): Boolean {
         return navigate(request.url, webView, activity, request)
     }
 
-    fun navigate(targetUri: Uri?, webView: WebView?, activity: Activity?, request: WebResourceRequest? = null): Boolean {
+    fun navigate(targetUri: Uri?, webView: WebView?, activity: BaseActivity?, request: WebResourceRequest? = null): Boolean {
 
         targetUri ?: return false
         val context = webView?.context ?: return false
@@ -459,7 +457,7 @@ class WebAppNavigation {
         return URL_REGEX_DOWNLOAD_LINK.toRegex().containsMatchIn(uri.toString())
     }
 
-    private fun handleNativeSupportedLink(uri: Uri, currentUrl: String, activity: Activity?, request: WebResourceRequest?): Boolean {
+    private fun handleNativeSupportedLink(uri: Uri, currentUrl: String, activity: BaseActivity?, request: WebResourceRequest?): Boolean {
         activity ?: return false
 
         var nativeClassIdentifier: String? = null
@@ -527,11 +525,14 @@ class WebAppNavigation {
             }
             NATIVE_NAVIGATION_HOME -> {
                 val cookies = CookieManager.getInstance().getCookie(uri.toString())
+                val accessToken = ""
+                val refreshToken = ""
+                val rememberMe = false
+                FetLifeApiIntentService.startApiCall(activity,FetLifeApiIntentService.ACTION_APICALL_FINALIZE_LOGIN, accessToken, refreshToken, rememberMe.toString())
                 if (BuildConfig.DEBUG) {
                     Log.d("Cookies",cookies.toString())
                 }
-                FetLifeWebViewActivity.startActivity(activity, URL_INBOX_MAIN, true, R.id.navigation_bottom_inbox)
-                activity.finish()
+                activity.showProgress()
                 true
             }
             else -> false

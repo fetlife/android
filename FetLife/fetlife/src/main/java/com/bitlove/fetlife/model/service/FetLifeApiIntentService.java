@@ -192,6 +192,8 @@ public class FetLifeApiIntentService extends JobIntentService {
     public static final String ACTION_APICALL_ADD_LOVE = "com.bitlove.fetlife.action.apicall.add_love";
     public static final String ACTION_APICALL_REMOVE_LOVE = "com.bitlove.fetlife.action.apicall.remove_love";
     public static final String ACTION_APICALL_LOGON_USER = "com.bitlove.fetlife.action.apicall.logon_user";
+    public static final String ACTION_APICALL_FINALIZE_LOGIN = "com.bitlove.fetlife.action.apicall.finalize_login";
+
     public static final String ACTION_APICALL_FRIENDREQUESTS = "com.bitlove.fetlife.action.apicall.friendrequests";
     public static final String ACTION_APICALL_CANCEL_FRIENDREQUEST = "com.bitlove.fetlife.action.apicall.cancel_friendrequest";
     public static final String ACTION_APICALL_CANCEL_FRIENDSHIP = "com.bitlove.fetlife.action.apicall.cancel_friendship";
@@ -424,6 +426,9 @@ public class FetLifeApiIntentService extends JobIntentService {
             //Call the appropriate method based on the action to be executed
             switch (action) {
                 case ACTION_APICALL_LOGON_USER:
+                    result = logonUser(params);
+                    break;
+                case ACTION_APICALL_FINALIZE_LOGIN:
                     result = logonUser(params);
                     break;
                 case ACTION_APICALL_FEED:
@@ -703,6 +708,23 @@ public class FetLifeApiIntentService extends JobIntentService {
         } else {
             return false;
         }
+    }
+
+    //Call for logging in the user
+    private int finalizeLogin(String... params) throws IOException {
+        String accessToken = params[0];
+        String refreshToken = params[1];
+        Boolean autoLoginUser = getBoolFromParams(params, 2, true);
+        Member user = retrieveCurrentUser(params[0]);
+        if (user == null) {
+            return Integer.MIN_VALUE;
+        }
+        user.setAccessToken(accessToken);
+        user.setRefreshToken(refreshToken);
+
+        //Notify the Session Manager about finished logon process
+        getFetLifeApplication().getUserSessionManager().onUserLogIn(user, autoLoginUser);
+        return 1;
     }
 
     //Call for logging in the user
@@ -2766,6 +2788,7 @@ public class FetLifeApiIntentService extends JobIntentService {
 
     private void sendLoadFinishedNotification(String action, int count, String... params) {
         switch (action) {
+            case ACTION_APICALL_FINALIZE_LOGIN:
             case ACTION_APICALL_LOGON_USER:
                 getFetLifeApplication().getEventBus().post(new LoginFinishedEvent());
                 break;
@@ -2780,6 +2803,7 @@ public class FetLifeApiIntentService extends JobIntentService {
 
     private void sendLoadFailedNotification(String action, String... params) {
         switch (action) {
+            case ACTION_APICALL_FINALIZE_LOGIN:
             case ACTION_APICALL_LOGON_USER:
                 getFetLifeApplication().getEventBus().post(new LoginFailedEvent());
                 break;
