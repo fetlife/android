@@ -73,6 +73,9 @@ public abstract class ResourceActivity extends BaseActivity {
     }
 
     private void showVersionSnackBarIfNeeded() {
+        if (FetLifeApplication.getInstance().getUserSessionManager().getCurrentUser() == null) {
+            return;
+        }
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         int lastVersionNotification = preferences.getInt(PREFERENCE_VERSION_NOTIFICATION_INT, 0);
         int versionNumber = getFetLifeApplication().getVersionNumber();

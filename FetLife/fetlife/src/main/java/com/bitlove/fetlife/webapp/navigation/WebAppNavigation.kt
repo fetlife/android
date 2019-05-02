@@ -99,6 +99,8 @@ class WebAppNavigation {
         //WARNING: Also matches with privacy (exception added on code level)
         // TODO(WEBAPP): find better
         private const val URL_REGEX_PLACES_MAIN = "^$REGEX_BASE_URL\\/(p|places)[^\\/]*\$"
+        //Login Url Regexps
+        private const val URL_REGEX_LOGIN_MAIN = "^$REGEX_BASE_URL\\/(users\\/sign_in|login)\\/?[^\\/_]*\$"
 
         //* Group Url Regexps - '/' is allowed after main object reference *
 
@@ -121,8 +123,6 @@ class WebAppNavigation {
         private const val URL_REGEX_INBOX = "^$REGEX_BASE_URL\\/inbox\\/?.*\$"
         private const val URL_REGEX_CONVERSATION = "^$REGEX_BASE_URL\\/conversations\\/(\\w+).*\$"
         private const val URL_REGEX_CONVERSATION_NEW = "^$REGEX_BASE_URL\\/conversations\\/new\\?with=[0-9]+.*\$"
-        //Login Url Regexps
-        private const val URL_REGEX_LOGIN = "^$REGEX_BASE_URL\\/(users\\/sign_in|login)\\/?.*\$"
         private const val URL_REGEX_PASSWORD_NEW_EMAIL = "^$REGEX_BASE_URL\\/users\\/password\\/new\$"
         private const val URL_REGEX_PASSWORD_NEW_MOBILE = "^$REGEX_BASE_URL\\/users\\/password\\/new_.*\$"
 
@@ -164,6 +164,7 @@ class WebAppNavigation {
         private const val URL_REGEX_ADMINISTRATIVE_AREAS = "^$REGEX_BASE_URL\\/administrative_areas\\/?.*\$"
         //QnA Url Regexps
         private const val URL_REGEX_QNA_QUESTION = "^$REGEX_BASE_URL\\/q\\/.*\\/.*\$"
+        private const val URL_REGEX_LOGIN = "^$REGEX_BASE_URL\\/(users\\/sign_in|login|sign_in_five_strike)\\/?.*\$"
 
     }
 
@@ -225,7 +226,7 @@ class WebAppNavigation {
 
     //Urls that are accessible without having the user signed in
     private val notResourceUrlSet = LinkedHashSet<String>().apply {
-        add(URL_REGEX_LOGIN)
+        add(URL_REGEX_LOGIN_MAIN)
         add(URL_REGEX_LOGIN_PASSWORD_SENT)
         add(URL_REGEX_PASSWORD_NEW_EMAIL)
         add(URL_REGEX_PASSWORD_NEW_MOBILE)
@@ -237,8 +238,6 @@ class WebAppNavigation {
 
     //Target Urls to be opened in as a new webview flow
     private val newWebViewFlowUrlSet = LinkedHashSet<String>().apply {
-        add(URL_REGEX_PASSWORD_NEW_EMAIL)
-        add(URL_REGEX_PASSWORD_NEW_MOBILE)
         add(URL_REGEX_USER_POST_MAIN)
         add(URL_REGEX_QNA_REVIEW)
         add(URL_REGEX_QNA_QUESTION)
@@ -277,10 +276,15 @@ class WebAppNavigation {
         add(URL_REGEX_PASSWORD_INCORRECT_PHONE)
         add(URL_REGEX_PASSWORD_VERIFY_PHONE)
         add(URL_REGEX_PASSWORD_EDIT)
+
+        add(URL_REGEX_LOGIN)
     }
 
     //Urls to be opened in the current flow, but with clearning backward navigation
     private val inPlaceOpenWithNoHistoryUrlSet = LinkedHashSet<String>().apply {
+
+        add(URL_REGEX_PASSWORD_NEW_EMAIL)
+        add(URL_REGEX_PASSWORD_NEW_MOBILE)
 
         add(URL_REGEX_TEAM_MAIN)
         add(URL_REGEX_SUPPORT_MAIN)
@@ -330,7 +334,7 @@ class WebAppNavigation {
         put(URL_REGEX_GROUP_POST_MAIN, GroupMessagesActivity::class.java.simpleName)
         put(URL_REGEX_USER_PICTURE_MAIN, ImageViewerWrapper::class.java.simpleName)
         put(URL_REGEX_USER_VIDEO_MAIN, Video::class.java.simpleName)
-        put(URL_REGEX_LOGIN, NATIVE_NAVIGATION_LOGIN)
+        put(URL_REGEX_LOGIN_MAIN, NATIVE_NAVIGATION_LOGIN)
         put(URL_REGEX_HOME, NATIVE_NAVIGATION_HOME)
     }
 
@@ -550,6 +554,9 @@ class WebAppNavigation {
     }
 
     private fun openAsNewWebViewFlow(uri: Uri, currentUrl: String): Boolean {
+        if (URL_REGEX_LOGIN.toRegex().matches(currentUrl) && !URL_REGEX_LOGIN.toRegex().matches(uri.toString())) {
+            return true
+        }
         for (uriRegex in newWebViewFlowUrlSet) {
             if (uriRegex.toRegex().matches(uri.toString()) && !uriRegex.toRegex().matches(currentUrl)) {
                 return true
