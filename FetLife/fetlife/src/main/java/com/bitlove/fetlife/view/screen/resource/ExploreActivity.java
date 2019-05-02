@@ -36,7 +36,7 @@ public class ExploreActivity extends FeedActivity {
     public static Intent createIntent(Context context, Explore type) {
         Intent intent = new Intent(context, ExploreActivity.class);
         intent.putExtra(EXTRA_EXPLORE,type);
-        intent.putExtra(EXTRA_HAS_BOTTOM_BAR, true);
+        intent.putExtra(EXTRA_HAS_BOTTOM_NAVIGATION, true);
         if (FetLifeApplication.getInstance().getUserSessionManager().getActiveUserPreferences().getBoolean(context.getString(R.string.settings_key_general_feed_as_start),false)) {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
         } else {

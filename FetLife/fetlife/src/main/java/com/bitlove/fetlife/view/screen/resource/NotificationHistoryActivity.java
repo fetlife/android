@@ -9,7 +9,6 @@ import android.view.MenuItem;
 
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.event.NotificationReceivedEvent;
-import com.bitlove.fetlife.inbound.onesignal.notification.OneSignalNotification;
 import com.bitlove.fetlife.model.pojos.fetlife.db.NotificationHistoryItem;
 import com.bitlove.fetlife.view.adapter.NotificationHistoryRecyclerAdapter;
 import com.bitlove.fetlife.view.adapter.ResourceListRecyclerAdapter;
@@ -21,8 +20,6 @@ import com.raizlabs.android.dbflow.sql.language.Delete;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.lang.reflect.Method;
 
 import static com.bitlove.fetlife.inbound.onesignal.notification.OneSignalNotification.LAUNCH_URL_PARAM_SEPARATOR;
 import static com.bitlove.fetlife.inbound.onesignal.notification.OneSignalNotification.LAUNCH_URL_PREFIX;
@@ -36,7 +33,7 @@ public class NotificationHistoryActivity extends ResourceListActivity<Notificati
 
     public static Intent createIntent(Context context, boolean newTask) {
         Intent intent = new Intent(context, NotificationHistoryActivity.class);
-        intent.putExtra(EXTRA_HAS_BOTTOM_BAR,true);
+        intent.putExtra(EXTRA_HAS_BOTTOM_NAVIGATION,true);
         if (newTask) {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
         }

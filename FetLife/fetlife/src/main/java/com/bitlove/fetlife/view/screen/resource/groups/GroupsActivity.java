@@ -10,7 +10,6 @@ import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.event.ServiceCallFailedEvent;
 import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
 import com.bitlove.fetlife.event.ServiceCallStartedEvent;
-import com.bitlove.fetlife.inbound.onesignal.NotificationParser;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.view.screen.BaseActivity;
@@ -38,7 +37,7 @@ public class GroupsActivity extends ResourceActivity {
     }
     public static Intent createIntent(Context context, boolean newTask) {
         Intent intent = new Intent(context, GroupsActivity.class);
-        intent.putExtra(EXTRA_HAS_BOTTOM_BAR,true);
+        intent.putExtra(EXTRA_HAS_BOTTOM_NAVIGATION,true);
         if (!newTask) {
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         } else {

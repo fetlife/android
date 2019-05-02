@@ -36,8 +36,8 @@ class QuestionAnsweredNotification(notificationType: String, notificationIdRange
     }
 
     override fun getNotificationIntent(oneSignalNotification: OneSignalNotification, context: Context, order: Int): PendingIntent? {
-        val baseIntent = FetLifeWebViewActivity.createIntent(context, "q", true, null, true, null)
-        val contentIntent = FetLifeWebViewActivity.createIntent(context, oneSignalNotification.launchUrl?.replace("https://fetlife.com".toRegex(), WebAppNavigation.WEBAPP_BASE_URL) ?: WebAppNavigation.WEBAPP_BASE_URL, false, null, false, null)
+        val baseIntent = FetLifeWebViewActivity.createIntent(context, "q", true, true, null, true, null)
+        val contentIntent = FetLifeWebViewActivity.createIntent(context, oneSignalNotification.launchUrl?.replace("https://fetlife.com".toRegex(), WebAppNavigation.WEBAPP_BASE_URL) ?: WebAppNavigation.WEBAPP_BASE_URL, true, false, null, false, null)
         contentIntent.putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE, oneSignalNotification.notificationType)
         contentIntent.putExtra(BaseActivity.EXTRA_NOTIFICATION_MERGE_ID, oneSignalNotification.mergeId)
         //return PendingIntent.gentActivity(context, order, contentIntent, PendingIntent.FLAG_IMMUTABLE)
@@ -45,7 +45,7 @@ class QuestionAnsweredNotification(notificationType: String, notificationIdRange
     }
 
     override fun getLegacySummaryIntent(context: Context): PendingIntent? {
-        val contentIntent = FetLifeWebViewActivity.createIntent(context, "notifications", true, R.id.navigation_bottom_notifications, true, null).apply {
+        val contentIntent = FetLifeWebViewActivity.createIntent(context, "notifications", true, true, R.id.navigation_bottom_notifications, true, null).apply {
             putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE, notificationType)
             putExtra(BaseActivity.EXTRA_NOTIFICATION_MERGE_ID, mergeId)
         }

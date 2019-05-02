@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -14,7 +13,6 @@ import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.session.UserSessionManager;
 import com.bitlove.fetlife.util.ColorUtil;
-import com.bitlove.fetlife.util.UrlUtil;
 import com.bitlove.fetlife.view.screen.resource.FeedActivity;
 import com.bitlove.fetlife.webapp.navigation.WebAppNavigation;
 import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity;
@@ -77,7 +75,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     public static final String EXTRA_NOTIFICATION_SOURCE_TYPE = "EXTRA_NOTIFICATION_SOURCE_TYPE";
     public static final String EXTRA_NOTIFICATION_MERGE_ID = "EXTRA_NOTIFICATION_MERGE_ID";
     public static final String EXTRA_SELECTED_BOTTOM_NAV_ITEM = "EXTRA_SELECTED_BOTTOM_NAV_ITEM";
-    public static final String EXTRA_HAS_BOTTOM_BAR = "EXTRA_HAS_BOTTOM_BAR";
+    public static final String EXTRA_HAS_BOTTOM_NAVIGATION = "EXTRA_HAS_BOTTOM_NAVIGATION";
 //    public static final String EXTRA_USE_BOTTOM_NAV_ITEM = "EXTRA_USE_BOTTOM_NAV_ITEM";
 
     private static final int BOTTOM_BAR_ORDER_MESSAGES = 1;
@@ -149,7 +147,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         setUpFloatingActionButton(getFabLink());
 
         final BottomNavigationView bottomNavigation = findViewById(R.id.navigation_bottom);
-        boolean hasBottomBar = getIntent().getBooleanExtra(EXTRA_HAS_BOTTOM_BAR,false);
+        boolean hasBottomBar = getIntent().getBooleanExtra(EXTRA_HAS_BOTTOM_NAVIGATION,false);
         if (bottomNavigation != null && !hasBottomBar) {
             bottomNavigation.setVisibility(View.GONE);
         } else if (bottomNavigation !=null){
@@ -194,7 +192,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                         case R.id.navigation_bottom_feed:
                             bottomNavigation.setOnNavigationItemSelectedListener(null);
                             intent = new Intent(BaseActivity.this, FeedActivity.class);
-                            intent.putExtra(EXTRA_HAS_BOTTOM_BAR,true);
+                            intent.putExtra(EXTRA_HAS_BOTTOM_NAVIGATION,true);
                             intent.putExtra(EXTRA_SELECTED_BOTTOM_NAV_ITEM,menuItem.getItemId());
                             BaseActivity.this.startActivity(intent,navOptions.toBundle());
                             setFinishAfterNavigation(true);

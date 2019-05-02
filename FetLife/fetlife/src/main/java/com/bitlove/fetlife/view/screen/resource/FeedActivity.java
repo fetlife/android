@@ -49,7 +49,7 @@ public class FeedActivity extends ResourceListActivity<Story> implements FeedRec
 
     private static Intent createIntent(Context context) {
         Intent intent = new Intent(context, FeedActivity.class);
-        intent.putExtra(BaseActivity.EXTRA_HAS_BOTTOM_BAR,true);
+        intent.putExtra(BaseActivity.EXTRA_HAS_BOTTOM_NAVIGATION,true);
         intent.putExtra(BaseActivity.EXTRA_SELECTED_BOTTOM_NAV_ITEM,R.id.navigation_bottom_feed);
         return intent;
     }
