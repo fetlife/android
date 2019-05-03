@@ -75,6 +75,7 @@ class FetLifeWebViewFragment : Fragment() {
             web_view.settings.javaScriptEnabled = true
             web_view.setBackgroundColor(Color.TRANSPARENT)
             web_view.addJavascriptInterface(WebViewInterface(context), "Android")
+            web_view.settings.cacheMode = WebSettings.LOAD_NO_CACHE
             web_view.webChromeClient = object : WebChromeClient() {
                 override fun onConsoleMessage(consoleMessage: ConsoleMessage?): Boolean {
                     if (BuildConfig.DEBUG) {
