@@ -23,7 +23,6 @@ import com.bitlove.fetlife.event.VideoChunkUploadFinishedEvent;
 import com.bitlove.fetlife.event.VideoChunkUploadStartedEvent;
 import com.bitlove.fetlife.event.VideoUploadFailedEvent;
 import com.bitlove.fetlife.inbound.onesignal.update.UpdateBroadcastReceiver;
-import com.bitlove.fetlife.model.pojos.fetlife.db.NotificationHistoryItem;
 import com.bitlove.fetlife.model.pojos.github.Release;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.model.service.ServiceCallCancelReceiver;
@@ -36,7 +35,7 @@ import java.util.Map;
 
 public class EventDisplayHandler {
 
-    private static Map<String,Integer> notificationIdMap = new HashMap<>();
+    private static Map<String, Integer> notificationIdMap = new HashMap<>();
 
     public void onAuthenticationFailed(BaseActivity baseActivity, AuthenticationFailedEvent authenticationFailedEvent) {
         baseActivity.showToast(baseActivity.getString(R.string.error_authentication_failed));
@@ -71,14 +70,14 @@ public class EventDisplayHandler {
 
     public void onServiceCallFinished(BaseActivity baseActivity, ServiceCallFinishedEvent serviceCallFinishedEvent) {
         if (serviceCallFinishedEvent instanceof PictureUploadFinishedEvent) {
-            int notificationId = getNotificationIdFromMediaId(((PictureUploadFinishedEvent)serviceCallFinishedEvent).getPictureId());
+            int notificationId = getNotificationIdFromMediaId(((PictureUploadFinishedEvent) serviceCallFinishedEvent).getPictureId());
             dismissNotification(baseActivity, notificationId);
             NotificationUtil.showMessageNotification(baseActivity.getFetLifeApplication(), notificationId, baseActivity.getString(R.string.notification_picture_upload_title), baseActivity.getString(R.string.message_image_upload_finished), null);
             baseActivity.showToast(baseActivity.getString(R.string.message_image_upload_finished));
         } else if (serviceCallFinishedEvent instanceof VideoChunkUploadFinishedEvent) {
             VideoChunkUploadFinishedEvent videoChunkUploadFinishedEvent = (VideoChunkUploadFinishedEvent) serviceCallFinishedEvent;
             if (videoChunkUploadFinishedEvent.getChunk() == videoChunkUploadFinishedEvent.getChunkCount()) {
-                int notificationId = getNotificationIdFromMediaId(((VideoChunkUploadFinishedEvent)serviceCallFinishedEvent).getVideoId());
+                int notificationId = getNotificationIdFromMediaId(((VideoChunkUploadFinishedEvent) serviceCallFinishedEvent).getVideoId());
                 dismissNotification(baseActivity, notificationId);
                 NotificationUtil.showMessageNotification(baseActivity.getFetLifeApplication(), notificationId, baseActivity.getString(R.string.notification_video_upload_title), baseActivity.getString(R.string.message_video_upload_finished), null);
                 baseActivity.showToast(baseActivity.getString(R.string.message_video_upload_finished));
@@ -88,20 +87,20 @@ public class EventDisplayHandler {
 
     public void onServiceCallStarted(BaseActivity baseActivity, ServiceCallStartedEvent serviceCallStartedEvent) {
         if (serviceCallStartedEvent instanceof PictureUploadStartedEvent) {
-            notificationIdMap.put(((PictureUploadStartedEvent)serviceCallStartedEvent).getPictureId(),NotificationUtil.PICTURE_UPLOAD_NOTIFICATION_ID);
+            notificationIdMap.put(((PictureUploadStartedEvent) serviceCallStartedEvent).getPictureId(), NotificationUtil.PICTURE_UPLOAD_NOTIFICATION_ID);
             NotificationUtil.showProgressNotification(baseActivity.getFetLifeApplication(), NotificationUtil.PICTURE_UPLOAD_NOTIFICATION_ID++, baseActivity.getString(R.string.notification_picture_upload_title), baseActivity.getString(R.string.notification_media_upload_text_inprogress), 0, 0, null);
             baseActivity.showToast(baseActivity.getString(R.string.message_image_upload_started));
         } else if (serviceCallStartedEvent instanceof VideoChunkUploadStartedEvent) {
             VideoChunkUploadStartedEvent videoChunkUploadStartedEvent = (VideoChunkUploadStartedEvent) serviceCallStartedEvent;
             if (videoChunkUploadStartedEvent.getChunk() == 1 && videoChunkUploadStartedEvent.getRetry() == 0) {
-                notificationIdMap.put(videoChunkUploadStartedEvent.getVideoId(),NotificationUtil.VIDEO_UPLOAD_NOTIFICATION_ID);
+                notificationIdMap.put(videoChunkUploadStartedEvent.getVideoId(), NotificationUtil.VIDEO_UPLOAD_NOTIFICATION_ID);
                 NotificationUtil.showProgressNotification(baseActivity.getFetLifeApplication(), NotificationUtil.VIDEO_UPLOAD_NOTIFICATION_ID, baseActivity.getString(R.string.notification_video_upload_title), baseActivity.getString(R.string.notification_media_upload_text_inprogress, 0, videoChunkUploadStartedEvent.getVideoSize()), 0, 0, ServiceCallCancelReceiver.createVideoCancelPendingIntent(baseActivity, NotificationUtil.VIDEO_UPLOAD_NOTIFICATION_ID, videoChunkUploadStartedEvent.getVideoId()));
                 NotificationUtil.VIDEO_UPLOAD_NOTIFICATION_ID++;
                 baseActivity.showToast(baseActivity.getString(R.string.message_video_upload_started));
-            } else if (videoChunkUploadStartedEvent.getRetry() == 0){
+            } else if (videoChunkUploadStartedEvent.getRetry() == 0) {
                 int notificationId = getNotificationIdFromMediaId(videoChunkUploadStartedEvent.getVideoId());
                 PendingIntent cancelIntent = videoChunkUploadStartedEvent.getChunk() * FetLifeApiIntentService.VIDEO_UPLOAD_CHUNK_SIZE_MBYTES >= videoChunkUploadStartedEvent.getVideoSize() ? null : ServiceCallCancelReceiver.createVideoCancelPendingIntent(baseActivity, notificationId, videoChunkUploadStartedEvent.getVideoId());
-                NotificationUtil.showProgressNotification(baseActivity.getFetLifeApplication(), notificationId, baseActivity.getString(R.string.notification_video_upload_title), baseActivity.getString(R.string.notification_media_upload_text_inprogress, (videoChunkUploadStartedEvent.getChunk()-1) * FetLifeApiIntentService.VIDEO_UPLOAD_CHUNK_SIZE_MBYTES, videoChunkUploadStartedEvent.getVideoSize()), 0, 0, cancelIntent);
+                NotificationUtil.showProgressNotification(baseActivity.getFetLifeApplication(), notificationId, baseActivity.getString(R.string.notification_video_upload_title), baseActivity.getString(R.string.notification_media_upload_text_inprogress, (videoChunkUploadStartedEvent.getChunk() - 1) * FetLifeApiIntentService.VIDEO_UPLOAD_CHUNK_SIZE_MBYTES, videoChunkUploadStartedEvent.getVideoSize()), 0, 0, cancelIntent);
             }
         }
     }
@@ -118,7 +117,7 @@ public class EventDisplayHandler {
         if (serviceCallCancelEvent instanceof VideoChunkUploadCancelEvent) {
             VideoChunkUploadCancelEvent videoChunkUploadCancelEvent = (VideoChunkUploadCancelEvent) serviceCallCancelEvent;
             if (videoChunkUploadCancelEvent.isCancelSucceed()) {
-                int notificationId = getNotificationIdFromMediaId(((VideoChunkUploadCancelEvent)serviceCallCancelEvent).getVideoId());
+                int notificationId = getNotificationIdFromMediaId(((VideoChunkUploadCancelEvent) serviceCallCancelEvent).getVideoId());
                 dismissNotification(baseActivity, notificationId);
                 NotificationUtil.showMessageNotification(baseActivity.getFetLifeApplication(), notificationId, baseActivity.getString(R.string.notification_video_upload_title), baseActivity.getString(R.string.message_video_upload_cancelled), null);
                 baseActivity.showToast(baseActivity.getString(R.string.message_video_upload_cancelled));
@@ -133,10 +132,10 @@ public class EventDisplayHandler {
         Release latestPreRelease = latestReleaseEvent.getLatestPreRelease();
         boolean forcedCheck = latestReleaseEvent.isForcedCheck();
         boolean notified = false;
-        if (VersionUtil.toBeNotified(baseActivity, latestPreRelease, forcedCheck)) {
+        if (VersionUtil.toBeNotified(latestPreRelease, forcedCheck)) {
             notifyAboutNewRelease(baseActivity, latestPreRelease);
             notified = true;
-        } else if (VersionUtil.toBeNotified(baseActivity, latestRelease, forcedCheck)) {
+        } else if (VersionUtil.toBeNotified(latestRelease, forcedCheck)) {
             notifyAboutNewRelease(baseActivity, latestRelease);
             notified = true;
         }
@@ -147,7 +146,7 @@ public class EventDisplayHandler {
 
     private void notifyAboutNewRelease(BaseActivity baseActivity, Release release) {
         String header = baseActivity.getString(release.isPrerelease() ? R.string.notification_title_new_prerelease : R.string.notification_title_new_release);
-        String message = baseActivity.getString(release.isPrerelease() ? R.string.notification_text_new_prerelease : R.string.notification_text_new_release,release.getTag());
+        String message = baseActivity.getString(release.isPrerelease() ? R.string.notification_text_new_prerelease : R.string.notification_text_new_release, release.getTag());
         String url = release.getReleaseUrl();
 
 //        NotificationHistoryItem notificationHistoryItem = new NotificationHistoryItem();
@@ -158,9 +157,9 @@ public class EventDisplayHandler {
 //        notificationHistoryItem.save();
 
         Intent notificationIntent = new Intent(baseActivity, UpdateBroadcastReceiver.class);
-        notificationIntent.putExtra(UpdateBroadcastReceiver.EXTRA_URL,url);
+        notificationIntent.putExtra(UpdateBroadcastReceiver.EXTRA_URL, url);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(baseActivity, 0, notificationIntent, 0);
-        NotificationUtil.showMessageNotification(baseActivity.getFetLifeApplication(),NotificationUtil.RELEASE_NOTIFICATION_ID,header,message,pendingIntent);
+        NotificationUtil.showMessageNotification(baseActivity.getFetLifeApplication(), NotificationUtil.RELEASE_NOTIFICATION_ID, header, message, pendingIntent);
 
         baseActivity.showToast(baseActivity.getString(release.isPrerelease() ? R.string.notification_toast_new_prerelease : R.string.notification_toast_new_release));
     }

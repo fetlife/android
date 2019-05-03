@@ -100,7 +100,7 @@ public class PicturesRecyclerAdapter extends RecyclerView.Adapter<PictureViewHol
 
     @Override
     public int getItemCount() {
-        return itemList.size();
+        return itemList == null ? 0 : itemList.size();
     }
 }
 

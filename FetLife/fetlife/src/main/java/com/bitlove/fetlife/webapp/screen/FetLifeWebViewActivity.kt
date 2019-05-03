@@ -11,12 +11,14 @@ import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.view.screen.BaseActivity
 import com.bitlove.fetlife.view.screen.component.MenuActivityComponent
+import com.bitlove.fetlife.view.screen.resource.ResourceActivity
 import com.bitlove.fetlife.view.screen.standalone.LoginActivity
 import com.bitlove.fetlife.webapp.kotlin.getBooleanExtra
 import com.bitlove.fetlife.webapp.kotlin.getStringExtra
 import com.bitlove.fetlife.webapp.navigation.WebAppNavigation
+import com.crashlytics.android.Crashlytics
 
-class FetLifeWebViewActivity : BaseActivity() {
+class FetLifeWebViewActivity : ResourceActivity() {
 
     override fun onCreateActivityComponents() {
         addActivityComponent(MenuActivityComponent())
@@ -54,18 +56,25 @@ class FetLifeWebViewActivity : BaseActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onResourceCreate(savedInstanceState: Bundle?) {
 //        setContentView(R.layout.webapp_activity_webview)
 
         var hasHomeNavigation = getBooleanExtra(EXTRA_HAS_BOTTOM_NAVIGATION) != true
         var pageUrl = getStringExtra(EXTRA_PAGE_URL)
 
         if (pageUrl == null) {
-            pageUrl = intent.data.toString()
+            pageUrl = intent.data?.toString()
             hasHomeNavigation = true
             // if opened externally, logout user for security reasons
             FetLifeApplication.getInstance().userSessionManager.onUserLogOut()
+        }
+
+        if (pageUrl == null) {
+            // In theory this should not happen, but based on some stackoverflow threads there are cases when the intent is null, usually when the App is updated and there is a dying App till in the memory
+            // If this is the case it is safe to ignore null cases, and just make sure the App does not crash, but just o be sure these cases should be monitored for a while
+            Crashlytics.log("$javaClass.simpleName: nullIntent? ${intent == null}; nullExtra? ${intent?.extras == null}; hasUrlExtra? ${intent?.hasExtra(EXTRA_PAGE_URL)}")
+            Crashlytics.logException(Exception("Page Url is null"))
+            return
         }
 
         if (savedInstanceState == null) {
@@ -74,6 +83,9 @@ class FetLifeWebViewActivity : BaseActivity() {
                     .add(R.id.content_layout, FetLifeWebViewFragment.newInstance(pageUrl, hasHomeNavigation), "FetLifeWebViewFragment")
                     .commit()
         }
+    }
+
+    override fun onResourceStart() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -104,8 +116,13 @@ class FetLifeWebViewActivity : BaseActivity() {
     }
 
     override fun getFabLink(): String? {
-        return (supportFragmentManager.fragments.getOrNull(0) as? FetLifeWebViewFragment)?.getFabLink() ?:
-            FetLifeApplication.getInstance().webAppNavigation.getFabLink(getStringExtra(EXTRA_PAGE_URL))
+        return (supportFragmentManager.fragments.getOrNull(0) as? FetLifeWebViewFragment)?.getFabLink()
+                ?: FetLifeApplication.getInstance().webAppNavigation.getFabLink(getStringExtra(EXTRA_PAGE_URL))
     }
+
+    fun getCurrentUrl(): String? {
+        return (supportFragmentManager.fragments.getOrNull(0) as? FetLifeWebViewFragment)?.getCurrentUrl()
+    }
+
 
 }

@@ -305,7 +305,7 @@ public class UserSessionManager {
     }
 
     public void deleteCurrentUserDb() {
-        String userId = currentUser.getId();
+        String userId = currentUser != null ? currentUser.getId() : null;
         if (userId != null) {
             fetLifeApplication.deleteDatabase(getUserDatabaseName(userId));
         } else {

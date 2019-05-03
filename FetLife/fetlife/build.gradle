@@ -14,7 +14,7 @@ if (propFile.canRead()) {
     releaseProperties = null;
 }
 
-def versionTimeStamp = new Date().time.toInteger()
+def versionTimeStamp = (new Date().time / 1000).toInteger()
 
 android {
     compileSdkVersion 28
@@ -27,7 +27,7 @@ android {
         multiDexEnabled true
 
         versionCode versionTimeStamp
-        versionName "3.0.0-beta.1"
+        versionName "3.0.0-beta.2"
 
         vectorDrawables.useSupportLibrary = true
 
@@ -62,8 +62,6 @@ android {
     buildTypes {
 
         debug {
-
-            versionNameSuffix "+" + versionTimeStamp
 
             ext.fabricApiKey = "9458d1130328510f43f88f9262670d7f81276071"
             ext.fabricApiSecret = "44a9fb077adf858f979097d8315bd1de9124dda2c00b63a067015d3610315c0a"
@@ -221,18 +219,18 @@ dependencies {
 }
 
 //Build time command line operations
-task buildInternalApk(dependsOn:['assembleInternal']) {
+task buildInternalApk(dependsOn: ['assembleInternal']) {
     doLast {
         exec {
-            commandLine 'git', 'tag', "i" + project.android.defaultConfig.versionName
+            commandLine 'git', 'tag', "v" + project.android.defaultConfig.versionName + "+" + versionTimeStamp
         }
     }
 }
 
-task buildReleaseApk(dependsOn:['assembleRelease']) {
+task buildReleaseApk(dependsOn: ['assembleRelease']) {
     doLast {
         exec {
-            commandLine 'git', 'tag', "v" + project.android.defaultConfig.versionName + "+" + versionTimeStamp
+            commandLine 'git', 'tag', "v" + project.android.defaultConfig.versionName
         }
     }
 }

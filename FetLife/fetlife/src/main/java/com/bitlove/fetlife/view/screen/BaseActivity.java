@@ -15,7 +15,6 @@ import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.session.UserSessionManager;
 import com.bitlove.fetlife.util.ColorUtil;
 import com.bitlove.fetlife.util.UrlUtil;
-import com.bitlove.fetlife.view.screen.resource.ConversationsActivity;
 import com.bitlove.fetlife.view.screen.resource.FeedActivity;
 import com.bitlove.fetlife.webapp.navigation.WebAppNavigation;
 import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity;
@@ -204,10 +203,10 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                             break;
                         case R.id.navigation_bottom_inbox:
                             bottomNavigation.setOnNavigationItemSelectedListener(null);
-                            intent = new Intent(BaseActivity.this, ConversationsActivity.class);
-                            intent.putExtra(EXTRA_HAS_BOTTOM_BAR,true);
-                            intent.putExtra(EXTRA_SELECTED_BOTTOM_NAV_ITEM,menuItem.getItemId());
-                            BaseActivity.this.startActivity(intent,navOptions.toBundle());
+//                            intent = new Intent(BaseActivity.this, ConversationsActivity.class);
+//                            intent.putExtra(EXTRA_SELECTED_BOTTOM_NAV_ITEM,menuItem.getItemId());
+                            FetLifeWebViewActivity.Companion.startActivity(BaseActivity.this, WebAppNavigation.WEBAPP_BASE_URL + "/inbox", true,menuItem.getItemId(),false, navOptions.toBundle());
+//                            BaseActivity.this.startActivity(intent,navOptions.toBundle());
 //                                finishAfterTransition();
 //                            ConversationsActivity.startActivity(BaseActivity.this, null, false, bottomNavigation, "bottomNavBar");
                             setFinishAfterNavigation(true);

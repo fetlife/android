@@ -1,39 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          android:installLocation="auto"
-          package="com.bitlove.fetlife">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.bitlove.fetlife"
+    android:installLocation="auto">
 
-    <meta-data android:name="android.webkit.WebView.EnableSafeBrowsing"
-               android:value="true" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="com.sonyericsson.home.permission.BROADCAST_BADGE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.NFC"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.MANAGE_DOCUMENTS"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="com.sonyericsson.home.permission.BROADCAST_BADGE" />
+
     <uses-permission
         android:name="android.permission.READ_PHONE_STATE"
-        tools:node="remove"/>
+        tools:node="remove" />
 
-    <!--
-         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
-         Google Maps Android API v2, but you must specify either coarse or fine
-         location permissions for the 'MyLocation' functionality. 
-    -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-    <uses-sdk tools:overrideLibrary="br.tiagohm.markdownview, com.basecamp.turbolinks" />
-
-    <!--
- Large Heap added as a workaround to issue with Fresco library in case of large image lists.
-    TODO: investigate further and check what can we do from App side, like fine-tuning images sizes
-    -->
+    <!-- TODO: revise allow back up enabled setting -->
     <application
         android:name=".FetLifeApplication"
         android:allowBackup="true"
@@ -43,33 +31,132 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:label">
-        <meta-data
-            android:name="com.onesignal.NotificationOpened.DEFAULT"
-            android:value="DISABLE"/>
-        <receiver
-            android:name=".model.service.ServiceCallCancelReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.bitlove.fetlife.ServiceCallCancelReceiver.RECEIVE"/>
-            </intent-filter>
-        </receiver>
-
-        <receiver android:name=".inbound.onesignal.update.UpdateBroadcastReceiver"/>
-
         <activity
             android:name=".StartActivity"
-            android:theme="@style/AppTheme.Transparent">
-        </activity>
+            android:theme="@style/AppTheme.Transparent"/>
 
         <activity
-            android:name=".inbound.CusomTabs.CustomTabLauncherActivity"
-            android:theme="@style/AppTheme.Transparent">
-        </activity>
+            android:name=".inbound.customtabs.CustomTabLauncherActivity"
+            android:theme="@style/AppTheme.Transparent"/>
 
         <activity
             android:name=".view.screen.resource.PictureShareActivity"
             android:label="@string/title_activity_pictureshare"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity
+            android:name=".view.screen.standalone.LoginActivity"
+            android:label="@string/app_name_kinky"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysVisible" />
+
+        <activity
+            android:name=".view.screen.resource.NotificationHistoryActivity"
+            android:label="@string/title_activity_app_notifications"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".view.screen.resource.groups.GroupMessagesActivity"
+            android:label="@string/title_activity_messages"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
+
+        <activity
+            android:name=".view.screen.resource.ExploreActivity"
+            android:label="@string/title_activity_stuff_you_love"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+
+        <activity
+            android:name=".view.screen.resource.FeedActivity"
+            android:label="@string/title_activity_feed"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+
+        <activity
+            android:name=".view.screen.resource.EventsActivity"
+            android:label="@string/title_activity_events"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan"/>
+
+        <activity
+            android:name=".view.screen.resource.FriendsActivity"
+            android:label="@string/title_activity_friends"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
+
+        <activity
+            android:name=".view.screen.resource.members.MembersActivity"
+            android:label="@string/title_activity_members"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
+
+        <activity
+            android:name=".view.screen.resource.groups.GroupsActivity"
+            android:label="@string/title_activity_groups"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+
+        <activity
+            android:name=".view.screen.resource.FriendRequestsActivity"
+            android:label="@string/title_activity_friendrequests"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden|adjustPan" />
+
+        <activity
+            android:name=".view.screen.standalone.AddNfcFriendActivity"
+            android:theme="@style/AppTheme.Dialog.Transparent" />
+
+        <activity
+            android:name=".view.screen.standalone.ReleaseNotesActivity"
+            android:label="@string/title_activity_relnotes"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".view.screen.standalone.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:theme="@style/AppTheme.Light_Accent" />
+
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
+
+        <activity
+            android:name=".view.screen.resource.profile.ProfileActivity"
+            android:label="@string/title_activity_about"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".inbound.onesignal.update.UpdatePermissionActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <activity
+            android:name=".view.screen.resource.EventActivity"
+            android:label="@string/title_activity_event"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity
+            android:name=".view.screen.resource.groups.GroupActivity"
+            android:label="@string/title_activity_group"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity
+            android:name=".webapp.screen.FetLifeWebViewActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="click.pstmrk.it"
+                    android:pathPattern="\\/2sm\\/fetlife\\.com.*"
+                    android:scheme="https" />
+            </intent-filter>
+
         </activity>
 
         <activity-alias
@@ -79,11 +166,11 @@
             android:label="@string/app_name_kinky"
             android:targetActivity=".StartActivity">
             <intent-filter android:label="@string/app_name_kinky">
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity-alias>
+
         <activity-alias
             android:name=".StartActivity_Vanilla"
             android:enabled="false"
@@ -91,129 +178,34 @@
             android:label="@string/app_name_vanilla"
             android:targetActivity=".StartActivity">
             <intent-filter android:label="@string/app_name_vanilla">
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity-alias>
 
-        <activity
-            android:name=".view.screen.standalone.LoginActivity"
-            android:label="@string/app_name_kinky"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateAlwaysVisible"/>
-        <activity
-            android:name=".view.screen.resource.ConversationsActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:label="@string/title_activity_conversations"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity
-            android:name=".view.screen.resource.TurboLinksViewActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:label=""
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity
-            android:name=".view.screen.resource.NotificationHistoryActivity"
-            android:label="@string/title_activity_app_notifications"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity
-            android:name=".view.screen.resource.MessagesActivity"
-            android:label="@string/title_activity_messages"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden"/>
-        <activity
-            android:name=".view.screen.resource.groups.GroupMessagesActivity"
-            android:label="@string/title_activity_messages"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden"/>
-        <activity
-            android:name=".view.screen.resource.ExploreActivity"
-            android:label="@string/title_activity_stuff_you_love"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
-        <activity
-            android:name=".view.screen.resource.FeedActivity"
-            android:label="@string/title_activity_feed"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
-        <activity
-            android:name=".view.screen.resource.EventsActivity"
-            android:label="@string/title_activity_events"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity
-            android:name=".view.screen.resource.FriendsActivity"
-            android:label="@string/title_activity_friends"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden"/>
-        <activity
-            android:name=".view.screen.resource.members.MembersActivity"
-            android:label="@string/title_activity_members"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden"/>
-        <activity
-            android:name=".view.screen.resource.groups.GroupsActivity"
-            android:label="@string/title_activity_groups"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
-        <activity
-            android:name=".view.screen.resource.FriendRequestsActivity"
-            android:label="@string/title_activity_friendrequests"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden|adjustPan"/>
-        <activity
-            android:name=".view.screen.standalone.AddNfcFriendActivity"
-            android:theme="@style/AppTheme.Dialog.Transparent"/>
-        <activity
-            android:name=".inbound.NfcFriendActivity"
-            android:theme="@style/AppTheme.Transparent">
-            <intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+        <meta-data
+            android:name="com.onesignal.NotificationOpened.DEFAULT"
+            android:value="DISABLE" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="${fabricApiKey}" />
 
-                <data android:mimeType="application/vnd.com.bitlove.fetlife"/>
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".view.screen.standalone.ReleaseNotesActivity"
-            android:label="@string/title_activity_relnotes"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity
-            android:name=".view.screen.standalone.SettingsActivity"
-            android:label="@string/title_activity_settings"
-            android:theme="@style/AppTheme.Light_Accent"/>
-        <activity
-            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat"/>
-        <activity
-            android:name=".view.screen.resource.profile.ProfileActivity"
-            android:label="@string/title_activity_about"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".inbound.onesignal.update.UpdatePermissionActivity" android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
-        
-        <service
-            android:name=".model.service.FetLifeApiIntentService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="false"/>
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/.
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
 
-        <service
-            android:name=".inbound.onesignal.OneSignalNotificationExtenderService"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.onesignal.NotificationExtender"/>
-            </intent-filter>
-        </service>
-
-        <receiver android:name=".inbound.NetworkStateChangeReceiver">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-                <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
-            </intent-filter>
-        </receiver>
+        <meta-data
+            android:name="android.webkit.WebView.EnableSafeBrowsing"
+            android:value="true" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -222,63 +214,40 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
+                android:resource="@xml/file_paths" />
         </provider>
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="${fabricApiKey}"/>
-
-        <!--
-             The API key for Google Maps-based APIs is defined as a string resource.
-             (See the file "res/values/google_maps_api.xml").
-             Note that the API key is linked to the encryption key used to sign the APK.
-             You need a different API key for each encryption key, including the release key that is used to
-             sign the APK for publishing.
-             You can define the keys for the debug and release targets in src/debug/ and src/release/. 
-        -->
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key"/>
-
-        <activity
-            android:name=".view.screen.resource.WritingActivity"
-            android:label="@string/title_activity_writing"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity
-            android:name=".view.screen.resource.EventActivity"
-            android:label="@string/title_activity_event"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity
-            android:name=".view.screen.resource.groups.GroupActivity"
-            android:label="@string/title_activity_group"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-
-        <!-- WebApp -->
-        <activity
-            android:name=".webapp.screen.FetLifeWebViewActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:label="@string/app_name_kinky"
-            android:windowSoftInputMode="adjustResize">
+        <receiver
+            android:name=".model.service.ServiceCallCancelReceiver"
+            android:exported="false">
             <intent-filter>
-            <action
-                android:name="android.intent.action.VIEW" />
-            <category
-                android:name="android.intent.category.DEFAULT" />
-            <category
-                android:name="android.intent.category.BROWSABLE" />
-
-            <data
-                android:scheme="https"
-                android:host="click.pstmrk.it"
-                android:pathPattern="\\/2sm\\/fetlife\\.com.*" />
+                <action android:name="com.bitlove.fetlife.ServiceCallCancelReceiver.RECEIVE" />
             </intent-filter>
+        </receiver>
 
-        </activity>
+        <receiver android:name=".inbound.onesignal.update.UpdateBroadcastReceiver" />
 
+        <!-- TODO: Use GCMNetworkManager instead -->
+        <receiver android:name=".inbound.NetworkStateChangeReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".model.service.FetLifeApiIntentService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <service
+            android:name=".inbound.onesignal.OneSignalNotificationExtenderService"
+            android:exported="false"
+            android:permission="android.permission.BIND_JOB_SERVICE">
+            <intent-filter>
+                <action android:name="com.onesignal.NotificationExtender" />
+            </intent-filter>
+        </service>
 
     </application>
 

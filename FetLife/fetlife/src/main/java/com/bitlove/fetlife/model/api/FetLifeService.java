@@ -29,7 +29,6 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 
 public class FetLifeService {
 
-    public static final String WEBVIEW_BASE_URL = "https://fetlife.com";
     public static final String BASE_URL = "https://fetlife.com";
     public static final String HOST_NAME = "fetlife.com";
     public static final String GRANT_TYPE_PASSWORD = "password";

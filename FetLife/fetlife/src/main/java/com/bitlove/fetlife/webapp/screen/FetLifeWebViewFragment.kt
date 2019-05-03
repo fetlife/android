@@ -2,12 +2,11 @@ package com.bitlove.fetlife.webapp.screen
 
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.webkit.*
 import androidx.fragment.app.Fragment
 import com.bitlove.fetlife.BuildConfig
@@ -36,7 +35,7 @@ import org.greenrobot.eventbus.ThreadMode
 
 
 class FetLifeWebViewFragment : Fragment() {
-    
+
     companion object {
         private const val ARG_PAGE_URL = "ARG_PAGE_URL"
         private const val ARG_USE_TOP_BACK_NAVIGATION = "ARG_USE_TOP_BACK_NAVIGATION"
@@ -52,17 +51,24 @@ class FetLifeWebViewFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        setHasOptionsMenu(true)
         return inflater.inflate(R.layout.webapp_fragment_webview,container,false).apply {
             val url = getStringArgument(ARG_PAGE_URL)
             val navigationTitleId = FetLifeApplication.getInstance().webAppNavigation.getTitle(url)
             val navigationTitle = if (navigationTitleId != null) container?.context?.getString(navigationTitleId) else null
-            toolbar_title.text = navigationTitle
+            toolbar_title.text = navigationTitle?.trim()
 
             if (getBooleanArgument(ARG_USE_TOP_BACK_NAVIGATION) == true) {
                 (activity as? FetLifeWebViewActivity)?.let {
                     it.setSupportActionBar(toolbar)
                     it.supportActionBar?.setDisplayHomeAsUpEnabled(true)
                     it.supportActionBar?.setDisplayShowHomeEnabled(true)
+                    it.supportActionBar?.setDisplayShowTitleEnabled(false)
+                }
+            } else {
+                (activity as? FetLifeWebViewActivity)?.let {
+                    it.setSupportActionBar(toolbar)
+                    it.supportActionBar?.setDisplayShowTitleEnabled(false)
                 }
             }
 
@@ -84,7 +90,7 @@ class FetLifeWebViewFragment : Fragment() {
                     dismissProgress()
                     val navigationTitleId = FetLifeApplication.getInstance().webAppNavigation.getTitle(url)
                     val navigationTitle = if (navigationTitleId != null) webView?.context?.getString(navigationTitleId) else null
-                    toolbar_title.text = navigationTitle?: getWebViewTitle(webView)
+                    toolbar_title.text = (navigationTitle?: getWebViewTitle(webView))?.trim()
                     if (webView?.tag == true) {
                         webView.tag = false
                         webView.clearHistory()
@@ -103,7 +109,7 @@ class FetLifeWebViewFragment : Fragment() {
                     }
                     val counterPos = title.indexOf(WebAppNavigation.WEB_COUNTER_SEPARATOR)
                     if (counterPos >= 0 && counterPos < title.length-1) {
-                        title = title.substring(counterPos+1, separatorPos)
+                        title = title.substring(counterPos+1)
                     }
                     val extraPos = title.indexOf(WebAppNavigation.WEB_EXTRA_SEPARATOR)
                     if (extraPos >= 0) {
@@ -114,12 +120,14 @@ class FetLifeWebViewFragment : Fragment() {
 
                 override fun shouldOverrideUrlLoading(webView: WebView?, request: WebResourceRequest?): Boolean {
                     LogUtil.writeLog("shouldOverrideUrlLoading(${request?.url})")
-                    val navigated = FetLifeApplication.getInstance().webAppNavigation.navigate(request?.url, webView, activity)
+                    request ?: return false
+                    val navigated = FetLifeApplication.getInstance().webAppNavigation.navigate(request, webView, activity)
                     return if (navigated) {
                         true
                     } else {
                         request?.url.toString().let {
                             webView?.loadUrl(it,createRequestHeaders())
+                            webView?.postDelayed(Runnable{activity?.invalidateOptionsMenu()},100)
                         }
                         true
                     }
@@ -130,7 +138,7 @@ class FetLifeWebViewFragment : Fragment() {
                     super.onPageCommitVisible(webView, url)
                     val navigationTitleId = FetLifeApplication.getInstance().webAppNavigation.getTitle(url)
                     val navigationTitle = if (navigationTitleId != null) webView?.context?.getString(navigationTitleId) else null
-                    toolbar_title.text = navigationTitle?: getWebViewTitle(webView)
+                    toolbar_title.text = (navigationTitle?: getWebViewTitle(webView))?.trim()
                 }
 
                 override fun onReceivedError(webView: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
@@ -173,7 +181,7 @@ class FetLifeWebViewFragment : Fragment() {
                 put("Authorization", authHeader)
             }
             put("X-Fetlife-Webview", "1")
-            put("X-Fetlife-Android", VersionUtil.getCurrentVersionInt(context).toString())
+            put("X-Fetlife-Android", VersionUtil.getCurrentVersionInt().toString())
         }
     }
 
@@ -253,12 +261,37 @@ class FetLifeWebViewFragment : Fragment() {
         } else {
             false
         }
-
     }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        val url = web_view?.url ?: getStringArgument(ARG_PAGE_URL)
+        val optionsMenuWebNavigation = FetLifeApplication.getInstance().webAppNavigation.getOptionsMenuNavigationList(url) ?: return
+        var order = 0
+        for (navigationItem in optionsMenuWebNavigation) {
+            menu?.add(0,navigationItem,order++,navigationItem)
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        item ?: return false
+        val url = FetLifeApplication.getInstance().webAppNavigation.getOptionMenuNavigationUrl(item.itemId)
+        val navigated = FetLifeApplication.getInstance().webAppNavigation.navigate(Uri.parse(url), web_view, activity)
+        if (!navigated) {
+            web_view?.loadUrl(url,createRequestHeaders())
+            web_view?.postDelayed(Runnable{activity?.invalidateOptionsMenu()},100)
+        }
+        return true
+    }
+
 
     fun getFabLink(): String? {
         //TODO(WEBAPP): implement to be more dynamic
         return FetLifeApplication.getInstance().webAppNavigation.getFabLink(getStringArgument(ARG_PAGE_URL))
+    }
+
+    fun getCurrentUrl(): String? {
+        return web_view?.url
     }
 
 }

@@ -643,12 +643,7 @@ public class FetLifeApiIntentService extends JobIntentService {
             Release latestRelease = null;
             Release latestPreRelease = null;
             final List<Release> releases = releasesCallResponse.body();
-            Collections.sort(releases, new Comparator<Release>() {
-                @Override
-                public int compare(Release o1, Release o2) {
-                    return VersionUtil.getVersionInt(o2.getTag())-VersionUtil.getVersionInt(o1.getTag());
-                }
-            });
+            Collections.sort(releases, VersionUtil.getReleaseComparator());
             for (Release release : releases) {
                 if (release.isPrerelease() && latestPreRelease == null) {
                     latestPreRelease = release;
@@ -1488,7 +1483,16 @@ public class FetLifeApiIntentService extends JobIntentService {
     private int retrieveGroupMessages(Member user, String... params) throws IOException {
 
         final String groupId = getLocalId(params[0]);
+        if (groupId == null) {
+            Crashlytics.logException(new Exception("groupId must not be null"));
+            return Integer.MIN_VALUE;
+        }
         final String groupDiscussionId = getLocalId(params[1]);
+        if (groupDiscussionId == null) {
+            Crashlytics.logException(new Exception("groupDiscussionId must not be null"));
+            return Integer.MIN_VALUE;
+        }
+
 
         final int limit = getIntFromParams(params, 2, 25);
         final int page = getIntFromParams(params, 3, 1);
@@ -1835,6 +1839,10 @@ public class FetLifeApiIntentService extends JobIntentService {
 
     private int getGroup(String... params) throws IOException {
         String groupId = getLocalId(params[0]);
+        if (groupId == null) {
+            Crashlytics.logException(new Exception("groupId must not be null"));
+            return Integer.MIN_VALUE;
+        }
         Call<Group> getGroupCall = getFetLifeApi().getGroup(FetLifeService.AUTH_HEADER_PREFIX + getAccessToken(), groupId);
         Response<Group> getGroupResponse = getGroupCall.execute();
         if (getGroupResponse.isSuccessful()) {

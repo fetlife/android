@@ -1,9 +1,7 @@
-package com.bitlove.fetlife.inbound.CusomTabs
+package com.bitlove.fetlife.inbound.customtabs
 
 import android.content.ComponentName
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import androidx.browser.customtabs.CustomTabsCallback
 import androidx.browser.customtabs.CustomTabsClient
 import androidx.browser.customtabs.CustomTabsServiceConnection

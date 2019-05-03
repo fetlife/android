@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -136,8 +137,8 @@ public class MenuActivityComponent extends ActivityComponent {
     @Override
     public Boolean onActivityBackPressed(BaseActivity baseActivity) {
         DrawerLayout drawer = (DrawerLayout) menuActivity.findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if (drawer.isDrawerOpen(Gravity.RIGHT)) {
+            drawer.closeDrawer(Gravity.RIGHT);
             return true;
         } else {
             return false;
@@ -148,8 +149,8 @@ public class MenuActivityComponent extends ActivityComponent {
     public Boolean onActivityKeyDown(BaseActivity baseActivity, int keyCode, KeyEvent e) {
         if (keyCode == KeyEvent.KEYCODE_MENU) {
             DrawerLayout drawer = (DrawerLayout) menuActivity.findViewById(R.id.drawer_layout);
-            if (!drawer.isDrawerOpen(GravityCompat.START)) {
-                drawer.openDrawer(GravityCompat.START);
+            if (!drawer.isDrawerOpen(Gravity.RIGHT)) {
+                drawer.openDrawer(Gravity.RIGHT);
                 return true;
             }
         }
@@ -297,7 +298,7 @@ public class MenuActivityComponent extends ActivityComponent {
         }
 
         menuActivity.setPendingNavigationIntent(pendingNavigationIntent);
-        drawer.closeDrawer(GravityCompat.END);
+        drawer.closeDrawer(Gravity.RIGHT);
 
 //        if (isNavigation(id) && ((MenuActivityCallBack)menuActivity).finishAtMenuNavigation()) {
 //            menuActivity.finish();

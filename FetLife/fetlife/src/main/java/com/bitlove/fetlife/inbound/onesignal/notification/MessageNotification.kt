@@ -9,8 +9,8 @@ import com.bitlove.fetlife.event.NewMessageEvent
 import com.bitlove.fetlife.inbound.onesignal.NotificationParser
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService
 import com.bitlove.fetlife.view.screen.BaseActivity
-import com.bitlove.fetlife.view.screen.resource.ConversationsActivity
-import com.bitlove.fetlife.view.screen.resource.MessagesActivity
+import com.bitlove.fetlife.webapp.navigation.WebAppNavigation
+import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity
 import com.crashlytics.android.Crashlytics
 import org.json.JSONObject
 
@@ -33,10 +33,10 @@ class MessageNotification(notificationType: String, notificationIdRange: Int, ti
         if (appInForeground) {
             fetLifeApplication.eventBus.post(NewMessageEvent(conversationId))
             val foregroundActivity = fetLifeApplication.foregroundActivity
-            if (foregroundActivity is MessagesActivity) {
-                conversationInForeground = conversationId == foregroundActivity.conversationId
-            } else if (foregroundActivity is ConversationsActivity) {
-                conversationInForeground = true
+            if (foregroundActivity is FetLifeWebViewActivity) {
+                conversationInForeground = launchUrl == (foregroundActivity as? FetLifeWebViewActivity)?.getCurrentUrl()
+            } else if (foregroundActivity is FetLifeWebViewActivity) {
+                conversationInForeground = launchUrl == WebAppNavigation.WEBAPP_BASE_URL + "/inbox"
             }
         }
 
@@ -71,8 +71,12 @@ class MessageNotification(notificationType: String, notificationIdRange: Int, ti
     override fun getNotificationIntent(oneSignalNotification: OneSignalNotification, context: Context, order: Int): PendingIntent? {
         val conversationId = (oneSignalNotification as? MessageNotification)?.conversationId
         val nickname = (oneSignalNotification as? MessageNotification)?.nickname
-        val baseIntent = ConversationsActivity.createIntent(context, true)
-        val contentIntent = MessagesActivity.createIntent(context, conversationId, nickname, null, false) . apply {
+        if (launchUrl == null) {
+            Crashlytics.logException(Exception("Launch url is null"))
+            return null
+        }
+        val baseIntent = FetLifeWebViewActivity.createIntent(context, WebAppNavigation.WEBAPP_BASE_URL + "/inbox", true, R.id.navigation_bottom_inbox, false)
+        val contentIntent = FetLifeWebViewActivity.createIntent(context, oneSignalNotification.launchUrl!!, false, null, false).apply {
             putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE, oneSignalNotification.notificationType)
             putExtra(BaseActivity.EXTRA_NOTIFICATION_MERGE_ID, oneSignalNotification.mergeId)
         }
@@ -80,7 +84,7 @@ class MessageNotification(notificationType: String, notificationIdRange: Int, ti
     }
 
     override fun getLegacySummaryIntent(context: Context): PendingIntent? {
-        return PendingIntent.getActivity(context,notificationIdRange,ConversationsActivity.createIntent(context,true),PendingIntent.FLAG_UPDATE_CURRENT)
+        return PendingIntent.getActivity(context,notificationIdRange,FetLifeWebViewActivity.createIntent(context, WebAppNavigation.WEBAPP_BASE_URL + "/inbox", true, R.id.navigation_bottom_inbox, false),PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     override fun saveNotificationItem(notificationId: Int) {}
