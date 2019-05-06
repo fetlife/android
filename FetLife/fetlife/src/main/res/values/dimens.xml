@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <!--<dimen tools:override="true" name="design_navigation_icon_padding">0dp</dimen>-->
     <!--<dimen name="design_navigation_item_horizontal_padding">0dp</dimen>-->
