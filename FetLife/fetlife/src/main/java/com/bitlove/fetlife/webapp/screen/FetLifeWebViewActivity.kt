@@ -12,6 +12,7 @@ import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.event.LoginFailedEvent
 import com.bitlove.fetlife.event.LoginFinishedEvent
+import com.bitlove.fetlife.inbound.onesignal.NotificationParser
 import com.bitlove.fetlife.view.screen.BaseActivity
 import com.bitlove.fetlife.view.screen.component.MenuActivityComponent
 import com.bitlove.fetlife.view.screen.resource.ResourceActivity
@@ -106,6 +107,8 @@ class FetLifeWebViewActivity : ResourceActivity() {
     override fun onResourceCreate(savedInstanceState: Bundle?) {
         var hasHomeNavigation = getBooleanExtra(EXTRA_HAS_BOTTOM_NAVIGATION) != true && getBooleanExtra(EXTRA_HAS_HOME_NAVIGATION) == true
         var pageUrl = getStringExtra(EXTRA_PAGE_URL)
+
+        NotificationParser.Companion.clearNotificationTypeForUrl(pageUrl)
 
         if (pageUrl == null) {
             pageUrl = intent.data?.toString()

@@ -27,7 +27,7 @@ android {
         multiDexEnabled true
 
         versionCode versionTimeStamp
-        versionName "3.0.0-beta.2"
+        versionName "3.0.1"
 
         vectorDrawables.useSupportLibrary = true
 

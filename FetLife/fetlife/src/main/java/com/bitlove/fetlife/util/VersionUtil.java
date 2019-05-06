@@ -103,7 +103,7 @@ public class VersionUtil {
                     versionName2 = versionName2.substring(PREFIX_VERSION.length());
                 }
                 try {
-                    return new SemanticVersion(versionName1).compareTo(new SemanticVersion(versionName2));
+                    return new SemanticVersion(versionName2).compareTo(new SemanticVersion(versionName1));
                 } catch (ParseException pe) {
                     return 0;
                 }

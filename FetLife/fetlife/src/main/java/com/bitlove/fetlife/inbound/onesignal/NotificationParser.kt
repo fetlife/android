@@ -180,9 +180,9 @@ class NotificationParser {
 
 
         fun clearNotificationTypeForUrl(location: String?) {
+            location?:return
             val uri = Uri.parse(location)
-            val definingSegment = if (uri.isHierarchical) uri.pathSegments.getOrNull(0) else location
-            when (definingSegment) {
+            when (if (uri.isHierarchical) uri.pathSegments.getOrNull(0) else location) {
                 "requests" -> {
                     OneSignalNotification.clearNotifications(JSON_VALUE_TYPE_PREFIX_REQUEST)
                 }
@@ -192,6 +192,8 @@ class NotificationParser {
                     OneSignalNotification.clearNotifications(JSON_VALUE_TYPE_PREFIX_MENTION)
                 }
                 "q" -> OneSignalNotification.clearNotifications(JSON_VALUE_TYPE_PREFIX_QUESTION)
+                "inbox" -> OneSignalNotification.clearNotifications(JSON_VALUE_TYPE_PREFIX_MESSAGE)
+                "conversations" -> OneSignalNotification.clearNotifications(JSON_VALUE_TYPE_PREFIX_MESSAGE)
                 "messages" -> OneSignalNotification.clearNotifications(JSON_VALUE_TYPE_PREFIX_MESSAGE)
                 "group_messages" -> OneSignalNotification.clearNotifications(JSON_VALUE_TYPE_PREFIX_COMMENT_GROUP)
                 "group_discussions" -> OneSignalNotification.clearNotifications(JSON_VALUE_TYPE_GROUP_POST)
