@@ -29,6 +29,12 @@
 
             <p><b><br/>Version History</b></p>
 
+            <p/>v3.0.1<br/>
+
+                    <ul>
+                        <li>FIXED: Device notifications about already seen App notifications</li>
+                    </ul>
+
             <p/>v3.0.0<br/>
 
                     <ul>
