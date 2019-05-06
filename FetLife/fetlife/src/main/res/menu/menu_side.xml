@@ -1,19 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <!--<group android:id="@+id/conversation" android:checkableBehavior="single">-->
-        <!--<item-->
-            <!--android:id="@+id/nav_conversations"-->
-            <!--android:icon="@android:drawable/ic_menu_view"-->
-            <!--android:title="@string/menu_conversations" />-->
-    <!--</group>-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:id="@+id/explore" android:checkableBehavior="single">
-
-        <!--<item-->
-            <!--android:id="@+id/nav_feed"-->
-            <!--android:icon="@drawable/ic_list_black_24dp"-->
-            <!--android:title="@string/menu_feed" />-->
 
         <item
             android:id="@+id/nav_kinky_and_popular"
@@ -36,11 +24,6 @@
     </group>
     <group android:id="@+id/navigation" android:checkableBehavior="single">
 
-        <!--<item-->
-            <!--android:id="@+id/nav_search"-->
-            <!--android:icon="@android:drawable/ic_menu_search"-->
-            <!--android:title="@string/menu_search" />-->
-
         <item
             android:id="@+id/nav_questions"
             android:icon="@drawable/ic_question_answer_black_24dp"
@@ -62,25 +45,9 @@
             android:title="@string/menu_places" />
 
         <item
-            android:id="@+id/nav_members"
-            android:icon="@drawable/ic_search_black_24dp"
-            android:title="@string/menu_members"
-            android:visible="false"/>
-
-        <item
             android:id="@+id/nav_search"
             android:icon="@drawable/ic_search_black_24dp"
             android:title="@string/menu_search" />
-
-        <!--<item-->
-            <!--android:id="@+id/nav_friendrequests"-->
-            <!--android:icon="@android:drawable/ic_menu_my_calendar"-->
-            <!--android:title="@string/menu_friendrequests" />-->
-
-        <!--<item-->
-            <!--android:id="@+id/nav_notifications"-->
-            <!--android:icon="@android:drawable/ic_dialog_alert"-->
-            <!--android:title="@string/menu_notifications" />-->
 
         <item
             android:id="@+id/nav_app_notifications"
@@ -99,11 +66,6 @@
             android:id="@+id/nav_upload_video"
             android:icon="@drawable/ic_slideshow_black_24dp"
             android:title="@string/menu_upload_video" />
-
-        <!--<item-->
-            <!--android:id="@+id/nav_introduce"-->
-            <!--android:icon="@android:drawable/ic_menu_share"-->
-            <!--android:title="@string/menu_introduce" />-->
 
     </group>
 
@@ -173,11 +135,6 @@
         <item
             android:id="@+id/nav_contact"
             android:title="@string/menu_contact" />
-
-        <!--<item-->
-        <!--android:id="@+id/nav_wallpapers"-->
-        <!--android:icon="@android:drawable/ic_menu_gallery"-->
-        <!--android:title="@string/menu_wallpapers" />-->
 
     </group>
 
