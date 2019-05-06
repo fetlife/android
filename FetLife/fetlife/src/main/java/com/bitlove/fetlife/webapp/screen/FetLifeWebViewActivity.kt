@@ -9,6 +9,7 @@ import android.view.KeyEvent
 import android.view.MenuItem
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
+import com.bitlove.fetlife.inbound.onesignal.NotificationParser
 import com.bitlove.fetlife.view.screen.BaseActivity
 import com.bitlove.fetlife.view.screen.component.MenuActivityComponent
 import com.bitlove.fetlife.view.screen.resource.ResourceActivity
@@ -61,6 +62,8 @@ class FetLifeWebViewActivity : ResourceActivity() {
 
         var hasHomeNavigation = getBooleanExtra(EXTRA_HAS_BOTTOM_NAVIGATION) != true
         var pageUrl = getStringExtra(EXTRA_PAGE_URL)
+
+        NotificationParser.Companion.clearNotificationTypeForUrl(pageUrl)
 
         if (pageUrl == null) {
             pageUrl = intent.data?.toString()
