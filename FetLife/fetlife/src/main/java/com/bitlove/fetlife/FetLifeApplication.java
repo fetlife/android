@@ -15,21 +15,24 @@ import android.os.StrictMode;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.bitlove.fetlife.inbound.ActionCable;
-import com.bitlove.fetlife.inbound.customtabs.CustomTabLauncherActivity;
-import com.bitlove.fetlife.inbound.customtabs.FetLifeCustomTabsServiceConnection;
-import com.bitlove.fetlife.inbound.onesignal.NotificationParser;
-import com.bitlove.fetlife.model.api.FetLifeService;
-import com.bitlove.fetlife.model.api.GitHubService;
-import com.bitlove.fetlife.model.api.TLSSocketFactory;
-import com.bitlove.fetlife.model.db.FetLifeDatabase;
-import com.bitlove.fetlife.model.inmemory.InMemoryStorage;
-import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
-import com.bitlove.fetlife.session.UserSessionManager;
-import com.bitlove.fetlife.util.FileUtil;
-import com.bitlove.fetlife.view.screen.resource.ResourceListActivity;
-import com.bitlove.fetlife.view.screen.standalone.LoginActivity;
-import com.bitlove.fetlife.view.widget.ImageViewerWrapper;
+import androidx.browser.customtabs.CustomTabsClient;
+import androidx.browser.customtabs.CustomTabsSession;
+import androidx.multidex.MultiDexApplication;
+
+import com.bitlove.fetlife.nativeapp.inbound.actioncable.ActionCable;
+import com.bitlove.fetlife.nativeapp.inbound.customtabs.CustomTabLauncherActivity;
+import com.bitlove.fetlife.nativeapp.inbound.customtabs.FetLifeCustomTabsServiceConnection;
+import com.bitlove.fetlife.nativeapp.inbound.onesignal.NotificationParser;
+import com.bitlove.fetlife.nativeapp.model.api.FetLifeService;
+import com.bitlove.fetlife.nativeapp.model.api.GitHubService;
+import com.bitlove.fetlife.nativeapp.model.api.TLSSocketFactory;
+import com.bitlove.fetlife.nativeapp.model.db.FetLifeDatabase;
+import com.bitlove.fetlife.nativeapp.model.inmemory.InMemoryStorage;
+import com.bitlove.fetlife.nativeapp.model.service.FetLifeApiIntentService;
+import com.bitlove.fetlife.nativeapp.session.UserSessionManager;
+import com.bitlove.fetlife.nativeapp.util.FileUtil;
+import com.bitlove.fetlife.nativeapp.view.screen.resource.ResourceListActivity;
+import com.bitlove.fetlife.nativeapp.view.widget.ImageViewerWrapper;
 import com.bitlove.fetlife.webapp.navigation.WebAppNavigation;
 import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity;
 import com.crashlytics.android.Crashlytics;
@@ -52,16 +55,13 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
-import androidx.browser.customtabs.CustomTabsClient;
-import androidx.browser.customtabs.CustomTabsSession;
-import androidx.multidex.MultiDexApplication;
 import io.fabric.sdk.android.Fabric;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import static com.bitlove.fetlife.inbound.onesignal.notification.OneSignalNotification.NOTIFICATION_CHANNEL_DEFUALT;
+import static com.bitlove.fetlife.nativeapp.inbound.onesignal.notification.OneSignalNotification.NOTIFICATION_CHANNEL_DEFUALT;
 
 /**
  * Main Application class. The lifecycle of the object of this class is the same as the App itself
@@ -495,7 +495,7 @@ public class FetLifeApplication extends MultiDexApplication {
 
         @Override
         public void onActivityResumed(Activity activity) {
-            if (!isAppInForeground() || foregroundActivity instanceof LoginActivity) {
+            if (!isAppInForeground()) {
                 FetLifeApiIntentService.startPendingCalls(FetLifeApplication.this, true);
             }
             setForegroundActivity(activity);

@@ -189,7 +189,6 @@ public class FetLifeApiIntentService extends JobIntentService {
     public static final String ACTION_APICALL_SET_MESSAGES_READ = "com.bitlove.fetlife.action.apicall.set_messages_read";
     public static final String ACTION_APICALL_ADD_LOVE = "com.bitlove.fetlife.action.apicall.add_love";
     public static final String ACTION_APICALL_REMOVE_LOVE = "com.bitlove.fetlife.action.apicall.remove_love";
-    public static final String ACTION_APICALL_LOGON_USER = "com.bitlove.fetlife.action.apicall.logon_user";
     public static final String ACTION_APICALL_FINALIZE_LOGIN = "com.bitlove.fetlife.action.apicall.finalize_login";
 
     public static final String ACTION_APICALL_FRIENDREQUESTS = "com.bitlove.fetlife.action.apicall.friendrequests";
@@ -388,7 +387,7 @@ public class FetLifeApiIntentService extends JobIntentService {
         //Check current logged in user
         //Any communication with the Api is allowed only if the user is logged on, except of course the login process itself
         Member currentUser = getFetLifeApplication().getUserSessionManager().getCurrentUser();
-        if (currentUser == null && action != ACTION_APICALL_LOGON_USER && action != ACTION_APICALL_FINALIZE_LOGIN) {
+        if (currentUser == null && action != ACTION_APICALL_FINALIZE_LOGIN) {
             return;
         }
 
@@ -406,7 +405,7 @@ public class FetLifeApiIntentService extends JobIntentService {
             sendLoadStartedNotification(action,params);
 
             //If we do not have any access token (for example because it is expired and removed) try to get new one with the stored refreshUi token
-            if (action != ACTION_APICALL_LOGON_USER && action != ACTION_APICALL_FINALIZE_LOGIN && getAccessToken() == null) {
+            if (action != ACTION_APICALL_FINALIZE_LOGIN && getAccessToken() == null) {
                 if (refreshToken(currentUser)) {
                     //If token successfully refreshed restart the original request
                     //Note: this could end up in endless loop if the backend keep sending invalid tokens, but at this point we assume backend works properly from this point of view
@@ -423,9 +422,6 @@ public class FetLifeApiIntentService extends JobIntentService {
 
             //Call the appropriate method based on the action to be executed
             switch (action) {
-                case ACTION_APICALL_LOGON_USER:
-                    result = logonUser(params);
-                    break;
                 case ACTION_APICALL_FINALIZE_LOGIN:
                     result = finalizeLogin(params);
                     break;
@@ -592,7 +588,7 @@ public class FetLifeApiIntentService extends JobIntentService {
                 //If the call failed notify all subscribers about
 //                Crashlytics.logException(new Exception("EXTRA LOG Load failed with response code: " + action + ";" + lastResponseCode));
                 sendLoadFailedNotification(action, params);
-            } else if (action != ACTION_APICALL_LOGON_USER && (lastResponseCode == 401)) {
+            } else if (action != ACTION_APICALL_FINALIZE_LOGIN && (lastResponseCode == 401)) {
                 //If the result is failed due to Authentication or Authorization issue, let's try to refreshUi the token as it is most probably expired
                 if (refreshToken(currentUser)) {
                     //If token refreshUi succeed restart the original request
@@ -725,35 +721,6 @@ public class FetLifeApiIntentService extends JobIntentService {
         return 1;
     }
 
-    //Call for logging in the user
-    private int logonUser(String... params) throws IOException {
-        Call<Token> tokenCall = getFetLifeApplication().getFetLifeService().getFetLifeApi().login(
-                BuildConfig.CLIENT_ID,
-                getClientSecret(),
-                BuildConfig.REDIRECT_URL,
-                new AuthBody(params[0], params[1]));
-
-        Response<Token> tokenResponse = tokenCall.execute();
-        if (tokenResponse.isSuccessful()) {
-            Token responseBody = tokenResponse.body();
-            String accessToken = responseBody.getAccessToken();
-            //Retrieve user information from the backend after Authentication
-            Member user = retrieveCurrentUser(accessToken);
-            if (user == null) {
-                return Integer.MIN_VALUE;
-            }
-            //Save the user information with the tokens into the backend
-            user.setAccessToken(accessToken);
-            user.setRefreshToken(responseBody.getRefreshToken());
-
-            //Notify the Session Manager about finished logon process
-            getFetLifeApplication().getUserSessionManager().onUserLogIn(user, getBoolFromParams(params, 2, true));
-            return 1;
-        } else {
-            return Integer.MIN_VALUE;
-        }
-    }
-
     //Special internal call to retrieve user information after authentication
     private Member retrieveCurrentUser(String accessToken) throws IOException {
         Call<Member> getMeCall = getFetLifeApi().getMe(FetLifeService.AUTH_HEADER_PREFIX + accessToken);
@@ -764,7 +731,6 @@ public class FetLifeApiIntentService extends JobIntentService {
             return null;
         }
     }
-
 
     //****
     //Pending post request related methods / Api calls
@@ -2768,7 +2734,7 @@ public class FetLifeApiIntentService extends JobIntentService {
 
     private void sendLoadStartedNotification(String action, String[] params) {
         switch (action) {
-            case ACTION_APICALL_LOGON_USER:
+            case ACTION_APICALL_FINALIZE_LOGIN:
                 getFetLifeApplication().getEventBus().post(new LoginStartedEvent());
                 break;
             case ACTION_APICALL_UPLOAD_PICTURE:
@@ -2787,7 +2753,6 @@ public class FetLifeApiIntentService extends JobIntentService {
     private void sendLoadFinishedNotification(String action, int count, String... params) {
         switch (action) {
             case ACTION_APICALL_FINALIZE_LOGIN:
-            case ACTION_APICALL_LOGON_USER:
                 getFetLifeApplication().getEventBus().post(new LoginFinishedEvent());
                 break;
             case ACTION_APICALL_UPLOAD_PICTURE:
@@ -2802,7 +2767,6 @@ public class FetLifeApiIntentService extends JobIntentService {
     private void sendLoadFailedNotification(String action, String... params) {
         switch (action) {
             case ACTION_APICALL_FINALIZE_LOGIN:
-            case ACTION_APICALL_LOGON_USER:
                 getFetLifeApplication().getEventBus().post(new LoginFailedEvent());
                 break;
             case ACTION_APICALL_UPLOAD_PICTURE:
@@ -2816,7 +2780,7 @@ public class FetLifeApiIntentService extends JobIntentService {
 
     private void sendConnectionFailedNotification(String action, String... params) {
         switch (action) {
-            case ACTION_APICALL_LOGON_USER:
+            case ACTION_APICALL_FINALIZE_LOGIN:
                 getFetLifeApplication().getEventBus().post(new LoginFailedEvent(true));
                 break;
             default:
