@@ -30,7 +30,7 @@
             android:layout_width="36dp"
             android:layout_height="36dp"/>
 
-        <com.bitlove.fetlife.view.widget.WorkaroundTextView
+        <com.bitlove.fetlife.nativeapp.view.widget.WorkaroundTextView
             android:id="@+id/message_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
             android:layout_height="36dp"/>
     </LinearLayout>
 
-    <com.bitlove.fetlife.view.widget.AutoAlignGridView
+    <com.bitlove.fetlife.nativeapp.view.widget.AutoAlignGridView
         android:id="@+id/message_grid_entities"
         android:background="@color/area_background_dark_invert"
         android:horizontalSpacing="4dp"

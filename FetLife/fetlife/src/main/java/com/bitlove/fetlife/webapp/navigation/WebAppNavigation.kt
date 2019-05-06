@@ -12,20 +12,17 @@ import androidx.browser.customtabs.CustomTabsIntent
 import com.bitlove.fetlife.BuildConfig
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
-import com.bitlove.fetlife.model.pojos.fetlife.dbjson.*
-import com.bitlove.fetlife.model.service.FetLifeApiIntentService
-import com.bitlove.fetlife.util.ColorUtil
-import com.bitlove.fetlife.view.screen.BaseActivity
-import com.bitlove.fetlife.view.screen.resource.EventActivity
-import com.bitlove.fetlife.view.screen.resource.groups.GroupActivity
-import com.bitlove.fetlife.view.screen.resource.groups.GroupMessagesActivity
-import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity
-import com.bitlove.fetlife.view.widget.ImageViewerWrapper
+import com.bitlove.fetlife.nativeapp.model.pojos.fetlife.dbjson.*
+import com.bitlove.fetlife.nativeapp.model.service.FetLifeApiIntentService
+import com.bitlove.fetlife.nativeapp.util.ColorUtil
+import com.bitlove.fetlife.nativeapp.view.screen.BaseActivity
+import com.bitlove.fetlife.nativeapp.view.screen.resource.EventActivity
+import com.bitlove.fetlife.nativeapp.view.screen.resource.groups.GroupActivity
+import com.bitlove.fetlife.nativeapp.view.screen.resource.groups.GroupMessagesActivity
+import com.bitlove.fetlife.nativeapp.view.screen.resource.profile.ProfileActivity
+import com.bitlove.fetlife.nativeapp.view.widget.ImageViewerWrapper
 import com.bitlove.fetlife.webapp.kotlin.openInBrowser
 import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity
-import kotlin.collections.ArrayList
-import kotlin.collections.LinkedHashMap
-import kotlin.collections.LinkedHashSet
 
 class WebAppNavigation {
 

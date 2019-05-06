@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.bitlove.fetlife.view.widget.BoldPreferenceCategory
+    <com.bitlove.fetlife.nativeapp.view.widget.BoldPreferenceCategory
         android:title="@string/settings_category_feed_autoexpand">
 
         <CheckBoxPreference
@@ -52,6 +52,6 @@
             android:title="@string/settings_title_feed_auto_expand_group"
             android:summary="@string/settings_summary_feed_auto_expand_group"/>
 
-    </com.bitlove.fetlife.view.widget.BoldPreferenceCategory>
+    </com.bitlove.fetlife.nativeapp.view.widget.BoldPreferenceCategory>
 
 </PreferenceScreen>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.bitlove.fetlife.view.widget.BoldPreferenceCategory
+    <com.bitlove.fetlife.nativeapp.view.widget.BoldPreferenceCategory
         android:title="@string/settings_category_notification_text">
 
         <CheckBoxPreference
@@ -10,9 +10,9 @@
             android:title="@string/settings_title_notification_anonymtext"
             android:summary="@string/settings_summary_notification_anonymtext" />
 
-    </com.bitlove.fetlife.view.widget.BoldPreferenceCategory>
+    </com.bitlove.fetlife.nativeapp.view.widget.BoldPreferenceCategory>
 
-    <com.bitlove.fetlife.view.widget.BoldPreferenceCategory
+    <com.bitlove.fetlife.nativeapp.view.widget.BoldPreferenceCategory
         android:title="@string/settings_category_notification_gouping">
 
         <CheckBoxPreference
@@ -21,9 +21,9 @@
             android:title="@string/settings_title_notification_grouping"
             android:summary="@string/settings_summary_notification_grouping" />
 
-    </com.bitlove.fetlife.view.widget.BoldPreferenceCategory>
+    </com.bitlove.fetlife.nativeapp.view.widget.BoldPreferenceCategory>
 
-    <com.bitlove.fetlife.view.widget.BoldPreferenceCategory
+    <com.bitlove.fetlife.nativeapp.view.widget.BoldPreferenceCategory
         android:title="@string/settings_category_notification_enablement">
         
         <CheckBoxPreference
@@ -80,6 +80,6 @@
             android:title="@string/settings_title_notification_prerelease_enabled"
             android:summary="@string/settings_summary_notification_prerelease_enabled"/>
 
-    </com.bitlove.fetlife.view.widget.BoldPreferenceCategory>
+    </com.bitlove.fetlife.nativeapp.view.widget.BoldPreferenceCategory>
 
 </PreferenceScreen>

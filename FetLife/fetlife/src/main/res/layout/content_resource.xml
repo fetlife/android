@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".view.screen.resource.ConversationsActivity"
+    tools:context=".nativeapp.view.screen.resource.ConversationsActivity"
     tools:showIn="@layout/coordinator_resource_default">
 
         <ImageView

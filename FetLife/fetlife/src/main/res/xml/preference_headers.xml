@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <preference-headers xmlns:android="http://schemas.android.com/apk/res/android">
     <header
-        android:fragment="com.bitlove.fetlife.view.screen.standalone.SettingsActivity$GeneralSettings"
+        android:fragment="com.bitlove.fetlife.nativeapp.view.screen.standalone.SettingsActivity$GeneralSettings"
         android:title="@string/settings_title_general"
         android:summary="@string/settings_summary_general" />
     <header
-        android:fragment="com.bitlove.fetlife.view.screen.standalone.SettingsActivity$NotificationSettings"
+        android:fragment="com.bitlove.fetlife.nativeapp.view.screen.standalone.SettingsActivity$NotificationSettings"
         android:title="@string/settings_title_notifications"
         android:summary="@string/settings_summary_notifications" />
     <header
-        android:fragment="com.bitlove.fetlife.view.screen.standalone.SettingsActivity$ProfileSettings"
+        android:fragment="com.bitlove.fetlife.nativeapp.view.screen.standalone.SettingsActivity$ProfileSettings"
         android:title="@string/settings_title_profile"
         android:summary="@string/settings_summary_profile" />
     <header
-        android:fragment="com.bitlove.fetlife.view.screen.standalone.SettingsActivity$FeedSettings"
+        android:fragment="com.bitlove.fetlife.nativeapp.view.screen.standalone.SettingsActivity$FeedSettings"
         android:title="@string/settings_title_feed"
         android:summary="@string/settings_summary_feed" />
 </preference-headers>

@@ -3,10 +3,9 @@ package com.bitlove.fetlife;
 import android.app.Activity;
 import android.os.Bundle;
 
-import com.bitlove.fetlife.inbound.onesignal.notification.OneSignalNotification;
-import com.bitlove.fetlife.session.UserSessionManager;
-import com.bitlove.fetlife.view.screen.resource.FeedActivity;
-import com.bitlove.fetlife.view.screen.standalone.LoginActivity;
+import com.bitlove.fetlife.nativeapp.inbound.onesignal.notification.OneSignalNotification;
+import com.bitlove.fetlife.nativeapp.session.UserSessionManager;
+import com.bitlove.fetlife.nativeapp.view.screen.resource.FeedActivity;
 import com.bitlove.fetlife.webapp.navigation.WebAppNavigation;
 import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity;
 

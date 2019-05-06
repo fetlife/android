@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:transitionGroup="true"
-    tools:context=".view.screen.standalone.ReleaseNotesActivity"
+    tools:context=".nativeapp.view.screen.standalone.ReleaseNotesActivity"
     tools:showIn="@layout/activity_relnotes">
 
     <TextView
