@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.browser.customtabs.CustomTabsCallback
 import androidx.browser.customtabs.CustomTabsClient
 import androidx.browser.customtabs.CustomTabsServiceConnection
-import com.bitlove.fetlife.FetLifeApplication
+import com.bitlove.fetlife.common.app.FetLifeApplication
 
 class FetLifeCustomTabsServiceConnection : CustomTabsServiceConnection() {
 

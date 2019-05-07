@@ -14,7 +14,7 @@ import com.bitlove.fetlife.legacy.model.pojos.fetlife.dbjson.Event;
 import com.bitlove.fetlife.legacy.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.legacy.view.adapter.EventsRecyclerAdapter;
 import com.bitlove.fetlife.legacy.view.adapter.ResourceListRecyclerAdapter;
-import com.bitlove.fetlife.legacy.view.screen.BaseActivity;
+import com.bitlove.fetlife.common.view.BaseActivity;
 import com.bitlove.fetlife.legacy.view.screen.resource.EventActivity;
 import com.bitlove.fetlife.legacy.view.screen.resource.LoadFragment;
 

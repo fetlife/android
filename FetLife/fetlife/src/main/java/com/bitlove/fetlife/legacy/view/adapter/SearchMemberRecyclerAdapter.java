@@ -1,6 +1,6 @@
 package com.bitlove.fetlife.legacy.view.adapter;
 
-import com.bitlove.fetlife.FetLifeApplication;
+import com.bitlove.fetlife.common.app.FetLifeApplication;
 import com.bitlove.fetlife.legacy.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.legacy.model.pojos.fetlife.dbjson.Member_Table;
 import com.raizlabs.android.dbflow.annotation.Collate;

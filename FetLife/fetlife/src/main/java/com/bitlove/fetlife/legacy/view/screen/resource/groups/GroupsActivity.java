@@ -16,10 +16,10 @@ import com.bitlove.fetlife.legacy.event.ServiceCallFinishedEvent;
 import com.bitlove.fetlife.legacy.event.ServiceCallStartedEvent;
 import com.bitlove.fetlife.legacy.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.legacy.model.service.FetLifeApiIntentService;
-import com.bitlove.fetlife.legacy.view.screen.BaseActivity;
+import com.bitlove.fetlife.common.view.BaseActivity;
 import com.bitlove.fetlife.legacy.view.screen.component.MenuActivityComponent;
 import com.bitlove.fetlife.legacy.view.screen.resource.LoadFragment;
-import com.bitlove.fetlife.legacy.view.screen.resource.ResourceActivity;
+import com.bitlove.fetlife.common.view.ResourceActivity;
 import com.bitlove.fetlife.legacy.view.screen.resource.profile.GroupsFragment;
 
 import org.greenrobot.eventbus.Subscribe;

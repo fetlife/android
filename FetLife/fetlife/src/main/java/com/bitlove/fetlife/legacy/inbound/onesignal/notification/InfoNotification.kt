@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import com.bitlove.fetlife.R
-import com.bitlove.fetlife.legacy.view.screen.BaseActivity
+import com.bitlove.fetlife.common.view.BaseActivity
 import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity
 import org.json.JSONObject
 

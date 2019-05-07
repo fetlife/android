@@ -1,6 +1,6 @@
 package com.bitlove.fetlife.legacy.model.pojos.fetlife.dbjson;
 
-import com.bitlove.fetlife.FetLifeApplication;
+import com.bitlove.fetlife.common.app.FetLifeApplication;
 import com.bitlove.fetlife.legacy.model.db.FetLifeDatabase;
 import com.bitlove.fetlife.legacy.util.DateUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;

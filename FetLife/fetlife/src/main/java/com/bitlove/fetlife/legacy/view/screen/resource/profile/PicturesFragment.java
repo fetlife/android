@@ -16,7 +16,7 @@ import com.bitlove.fetlife.legacy.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.legacy.util.PictureUtil;
 import com.bitlove.fetlife.legacy.util.UrlUtil;
 import com.bitlove.fetlife.legacy.view.adapter.PicturesRecyclerAdapter;
-import com.bitlove.fetlife.legacy.view.screen.BaseActivity;
+import com.bitlove.fetlife.common.view.BaseActivity;
 import com.bitlove.fetlife.legacy.view.screen.resource.LoadFragment;
 
 public class PicturesFragment extends LoadFragment implements PictureUtil.OnPictureOverlayClickListener {

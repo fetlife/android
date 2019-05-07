@@ -6,7 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 
-import com.bitlove.fetlife.FetLifeApplication;
+import com.bitlove.fetlife.common.app.FetLifeApplication;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.legacy.model.pojos.github.Release;
 import com.crashlytics.android.Crashlytics;

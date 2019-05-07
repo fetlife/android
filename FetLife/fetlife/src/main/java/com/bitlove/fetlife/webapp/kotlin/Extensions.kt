@@ -6,7 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.bitlove.fetlife.FetLifeApplication
+import com.bitlove.fetlife.common.app.FetLifeApplication
 
 //Activity functions
 fun Activity.getStringExtra(name: String) : String? {

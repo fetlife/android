@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bitlove.fetlife.FetLifeApplication;
+import com.bitlove.fetlife.common.app.FetLifeApplication;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.legacy.model.pojos.fetlife.db.PictureReference;
 import com.bitlove.fetlife.legacy.model.pojos.fetlife.db.PictureReference_Table;

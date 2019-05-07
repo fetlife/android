@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bitlove.fetlife.R;
+import com.bitlove.fetlife.common.view.ResourceActivity;
 import com.bitlove.fetlife.legacy.event.ServiceCallFailedEvent;
 import com.bitlove.fetlife.legacy.event.ServiceCallFinishedEvent;
 import com.bitlove.fetlife.legacy.event.ServiceCallStartedEvent;

@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
-import com.bitlove.fetlife.FetLifeApplication;
+import com.bitlove.fetlife.common.app.FetLifeApplication;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.legacy.model.pojos.fetlife.json.Story;
 import com.bitlove.fetlife.legacy.model.service.FetLifeApiIntentService;

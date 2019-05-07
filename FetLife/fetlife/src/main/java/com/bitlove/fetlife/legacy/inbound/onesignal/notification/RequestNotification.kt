@@ -3,7 +3,7 @@ package com.bitlove.fetlife.legacy.inbound.onesignal.notification
 import android.app.PendingIntent
 import android.content.Context
 import com.bitlove.fetlife.R
-import com.bitlove.fetlife.legacy.view.screen.BaseActivity
+import com.bitlove.fetlife.common.view.BaseActivity
 import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity
 import org.json.JSONObject
 

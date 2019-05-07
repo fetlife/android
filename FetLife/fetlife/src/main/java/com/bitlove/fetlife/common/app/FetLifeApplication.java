@@ -1,4 +1,4 @@
-package com.bitlove.fetlife;
+package com.bitlove.fetlife.common.app;
 
 import android.app.Activity;
 import android.app.NotificationChannel;
@@ -19,6 +19,7 @@ import androidx.browser.customtabs.CustomTabsClient;
 import androidx.browser.customtabs.CustomTabsSession;
 import androidx.multidex.MultiDexApplication;
 
+import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.legacy.inbound.actioncable.ActionCable;
 import com.bitlove.fetlife.legacy.inbound.customtabs.CustomTabLauncherActivity;
 import com.bitlove.fetlife.legacy.inbound.customtabs.FetLifeCustomTabsServiceConnection;
@@ -29,7 +30,6 @@ import com.bitlove.fetlife.legacy.model.api.TLSSocketFactory;
 import com.bitlove.fetlife.legacy.model.db.FetLifeDatabase;
 import com.bitlove.fetlife.legacy.model.inmemory.InMemoryStorage;
 import com.bitlove.fetlife.legacy.model.service.FetLifeApiIntentService;
-import com.bitlove.fetlife.legacy.session.UserSessionManager;
 import com.bitlove.fetlife.legacy.util.FileUtil;
 import com.bitlove.fetlife.legacy.view.screen.resource.ResourceListActivity;
 import com.bitlove.fetlife.legacy.view.widget.ImageViewerWrapper;

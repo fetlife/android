@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bitlove.fetlife.R;
+import com.bitlove.fetlife.common.view.ResourceActivity;
 import com.bitlove.fetlife.legacy.event.ServiceCallFailedEvent;
 import com.bitlove.fetlife.legacy.event.ServiceCallFinishedEvent;
 import com.bitlove.fetlife.legacy.event.ServiceCallStartedEvent;

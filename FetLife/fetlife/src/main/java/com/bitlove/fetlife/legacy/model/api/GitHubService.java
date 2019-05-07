@@ -2,7 +2,7 @@ package com.bitlove.fetlife.legacy.model.api;
 
 import android.os.Build;
 
-import com.bitlove.fetlife.FetLifeApplication;
+import com.bitlove.fetlife.common.app.FetLifeApplication;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

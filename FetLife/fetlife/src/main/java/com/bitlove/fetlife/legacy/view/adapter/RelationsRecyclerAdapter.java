@@ -1,6 +1,6 @@
 package com.bitlove.fetlife.legacy.view.adapter;
 
-import com.bitlove.fetlife.FetLifeApplication;
+import com.bitlove.fetlife.common.app.FetLifeApplication;
 import com.bitlove.fetlife.legacy.model.pojos.fetlife.db.RelationReference;
 import com.bitlove.fetlife.legacy.model.pojos.fetlife.db.RelationReference_Table;
 import com.bitlove.fetlife.legacy.model.pojos.fetlife.dbjson.Member;

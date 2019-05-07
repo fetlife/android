@@ -1,4 +1,4 @@
-package com.bitlove.fetlife.legacy.view.screen;
+package com.bitlove.fetlife.common.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -32,17 +32,18 @@ import androidx.core.app.ActivityOptionsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.bitlove.fetlife.BuildConfig;
-import com.bitlove.fetlife.FetLifeApplication;
+import com.bitlove.fetlife.common.app.FetLifeApplication;
 import com.bitlove.fetlife.R;
+
 import com.bitlove.fetlife.legacy.event.NotificationCountUpdatedEvent;
 import com.bitlove.fetlife.legacy.event.ServiceCallFinishedEvent;
 import com.bitlove.fetlife.legacy.inbound.onesignal.notification.OneSignalNotification;
-import com.bitlove.fetlife.legacy.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.legacy.model.service.FetLifeApiIntentService;
-import com.bitlove.fetlife.legacy.session.UserSessionManager;
-import com.bitlove.fetlife.legacy.util.ColorUtil;
 import com.bitlove.fetlife.legacy.view.screen.component.ActivityComponent;
 import com.bitlove.fetlife.legacy.view.screen.resource.FeedActivity;
+import com.bitlove.fetlife.legacy.util.ColorUtil;
+
+import com.bitlove.fetlife.common.app.UserSessionManager;
 import com.bitlove.fetlife.webapp.navigation.WebAppNavigation;
 import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity;
 import com.crashlytics.android.Crashlytics;
@@ -531,14 +532,6 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
             activityComponent.onActivityStarted(this);
         }
 //        registerActionCable();
-    }
-
-    private String getAccessToken() {
-        Member currentUser = getFetLifeApplication().getUserSessionManager().getCurrentUser();
-        if (currentUser == null) {
-            return null;
-        }
-        return currentUser.getAccessToken();
     }
 
     @Override

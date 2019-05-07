@@ -3,9 +3,9 @@ package com.bitlove.fetlife.legacy.inbound.actioncable
 import android.content.Context
 import android.text.TextUtils
 import android.webkit.CookieManager
-import com.bitlove.fetlife.FetLifeApplication
+import com.bitlove.fetlife.common.app.FetLifeApplication
 import com.bitlove.fetlife.legacy.event.NotificationCountUpdatedEvent
-import com.bitlove.fetlife.legacy.session.UserSessionManager
+import com.bitlove.fetlife.common.app.UserSessionManager
 import com.crashlytics.android.Crashlytics
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject

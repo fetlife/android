@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.bitlove.fetlife.FetLifeApplication;
+import com.bitlove.fetlife.common.app.FetLifeApplication;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.legacy.model.pojos.fetlife.dbjson.Picture;
 import com.bitlove.fetlife.legacy.model.pojos.fetlife.json.FeedEvent;

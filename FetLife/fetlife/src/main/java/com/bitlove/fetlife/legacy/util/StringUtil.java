@@ -9,7 +9,7 @@ import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.view.View;
 
-import com.bitlove.fetlife.FetLifeApplication;
+import com.bitlove.fetlife.common.app.FetLifeApplication;
 import com.bitlove.fetlife.legacy.model.pojos.fetlife.json.Mention;
 import com.bitlove.fetlife.legacy.model.pojos.fetlife.json.MessageEntities;
 import com.bitlove.fetlife.legacy.view.screen.resource.profile.ProfileActivity;

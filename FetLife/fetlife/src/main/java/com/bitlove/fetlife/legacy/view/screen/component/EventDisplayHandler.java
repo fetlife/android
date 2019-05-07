@@ -28,7 +28,7 @@ import com.bitlove.fetlife.legacy.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.legacy.model.service.ServiceCallCancelReceiver;
 import com.bitlove.fetlife.legacy.util.NotificationUtil;
 import com.bitlove.fetlife.legacy.util.VersionUtil;
-import com.bitlove.fetlife.legacy.view.screen.BaseActivity;
+import com.bitlove.fetlife.common.view.BaseActivity;
 
 import java.util.HashMap;
 import java.util.Map;

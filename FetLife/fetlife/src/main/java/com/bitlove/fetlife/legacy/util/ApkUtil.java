@@ -9,7 +9,7 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Environment;
 
-import com.bitlove.fetlife.FetLifeApplication;
+import com.bitlove.fetlife.common.app.FetLifeApplication;
 import com.bitlove.fetlife.R;
 import com.crashlytics.android.Crashlytics;
 

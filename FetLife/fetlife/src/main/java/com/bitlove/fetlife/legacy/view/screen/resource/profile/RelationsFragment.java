@@ -14,7 +14,7 @@ import com.bitlove.fetlife.legacy.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.legacy.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.legacy.view.adapter.RelationsRecyclerAdapter;
 import com.bitlove.fetlife.legacy.view.adapter.ResourceListRecyclerAdapter;
-import com.bitlove.fetlife.legacy.view.screen.BaseActivity;
+import com.bitlove.fetlife.common.view.BaseActivity;
 import com.bitlove.fetlife.legacy.view.screen.resource.LoadFragment;
 
 public class RelationsFragment extends LoadFragment implements ResourceListRecyclerAdapter.OnResourceClickListener<Member> {

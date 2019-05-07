@@ -24,7 +24,7 @@ import com.bitlove.fetlife.legacy.util.UrlUtil;
 import com.bitlove.fetlife.legacy.view.adapter.ResourceListRecyclerAdapter;
 import com.bitlove.fetlife.legacy.view.adapter.feed.FeedItemResourceHelper;
 import com.bitlove.fetlife.legacy.view.adapter.feed.FeedRecyclerAdapter;
-import com.bitlove.fetlife.legacy.view.screen.BaseActivity;
+import com.bitlove.fetlife.common.view.BaseActivity;
 import com.bitlove.fetlife.legacy.view.screen.component.MenuActivityComponent;
 import com.bitlove.fetlife.legacy.view.screen.resource.groups.GroupActivity;
 import com.bitlove.fetlife.legacy.view.screen.resource.groups.GroupMessagesActivity;

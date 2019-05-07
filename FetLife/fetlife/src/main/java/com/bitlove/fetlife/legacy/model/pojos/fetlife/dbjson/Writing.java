@@ -1,6 +1,6 @@
 package com.bitlove.fetlife.legacy.model.pojos.fetlife.dbjson;
 
-import com.bitlove.fetlife.FetLifeApplication;
+import com.bitlove.fetlife.common.app.FetLifeApplication;
 import com.bitlove.fetlife.legacy.event.ServiceCallFailedEvent;
 import com.bitlove.fetlife.legacy.event.ServiceCallFinishedEvent;
 import com.bitlove.fetlife.legacy.model.db.FetLifeDatabase;

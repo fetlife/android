@@ -11,6 +11,7 @@ import android.view.View;
 import androidx.appcompat.widget.Toolbar;
 
 import com.bitlove.fetlife.R;
+import com.bitlove.fetlife.common.view.ResourceActivity;
 import com.bitlove.fetlife.legacy.model.pojos.fetlife.dbjson.Picture;
 import com.bitlove.fetlife.legacy.model.pojos.fetlife.dbjson.Picture_Table;
 import com.bitlove.fetlife.legacy.view.adapter.SharePictureGridAdapter;

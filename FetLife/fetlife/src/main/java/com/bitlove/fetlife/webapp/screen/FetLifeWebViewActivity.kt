@@ -8,14 +8,14 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.MenuItem
 import android.webkit.CookieManager
-import com.bitlove.fetlife.FetLifeApplication
+import com.bitlove.fetlife.common.app.FetLifeApplication
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.legacy.event.LoginFailedEvent
 import com.bitlove.fetlife.legacy.event.LoginFinishedEvent
 import com.bitlove.fetlife.legacy.inbound.onesignal.NotificationParser
-import com.bitlove.fetlife.legacy.view.screen.BaseActivity
+import com.bitlove.fetlife.common.view.BaseActivity
 import com.bitlove.fetlife.legacy.view.screen.component.MenuActivityComponent
-import com.bitlove.fetlife.legacy.view.screen.resource.ResourceActivity
+import com.bitlove.fetlife.common.view.ResourceActivity
 import com.bitlove.fetlife.webapp.kotlin.getBooleanExtra
 import com.bitlove.fetlife.webapp.kotlin.getStringExtra
 import com.bitlove.fetlife.webapp.navigation.WebAppNavigation

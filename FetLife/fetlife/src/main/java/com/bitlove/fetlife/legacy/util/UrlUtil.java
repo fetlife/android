@@ -6,7 +6,7 @@ import android.net.Uri;
 
 import androidx.browser.customtabs.CustomTabsIntent;
 
-import com.bitlove.fetlife.FetLifeApplication;
+import com.bitlove.fetlife.common.app.FetLifeApplication;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.legacy.inbound.customtabs.CustomTabLauncherActivity;
 

@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import com.bitlove.fetlife.BuildConfig;
-import com.bitlove.fetlife.FetLifeApplication;
+import com.bitlove.fetlife.common.app.FetLifeApplication;
 import com.crashlytics.android.Crashlytics;
 
 import java.io.File;

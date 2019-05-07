@@ -9,7 +9,7 @@ import android.graphics.BitmapFactory
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.bitlove.fetlife.FetLifeApplication
+import com.bitlove.fetlife.common.app.FetLifeApplication
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.legacy.model.pojos.fetlife.db.NotificationHistoryItem
 import com.bitlove.fetlife.legacy.util.AppUtil

@@ -10,7 +10,7 @@ import android.view.*
 import android.webkit.*
 import androidx.fragment.app.Fragment
 import com.bitlove.fetlife.BuildConfig
-import com.bitlove.fetlife.FetLifeApplication
+import com.bitlove.fetlife.common.app.FetLifeApplication
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.legacy.event.ServiceCallFailedEvent
 import com.bitlove.fetlife.legacy.event.ServiceCallFinishedEvent
@@ -19,7 +19,7 @@ import com.bitlove.fetlife.legacy.model.api.FetLifeService
 import com.bitlove.fetlife.legacy.model.service.FetLifeApiIntentService
 import com.bitlove.fetlife.legacy.util.ServerIdUtil
 import com.bitlove.fetlife.legacy.util.VersionUtil
-import com.bitlove.fetlife.legacy.view.screen.BaseActivity
+import com.bitlove.fetlife.common.view.BaseActivity
 import com.bitlove.fetlife.webapp.communication.WebViewInterface
 import com.bitlove.fetlife.webapp.kotlin.getBooleanArgument
 import com.bitlove.fetlife.webapp.kotlin.getStringArgument

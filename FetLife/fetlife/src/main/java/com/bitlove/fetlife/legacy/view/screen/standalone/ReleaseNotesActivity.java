@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.legacy.util.HtmlListTagHandler;
-import com.bitlove.fetlife.legacy.view.screen.BaseActivity;
+import com.bitlove.fetlife.common.view.BaseActivity;
 import com.bitlove.fetlife.legacy.view.screen.component.MenuActivityComponent;
 
 public class ReleaseNotesActivity extends BaseActivity {

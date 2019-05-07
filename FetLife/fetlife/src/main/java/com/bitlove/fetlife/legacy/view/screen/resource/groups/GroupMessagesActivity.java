@@ -35,7 +35,7 @@ import com.bitlove.fetlife.legacy.util.MessageDuplicationDebugUtil;
 import com.bitlove.fetlife.legacy.util.SpaceTokenizer;
 import com.bitlove.fetlife.legacy.view.adapter.GroupMessagesRecyclerAdapter;
 import com.bitlove.fetlife.legacy.view.screen.resource.PictureShareActivity;
-import com.bitlove.fetlife.legacy.view.screen.resource.ResourceActivity;
+import com.bitlove.fetlife.common.view.ResourceActivity;
 import com.bitlove.fetlife.legacy.view.screen.resource.profile.ProfileActivity;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.navigation.NavigationView;

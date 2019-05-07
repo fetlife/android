@@ -1,4 +1,4 @@
-package com.bitlove.fetlife;
+package com.bitlove.fetlife.common.app;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;

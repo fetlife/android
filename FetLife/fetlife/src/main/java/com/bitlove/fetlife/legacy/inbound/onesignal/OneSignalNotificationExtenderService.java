@@ -1,6 +1,6 @@
 package com.bitlove.fetlife.legacy.inbound.onesignal;
 
-import com.bitlove.fetlife.FetLifeApplication;
+import com.bitlove.fetlife.common.app.FetLifeApplication;
 import com.bitlove.fetlife.legacy.event.NotificationReceivedEvent;
 import com.bitlove.fetlife.legacy.inbound.onesignal.notification.AnonymNotification;
 import com.bitlove.fetlife.legacy.inbound.onesignal.notification.OneSignalNotification;

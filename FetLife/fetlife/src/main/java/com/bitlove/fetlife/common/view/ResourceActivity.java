@@ -1,4 +1,4 @@
-package com.bitlove.fetlife.legacy.view.screen.resource;
+package com.bitlove.fetlife.common.view;
 
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import com.bitlove.fetlife.FetLifeApplication;
+import com.bitlove.fetlife.common.app.FetLifeApplication;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.legacy.event.AuthenticationFailedEvent;
 import com.bitlove.fetlife.legacy.event.LatestReleaseEvent;
@@ -18,7 +18,7 @@ import com.bitlove.fetlife.legacy.event.ServiceCallCancelRequestEvent;
 import com.bitlove.fetlife.legacy.event.ServiceCallFailedEvent;
 import com.bitlove.fetlife.legacy.event.ServiceCallFinishedEvent;
 import com.bitlove.fetlife.legacy.event.ServiceCallStartedEvent;
-import com.bitlove.fetlife.legacy.view.screen.BaseActivity;
+import com.bitlove.fetlife.common.view.BaseActivity;
 import com.bitlove.fetlife.legacy.view.screen.component.EventDisplayHandler;
 import com.bitlove.fetlife.legacy.view.screen.standalone.ReleaseNotesActivity;
 import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity;

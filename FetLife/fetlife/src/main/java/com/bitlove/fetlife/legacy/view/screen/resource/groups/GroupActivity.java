@@ -23,7 +23,7 @@ import com.bitlove.fetlife.legacy.model.pojos.fetlife.dbjson.Group;
 import com.bitlove.fetlife.legacy.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.legacy.util.UrlUtil;
 import com.bitlove.fetlife.legacy.view.dialog.ConfirmationDialog;
-import com.bitlove.fetlife.legacy.view.screen.resource.ResourceActivity;
+import com.bitlove.fetlife.common.view.ResourceActivity;
 import com.bitlove.fetlife.legacy.view.widget.FlingBehavior;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.appbar.AppBarLayout;

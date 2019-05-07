@@ -2,7 +2,7 @@ package com.bitlove.fetlife.legacy.inbound.onesignal
 
 import android.content.Context
 import android.net.Uri
-import com.bitlove.fetlife.FetLifeApplication
+import com.bitlove.fetlife.common.app.FetLifeApplication
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.legacy.inbound.onesignal.notification.*
 import com.onesignal.OSNotificationReceivedResult

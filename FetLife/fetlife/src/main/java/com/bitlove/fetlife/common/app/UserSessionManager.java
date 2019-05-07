@@ -1,4 +1,4 @@
-package com.bitlove.fetlife.legacy.session;
+package com.bitlove.fetlife.common.app;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,7 +8,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.bitlove.fetlife.BuildConfig;
-import com.bitlove.fetlife.FetLifeApplication;
+import com.bitlove.fetlife.common.app.FetLifeApplication;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.legacy.model.db.FetLifeDatabase;
 import com.bitlove.fetlife.legacy.model.pojos.fetlife.dbjson.Member;

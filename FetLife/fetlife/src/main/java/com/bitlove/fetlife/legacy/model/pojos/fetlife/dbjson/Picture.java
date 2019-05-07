@@ -3,7 +3,7 @@ package com.bitlove.fetlife.legacy.model.pojos.fetlife.dbjson;
 
 import android.text.Html;
 
-import com.bitlove.fetlife.FetLifeApplication;
+import com.bitlove.fetlife.common.app.FetLifeApplication;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.legacy.event.ServiceCallFailedEvent;
 import com.bitlove.fetlife.legacy.event.ServiceCallFinishedEvent;

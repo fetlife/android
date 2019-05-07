@@ -17,7 +17,7 @@ import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.legacy.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.legacy.model.pojos.fetlife.dbjson.Relationship;
 import com.bitlove.fetlife.legacy.model.service.FetLifeApiIntentService;
-import com.bitlove.fetlife.legacy.view.screen.BaseActivity;
+import com.bitlove.fetlife.common.view.BaseActivity;
 import com.bitlove.fetlife.legacy.view.screen.resource.LoadFragment;
 
 import java.util.HashMap;

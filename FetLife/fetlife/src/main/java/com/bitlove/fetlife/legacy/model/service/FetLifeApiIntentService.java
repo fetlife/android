@@ -19,7 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.JobIntentService;
 
 import com.bitlove.fetlife.BuildConfig;
-import com.bitlove.fetlife.FetLifeApplication;
+import com.bitlove.fetlife.common.app.FetLifeApplication;
 import com.bitlove.fetlife.legacy.event.FriendRequestResponseSendFailedEvent;
 import com.bitlove.fetlife.legacy.event.FriendRequestResponseSendSucceededEvent;
 import com.bitlove.fetlife.legacy.event.AuthenticationFailedEvent;
@@ -100,7 +100,7 @@ import com.bitlove.fetlife.legacy.model.pojos.fetlife.json.Story;
 import com.bitlove.fetlife.legacy.model.pojos.fetlife.json.Token;
 import com.bitlove.fetlife.legacy.model.pojos.fetlife.json.VideoUploadResult;
 import com.bitlove.fetlife.legacy.model.pojos.github.Release;
-import com.bitlove.fetlife.legacy.session.UserSessionManager;
+import com.bitlove.fetlife.common.app.UserSessionManager;
 import com.bitlove.fetlife.legacy.util.BytesUtil;
 import com.bitlove.fetlife.legacy.util.DateUtil;
 import com.bitlove.fetlife.legacy.util.FileUtil;

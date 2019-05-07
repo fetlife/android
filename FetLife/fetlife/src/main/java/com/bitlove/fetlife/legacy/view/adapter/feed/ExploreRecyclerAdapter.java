@@ -1,6 +1,6 @@
 package com.bitlove.fetlife.legacy.view.adapter.feed;
 
-import com.bitlove.fetlife.FetLifeApplication;
+import com.bitlove.fetlife.common.app.FetLifeApplication;
 import com.bitlove.fetlife.legacy.view.screen.resource.ExploreActivity;
 
 public class ExploreRecyclerAdapter extends FeedRecyclerAdapter {

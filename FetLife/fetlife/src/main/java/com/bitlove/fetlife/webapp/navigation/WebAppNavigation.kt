@@ -10,12 +10,12 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import androidx.browser.customtabs.CustomTabsIntent
 import com.bitlove.fetlife.BuildConfig
-import com.bitlove.fetlife.FetLifeApplication
+import com.bitlove.fetlife.common.app.FetLifeApplication
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.legacy.model.pojos.fetlife.dbjson.*
 import com.bitlove.fetlife.legacy.model.service.FetLifeApiIntentService
 import com.bitlove.fetlife.legacy.util.ColorUtil
-import com.bitlove.fetlife.legacy.view.screen.BaseActivity
+import com.bitlove.fetlife.common.view.BaseActivity
 import com.bitlove.fetlife.legacy.view.screen.resource.EventActivity
 import com.bitlove.fetlife.legacy.view.screen.resource.groups.GroupActivity
 import com.bitlove.fetlife.legacy.view.screen.resource.groups.GroupMessagesActivity

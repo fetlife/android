@@ -3,12 +3,12 @@ package com.bitlove.fetlife.legacy.inbound.onesignal.notification
 import android.app.PendingIntent
 import android.app.TaskStackBuilder
 import android.content.Context
-import com.bitlove.fetlife.FetLifeApplication
+import com.bitlove.fetlife.common.app.FetLifeApplication
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.legacy.event.NewMessageEvent
 import com.bitlove.fetlife.legacy.inbound.onesignal.NotificationParser
 import com.bitlove.fetlife.legacy.model.service.FetLifeApiIntentService
-import com.bitlove.fetlife.legacy.view.screen.BaseActivity
+import com.bitlove.fetlife.common.view.BaseActivity
 import com.bitlove.fetlife.webapp.navigation.WebAppNavigation
 import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity
 import com.crashlytics.android.Crashlytics

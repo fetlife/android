@@ -6,7 +6,7 @@ import android.content.Context;
 
 import androidx.core.app.NotificationCompat;
 
-import com.bitlove.fetlife.FetLifeApplication;
+import com.bitlove.fetlife.common.app.FetLifeApplication;
 import com.bitlove.fetlife.legacy.inbound.onesignal.notification.OneSignalNotification;
 
 public class NotificationUtil {

@@ -4,7 +4,7 @@ package com.bitlove.fetlife.legacy.view.adapter.feed;
 import android.content.Context;
 import android.view.View;
 
-import com.bitlove.fetlife.FetLifeApplication;
+import com.bitlove.fetlife.common.app.FetLifeApplication;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.legacy.model.pojos.fetlife.json.Story;
 
