@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.bitlove.fetlife.nativeapp.view.widget.BoldPreferenceCategory
+    <com.bitlove.fetlife.legacy.view.widget.BoldPreferenceCategory
         android:title="@string/settings_category_profile_login">
 
         <CheckBoxPreference
@@ -10,9 +10,9 @@
             android:title="@string/settings_title_profile_password_always"
             android:summary="@string/settings_summary_profile_password_always"/>
 
-    </com.bitlove.fetlife.nativeapp.view.widget.BoldPreferenceCategory>
+    </com.bitlove.fetlife.legacy.view.widget.BoldPreferenceCategory>
 
-    <com.bitlove.fetlife.nativeapp.view.widget.BoldPreferenceCategory
+    <com.bitlove.fetlife.legacy.view.widget.BoldPreferenceCategory
         android:title="@string/settings_category_profile_data">
 
         <Preference
@@ -20,6 +20,6 @@
             android:title="@string/settings_title_profile_clear_data"
             android:summary="@string/settings_summary_profile_clear_data" />
 
-    </com.bitlove.fetlife.nativeapp.view.widget.BoldPreferenceCategory>
+    </com.bitlove.fetlife.legacy.view.widget.BoldPreferenceCategory>
 
 </PreferenceScreen>

@@ -253,13 +253,13 @@
         android:layout_width="match_parent"
         android:orientation="vertical">
 
-        <com.bitlove.fetlife.nativeapp.view.widget.SlidingTabLayout
+        <com.bitlove.fetlife.legacy.view.widget.SlidingTabLayout
             android:id="@+id/navigation_tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/side_menu_background_main"/>
 
-        <com.bitlove.fetlife.nativeapp.view.widget.SlideControlViewPager
+        <com.bitlove.fetlife.legacy.view.widget.SlideControlViewPager
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/pager"
             android:layout_width="match_parent"

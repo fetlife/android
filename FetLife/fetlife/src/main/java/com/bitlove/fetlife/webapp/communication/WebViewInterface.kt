@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.webkit.JavascriptInterface
 import com.bitlove.fetlife.BuildConfig
-import com.bitlove.fetlife.nativeapp.util.LogUtil
+import com.bitlove.fetlife.legacy.util.LogUtil
 import com.bitlove.fetlife.webapp.kotlin.showToast
 
 class WebViewInterface(private val context: Context) {

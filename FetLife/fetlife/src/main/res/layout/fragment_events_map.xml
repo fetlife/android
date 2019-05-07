@@ -10,7 +10,7 @@
     map:mapType="normal"
     map:uiZoomControls="true"
     map:uiZoomGestures="true"
-    tools:context=".nativeapp.view.screen.resource.EventsActivity">
+    tools:context=".legacy.view.screen.resource.EventsActivity">
 
     <fragment
         android:id="@+id/map"

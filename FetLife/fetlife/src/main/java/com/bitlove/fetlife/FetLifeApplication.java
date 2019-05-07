@@ -19,20 +19,20 @@ import androidx.browser.customtabs.CustomTabsClient;
 import androidx.browser.customtabs.CustomTabsSession;
 import androidx.multidex.MultiDexApplication;
 
-import com.bitlove.fetlife.nativeapp.inbound.actioncable.ActionCable;
-import com.bitlove.fetlife.nativeapp.inbound.customtabs.CustomTabLauncherActivity;
-import com.bitlove.fetlife.nativeapp.inbound.customtabs.FetLifeCustomTabsServiceConnection;
-import com.bitlove.fetlife.nativeapp.inbound.onesignal.NotificationParser;
-import com.bitlove.fetlife.nativeapp.model.api.FetLifeService;
-import com.bitlove.fetlife.nativeapp.model.api.GitHubService;
-import com.bitlove.fetlife.nativeapp.model.api.TLSSocketFactory;
-import com.bitlove.fetlife.nativeapp.model.db.FetLifeDatabase;
-import com.bitlove.fetlife.nativeapp.model.inmemory.InMemoryStorage;
-import com.bitlove.fetlife.nativeapp.model.service.FetLifeApiIntentService;
-import com.bitlove.fetlife.nativeapp.session.UserSessionManager;
-import com.bitlove.fetlife.nativeapp.util.FileUtil;
-import com.bitlove.fetlife.nativeapp.view.screen.resource.ResourceListActivity;
-import com.bitlove.fetlife.nativeapp.view.widget.ImageViewerWrapper;
+import com.bitlove.fetlife.legacy.inbound.actioncable.ActionCable;
+import com.bitlove.fetlife.legacy.inbound.customtabs.CustomTabLauncherActivity;
+import com.bitlove.fetlife.legacy.inbound.customtabs.FetLifeCustomTabsServiceConnection;
+import com.bitlove.fetlife.legacy.inbound.onesignal.NotificationParser;
+import com.bitlove.fetlife.legacy.model.api.FetLifeService;
+import com.bitlove.fetlife.legacy.model.api.GitHubService;
+import com.bitlove.fetlife.legacy.model.api.TLSSocketFactory;
+import com.bitlove.fetlife.legacy.model.db.FetLifeDatabase;
+import com.bitlove.fetlife.legacy.model.inmemory.InMemoryStorage;
+import com.bitlove.fetlife.legacy.model.service.FetLifeApiIntentService;
+import com.bitlove.fetlife.legacy.session.UserSessionManager;
+import com.bitlove.fetlife.legacy.util.FileUtil;
+import com.bitlove.fetlife.legacy.view.screen.resource.ResourceListActivity;
+import com.bitlove.fetlife.legacy.view.widget.ImageViewerWrapper;
 import com.bitlove.fetlife.webapp.navigation.WebAppNavigation;
 import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity;
 import com.crashlytics.android.Crashlytics;
@@ -61,7 +61,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import static com.bitlove.fetlife.nativeapp.inbound.onesignal.notification.OneSignalNotification.NOTIFICATION_CHANNEL_DEFUALT;
+import static com.bitlove.fetlife.legacy.inbound.onesignal.notification.OneSignalNotification.NOTIFICATION_CHANNEL_DEFUALT;
 
 /**
  * Main Application class. The lifecycle of the object of this class is the same as the App itself

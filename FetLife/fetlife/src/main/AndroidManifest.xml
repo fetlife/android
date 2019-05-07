@@ -36,63 +36,63 @@
             android:theme="@style/AppTheme.Transparent"/>
 
         <activity
-            android:name="com.bitlove.fetlife.nativeapp.inbound.customtabs.CustomTabLauncherActivity"
+            android:name="com.bitlove.fetlife.legacy.inbound.customtabs.CustomTabLauncherActivity"
             android:theme="@style/AppTheme.Transparent"/>
 
         <activity
-            android:name="com.bitlove.fetlife.nativeapp.view.screen.resource.PictureShareActivity"
+            android:name="com.bitlove.fetlife.legacy.view.screen.resource.PictureShareActivity"
             android:label="@string/title_activity_pictureshare"
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
-            android:name="com.bitlove.fetlife.nativeapp.view.screen.resource.NotificationHistoryActivity"
+            android:name="com.bitlove.fetlife.legacy.view.screen.resource.NotificationHistoryActivity"
             android:label="@string/title_activity_app_notifications"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name="com.bitlove.fetlife.nativeapp.view.screen.resource.groups.GroupMessagesActivity"
+            android:name="com.bitlove.fetlife.legacy.view.screen.resource.groups.GroupMessagesActivity"
             android:label="@string/title_activity_messages"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
 
         <activity
-            android:name="com.bitlove.fetlife.nativeapp.view.screen.resource.ExploreActivity"
+            android:name="com.bitlove.fetlife.legacy.view.screen.resource.ExploreActivity"
             android:label="@string/title_activity_stuff_you_love"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustPan" />
 
         <activity
-            android:name="com.bitlove.fetlife.nativeapp.view.screen.resource.FeedActivity"
+            android:name="com.bitlove.fetlife.legacy.view.screen.resource.FeedActivity"
             android:label="@string/title_activity_feed"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustPan" />
 
         <activity
-            android:name="com.bitlove.fetlife.nativeapp.view.screen.resource.EventsActivity"
+            android:name="com.bitlove.fetlife.legacy.view.screen.resource.EventsActivity"
             android:label="@string/title_activity_events"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan"/>
 
         <activity
-            android:name="com.bitlove.fetlife.nativeapp.view.screen.resource.FriendsActivity"
+            android:name="com.bitlove.fetlife.legacy.view.screen.resource.FriendsActivity"
             android:label="@string/title_activity_friends"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
 
         <activity
-            android:name="com.bitlove.fetlife.nativeapp.view.screen.resource.groups.GroupsActivity"
+            android:name="com.bitlove.fetlife.legacy.view.screen.resource.groups.GroupsActivity"
             android:label="@string/title_activity_groups"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustPan" />
 
         <activity
-            android:name="com.bitlove.fetlife.nativeapp.view.screen.standalone.ReleaseNotesActivity"
+            android:name="com.bitlove.fetlife.legacy.view.screen.standalone.ReleaseNotesActivity"
             android:label="@string/title_activity_relnotes"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
-            android:name="com.bitlove.fetlife.nativeapp.view.screen.standalone.SettingsActivity"
+            android:name="com.bitlove.fetlife.legacy.view.screen.standalone.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:theme="@style/AppTheme.Light_Accent" />
 
@@ -101,21 +101,21 @@
             android:theme="@style/Base.Theme.AppCompat" />
 
         <activity
-            android:name="com.bitlove.fetlife.nativeapp.view.screen.resource.profile.ProfileActivity"
+            android:name="com.bitlove.fetlife.legacy.view.screen.resource.profile.ProfileActivity"
             android:label="@string/title_activity_about"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name="com.bitlove.fetlife.nativeapp.inbound.onesignal.update.UpdatePermissionActivity"
+            android:name="com.bitlove.fetlife.legacy.inbound.onesignal.update.UpdatePermissionActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <activity
-            android:name="com.bitlove.fetlife.nativeapp.view.screen.resource.EventActivity"
+            android:name="com.bitlove.fetlife.legacy.view.screen.resource.EventActivity"
             android:label="@string/title_activity_event"
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
-            android:name="com.bitlove.fetlife.nativeapp.view.screen.resource.groups.GroupActivity"
+            android:name="com.bitlove.fetlife.legacy.view.screen.resource.groups.GroupActivity"
             android:label="@string/title_activity_group"
             android:theme="@style/AppTheme.NoActionBar"/>
 
@@ -196,17 +196,17 @@
         </provider>
 
         <receiver
-            android:name=".nativeapp.model.service.ServiceCallCancelReceiver"
+            android:name=".legacy.model.service.ServiceCallCancelReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.bitlove.fetlife.ServiceCallCancelReceiver.RECEIVE" />
             </intent-filter>
         </receiver>
 
-        <receiver android:name="com.bitlove.fetlife.nativeapp.inbound.onesignal.update.UpdateBroadcastReceiver" />
+        <receiver android:name="com.bitlove.fetlife.legacy.inbound.onesignal.update.UpdateBroadcastReceiver" />
 
         <!-- TODO: Use GCMNetworkManager instead -->
-        <receiver android:name="com.bitlove.fetlife.nativeapp.inbound.receiver.NetworkStateChangeReceiver">
+        <receiver android:name="com.bitlove.fetlife.legacy.inbound.receiver.NetworkStateChangeReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
@@ -214,12 +214,12 @@
         </receiver>
 
         <service
-            android:name=".nativeapp.model.service.FetLifeApiIntentService"
+            android:name=".legacy.model.service.FetLifeApiIntentService"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
         <service
-            android:name="com.bitlove.fetlife.nativeapp.inbound.onesignal.OneSignalNotificationExtenderService"
+            android:name="com.bitlove.fetlife.legacy.inbound.onesignal.OneSignalNotificationExtenderService"
             android:exported="false"
             android:permission="android.permission.BIND_JOB_SERVICE">
             <intent-filter>

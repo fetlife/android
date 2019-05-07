@@ -104,7 +104,7 @@
         android:visibility="gone"
         android:orientation="vertical" />
 
-    <com.bitlove.fetlife.nativeapp.view.widget.AutoAlignGridView
+    <com.bitlove.fetlife.legacy.view.widget.AutoAlignGridView
         android:id="@+id/feeditem_grid_expandable"
         android:background="#090909"
         android:horizontalSpacing="4dp"
