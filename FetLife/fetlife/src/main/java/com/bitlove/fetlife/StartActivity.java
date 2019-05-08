@@ -18,7 +18,6 @@ public class StartActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        OneSignalNotification.Companion.clearNotifications(null, null);
 
         UserSessionManager userSessionManager = getFetLifeApplication().getUserSessionManager();
         if (userSessionManager.getCurrentUser() == null) {

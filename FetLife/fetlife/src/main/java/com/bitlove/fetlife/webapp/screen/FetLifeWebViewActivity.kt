@@ -63,8 +63,6 @@ class FetLifeWebViewActivity : ResourceActivity() {
         var hasHomeNavigation = getBooleanExtra(EXTRA_HAS_BOTTOM_NAVIGATION) != true
         var pageUrl = getStringExtra(EXTRA_PAGE_URL)
 
-        NotificationParser.Companion.clearNotificationTypeForUrl(pageUrl)
-
         if (pageUrl == null) {
             pageUrl = intent.data?.toString()
             hasHomeNavigation = true
@@ -89,6 +87,8 @@ class FetLifeWebViewActivity : ResourceActivity() {
     }
 
     override fun onResourceStart() {
+        var pageUrl = getStringExtra(EXTRA_PAGE_URL)
+        NotificationParser.Companion.clearNotificationTypeForUrl(pageUrl)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -19,6 +19,7 @@ import com.bitlove.fetlife.inbound.ActionCable;
 import com.bitlove.fetlife.inbound.customtabs.CustomTabLauncherActivity;
 import com.bitlove.fetlife.inbound.customtabs.FetLifeCustomTabsServiceConnection;
 import com.bitlove.fetlife.inbound.onesignal.NotificationParser;
+import com.bitlove.fetlife.inbound.onesignal.notification.OneSignalNotification;
 import com.bitlove.fetlife.model.api.FetLifeService;
 import com.bitlove.fetlife.model.api.GitHubService;
 import com.bitlove.fetlife.model.api.TLSSocketFactory;
@@ -495,6 +496,7 @@ public class FetLifeApplication extends MultiDexApplication {
         @Override
         public void onActivityResumed(Activity activity) {
             if (!isAppInForeground() || foregroundActivity instanceof LoginActivity) {
+                OneSignalNotification.Companion.clearNotifications(null, null);
                 FetLifeApiIntentService.startPendingCalls(FetLifeApplication.this, true);
             }
             setForegroundActivity(activity);
