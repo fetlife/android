@@ -3,6 +3,7 @@ package com.bitlove.fetlife.inbound.onesignal.notification
 import android.app.PendingIntent
 import android.app.TaskStackBuilder
 import android.content.Context
+import android.content.Intent
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.event.NewMessageEvent
@@ -80,7 +81,7 @@ class MessageNotification(notificationType: String, notificationIdRange: Int, ti
             putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE, oneSignalNotification.notificationType)
             putExtra(BaseActivity.EXTRA_NOTIFICATION_MERGE_ID, oneSignalNotification.mergeId)
         }
-        return TaskStackBuilder.create(context).addNextIntentWithParentStack(baseIntent).addNextIntent(contentIntent).getPendingIntent(order, PendingIntent.FLAG_CANCEL_CURRENT)
+        return PendingIntent.getActivities(context, order, arrayOf(baseIntent, contentIntent), PendingIntent.FLAG_CANCEL_CURRENT)
     }
 
     override fun getLegacySummaryIntent(context: Context): PendingIntent? {
