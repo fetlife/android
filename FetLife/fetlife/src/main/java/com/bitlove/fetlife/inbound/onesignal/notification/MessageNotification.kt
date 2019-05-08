@@ -70,8 +70,6 @@ class MessageNotification(notificationType: String, notificationIdRange: Int, ti
     }
 
     override fun getNotificationIntent(oneSignalNotification: OneSignalNotification, context: Context, order: Int): PendingIntent? {
-        val conversationId = (oneSignalNotification as? MessageNotification)?.conversationId
-        val nickname = (oneSignalNotification as? MessageNotification)?.nickname
         if (launchUrl == null) {
             Crashlytics.logException(Exception("Launch url is null"))
             return null
