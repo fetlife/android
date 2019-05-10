@@ -1,9 +1,7 @@
 package com.bitlove.fetlife.inbound.onesignal.notification
 
 import android.app.PendingIntent
-import android.app.TaskStackBuilder
 import android.content.Context
-import android.content.Intent
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.event.NewMessageEvent
@@ -21,11 +19,9 @@ class MessageNotification(notificationType: String, notificationIdRange: Int, ti
     private var nickname: String? = additionalData.optString(NotificationParser.JSON_FIELD_STRING_NICKNAME)
 
     override fun handle(fetLifeApplication: FetLifeApplication): Boolean {
-        if (conversationId != null) {
-            FetLifeApiIntentService.startApiCall(fetLifeApplication, FetLifeApiIntentService.ACTION_APICALL_MESSAGES, conversationId)
-        } else {
+        if (conversationId == null) {
             Crashlytics.logException(Exception("Missing conversation id"))
-            return false;
+            return false
         }
 
         var conversationInForeground = false
@@ -36,8 +32,9 @@ class MessageNotification(notificationType: String, notificationIdRange: Int, ti
             val foregroundActivity = fetLifeApplication.foregroundActivity
             if (foregroundActivity is FetLifeWebViewActivity) {
                 conversationInForeground = launchUrl == (foregroundActivity as? FetLifeWebViewActivity)?.getCurrentUrl()
-            } else if (foregroundActivity is FetLifeWebViewActivity) {
-                conversationInForeground = launchUrl == WebAppNavigation.WEBAPP_BASE_URL + "/inbox"
+            }
+            if (!conversationInForeground) {
+                FetLifeApiIntentService.startApiCall(fetLifeApplication, FetLifeApiIntentService.ACTION_APICALL_NOTIFICATION_COUNTS)
             }
         }
 
@@ -62,7 +59,8 @@ class MessageNotification(notificationType: String, notificationIdRange: Int, ti
     }
 
     override fun getNotificationTitle(oneSignalNotification: OneSignalNotification, notificationCount: Int, context: Context): String? {
-        return (oneSignalNotification as? MessageNotification)?.nickname ?: oneSignalNotification.title
+        return (oneSignalNotification as? MessageNotification)?.nickname
+                ?: oneSignalNotification.title
     }
 
     override fun getNotificationText(oneSignalNotification: OneSignalNotification, notificationCount: Int, context: Context): String? {
@@ -83,7 +81,7 @@ class MessageNotification(notificationType: String, notificationIdRange: Int, ti
     }
 
     override fun getLegacySummaryIntent(context: Context): PendingIntent? {
-        return PendingIntent.getActivity(context,notificationIdRange,FetLifeWebViewActivity.createIntent(context, WebAppNavigation.WEBAPP_BASE_URL + "/inbox", true, R.id.navigation_bottom_inbox, false),PendingIntent.FLAG_UPDATE_CURRENT)
+        return PendingIntent.getActivity(context, notificationIdRange, FetLifeWebViewActivity.createIntent(context, WebAppNavigation.WEBAPP_BASE_URL + "/inbox", true, R.id.navigation_bottom_inbox, false), PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     override fun saveNotificationItem(notificationId: Int) {}

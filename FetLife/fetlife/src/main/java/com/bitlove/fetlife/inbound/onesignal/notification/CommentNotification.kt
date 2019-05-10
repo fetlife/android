@@ -2,7 +2,9 @@ package com.bitlove.fetlife.inbound.onesignal.notification
 
 import android.app.PendingIntent
 import android.content.Context
+import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
+import com.bitlove.fetlife.model.service.FetLifeApiIntentService
 import com.bitlove.fetlife.view.screen.BaseActivity
 import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity
 import org.json.JSONObject
@@ -35,7 +37,7 @@ class CommentNotification(notificationType: String, notificationIdRange: Int, ti
         }
     }
 
-    override fun getNotificationText(oneSignalNotification: OneSignalNotification, count: Int, context: Context): String? {
+    override fun getNotificationText(oneSignalNotification: OneSignalNotification, notificationCount: Int, context: Context): String? {
         return oneSignalNotification.message?.toLowerCase()
     }
 
@@ -44,6 +46,13 @@ class CommentNotification(notificationType: String, notificationIdRange: Int, ti
             putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE, oneSignalNotification.notificationType)
             putExtra(BaseActivity.EXTRA_NOTIFICATION_MERGE_ID, oneSignalNotification.mergeId)
         }
-        return PendingIntent.getActivity(context,order,contentIntent,PendingIntent.FLAG_CANCEL_CURRENT)
+        return PendingIntent.getActivity(context, order, contentIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+    }
+
+    override fun handle(fetLifeApplication: FetLifeApplication): Boolean {
+        if (fetLifeApplication.isAppInForeground) {
+            FetLifeApiIntentService.startApiCall(fetLifeApplication, FetLifeApiIntentService.ACTION_APICALL_NOTIFICATION_COUNTS)
+        }
+        return false
     }
 }

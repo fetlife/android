@@ -18,7 +18,7 @@ import com.bitlove.fetlife.inbound.onesignal.NotificationParser
 class AnonymNotification {
 
     companion object {
-        var notificationId : Int = NotificationParser.NOTIFICATION_ID_ANONYM
+        var notificationId: Int = NotificationParser.NOTIFICATION_ID_ANONYM
     }
 
     fun display(fetLifeApplication: FetLifeApplication) {
@@ -29,7 +29,7 @@ class AnonymNotification {
             val channelDescription = fetLifeApplication.getString(R.string.settings_summary_notification_info_enabled)
             val channelImportance = NotificationManager.IMPORTANCE_DEFAULT
 
-            val channel = NotificationChannel(channelId, channelName, channelImportance).apply { if (channelDescription != null) this.description = channelDescription }
+            val channel = NotificationChannel(channelId, channelName, channelImportance).apply { this.description = channelDescription }
             fetLifeApplication.getSystemService(NotificationManager::class.java)!!.createNotificationChannel(channel)
         }
 
@@ -46,7 +46,7 @@ class AnonymNotification {
             setLights(fetLifeApplication.userSessionManager.notificationColor, 1000, 1000)
             setSound(fetLifeApplication.userSessionManager.notificationRingtone)
 
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 setChannelId(channelId)
             }
 
@@ -59,7 +59,7 @@ class AnonymNotification {
         }
 
         val notificationManager = NotificationManagerCompat.from(fetLifeApplication)
-        notificationManager.notify(notificationId,notificationBuilder.build());
+        notificationManager.notify(notificationId, notificationBuilder.build())
     }
 
     private fun getContentIntent(context: Context): PendingIntent? {

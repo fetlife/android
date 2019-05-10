@@ -4,7 +4,6 @@ import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.event.NotificationReceivedEvent;
 import com.bitlove.fetlife.inbound.onesignal.notification.AnonymNotification;
 import com.bitlove.fetlife.inbound.onesignal.notification.OneSignalNotification;
-import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.util.AppUtil;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
@@ -30,9 +29,6 @@ public class OneSignalNotificationExtenderService extends NotificationExtenderSe
         NotificationParser notificationParser = fetLifeApplication.getNotificationParser();
         OneSignalNotification oneSignalNotification = notificationParser.parseNotification(fetLifeApplication, notification);
 
-        //Look up for latest notification count and update the badge
-        FetLifeApiIntentService.startApiCall(fetLifeApplication, FetLifeApiIntentService.ACTION_APICALL_NOTIFICATION_COUNTS);
-
         //Handle the incoming notification to do what is needed at the state of onreceived.
         boolean handledInternally = oneSignalNotification.handle(fetLifeApplication);
 
@@ -57,23 +53,23 @@ public class OneSignalNotificationExtenderService extends NotificationExtenderSe
         try {
             long clientTime = System.currentTimeMillis();
             double serverTimeDouble = notification.payload.additionalData.getDouble("sent_at");
-            long serverTime = (long)(serverTimeDouble*1000);
+            long serverTime = (long) (serverTimeDouble * 1000);
             String type = notification.payload.additionalData.getString("type");
             long googleTime = new JSONObject(notification.payload.rawPayload).getLong("google.sent_time");
-            long time2Google = googleTime-serverTime;
-            long time2Client = clientTime-googleTime;
-            long totalTime = clientTime-serverTime;
+            long time2Google = googleTime - serverTime;
+            long time2Client = clientTime - googleTime;
+            long totalTime = clientTime - serverTime;
 
             if (time2Google < 0 || time2Client < 0) {
                 Crashlytics.logException(new Exception("Invalid notification track time"));
             } else {
                 Answers.getInstance().logCustom(
                         new CustomEvent("CloudMessageReceived")
-                                .putCustomAttribute("notificationId",notification.payload.notificationID)
-                                .putCustomAttribute("type",type)
-                                .putCustomAttribute("time2Google",time2Google)
-                                .putCustomAttribute("time2Client",time2Client)
-                                .putCustomAttribute("totalTime",totalTime));
+                                .putCustomAttribute("notificationId", notification.payload.notificationID)
+                                .putCustomAttribute("type", type)
+                                .putCustomAttribute("time2Google", time2Google)
+                                .putCustomAttribute("time2Client", time2Client)
+                                .putCustomAttribute("totalTime", totalTime));
             }
 
         } catch (Throwable t) {

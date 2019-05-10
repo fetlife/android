@@ -29,7 +29,8 @@ class GroupMessageNotification(notificationType: String, notificationIdRange: In
         groupId = apiContainer?.optString(NotificationParser.JSON_FIELD_STRING_GROUPID)
         groupDiscussionId = apiContainer?.optString(NotificationParser.JSON_FIELD_STRING_GROUPPOSTID)
         groupTitle = Group.loadGroup(groupId)?.name
-        groupDiscussionTitle = GroupPost.loadGroupPost(groupDiscussionId)?.title  ?: apiContainer.optString(NotificationParser.JSON_FIELD_STRING_GROUP_POST_TITLE)
+        groupDiscussionTitle = GroupPost.loadGroupPost(groupDiscussionId)?.title
+                ?: apiContainer.optString(NotificationParser.JSON_FIELD_STRING_GROUP_POST_TITLE)
         if (TextUtils.isEmpty(groupDiscussionTitle)) {
             groupDiscussionTitle = apiContainer.optString(NotificationParser.JSON_FIELD_STRING_GROUP_NAME)
         }
@@ -40,22 +41,22 @@ class GroupMessageNotification(notificationType: String, notificationIdRange: In
             return false
         }
 
-        FetLifeApiIntentService.startApiCall(fetLifeApplication, FetLifeApiIntentService.ACTION_APICALL_GROUP, groupId)
-        FetLifeApiIntentService.startApiCall(fetLifeApplication, FetLifeApiIntentService.ACTION_APICALL_GROUP_MESSAGES, groupId, groupDiscussionId)
+        if (Group.loadGroup(groupId) == null) {
+            FetLifeApiIntentService.startApiCall(fetLifeApplication, FetLifeApiIntentService.ACTION_APICALL_GROUP, groupId)
+        }
 
-        val groupDiscussionInForeground = false
+        var groupDiscussionInForeground = false
         val appInForeground = fetLifeApplication.isAppInForeground
 
         if (appInForeground) {
+            FetLifeApiIntentService.startApiCall(fetLifeApplication, FetLifeApiIntentService.ACTION_APICALL_GROUP_MESSAGES, groupId, groupDiscussionId)
             fetLifeApplication.eventBus.post(NewGroupMessageEvent(groupId, groupDiscussionId))
             val foregroundActivity = fetLifeApplication.foregroundActivity
             if (foregroundActivity is GroupMessagesActivity) {
-                return groupId == foregroundActivity.groupId && groupDiscussionId == foregroundActivity.groupDiscussionId
+                groupDiscussionInForeground = groupId == foregroundActivity.groupId && groupDiscussionId == foregroundActivity.groupDiscussionId
             }
         }
-
-        if (groupDiscussionInForeground) {
-            //otherwise it will be saved in display
+        if (!groupDiscussionInForeground) {
             saveNotificationItem(notificationIdRange)
         }
 
@@ -96,7 +97,7 @@ class GroupMessageNotification(notificationType: String, notificationIdRange: In
         val groupDiscussionTitle = (oneSignalNotification as? GroupMessageNotification)?.groupDiscussionTitle
         val baseIntent = GroupsActivity.createIntent(context, true)
         val interimIntent = GroupActivity.createIntent(context, groupId, groupTitle, false)
-        val contentIntent = GroupMessagesActivity.createIntent(context, groupId, groupDiscussionId, groupDiscussionTitle, null, false). apply {
+        val contentIntent = GroupMessagesActivity.createIntent(context, groupId, groupDiscussionId, groupDiscussionTitle, null, false).apply {
             putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE, oneSignalNotification.notificationType)
             putExtra(BaseActivity.EXTRA_NOTIFICATION_MERGE_ID, oneSignalNotification.mergeId)
         }
@@ -104,7 +105,7 @@ class GroupMessageNotification(notificationType: String, notificationIdRange: In
     }
 
     override fun getLegacySummaryIntent(context: Context): PendingIntent? {
-        return PendingIntent.getActivity(context,notificationIdRange, GroupsActivity.createIntent(context,true),PendingIntent.FLAG_UPDATE_CURRENT)
+        return PendingIntent.getActivity(context, notificationIdRange, GroupsActivity.createIntent(context, true), PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     override fun getNotificationItemLaunchUrl(): String? {

@@ -1,5 +1,6 @@
 package com.bitlove.fetlife.inbound.onesignal.notification
 
+import android.annotation.TargetApi
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -16,7 +17,7 @@ import com.bitlove.fetlife.util.AppUtil
 import com.bitlove.fetlife.util.NotificationUtil
 import org.json.JSONObject
 
-//TODO anonym, deleteintent, inner launches, move hardcoded urls
+//TODO anonym, delete intent, inner launches, move hardcoded urls
 abstract class OneSignalNotification(val notificationType: String,
                                      val notificationIdRange: Int,
                                      val title: String?,
@@ -30,15 +31,16 @@ abstract class OneSignalNotification(val notificationType: String,
     open fun getNotificationChannelId(): String = notificationType
     open fun getNotificationChannelName(context: Context): String? = null
     open fun getNotificationChannelDescription(context: Context): String? = null
+    @TargetApi(Build.VERSION_CODES.N)
     open fun getNotificationChannelImportance(): Int = NotificationManager.IMPORTANCE_DEFAULT
 
     open fun getSummaryTitle(notificationCount: Int, context: Context): String? = null
     open fun getSummaryText(notificationCount: Int, context: Context): String? = null
 
-    open fun getNotificationTitle(oneSignalNotification: OneSignalNotification, count: Int, context: Context): String? = oneSignalNotification.title
-    open fun getNotificationText(oneSignalNotification: OneSignalNotification, count: Int, context: Context): String? = oneSignalNotification.message
+    open fun getNotificationTitle(oneSignalNotification: OneSignalNotification, notificationCount: Int, context: Context): String? = oneSignalNotification.title
+    open fun getNotificationText(oneSignalNotification: OneSignalNotification, notificationCount: Int, context: Context): String? = oneSignalNotification.message
     open fun getNotificationIntent(oneSignalNotification: OneSignalNotification, context: Context, order: Int): PendingIntent? = null
-    open fun getLegacySummaryIntent(context: Context): PendingIntent? = getNotificationIntent(this,context,notificationIdRange)
+    open fun getLegacySummaryIntent(context: Context): PendingIntent? = getNotificationIntent(this, context, notificationIdRange)
 
     open fun getNotificationItemLaunchUrl(): String? = launchUrl
 
@@ -46,10 +48,10 @@ abstract class OneSignalNotification(val notificationType: String,
 
     open fun display(fetLifeApplication: FetLifeApplication) {
 
-        val groupingEnabled = fetLifeApplication.userSessionManager.activeUserPreferences.getBoolean(fetLifeApplication.getString(R.string.settings_key_notification_grouping_enabled),true);
+        val groupingEnabled = fetLifeApplication.userSessionManager.activeUserPreferences.getBoolean(fetLifeApplication.getString(R.string.settings_key_notification_grouping_enabled), true)
 
         //Selecting storage
-        var liveNotifications = liveNotificationMap[notificationType] ?: ArrayList()
+        val liveNotifications = liveNotificationMap[notificationType] ?: ArrayList()
         if (liveNotifications.isEmpty()) liveNotificationMap[notificationType] = liveNotifications
 
         //Create notification channel
@@ -68,8 +70,8 @@ abstract class OneSignalNotification(val notificationType: String,
         //Sending notifications
         val notificationManager = NotificationManagerCompat.from(fetLifeApplication)
 
-        val summaryTitle = getSummaryTitle(liveNotifications.size,fetLifeApplication)
-        val summaryText = getSummaryText(liveNotifications.size,fetLifeApplication)
+        val summaryTitle = getSummaryTitle(liveNotifications.size, fetLifeApplication)
+        val summaryText = getSummaryText(liveNotifications.size, fetLifeApplication)
 
         val inboxStyle = NotificationCompat.InboxStyle()
                 .setBigContentTitle(summaryTitle)
@@ -79,8 +81,8 @@ abstract class OneSignalNotification(val notificationType: String,
         for (oneSignalNotificationEntry in liveNotifications.groupBy { it.mergeId }) {
             val groupCount = oneSignalNotificationEntry.value.size
             val referenceNotification = oneSignalNotificationEntry.value.first()
-            val title = getNotificationTitle(referenceNotification,groupCount,fetLifeApplication)
-            val text = getNotificationText(referenceNotification,groupCount,fetLifeApplication)
+            val title = getNotificationTitle(referenceNotification, groupCount, fetLifeApplication)
+            val text = getNotificationText(referenceNotification, groupCount, fetLifeApplication)
             val pendingIntent = getNotificationIntent(referenceNotification, fetLifeApplication, i++)
 
             val groupId = if (groupingEnabled) notificationType else null
@@ -89,10 +91,10 @@ abstract class OneSignalNotification(val notificationType: String,
             inboxStyle.addLine("$title $text")
         }
 
-        val summaryNotification = getDefaultNotificationBuilder(channelId, notificationType, fetLifeApplication, null, summaryTitle, summaryText). apply {
+        val summaryNotification = getDefaultNotificationBuilder(channelId, notificationType, fetLifeApplication, null, summaryTitle, summaryText).apply {
             setGroupSummary(true)
             setStyle(inboxStyle)
-            if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.O) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
                 setContentIntent(getLegacySummaryIntent(fetLifeApplication))
             }
         }.build()
@@ -119,8 +121,8 @@ abstract class OneSignalNotification(val notificationType: String,
     }
 
 
-    protected fun getDefaultNotificationBuilder(notificationChannelId: String, groupId: String?, fetLifeApplication: FetLifeApplication, contentIntent: PendingIntent?, title: String?, text: String?): NotificationCompat.Builder {
-        val builder = if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) NotificationCompat.Builder(fetLifeApplication, notificationChannelId) else NotificationCompat.Builder(fetLifeApplication)
+    private fun getDefaultNotificationBuilder(notificationChannelId: String, groupId: String?, fetLifeApplication: FetLifeApplication, contentIntent: PendingIntent?, title: String?, text: String?): NotificationCompat.Builder {
+        val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) NotificationCompat.Builder(fetLifeApplication, notificationChannelId) else NotificationCompat.Builder(fetLifeApplication)
         return builder.apply {
             setAutoCancel(true)
             setContentIntent(contentIntent)
@@ -136,7 +138,7 @@ abstract class OneSignalNotification(val notificationType: String,
             setLights(fetLifeApplication.userSessionManager.notificationColor, 1000, 1000)
             setSound(fetLifeApplication.userSessionManager.notificationRingtone)
 
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 setChannelId(notificationChannelId)
             }
 
@@ -163,7 +165,7 @@ abstract class OneSignalNotification(val notificationType: String,
             this.launchUrl = getNotificationItemLaunchUrl()
             this.collapseId = this@OneSignalNotification.collapseId
             this.timeStamp = try {
-                (this@OneSignalNotification.additionalData!!.getDouble("sent_at") * 1000)?.toLong()
+                (this@OneSignalNotification.additionalData!!.getDouble("sent_at") * 1000).toLong()
             } catch (exception: Throwable) {
                 -1
             }
@@ -177,7 +179,7 @@ abstract class OneSignalNotification(val notificationType: String,
         const val LAUNCH_URL_PARAM_SEPARATOR = ":"
         const val LAUNCH_URL_PREFIX = "FetLifeApp://"
 
-        val liveNotificationMap : MutableMap<String,MutableList<OneSignalNotification>> = HashMap()
+        val liveNotificationMap: MutableMap<String, MutableList<OneSignalNotification>> = HashMap()
 
         fun clearNotifications(notificationType: String? = null, mergeId: String? = null) {
             if (notificationType == null) {
