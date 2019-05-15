@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bitlove.fetlife.R;
+import com.bitlove.fetlife.github.GitHubReleaseNotesActivity;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.view.dialog.PictureUploadSelectionDialog;
@@ -24,7 +25,7 @@ import com.bitlove.fetlife.view.screen.resource.groups.GroupsActivity;
 import com.bitlove.fetlife.view.screen.resource.members.MembersActivity;
 import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity;
 import com.bitlove.fetlife.view.screen.standalone.LoginActivity;
-import com.bitlove.fetlife.view.screen.standalone.ReleaseNotesActivity;
+import com.bitlove.fetlife.github.ReleaseNotesActivity;
 import com.bitlove.fetlife.view.screen.standalone.SettingsActivity;
 import com.bitlove.fetlife.webapp.navigation.WebAppNavigation;
 import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity;
@@ -36,7 +37,6 @@ import com.google.android.material.navigation.NavigationView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 public class MenuActivityComponent extends ActivityComponent {
@@ -196,7 +196,7 @@ public class MenuActivityComponent extends ActivityComponent {
             pendingNavigationIntent = FetLifeWebViewActivity.Companion.createIntent(menuActivity, WebAppNavigation.WEBAPP_BASE_URL + "/android", true,null,false);
             menuActivity.setFinishAfterNavigation(true);
         } else if (id == R.id.nav_relnotes) {
-            pendingNavigationIntent = ReleaseNotesActivity.createIntent(menuActivity);
+            pendingNavigationIntent = GitHubReleaseNotesActivity.Companion.createIntent(menuActivity);
             menuActivity.setFinishAfterNavigation(true);
 //        } else if (id == R.id.nav_notifications) {
 //            TurboLinksViewActivity.startActivity(menuActivity,"notifications",menuActivity.getString(R.string.title_activity_notifications));

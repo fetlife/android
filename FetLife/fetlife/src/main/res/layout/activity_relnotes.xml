@@ -1,70 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/navigation_bottom"
+    <data>
+        <import type="com.bitlove.fetlife.common.logic.databinding.DatabindingIdBinder"/>
+        <variable
+            name="releases"
+            type="com.bitlove.fetlife.github.dto.Releases" />
+    </data>
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#0c0c0c"
-        app:itemIconSize="20dp"
-        android:transitionName="bottomNavBar"
-        app:labelVisibilityMode="labeled"
-        app:itemHorizontalTranslationEnabled="false"
-        app:itemIconTint="@drawable/webapp_selector_bottom_navigation"
-        app:itemTextColor="@drawable/webapp_selector_bottom_navigation"
-        app:itemTextAppearanceActive="@style/navigation_bottom"
-        app:itemTextAppearanceInactive="@style/navigation_bottom"
-        android:layout_alignParentBottom="true"/>
+        android:layout_height="match_parent">
 
-    <View
-        android:id="@+id/navigation_bottom_separator"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="#555"
-        app:layout_anchor="@id/navigation_bottom"
-        app:layout_anchorGravity="top"
-        android:layout_above="@id/navigation_bottom"
-        />
-
-    <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/drawer_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/navigation_bottom_separator"
-        android:fitsSystemWindows="true"
-        tools:openDrawer="start">
-
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/navigation_bottom"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:background="#0c0c0c"
+            app:itemIconSize="20dp"
+            android:transitionName="bottomNavBar"
+            app:labelVisibilityMode="labeled"
+            app:itemHorizontalTranslationEnabled="false"
+            app:itemIconTint="@drawable/webapp_selector_bottom_navigation"
+            app:itemTextColor="@drawable/webapp_selector_bottom_navigation"
+            app:itemTextAppearanceActive="@style/navigation_bottom"
+            app:itemTextAppearanceInactive="@style/navigation_bottom"
+            android:layout_alignParentBottom="true"/>
 
-            <include
-                layout="@layout/content_relnotes"
+        <View
+            android:id="@+id/navigation_bottom_separator"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="#555"
+            app:layout_anchor="@id/navigation_bottom"
+            app:layout_anchorGravity="top"
+            android:layout_above="@id/navigation_bottom"
+            />
+
+        <androidx.drawerlayout.widget.DrawerLayout
+            android:id="@+id/drawer_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/navigation_bottom_separator"
+            android:fitsSystemWindows="true"
+            tools:openDrawer="start">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@+id/navigation_bottom_separator"
-                />
+                android:transitionGroup="true"
+                app:items="@{releases.releaseList}"
+                app:layout="@{@layout/item_github_release}"
+                app:itemBindingId="@{DatabindingIdBinder.release}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                tools:context=".github.ReleaseNotesActivity"
+                tools:showIn="@layout/activity_relnotes" />
 
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+            <com.google.android.material.navigation.NavigationView
+                android:id="@+id/navigation_side_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:fitsSystemWindows="true"
+                style="@style/NavigationView"
+                app:itemIconTint="@color/side_menu_icon"
+                android:background="@color/side_menu_background_main"
+                app:itemTextColor="@color/side_menu_label"
+                app:headerLayout="@layout/navigation_side_header"
+                app:menu="@menu/menu_side"/>
 
-        <com.google.android.material.navigation.NavigationView
-            android:id="@+id/navigation_side_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="end"
-            android:fitsSystemWindows="true"
-            style="@style/NavigationView"
-            app:itemIconTint="@color/side_menu_icon"
-            android:background="@color/side_menu_background_main"
-            app:itemTextColor="@color/side_menu_label"
-            app:headerLayout="@layout/navigation_side_header"
-            app:menu="@menu/menu_side"/>
+        </androidx.drawerlayout.widget.DrawerLayout>
 
-    </androidx.drawerlayout.widget.DrawerLayout>
+    </RelativeLayout>
 
-</RelativeLayout>
+</layout>

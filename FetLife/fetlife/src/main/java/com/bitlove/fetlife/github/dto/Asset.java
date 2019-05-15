@@ -1,4 +1,4 @@
-package com.bitlove.fetlife.model.pojos.github;
+package com.bitlove.fetlife.github.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

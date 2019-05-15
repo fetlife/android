@@ -1,4 +1,4 @@
-package com.bitlove.fetlife.view.screen.standalone;
+package com.bitlove.fetlife.github;
 
 import android.content.Context;
 import android.content.Intent;
@@ -27,18 +27,6 @@ public class ReleaseNotesActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-
-        TextView aboutTextView = (TextView) findViewById(R.id.text_about);
-
-        aboutTextView.setText(Html.fromHtml(getString(R.string.text_about, getFetLifeApplication().getVersionText()), null, new HtmlListTagHandler()));
-
-    }
-
-    @Override
-    protected void onCreateActivityComponents() {
-        addActivityComponent(new MenuActivityComponent());
     }
 
     @Override
@@ -47,14 +35,8 @@ public class ReleaseNotesActivity extends BaseActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-//        overridePendingTransition(0, 0);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onCreateActivityComponents() {
+        addActivityComponent(new MenuActivityComponent());
     }
 
     @Override

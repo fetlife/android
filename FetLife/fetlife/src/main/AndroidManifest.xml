@@ -108,7 +108,7 @@
             android:theme="@style/AppTheme.Dialog.Transparent" />
 
         <activity
-            android:name=".view.screen.standalone.ReleaseNotesActivity"
+            android:name=".github.GitHubReleaseNotesActivity"
             android:label="@string/title_activity_relnotes"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />

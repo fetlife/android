@@ -8,7 +8,7 @@ import android.preference.PreferenceManager;
 
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
-import com.bitlove.fetlife.model.pojos.github.Release;
+import com.bitlove.fetlife.github.dto.Release;
 import com.crashlytics.android.Crashlytics;
 
 import java.text.ParseException;

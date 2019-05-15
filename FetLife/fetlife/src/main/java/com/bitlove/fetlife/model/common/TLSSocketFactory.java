@@ -1,4 +1,4 @@
-package com.bitlove.fetlife.model.api;
+package com.bitlove.fetlife.model.common;
 
 import java.io.IOException;
 import java.net.InetAddress;

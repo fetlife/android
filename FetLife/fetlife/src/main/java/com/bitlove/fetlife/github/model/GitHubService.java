@@ -1,8 +1,8 @@
-package com.bitlove.fetlife.model.api;
+package com.bitlove.fetlife.github.model;
 
 import android.os.Build;
 
-import com.bitlove.fetlife.FetLifeApplication;
+import com.bitlove.fetlife.model.common.TLSSocketFactory;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -31,7 +31,7 @@ public class GitHubService {
 
     private int lastResponseCode = -1;
 
-    public GitHubService(final FetLifeApplication fetLifeApplication) throws Exception {
+    public GitHubService() throws Exception {
 
         OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
 
@@ -49,7 +49,6 @@ public class GitHubService {
             public Response intercept(Chain chain) throws IOException {
                 Request request = chain.request();
                 Response response = chain.proceed(request);
-                //response.body().string();
                 lastResponseCode = response.code();
                 return response;
             }
@@ -62,7 +61,7 @@ public class GitHubService {
             tmf.init((KeyStore) null);
             TrustManager[] trustManagers = tmf.getTrustManagers();
             context.init(null,trustManagers,null);
-            clientBuilder.sslSocketFactory(new TLSSocketFactory(context.getSocketFactory()));
+            clientBuilder.sslSocketFactory(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ? new TLSSocketFactory(context.getSocketFactory()) : context.getSocketFactory());
         }
 
         ObjectMapper mapper = new ObjectMapper();
@@ -74,7 +73,6 @@ public class GitHubService {
                 .client(clientBuilder.build())
                 .addConverterFactory(JacksonConverterFactory.create(mapper)).build()
                 .create(GitHubApi.class);
-
     }
 
     public GitHubApi getGitHubApi() {
