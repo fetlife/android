@@ -27,7 +27,7 @@ android {
         multiDexEnabled true
 
         versionCode versionTimeStamp
-        versionName "3.0.1"
+        versionName "3.0.2-beta.1"
 
         vectorDrawables.useSupportLibrary = true
 
@@ -202,6 +202,8 @@ dependencies {
     implementation 'com.facebook.fresco:imagepipeline-okhttp3:1.10.0'
     implementation 'com.facebook.fresco:fresco:1.10.0'
     implementation 'com.github.stfalcon:frescoimageviewer:0.5.0'
+
+    implementation "org.jetbrains.anko:anko-commons:0.10.8"
 
     // if Java use this. If using Kotlin do NOT use this.
     annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"

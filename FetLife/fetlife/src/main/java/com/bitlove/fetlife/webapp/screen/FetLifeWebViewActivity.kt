@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.view.MenuItem
 import android.webkit.CookieManager
+import com.bitlove.fetlife.BuildConfig
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
 import com.bitlove.fetlife.event.LoginFailedEvent
@@ -38,7 +39,7 @@ class FetLifeWebViewActivity : ResourceActivity() {
         }
 
         fun createLoginIntent(context: Context, toastMessage: String? = null): Intent {
-            return createIntent(context, WebAppNavigation.URL_LOGIN, false, false, null, true, toastMessage)
+            return createIntent(context, WebAppNavigation.URL_OAUTH_LOGIN, false, false, null, true, toastMessage)
         }
 
         fun startActivity(context: Context, pageUrl: String, hasBottomNavigation: Boolean = false, selectedBottomNavigationItem: Int? = null, newTask: Boolean = false, options: Bundle? = null, toastMessage: String? = null) {

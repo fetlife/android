@@ -2,9 +2,10 @@ package com.bitlove.fetlife.webapp.navigation
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
-import android.util.Log
+import android.util.Base64
 import android.webkit.CookieManager
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -26,6 +27,17 @@ import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity
 import kotlin.collections.ArrayList
 import kotlin.collections.LinkedHashMap
 import kotlin.collections.LinkedHashSet
+import org.json.JSONObject
+import okhttp3.*
+import org.jetbrains.anko.doAsync
+import java.io.ByteArrayInputStream
+import java.io.IOException
+import java.security.cert.CertificateFactory
+import java.security.cert.X509Certificate
+import javax.crypto.Cipher
+import javax.crypto.spec.IvParameterSpec
+import javax.crypto.spec.SecretKeySpec
+
 
 class WebAppNavigation {
 
@@ -48,12 +60,30 @@ class WebAppNavigation {
 
         //*** Full Urls ***
 
-        const val URL_LOGIN = "$WEBAPP_BASE_URL/users/sign_in"
+        const val URL_OAUTH_LOGIN = "$WEBAPP_BASE_URL/api/oauth/authorize?client_id=${BuildConfig.CLIENT_ID}&amp;redirect_uri=${BuildConfig.REDIRECT_URL}&amp;response_type=code"
+        const val URL_OAUTH_TOKEN = "https://fetlife.com/api/oauth/token"
+        const val URL_OAUTH_CALLBACK = "https://fetlife.com/api/oauth/authorize/native"
+
         private const val URL_QNA_NEW = "$WEBAPP_BASE_URL/q/new"
         private const val URL_INBOX_MAIN = "$WEBAPP_BASE_URL/inbox"
         private const val URL_INBOX_ALL = "$WEBAPP_BASE_URL/inbox/all"
         private const val URL_INBOX_ARCHIVED = "$WEBAPP_BASE_URL/inbox/archived"
 
+
+        //*** Url Params & Values ***
+        private const val PARAM_POST_LOGIN_CODE = "code"
+        private const val PARAM_POST_LOGIN_CLIENT_ID = "client_id"
+        private const val PARAM_POST_LOGIN_CLIENT_SECRET = "client_secret"
+        private const val PARAM_POST_LOGIN_REDIRECT_URI = "redirect_uri"
+        private const val PARAM_POST_LOGIN_GRANT_TYPE = "grant_type"
+        private const val VALUE_POST_LOGIN_GRANT_TYPE = "authorization_code"
+
+        private const val PARAM_QUERY_LOGIN_CODE = "code"
+
+        private const val PARAM_LOGIN_RESPONSE_ACCESS_TOKEN = "access_token"
+        private const val PARAM_LOGIN_RESPONSE_REFRESH_TOKEN = "refresh_token"
+
+        private const val COOKIE_REMEMBER_USER_TOKEN = "remember_user_token"
 
         //*** Url Regular Expressions ***
 
@@ -165,6 +195,7 @@ class WebAppNavigation {
         //QnA Url Regexps
         private const val URL_REGEX_QNA_QUESTION = "^$REGEX_BASE_URL\\/q\\/.*\\/.*\$"
         private const val URL_REGEX_LOGIN = "^$REGEX_BASE_URL\\/(users\\/sign_in|login|sign_in_five_strike)\\/?.*\$"
+        private const val URL_REGEX_LOGIN_OAUTH = "^$REGEX_BASE_URL\\/api\\/oauth\\/?.*\$"
 
     }
 
@@ -227,6 +258,7 @@ class WebAppNavigation {
     //Urls that are accessible without having the user signed in
     private val notResourceUrlSet = LinkedHashSet<String>().apply {
         add(URL_REGEX_LOGIN_MAIN)
+        add(URL_REGEX_LOGIN_OAUTH)
         add(URL_REGEX_LOGIN_PASSWORD_SENT)
         add(URL_REGEX_PASSWORD_NEW_EMAIL)
         add(URL_REGEX_PASSWORD_NEW_MOBILE)
@@ -346,7 +378,7 @@ class WebAppNavigation {
         url ?: return false
         return !checkRegexpSet(url, notResourceUrlSet)
     }
-    
+
     fun getOptionsMenuNavigationList(url: String?): List<Int>? {
         return checkRegexpMap(url, optionsMenuMap)
     }
@@ -366,7 +398,9 @@ class WebAppNavigation {
     }
 
     fun showVideo(context: Context?, mediaId: String) {
-        if (context == null) return
+        if (context == null) {
+            return
+        }
         val video = Video.loadVideo(mediaId) ?: return
         val uri = Uri.parse(video.videoUrl)
         val intent = Intent(Intent.ACTION_VIEW, uri)
@@ -386,12 +420,22 @@ class WebAppNavigation {
 
         webView.tag = false
 
-        if (targetUri.toString() == currentUrl) {
+        if (!isFetLifeUrl(targetUri)) {
+            targetUri.openInBrowser()
             return true
         }
 
-        if (!isFetLifeUrl(targetUri)) {
-            targetUri.openInBrowser()
+        if (isLoginRedirect(targetUri)) {
+            val code = targetUri.getQueryParameter(PARAM_QUERY_LOGIN_CODE) ?: return false
+            getAccessToken(activity, code)
+            return true
+        }
+
+        if (isOauthUrl(targetUri)) {
+            return false
+        }
+
+        if (targetUri.toString() == currentUrl) {
             return true
         }
 
@@ -432,6 +476,65 @@ class WebAppNavigation {
         //if (not supported as webview yet)
         openInCustomTab(targetUri, context)
         return true
+    }
+
+    private fun isOauthUrl(targetUri: Uri): Boolean {
+        return URL_REGEX_LOGIN_OAUTH.toRegex().matches(targetUri.toString())
+    }
+
+    private fun getAccessToken(activity: BaseActivity?, code: String) {
+
+        activity?.showProgress()
+
+        doAsync {
+            val client = OkHttpClient().newBuilder()
+                    .followRedirects(true)
+                    .followSslRedirects(true)
+                    .build()
+            val parameters = HashMap<String, String>().apply {
+                put(PARAM_POST_LOGIN_CODE, code)
+                put(PARAM_POST_LOGIN_CLIENT_ID, BuildConfig.CLIENT_ID)
+                put(PARAM_POST_LOGIN_CLIENT_SECRET, getClientSecret())
+                put(PARAM_POST_LOGIN_REDIRECT_URI, BuildConfig.REDIRECT_URL)
+                put(PARAM_POST_LOGIN_GRANT_TYPE, VALUE_POST_LOGIN_GRANT_TYPE)
+            }
+
+            val builder = FormBody.Builder()
+            val it = parameters.entries.iterator()
+            while (it.hasNext()) {
+                val pair = it.next() as Map.Entry<*, *>
+                builder.add(pair.key.toString(), pair.value.toString())
+            }
+
+            val formBody = builder.build()
+            val request = Request.Builder()
+                    .header("CONTENT_TYPE", "application/x-www-form-urlencoded")
+                    .url(URL_OAUTH_TOKEN)
+                    .post(formBody)
+                    .build()
+
+
+            val call = client.newCall(request)
+            call.enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                }
+
+                override fun onResponse(call: Call, response: Response) {
+                    val responseJson = JSONObject(response.body()?.string())
+                    val accessToken = responseJson.getString(PARAM_LOGIN_RESPONSE_ACCESS_TOKEN)
+                    val refreshToken = responseJson.getString(PARAM_LOGIN_RESPONSE_REFRESH_TOKEN)
+
+                    val cookies = CookieManager.getInstance().getCookie(URL_OAUTH_TOKEN)
+                    val userTokenIndex = cookies.indexOf(COOKIE_REMEMBER_USER_TOKEN)
+                    val rememberMe = userTokenIndex >= 0
+                    FetLifeApiIntentService.startApiCall(activity, FetLifeApiIntentService.ACTION_APICALL_FINALIZE_LOGIN, accessToken, refreshToken, rememberMe.toString())
+                }
+            })
+        }
+    }
+
+    private fun isLoginRedirect(targetUri: Uri): Boolean {
+        return targetUri.toString().startsWith(URL_OAUTH_CALLBACK)
     }
 
     private fun isParent(targetUri: Uri, webView: WebView): Boolean {
@@ -495,7 +598,7 @@ class WebAppNavigation {
                 val fromNewConversation = URL_REGEX_CONVERSATION_NEW.toRegex().matches(currentUrl)
                 val toastMessage = if (fromNewConversation && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && request?.isRedirect == true) {
                     val memberName = Member.loadMember(memberId)?.nickname
-                    if (memberName != null) activity?.getString(R.string.toast_message_sent_successfully_to_user, memberName) else activity?.getString(R.string.toast_message_sent_successfully)
+                    if (memberName != null) activity.getString(R.string.toast_message_sent_successfully_to_user, memberName) else activity.getString(R.string.toast_message_sent_successfully)
                 } else null
                 ProfileActivity.startActivity(activity, memberId, fromNewConversation, toastMessage)
                 true
@@ -531,22 +634,13 @@ class WebAppNavigation {
                 true
             }
             NATIVE_NAVIGATION_LOGIN -> {
+                if (URL_REGEX_LOGIN_OAUTH.toRegex().matches(currentUrl) || URL_REGEX_LOGIN_MAIN.toRegex().matches(currentUrl)) {
+                    return false
+                }
                 val toastMessage = if (URL_REGEX_PASSWORD_EDIT.toRegex().matches(currentUrl)) {
-                    activity?.getString(R.string.toast_password_reset_successfull);
+                    activity.getString(R.string.toast_password_reset_successfull)
                 } else null
                 FetLifeWebViewActivity.startLogin(FetLifeApplication.getInstance(), toastMessage)
-                true
-            }
-            NATIVE_NAVIGATION_HOME -> {
-                val cookies = CookieManager.getInstance().getCookie(uri.toString())
-                val accessToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJmZXRsaWZlIiwiaWF0IjoxNTU2NzIzNzQyLCJybmQiOiIzMWNiYzQwODRhZjQiLCJ1c2VyIjp7ImlkIjoiMTA2ZDNhYjQiLCJuaWNrIjoiRHJlYW1saXRlIn19.fctcn_h03jLrEB3D7d_R5q1jcOVEh2dCLtjcRAnnnmU"
-                val refreshToken = ""
-                val rememberMe = false
-                FetLifeApiIntentService.startApiCall(activity, FetLifeApiIntentService.ACTION_APICALL_FINALIZE_LOGIN, accessToken, refreshToken, rememberMe.toString())
-                if (BuildConfig.DEBUG) {
-                    Log.d("Cookies", cookies.toString())
-                }
-                activity.showProgress()
                 true
             }
             else -> false
@@ -570,10 +664,8 @@ class WebAppNavigation {
         if (URL_REGEX_PRIVACY_MAIN.toRegex().matches(uri.toString())) {
             return false
         }
-        for (uriRegex in inPlaceOpenWithNoHistoryUrlSet) {
-            if (uriRegex.toRegex().matches(uri.toString()) && !uriRegex.toRegex().matches(currentUrl)) {
-                return true
-            }
+        for (uriRegex in inPlaceOpenWithNoHistoryUrlSet) if (uriRegex.toRegex().matches(uri.toString()) && !uriRegex.toRegex().matches(currentUrl)) {
+            return true
         }
         return false
     }
@@ -611,6 +703,46 @@ class WebAppNavigation {
             }
         }
         return false
+    }
+
+    private fun getClientSecret(): String {
+
+        try {
+            val application = FetLifeApplication.getInstance()
+
+            val iv = BuildConfig.SECURE_API_IV
+            if (iv.isEmpty()) {
+                return BuildConfig.CLIENT_SECRET
+            }
+
+            val cert = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                val pInfo = application.packageManager.getPackageInfo(application.packageName, PackageManager.GET_SIGNING_CERTIFICATES)
+                pInfo.signingInfo.signingCertificateHistory[0].toByteArray()
+            } else {
+                val pInfo = application.packageManager.getPackageInfo(application.packageName, PackageManager.GET_SIGNATURES)
+                pInfo.signatures[0].toByteArray()
+            }
+
+            val input = ByteArrayInputStream(cert)
+            val cf = CertificateFactory.getInstance("X509")
+            val c = cf.generateCertificate(input) as X509Certificate
+
+            val key = ByteArray(16)
+            System.arraycopy(c.publicKey.encoded, 0, key, 0, 16)
+
+            val secret = SecretKeySpec(key, "AES")
+
+            val cipher = Cipher.getInstance("AES/CBC/PKCS7Padding")
+            cipher.init(Cipher.DECRYPT_MODE, secret, IvParameterSpec(Base64.decode(iv, Base64.NO_WRAP)))
+
+            input.close()
+
+            return String(cipher.doFinal(Base64.decode(BuildConfig.CLIENT_SECRET, Base64.NO_WRAP)))
+
+        } catch (e: Exception) {
+            throw RuntimeException(e)
+        }
+
     }
 
 }

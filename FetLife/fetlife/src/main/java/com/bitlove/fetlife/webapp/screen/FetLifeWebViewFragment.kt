@@ -40,11 +40,11 @@ class FetLifeWebViewFragment : Fragment() {
         private const val ARG_PAGE_URL = "ARG_PAGE_URL"
         private const val ARG_USE_TOP_BACK_NAVIGATION = "ARG_USE_TOP_BACK_NAVIGATION"
 
-        fun newInstance(pageUrl: String, useTopBackNavigation: Boolean = false) : FetLifeWebViewFragment {
+        fun newInstance(pageUrl: String, useTopBackNavigation: Boolean = false): FetLifeWebViewFragment {
             return FetLifeWebViewFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PAGE_URL,pageUrl)
-                    putBoolean(ARG_USE_TOP_BACK_NAVIGATION,useTopBackNavigation)
+                    putString(ARG_PAGE_URL, pageUrl)
+                    putBoolean(ARG_USE_TOP_BACK_NAVIGATION, useTopBackNavigation)
                 }
             }
         }
@@ -52,7 +52,7 @@ class FetLifeWebViewFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.webapp_fragment_webview,container,false).apply {
+        return inflater.inflate(R.layout.webapp_fragment_webview, container, false).apply {
             val url = getStringArgument(ARG_PAGE_URL)
             val navigationTitleId = FetLifeApplication.getInstance().webAppNavigation.getTitle(url)
             val navigationTitle = if (navigationTitleId != null) container?.context?.getString(navigationTitleId) else null
@@ -75,11 +75,12 @@ class FetLifeWebViewFragment : Fragment() {
             web_view.settings.javaScriptEnabled = true
             web_view.setBackgroundColor(Color.TRANSPARENT)
             web_view.addJavascriptInterface(WebViewInterface(context), "Android")
+            web_view.settings.setAppCacheEnabled(false);
             web_view.settings.cacheMode = WebSettings.LOAD_NO_CACHE
             web_view.webChromeClient = object : WebChromeClient() {
                 override fun onConsoleMessage(consoleMessage: ConsoleMessage?): Boolean {
                     if (BuildConfig.DEBUG) {
-                        Log.d("[WEBVIEW][CONSOLE]",consoleMessage?.toString())
+                        Log.d("[WEBVIEW][CONSOLE]", consoleMessage?.toString())
                     }
                     return super.onConsoleMessage(consoleMessage)
                 }
@@ -90,13 +91,13 @@ class FetLifeWebViewFragment : Fragment() {
                     dismissProgress()
                     val navigationTitleId = FetLifeApplication.getInstance().webAppNavigation.getTitle(url)
                     val navigationTitle = if (navigationTitleId != null) webView?.context?.getString(navigationTitleId) else null
-                    toolbar_title.text = (navigationTitle?: getWebViewTitle(webView))?.trim()
+                    toolbar_title.text = (navigationTitle ?: getWebViewTitle(webView))?.trim()
                     if (webView?.tag == true) {
                         webView.tag = false
                         webView.clearHistory()
                     }
                     url?.let {
-                        FetLifeApplication.getInstance().actionCable.tryConnect(context,url)
+                        FetLifeApplication.getInstance().actionCable.tryConnect(context, url)
                     }
                     super.onPageFinished(webView, url)
                 }
@@ -108,8 +109,8 @@ class FetLifeWebViewFragment : Fragment() {
                         title = title.substring(0, separatorPos)
                     }
                     val counterPos = title.indexOf(WebAppNavigation.WEB_COUNTER_SEPARATOR)
-                    if (counterPos >= 0 && counterPos < title.length-1) {
-                        title = title.substring(counterPos+1)
+                    if (counterPos >= 0 && counterPos < title.length - 1) {
+                        title = title.substring(counterPos + 1)
                     }
                     val extraPos = title.indexOf(WebAppNavigation.WEB_EXTRA_SEPARATOR)
                     if (extraPos >= 0) {
@@ -120,13 +121,13 @@ class FetLifeWebViewFragment : Fragment() {
 
                 override fun shouldOverrideUrlLoading(webView: WebView?, request: WebResourceRequest?): Boolean {
                     request ?: return false
-                    val navigated = FetLifeApplication.getInstance().webAppNavigation.navigate(request, webView, activity as BaseActivity)
+                    val navigated = FetLifeApplication.getInstance().webAppNavigation.navigate(request, webView, activity as? BaseActivity)
                     return if (navigated) {
                         true
                     } else {
                         request?.url.toString().let {
-                            webView?.loadUrl(it,createRequestHeaders())
-                            webView?.postDelayed(Runnable{activity?.invalidateOptionsMenu()},100)
+                            webView?.loadUrl(it, createRequestHeaders())
+                            webView?.postDelayed(Runnable { activity?.invalidateOptionsMenu() }, 100)
                         }
                         true
                     }
@@ -136,7 +137,12 @@ class FetLifeWebViewFragment : Fragment() {
                     super.onPageCommitVisible(webView, url)
                     val navigationTitleId = FetLifeApplication.getInstance().webAppNavigation.getTitle(url)
                     val navigationTitle = if (navigationTitleId != null) webView?.context?.getString(navigationTitleId) else null
-                    toolbar_title.text = (navigationTitle?: getWebViewTitle(webView))?.trim()
+                    toolbar_title.text = (navigationTitle ?: getWebViewTitle(webView))?.trim()
+                }
+
+                override fun onReceivedHttpError(view: WebView?, request: WebResourceRequest?, errorResponse: WebResourceResponse?) {
+                    super.onReceivedHttpError(view, request, errorResponse)
+                    Crashlytics.logException(Exception("request: ${request?.url}, error: ${errorResponse?.statusCode}-${errorResponse?.reasonPhrase}"))
                 }
 
                 override fun onReceivedError(webView: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
@@ -163,15 +169,15 @@ class FetLifeWebViewFragment : Fragment() {
                 }
             }
 
-            web_view.loadUrl(url,createRequestHeaders())
+            web_view.loadUrl(url, createRequestHeaders())
             url?.let {
-                FetLifeApplication.getInstance().actionCable.tryConnect(context,url)
+                FetLifeApplication.getInstance().actionCable.tryConnect(context, url)
             }
         }
     }
 
     private fun createRequestHeaders(): MutableMap<String, String>? {
-        return HashMap<String,String>().apply {
+        return HashMap<String, String>().apply {
             val accessToken = FetLifeApplication.getInstance().userSessionManager.currentUser?.accessToken
             if (accessToken != null) {
                 val authHeader = FetLifeService.AUTH_HEADER_PREFIX + accessToken
@@ -227,9 +233,9 @@ class FetLifeWebViewFragment : Fragment() {
             }
 
             if (serviceCallFinishedEvent.serviceCallAction === FetLifeApiIntentService.ACTION_APICALL_MEMBER_PICTURE) {
-                FetLifeApplication.getInstance().webAppNavigation.showPicture(context,mediaId)
+                FetLifeApplication.getInstance().webAppNavigation.showPicture(context, mediaId)
             } else if (serviceCallFinishedEvent.serviceCallAction === FetLifeApiIntentService.ACTION_APICALL_MEMBER_VIDEO) {
-                FetLifeApplication.getInstance().webAppNavigation.showVideo(context,mediaId)
+                FetLifeApplication.getInstance().webAppNavigation.showVideo(context, mediaId)
             }
         }
     }
@@ -251,7 +257,7 @@ class FetLifeWebViewFragment : Fragment() {
         return FetLifeApiIntentService.ACTION_APICALL_MEMBER_VIDEO == serviceCallAction
     }
 
-    fun onKeyBack() : Boolean{
+    fun onKeyBack(): Boolean {
         return if (web_view.canGoBack()) {
             web_view.goBack()
             true
@@ -263,10 +269,11 @@ class FetLifeWebViewFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         val url = web_view?.url ?: getStringArgument(ARG_PAGE_URL)
-        val optionsMenuWebNavigation = FetLifeApplication.getInstance().webAppNavigation.getOptionsMenuNavigationList(url) ?: return
+        val optionsMenuWebNavigation = FetLifeApplication.getInstance().webAppNavigation.getOptionsMenuNavigationList(url)
+                ?: return
         var order = 0
         for (navigationItem in optionsMenuWebNavigation) {
-            menu?.add(0,navigationItem,order++,navigationItem)
+            menu?.add(0, navigationItem, order++, navigationItem)
         }
     }
 
@@ -275,8 +282,8 @@ class FetLifeWebViewFragment : Fragment() {
         val url = FetLifeApplication.getInstance().webAppNavigation.getOptionMenuNavigationUrl(item.itemId)
         val navigated = FetLifeApplication.getInstance().webAppNavigation.navigate(Uri.parse(url), web_view, activity as BaseActivity)
         if (!navigated) {
-            web_view?.loadUrl(url,createRequestHeaders())
-            web_view?.postDelayed(Runnable{activity?.invalidateOptionsMenu()},100)
+            web_view?.loadUrl(url, createRequestHeaders())
+            web_view?.postDelayed(Runnable { activity?.invalidateOptionsMenu() }, 100)
         }
         return true
     }
