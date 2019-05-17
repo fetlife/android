@@ -30,6 +30,7 @@ class NotificationParser {
                 ?: return UnknownNotification(title, message, launchUrl, additionalData)
         return when {
             notificationType == JSON_VALUE_TYPE_GROUP_POST -> GroupNotification(JSON_VALUE_TYPE_GROUP_POST, NOTIFICATION_ID_GROUP_DISCUSSION, title, message, launchUrl, getMergeId(notificationType, launchUrl, additionalData), collapseId, additionalData, getPreferenceKey(notificationType, fetLifeApplication))
+            notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_MENTION_GROUP) -> GroupMessageNotification(JSON_VALUE_TYPE_PREFIX_COMMENT_GROUP, NOTIFICATION_ID_GROUP_MESSAGE, title, message, launchUrl, getMergeId(notificationType, launchUrl, additionalData), collapseId, additionalData, getPreferenceKey(notificationType, fetLifeApplication))
             notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_COMMENT_GROUP) -> GroupMessageNotification(JSON_VALUE_TYPE_PREFIX_COMMENT_GROUP, NOTIFICATION_ID_GROUP_MESSAGE, title, message, launchUrl, getMergeId(notificationType, launchUrl, additionalData), collapseId, additionalData, getPreferenceKey(notificationType, fetLifeApplication))
             notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_QUESTION) -> QuestionAnsweredNotification(JSON_VALUE_TYPE_PREFIX_QUESTION, NOTIFICATION_ID_ANSWERS, title, message, launchUrl, getMergeId(notificationType, launchUrl, additionalData), collapseId, additionalData, getPreferenceKey(notificationType, fetLifeApplication))
             notificationType.startsWith(JSON_VALUE_TYPE_PREFIX_MESSAGE) ||
@@ -150,7 +151,7 @@ class NotificationParser {
 //        const val JSON_VALUE_TYPE_LOVE_STATUS_UPDATE = "love_status_update"
 //        const val JSON_VALUE_TYPE_LOVE_SUGGESTION = "love_suggestion"
 
-//        const val JSON_VALUE_TYPE_PREFIX_MENTION_GROUP = "mention_group"
+        const val JSON_VALUE_TYPE_PREFIX_MENTION_GROUP = "mention_group"
 
         const val JSON_VALUE_TYPE_PREFIX_MENTION = "mention"
 //        const val JSON_VALUE_TYPE_MENTION = "mention"

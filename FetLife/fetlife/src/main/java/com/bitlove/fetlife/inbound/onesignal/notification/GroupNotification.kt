@@ -49,13 +49,9 @@ class GroupNotification(notificationType: String, notificationIdRange: Int, titl
     }
 
     override fun handle(fetLifeApplication: FetLifeApplication): Boolean {
-        if (TextUtils.isEmpty(groupId) || TextUtils.isEmpty(groupDiscussionId)) {
+        if (TextUtils.isEmpty(groupId)) {
             return false
         }
-        if (ServerIdUtil.isServerId(groupId) || ServerIdUtil.isServerId(groupDiscussionId)) {
-            return false
-        }
-
 
         if (Group.loadGroup(groupId) == null) {
             FetLifeApiIntentService.startApiCall(fetLifeApplication, FetLifeApiIntentService.ACTION_APICALL_GROUP, groupId)
@@ -65,7 +61,7 @@ class GroupNotification(notificationType: String, notificationIdRange: Int, titl
         val appInForeground = fetLifeApplication.isAppInForeground
 
         if (appInForeground) {
-            FetLifeApiIntentService.startApiCall(fetLifeApplication, FetLifeApiIntentService.ACTION_APICALL_GROUP_MESSAGES, groupId, groupDiscussionId)
+            FetLifeApiIntentService.startApiCall(fetLifeApplication, FetLifeApiIntentService.ACTION_APICALL_GROUP, groupId)
             fetLifeApplication.eventBus.post(NewGroupMessageEvent(groupId, groupDiscussionId))
             val foregroundActivity = fetLifeApplication.foregroundActivity
             if (foregroundActivity is GroupMessagesActivity) {
@@ -74,6 +70,7 @@ class GroupNotification(notificationType: String, notificationIdRange: Int, titl
         }
 
         if (!groupDiscussionInForeground) {
+            FetLifeApiIntentService.startApiCall(fetLifeApplication, FetLifeApiIntentService.ACTION_APICALL_GROUP_MESSAGES, groupId, groupDiscussionId)
             //otherwise it will be saved in display
             saveNotificationItem(notificationIdRange)
         }

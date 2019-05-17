@@ -49,7 +49,6 @@ class GroupMessageNotification(notificationType: String, notificationIdRange: In
         val appInForeground = fetLifeApplication.isAppInForeground
 
         if (appInForeground) {
-            FetLifeApiIntentService.startApiCall(fetLifeApplication, FetLifeApiIntentService.ACTION_APICALL_GROUP_MESSAGES, groupId, groupDiscussionId)
             fetLifeApplication.eventBus.post(NewGroupMessageEvent(groupId, groupDiscussionId))
             val foregroundActivity = fetLifeApplication.foregroundActivity
             if (foregroundActivity is GroupMessagesActivity) {
@@ -57,6 +56,7 @@ class GroupMessageNotification(notificationType: String, notificationIdRange: In
             }
         }
         if (!groupDiscussionInForeground) {
+            FetLifeApiIntentService.startApiCall(fetLifeApplication, FetLifeApiIntentService.ACTION_APICALL_GROUP_MESSAGES, groupId, groupDiscussionId)
             saveNotificationItem(notificationIdRange)
         }
 
