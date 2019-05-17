@@ -34,12 +34,12 @@ class InfoNotification(notificationType: String, notificationIdRange: Int, title
                 data = Uri.parse(launchUrl)
             }
         } else {
-            FetLifeWebViewActivity.createIntent(context, "notifications",true, R.id.navigation_bottom_notifications, true).apply {
+            FetLifeWebViewActivity.createIntent(context, "notifications", true, R.id.navigation_bottom_notifications, true).apply {
                 addFlags(Intent.FLAG_RECEIVER_FOREGROUND)
                 putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE, oneSignalNotification.notificationType)
                 putExtra(BaseActivity.EXTRA_NOTIFICATION_MERGE_ID, oneSignalNotification.mergeId)
             }
         }
-        return PendingIntent.getActivity(context,order,contentIntent,PendingIntent.FLAG_CANCEL_CURRENT)
+        return PendingIntent.getActivity(context, order, contentIntent, PendingIntent.FLAG_CANCEL_CURRENT)
     }
 }

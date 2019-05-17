@@ -3,8 +3,9 @@ package com.bitlove.fetlife.inbound.onesignal.notification
 import android.app.PendingIntent
 import android.app.TaskStackBuilder
 import android.content.Context
+import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
-import com.bitlove.fetlife.model.api.FetLifeService
+import com.bitlove.fetlife.model.service.FetLifeApiIntentService
 import com.bitlove.fetlife.view.screen.BaseActivity
 import com.bitlove.fetlife.webapp.navigation.WebAppNavigation
 import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity
@@ -38,7 +39,8 @@ class QuestionAnsweredNotification(notificationType: String, notificationIdRange
 
     override fun getNotificationIntent(oneSignalNotification: OneSignalNotification, context: Context, order: Int): PendingIntent? {
         val baseIntent = FetLifeWebViewActivity.createIntent(context, "q", true, null, true)
-        val contentIntent = FetLifeWebViewActivity.createIntent(context, oneSignalNotification.launchUrl?.replace("https://fetlife.com".toRegex(), WebAppNavigation.WEBAPP_BASE_URL) ?: WebAppNavigation.WEBAPP_BASE_URL, false, null, false)
+        val contentIntent = FetLifeWebViewActivity.createIntent(context, oneSignalNotification.launchUrl?.replace("https://fetlife.com".toRegex(), WebAppNavigation.WEBAPP_BASE_URL)
+                ?: WebAppNavigation.WEBAPP_BASE_URL, false, null, false)
         contentIntent.putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE, oneSignalNotification.notificationType)
         contentIntent.putExtra(BaseActivity.EXTRA_NOTIFICATION_MERGE_ID, oneSignalNotification.mergeId)
         //return PendingIntent.gentActivity(context, order, contentIntent, PendingIntent.FLAG_IMMUTABLE)
@@ -50,7 +52,14 @@ class QuestionAnsweredNotification(notificationType: String, notificationIdRange
             putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE, notificationType)
             putExtra(BaseActivity.EXTRA_NOTIFICATION_MERGE_ID, mergeId)
         }
-        return PendingIntent.getActivity(context,notificationIdRange,contentIntent,PendingIntent.FLAG_CANCEL_CURRENT)
+        return PendingIntent.getActivity(context, notificationIdRange, contentIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+    }
+
+    override fun handle(fetLifeApplication: FetLifeApplication): Boolean {
+        if (fetLifeApplication.isAppInForeground) {
+            FetLifeApiIntentService.startApiCall(fetLifeApplication, FetLifeApiIntentService.ACTION_APICALL_NOTIFICATION_COUNTS)
+        }
+        return false
     }
 
 }

@@ -31,7 +31,7 @@ class GroupNotification(notificationType: String, notificationIdRange: Int, titl
         val launchUri = Uri.parse(launchUrl)
         if (launchUri.isHierarchical) {
             val pathSegments = launchUri.pathSegments
-            if (pathSegments.size >=4) {
+            if (pathSegments.size >= 4) {
                 groupId = ServerIdUtil.prefixServerId(pathSegments[1])
                 groupDiscussionId = ServerIdUtil.prefixServerId(pathSegments[3])
                 val group = Group.loadGroup(groupId)
@@ -57,21 +57,23 @@ class GroupNotification(notificationType: String, notificationIdRange: Int, titl
         }
 
 
-        FetLifeApiIntentService.startApiCall(fetLifeApplication, FetLifeApiIntentService.ACTION_APICALL_GROUP, groupId)
-        FetLifeApiIntentService.startApiCall(fetLifeApplication, FetLifeApiIntentService.ACTION_APICALL_GROUP_MESSAGES, groupId, groupDiscussionId)
+        if (Group.loadGroup(groupId) == null) {
+            FetLifeApiIntentService.startApiCall(fetLifeApplication, FetLifeApiIntentService.ACTION_APICALL_GROUP, groupId)
+        }
 
-        val groupDiscussionInForeground = false
+        var groupDiscussionInForeground = false
         val appInForeground = fetLifeApplication.isAppInForeground
 
         if (appInForeground) {
+            FetLifeApiIntentService.startApiCall(fetLifeApplication, FetLifeApiIntentService.ACTION_APICALL_GROUP_MESSAGES, groupId, groupDiscussionId)
             fetLifeApplication.eventBus.post(NewGroupMessageEvent(groupId, groupDiscussionId))
             val foregroundActivity = fetLifeApplication.foregroundActivity
             if (foregroundActivity is GroupMessagesActivity) {
-                return groupId == foregroundActivity.groupId && groupDiscussionId == foregroundActivity.groupDiscussionId
+                groupDiscussionInForeground = groupId == foregroundActivity.groupId && groupDiscussionId == foregroundActivity.groupDiscussionId
             }
         }
 
-        if (groupDiscussionInForeground) {
+        if (!groupDiscussionInForeground) {
             //otherwise it will be saved in display
             saveNotificationItem(notificationIdRange)
         }
@@ -114,22 +116,22 @@ class GroupNotification(notificationType: String, notificationIdRange: Int, titl
             val groupDiscussionTitle = (oneSignalNotification as? GroupNotification)?.groupDiscussionTitle
             val baseIntent = GroupsActivity.createIntent(context, true)
             val interimIntent = GroupActivity.createIntent(context, groupId, groupTitle, false)
-            val contentIntent = GroupMessagesActivity.createIntent(context, groupId, groupDiscussionId, groupDiscussionTitle, null, false). apply {
+            val contentIntent = GroupMessagesActivity.createIntent(context, groupId, groupDiscussionId, groupDiscussionTitle, null, false).apply {
                 putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE, oneSignalNotification.notificationType)
                 putExtra(BaseActivity.EXTRA_NOTIFICATION_MERGE_ID, oneSignalNotification.mergeId)
             }
             return TaskStackBuilder.create(context).addNextIntentWithParentStack(baseIntent).addNextIntent(interimIntent).addNextIntent(contentIntent).getPendingIntent(order, PendingIntent.FLAG_CANCEL_CURRENT)
         } else {
-            return PendingIntent.getActivity(context,0,Intent(Intent.ACTION_VIEW).apply {
+            return PendingIntent.getActivity(context, 0, Intent(Intent.ACTION_VIEW).apply {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_RECEIVER_FOREGROUND)
                 data = Uri.parse(launchUrl)
-            },0)
+            }, 0)
 
         }
     }
 
     override fun getLegacySummaryIntent(context: Context): PendingIntent? {
-        return PendingIntent.getActivity(context,notificationIdRange, GroupsActivity.createIntent(context,true),PendingIntent.FLAG_UPDATE_CURRENT)
+        return PendingIntent.getActivity(context, notificationIdRange, GroupsActivity.createIntent(context, true), PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
 //    override fun saveNotificationItem(notificationId: Int) {}
