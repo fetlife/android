@@ -1,6 +1,8 @@
 package com.bitlove.fetlife.github.dto;
 
 import com.bitlove.fetlife.common.logic.databinding.BindableRecyclerAdapter;
+import com.bitlove.fetlife.util.VersionUtil;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import org.jetbrains.annotations.NotNull;
@@ -96,5 +98,10 @@ public class Release implements BindableRecyclerAdapter.Diffable {
         if (!tag.equals(otherRelease.tag)) return false;
         if (!body.equals(otherRelease.body)) return false;
         return true;
+    }
+
+    @JsonIgnore
+    public boolean isCurrentVersion() {
+        return VersionUtil.isCurrentVersion(this);
     }
 }

@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.preference.PreferenceManager;
 
+import com.bitlove.fetlife.BuildConfig;
 import com.bitlove.fetlife.FetLifeApplication;
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.github.dto.Release;
@@ -88,6 +89,17 @@ public class VersionUtil {
         } catch (PackageManager.NameNotFoundException e) {
             return -1;
         }
+    }
+
+    public static boolean isCurrentVersion(Release release) {
+        String releaseVersionName = release.getTag();
+        if (releaseVersionName.startsWith(PREFIX_VERSION)) {
+            releaseVersionName = releaseVersionName.substring(PREFIX_VERSION.length());
+        }
+        if (BuildConfig.DEBUG) {
+            return "3.0.0".equalsIgnoreCase(releaseVersionName);
+        }
+        return getCurrentVersionName().equalsIgnoreCase(releaseVersionName);
     }
 
     public static Comparator<Release> getReleaseComparator() {

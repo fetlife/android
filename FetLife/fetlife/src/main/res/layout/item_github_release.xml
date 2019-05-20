@@ -2,15 +2,62 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:paddingBottom="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <TextView
+            android:id="@+id/release_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:text="@{release.tag}"
+            android:textAppearance="@android:style/TextAppearance.Material.Title" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@id/release_tag"
+            android:text="@string/link_release_notes_download"
+            android:textAppearance="@android:style/TextAppearance.Material.Title"
+            android:textColor="@color/color_accent_bright"
+            android:visibility="@{release.isCurrentVersion() || release.releaseUrl == null ? View.GONE : View.VISIBLE}" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@id/release_tag"
+            android:text="@string/text_release_notes_current_version"
+            android:textAppearance="@android:style/TextAppearance.Material.Title"
+            android:textColor="@color/color_accent_light"
+            android:visibility="@{release.isCurrentVersion() ? View.VISIBLE : View.GONE}" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/release_tag"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@{release.body}"
+            android:textAppearance="@android:style/TextAppearance.Material.Body1" />
+
+    </RelativeLayout>
+
     <data>
+
+        <import type="android.view.View" />
+
         <variable
             name="release"
             type="com.bitlove.fetlife.github.dto.Release" />
     </data>
 
-    <TextView
-        app:markwon="@{release.body}"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
 
 </layout>
