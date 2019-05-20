@@ -4,6 +4,7 @@ package com.bitlove.fetlife.webapp.navigation
 //import android.util.Base64
 //import android.webkit.CookieManager
 //import com.bitlove.fetlife.BuildConfig
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -423,11 +424,11 @@ class WebAppNavigation {
         context.startActivity(intent)
     }
 
-    fun navigate(request: WebResourceRequest, webView: WebView?, activity: BaseActivity?): Boolean {
+    fun navigate(request: WebResourceRequest, webView: WebView?, activity: Activity?): Boolean {
         return navigate(request.url, webView, activity, request)
     }
 
-    fun navigate(targetUri: Uri?, webView: WebView?, activity: BaseActivity?, request: WebResourceRequest? = null): Boolean {
+    fun navigate(targetUri: Uri?, webView: WebView?, activity: Activity?, request: WebResourceRequest? = null): Boolean {
 
         targetUri ?: return false
         val context = webView?.context ?: return false
@@ -588,7 +589,7 @@ class WebAppNavigation {
         return URL_REGEX_DOWNLOAD_URL.toRegex().containsMatchIn(uri.toString())
     }
 
-    private fun handleNativeSupportedUrl(uri: Uri, currentUrl: String, activity: BaseActivity?, request: WebResourceRequest?): Boolean {
+    private fun handleNativeSupportedUrl(uri: Uri, currentUrl: String, activity: Activity?, request: WebResourceRequest?): Boolean {
         activity ?: return false
 
         var nativeClassIdentifier: String? = null

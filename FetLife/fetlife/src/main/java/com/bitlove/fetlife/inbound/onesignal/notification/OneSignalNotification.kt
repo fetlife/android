@@ -209,7 +209,6 @@ abstract class OneSignalNotification(val notificationType: String,
                 liveNotifications.removeAll { it.mergeId == mergeId }
             }
         }
-
     }
 
 }
