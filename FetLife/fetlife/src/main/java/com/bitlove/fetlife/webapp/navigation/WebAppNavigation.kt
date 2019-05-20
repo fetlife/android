@@ -281,7 +281,8 @@ class WebAppNavigation {
 
     //Target Urls to be opened in as a new webview flow
     private val newWebViewFlowUrlSet = LinkedHashSet<String>().apply {
-        add(URL_REGEX_USER_POST_MAIN)
+        add(URL_REGEX_USER_STATUS)
+        add(URL_REGEX_USER_POST)
         add(URL_REGEX_QNA_REVIEW)
         add(URL_REGEX_QNA_QUESTION)
         add(URL_REGEX_CONVERSATION_MAIN)
