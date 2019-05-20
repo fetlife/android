@@ -57,6 +57,14 @@ class FetLifeWebViewActivity : ResourceActivity() {
         }
     }
 
+    override fun verifyUser(): Boolean {
+        return if (FetLifeApplication.getInstance().webAppNavigation.isResourceUrl(getStringExtra(EXTRA_PAGE_URL))) {
+            super.verifyUser()
+        } else {
+            true
+        }
+    }
+
     override fun onResourceCreate(savedInstanceState: Bundle?) {
 //        setContentView(R.layout.webapp_activity_webview)
 
