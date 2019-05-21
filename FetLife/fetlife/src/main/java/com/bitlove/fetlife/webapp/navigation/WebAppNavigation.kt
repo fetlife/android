@@ -83,7 +83,8 @@ class WebAppNavigation {
         //places
         private const val URL_REGEX_PLACES_MAIN = "^$REGEX_BASE_URL\\/(p|places)[^\\/]*\$" //WARNING: Also matches with privacy TODO(WEBAPP): find better
         //user content
-        private const val URL_REGEX_USER_POST = "^$REGEX_BASE_URL\\/users\\/(\\w+)\\/posts\\/(\\w+)[^\\/]*\$"
+        private const val URL_REGEX_USER_POST = "^$REGEX_BASE_URL\\/users\\/(\\w+)\\/posts\\/(\\w+).*\$"
+        private const val URL_REGEX_USER_STATUS = "^$REGEX_BASE_URL\\/users\\/(\\w+)\\/statuses\\/(\\w+).*\$"
         //qna
         private const val URL_REGEX_QNA_REVIEW = "^$REGEX_BASE_URL\\/q\\/review\\/?[^\\/]*\$"
 
@@ -211,6 +212,7 @@ class WebAppNavigation {
 
     private val newWebViewFlowLinkSetSet = LinkedHashSet<String>().apply {
         add(URL_REGEX_USER_POST)
+        add(URL_REGEX_USER_STATUS)
         add(URL_REGEX_QNA_REVIEW)
         add(URL_REGEX_QNA_QUESTION)
         add(URL_REGEX_CONVERSATION_MAIN)
