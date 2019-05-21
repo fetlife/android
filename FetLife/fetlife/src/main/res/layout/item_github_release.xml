@@ -2,6 +2,18 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="release"
+            type="com.bitlove.fetlife.github.dto.Release" />
+        <variable
+            name="releaseHandler"
+            type="com.bitlove.fetlife.github.logic.ReleaseHandler" />
+    </data>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,18 +37,21 @@
             android:layout_marginLeft="8dp"
             android:layout_toRightOf="@id/release_tag"
             android:text="@string/link_release_notes_download"
+            android:textColor="@color/color_accent_special"
+            android:onClick="@{(view) -> releaseHandler.onDownloadVersion(view, release)}"
             android:textAppearance="@android:style/TextAppearance.Material.Title"
-            android:textColor="@color/color_accent_bright"
             android:visibility="@{release.isCurrentVersion() || release.releaseUrl == null ? View.GONE : View.VISIBLE}" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
+            android:layout_marginLeft="4dp"
             android:layout_toRightOf="@id/release_tag"
+            android:layout_alignBottom="@id/release_tag"
+            android:layout_alignTop="@id/release_tag"
+            android:gravity="center_vertical"
             android:text="@string/text_release_notes_current_version"
-            android:textAppearance="@android:style/TextAppearance.Material.Title"
-            android:textColor="@color/color_accent_light"
+            android:textAppearance="@android:style/TextAppearance.Material.Body1"
             android:visibility="@{release.isCurrentVersion() ? View.VISIBLE : View.GONE}" />
 
         <TextView
@@ -49,15 +64,5 @@
             android:textAppearance="@android:style/TextAppearance.Material.Body1" />
 
     </RelativeLayout>
-
-    <data>
-
-        <import type="android.view.View" />
-
-        <variable
-            name="release"
-            type="com.bitlove.fetlife.github.dto.Release" />
-    </data>
-
 
 </layout>

@@ -1,15 +1,15 @@
-package com.bitlove.fetlife.github
+package com.bitlove.fetlife.github.view
 
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import com.bitlove.fetlife.R
-import com.bitlove.fetlife.databinding.ActivityRelnotesBinding
+import com.bitlove.fetlife.databinding.ActivityGithubReleaseNotesBinding
 import com.bitlove.fetlife.github.dto.Releases
-import com.bitlove.fetlife.github.vm.GitHubReleasesViewModel
+import com.bitlove.fetlife.github.logic.GitHubReleasesViewModel
+import com.bitlove.fetlife.github.logic.ReleaseHandler
 import com.bitlove.fetlife.view.screen.BaseActivity
 import com.bitlove.fetlife.view.screen.component.MenuActivityComponent
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -30,17 +30,14 @@ class GitHubReleaseNotesActivity : BaseActivity() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateActivityComponents() {
         addActivityComponent(MenuActivityComponent())
     }
 
     override fun onSetContentView() {
-        val binding: ActivityRelnotesBinding = DataBindingUtil.setContentView(this, R.layout.activity_relnotes)
+        val binding: ActivityGithubReleaseNotesBinding = DataBindingUtil.setContentView(this, R.layout.activity_github_release_notes)
         viewModel.gitHubReleases.observe(this, Observer {
+            binding.releaseHandler = ReleaseHandler()
             binding.releases = Releases(it)
             binding.executePendingBindings()
         })

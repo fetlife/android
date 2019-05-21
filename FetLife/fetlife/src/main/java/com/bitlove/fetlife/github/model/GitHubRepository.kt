@@ -24,7 +24,7 @@ class GitHubRepository : KoinComponent {
             override fun onResponse(call: Call<List<Release>>, response: Response<List<Release>>) {
                 result.value = if (response.isSuccessful) response.body() else null
             }
-        });
+        })
         return result
     }
 

@@ -89,7 +89,7 @@ public class Release implements BindableRecyclerAdapter.Diffable {
         if (!(other instanceof Release)) {
             return false;
         }
-        return id.equals(((Release)other).id);
+        return id.equals(((Release) other).id);
     }
 
     @Override

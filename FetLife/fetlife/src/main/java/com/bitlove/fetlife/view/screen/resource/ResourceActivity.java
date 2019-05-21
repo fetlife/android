@@ -16,11 +16,10 @@ import com.bitlove.fetlife.event.ServiceCallCancelRequestEvent;
 import com.bitlove.fetlife.event.ServiceCallFailedEvent;
 import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
 import com.bitlove.fetlife.event.ServiceCallStartedEvent;
-import com.bitlove.fetlife.github.GitHubReleaseNotesActivity;
+import com.bitlove.fetlife.github.view.GitHubReleaseNotesActivity;
 import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.component.EventDisplayHandler;
 import com.bitlove.fetlife.view.screen.standalone.LoginActivity;
-import com.bitlove.fetlife.github.ReleaseNotesActivity;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
 

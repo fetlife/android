@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bitlove.fetlife.R;
-import com.bitlove.fetlife.github.GitHubReleaseNotesActivity;
+import com.bitlove.fetlife.github.view.GitHubReleaseNotesActivity;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.view.dialog.PictureUploadSelectionDialog;
@@ -25,7 +25,6 @@ import com.bitlove.fetlife.view.screen.resource.groups.GroupsActivity;
 import com.bitlove.fetlife.view.screen.resource.members.MembersActivity;
 import com.bitlove.fetlife.view.screen.resource.profile.ProfileActivity;
 import com.bitlove.fetlife.view.screen.standalone.LoginActivity;
-import com.bitlove.fetlife.github.ReleaseNotesActivity;
 import com.bitlove.fetlife.view.screen.standalone.SettingsActivity;
 import com.bitlove.fetlife.webapp.navigation.WebAppNavigation;
 import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity;

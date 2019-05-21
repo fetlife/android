@@ -11,6 +11,7 @@
 
     <color name="color_accent">#ff880000</color>
     <color name="color_accent_bright">#ffff0000</color>
+    <color name="color_accent_special">#ff2ac98f</color>
     <color name="color_accent_light">#fffaffbd</color>
     <color name="color_accent_gradient_dark">#ff700000</color>
     <color name="color_accent_gradient_light">#ffa00000</color>

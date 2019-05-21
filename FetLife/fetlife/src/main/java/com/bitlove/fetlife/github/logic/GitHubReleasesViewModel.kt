@@ -1,4 +1,4 @@
-package com.bitlove.fetlife.github.vm
+package com.bitlove.fetlife.github.logic
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations

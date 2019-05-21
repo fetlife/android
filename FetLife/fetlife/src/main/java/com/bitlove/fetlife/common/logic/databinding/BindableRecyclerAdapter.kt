@@ -7,10 +7,12 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.DiffUtil
 
-class BindableRecyclerAdapter<T : BindableRecyclerAdapter.Diffable>(
+class BindableRecyclerAdapter<T : BindableRecyclerAdapter.Diffable, H>(
         private val itemLayout: Int,
-        private val bindingId: Int
-) : RecyclerView.Adapter<BindableRecyclerAdapter.BindableViewHolder<T>>() {
+        private val itemHandler: H,
+        private val itemBindingId: Int,
+        private val handlerBindingId: Int
+) : RecyclerView.Adapter<BindableRecyclerAdapter.BindableViewHolder<T,H>>() {
 
     private var items: MutableList<T> = ArrayList()
 
@@ -25,13 +27,13 @@ class BindableRecyclerAdapter<T : BindableRecyclerAdapter.Diffable>(
         return items.size
     }
 
-    override fun onBindViewHolder(holder: BindableViewHolder<T>, position: Int) {
-        holder.bind(items[position])
+    override fun onBindViewHolder(holder: BindableViewHolder<T,H>, position: Int) {
+        holder.bind(items[position],itemHandler)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindableViewHolder<T> {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BindableViewHolder<T,H> {
         val binding = DataBindingUtil.inflate<ViewDataBinding>(LayoutInflater.from(parent.context), itemLayout, parent, false)
-        return BindableViewHolder(binding, bindingId)
+        return BindableViewHolder(binding, itemBindingId, handlerBindingId)
     }
 
     interface Diffable {
@@ -39,9 +41,10 @@ class BindableRecyclerAdapter<T : BindableRecyclerAdapter.Diffable>(
         fun hasSameContent(other: Diffable): Boolean
     }
 
-    class BindableViewHolder<T>(private val binding: ViewDataBinding, private val bindingId: Int) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: T) {
-            binding.setVariable(bindingId, item)
+    class BindableViewHolder<T,H>(private val binding: ViewDataBinding, private val itemBindingId: Int, private val handlerBindingId: Int) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: T, itemHandler: H) {
+            binding.setVariable(itemBindingId, item)
+            binding.setVariable(handlerBindingId, itemHandler)
         }
     }
 

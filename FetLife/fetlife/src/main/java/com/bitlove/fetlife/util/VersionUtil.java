@@ -96,9 +96,6 @@ public class VersionUtil {
         if (releaseVersionName.startsWith(PREFIX_VERSION)) {
             releaseVersionName = releaseVersionName.substring(PREFIX_VERSION.length());
         }
-        if (BuildConfig.DEBUG) {
-            return "3.0.0".equalsIgnoreCase(releaseVersionName);
-        }
         return getCurrentVersionName().equalsIgnoreCase(releaseVersionName);
     }
 

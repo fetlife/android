@@ -1,44 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="com.bitlove.fetlife.common.logic.databinding.DatabindingIdBinder"/>
+
+        <import type="com.bitlove.fetlife.common.logic.databinding.DataBindingIdBinder" />
         <variable
             name="releases"
             type="com.bitlove.fetlife.github.dto.Releases" />
+        <variable
+            name="releaseHandler"
+            type="com.bitlove.fetlife.github.logic.ReleaseHandler" />
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/navigation_bottom"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#0c0c0c"
-            app:itemIconSize="20dp"
-            android:transitionName="bottomNavBar"
-            app:labelVisibilityMode="labeled"
-            app:itemHorizontalTranslationEnabled="false"
-            app:itemIconTint="@drawable/webapp_selector_bottom_navigation"
-            app:itemTextColor="@drawable/webapp_selector_bottom_navigation"
-            app:itemTextAppearanceActive="@style/navigation_bottom"
-            app:itemTextAppearanceInactive="@style/navigation_bottom"
-            android:layout_alignParentBottom="true"/>
-
         <View
             android:id="@+id/navigation_bottom_separator"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_above="@id/navigation_bottom"
             android:background="#555"
             app:layout_anchor="@id/navigation_bottom"
-            app:layout_anchorGravity="top"
-            android:layout_above="@id/navigation_bottom"
-            />
+            app:layout_anchorGravity="top" />
 
         <androidx.drawerlayout.widget.DrawerLayout
             android:id="@+id/drawer_layout"
@@ -58,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:theme="@style/AppTheme.AppBarOverlay">
 
-                    <include layout="@layout/tool_bar_default"/>
+                    <include layout="@layout/tool_bar_default" />
 
                 </com.google.android.material.appbar.AppBarLayout>
 
@@ -67,30 +54,47 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:transitionGroup="true"
+                    app:itemBindingId="@{DataBindingIdBinder.release}"
+                    app:handlerBindingId="@{DataBindingIdBinder.releaseHandler}"
+                    app:itemHandler="@{releaseHandler}"
                     app:items="@{releases.releaseList}"
                     app:layout="@{@layout/item_github_release}"
-                    app:itemBindingId="@{DatabindingIdBinder.release}"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                    tools:context=".github.ReleaseNotesActivity"
-                    tools:showIn="@layout/activity_relnotes" />
+                    tools:context=".github.view.GitHubReleaseNotesActivity"
+                    tools:showIn="@layout/activity_github_release_notes" />
 
             </LinearLayout>
 
             <com.google.android.material.navigation.NavigationView
                 android:id="@+id/navigation_side_layout"
+                style="@style/NavigationView"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="end"
-                android:fitsSystemWindows="true"
-                style="@style/NavigationView"
-                app:itemIconTint="@color/side_menu_icon"
                 android:background="@color/side_menu_background_main"
-                app:itemTextColor="@color/side_menu_label"
+                android:fitsSystemWindows="true"
                 app:headerLayout="@layout/navigation_side_header"
-                app:menu="@menu/menu_side"/>
+                app:itemIconTint="@color/side_menu_icon"
+                app:itemTextColor="@color/side_menu_label"
+                app:menu="@menu/menu_side" />
 
         </androidx.drawerlayout.widget.DrawerLayout>
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/navigation_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="#0c0c0c"
+            android:transitionName="bottomNavBar"
+            app:itemHorizontalTranslationEnabled="false"
+            app:itemIconSize="20dp"
+            app:itemIconTint="@drawable/webapp_selector_bottom_navigation"
+            app:itemTextAppearanceActive="@style/navigation_bottom"
+            app:itemTextAppearanceInactive="@style/navigation_bottom"
+            app:itemTextColor="@drawable/webapp_selector_bottom_navigation"
+            app:labelVisibilityMode="labeled" />
 
     </RelativeLayout>
 
