@@ -549,26 +549,6 @@ class WebAppNavigation {
     fun showPicture(context: Context?, mediaId: String) {
         if (context == null) return
         val picture = Picture.loadPicture(mediaId)
-        val inflater = LayoutInflater.from(context)
-        val overlay = inflater.inflate(R.layout.overlay_feed_imageswipe, null)
-        val onPictureOverlayClickListener = object : PictureUtil.OnPictureOverlayClickListener {
-            override fun onMemberClick(member: Member) {
-                member.mergeSave()
-                ProfileActivity.startActivity(context, member.id)
-            }
-
-            override fun onVisitPicture(picture: Picture, url: String) {
-                UrlUtil.openUrl(context, url, true, false)
-            }
-
-            override fun onSharePicture(picture: Picture, url: String) {
-                if (picture.isOnShareList) {
-                    Picture.unsharePicture(picture)
-                } else {
-                    Picture.sharePicture(picture)
-                }
-            }
-        }
         val pictures = ArrayList<Picture>()
         pictures.add(picture)
         FetLifeApplication.getInstance().imageViewerWrapper.show(context, pictures, 0)
