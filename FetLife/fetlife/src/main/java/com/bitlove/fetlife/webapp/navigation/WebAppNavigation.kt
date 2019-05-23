@@ -5,6 +5,7 @@ package com.bitlove.fetlife.webapp.navigation
 //import android.webkit.CookieManager
 //import com.bitlove.fetlife.BuildConfig
 import android.app.Activity
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -14,6 +15,7 @@ import android.webkit.WebView
 import androidx.browser.customtabs.CustomTabsIntent
 import com.bitlove.fetlife.FetLifeApplication
 import com.bitlove.fetlife.R
+import com.bitlove.fetlife.inbound.onesignal.notification.OneSignalNotification
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.*
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService
 import com.bitlove.fetlife.util.ColorUtil
@@ -392,7 +394,7 @@ class WebAppNavigation {
         return !checkRegexpSet(url, notResourceUrlSet)
     }
 
-    fun openFromNotification(url: String?): Boolean {
+    fun openAsWebviewFromNotification(url: String?): Boolean {
         url ?: return false
         return !checkRegexpSet(url, openFromNotificationUrlSet)
     }
@@ -426,8 +428,49 @@ class WebAppNavigation {
         context.startActivity(intent)
     }
 
-    fun navigate(request: WebResourceRequest, webView: WebView?, activity: Activity?): Boolean {
-        return navigate(request.url, webView, activity, request)
+    fun getOpenFromNotificationIntent(oneSignalNotification: OneSignalNotification, notificationId: Int): PendingIntent? {
+        val launchUrl = oneSignalNotification.launchUrl
+        launchUrl ?: return null
+        val launchUri = Uri.parse(launchUrl)
+        val fetLifeApplication = FetLifeApplication.getInstance()
+
+        val baseIntent = FetLifeWebViewActivity.createIntent(fetLifeApplication, WebAppNavigation.WEBAPP_BASE_URL + "/inbox", true, R.id.navigation_bottom_inbox, true)
+
+        if (openAsWebviewFromNotification(launchUrl)) {
+            val contentIntent = FetLifeWebViewActivity.createIntent(fetLifeApplication, oneSignalNotification.launchUrl!!, false, null, false).apply {
+                putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE, oneSignalNotification.notificationType)
+                putExtra(BaseActivity.EXTRA_NOTIFICATION_MERGE_ID, oneSignalNotification.mergeId)
+            }
+            return PendingIntent.getActivities(fetLifeApplication, notificationId, arrayOf(baseIntent, contentIntent), PendingIntent.FLAG_CANCEL_CURRENT)
+        }
+
+        var nativeClassIdentifier: String? = null
+        for ((uriRegex, classIdentifier) in nativeNavigationMap) {
+            if (uriRegex.toRegex().containsMatchIn(launchUrl)) {
+                nativeClassIdentifier = classIdentifier
+                break
+            }
+        }
+
+        if (nativeClassIdentifier == null) {
+            return null
+        }
+
+        val apiIdsParam = launchUri.getQueryParameter(QUERY_PARAM_API_IDS)
+        val apiIds = apiIdsParam?.split(",".toRegex())?.dropLastWhile { it.isEmpty() }?.toTypedArray()
+                ?: arrayOfNulls<String>(0)
+
+        return when (nativeClassIdentifier) {
+            ProfileActivity::class.java.simpleName -> {
+                val memberId = apiIds.getOrNull(0) ?: SERVER_ID_PREFIX + launchUri.lastPathSegment
+                val contentIntent = ProfileActivity.createIntent(fetLifeApplication, memberId, false, null, false).apply {
+                    putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE, oneSignalNotification.notificationType)
+                    putExtra(BaseActivity.EXTRA_NOTIFICATION_MERGE_ID, oneSignalNotification.mergeId)
+                }
+                return PendingIntent.getActivities(fetLifeApplication, notificationId, arrayOf(baseIntent, contentIntent), PendingIntent.FLAG_CANCEL_CURRENT)
+            }
+            else -> null
+        }
     }
 
     fun navigate(targetUri: Uri?, webView: WebView?, activity: Activity?, request: WebResourceRequest? = null): Boolean {

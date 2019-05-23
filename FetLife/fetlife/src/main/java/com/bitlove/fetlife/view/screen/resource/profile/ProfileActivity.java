@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bitlove.fetlife.R;
 import com.bitlove.fetlife.event.ServiceCallFailedEvent;
@@ -18,7 +17,6 @@ import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
 import com.bitlove.fetlife.event.ServiceCallStartedEvent;
 import com.bitlove.fetlife.model.pojos.fetlife.db.FollowRequest;
 import com.bitlove.fetlife.model.pojos.fetlife.db.RelationReference;
-import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Conversation;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.FriendRequest;
 import com.bitlove.fetlife.model.pojos.fetlife.dbjson.Member;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
@@ -41,7 +39,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 
 public class ProfileActivity extends ResourceActivity implements AppBarLayout.OnOffsetChangedListener {
 
@@ -68,14 +65,17 @@ public class ProfileActivity extends ResourceActivity implements AppBarLayout.On
         if (context == null) {
             return;
         }
-        context.startActivity(createIntent(context,memberId, clearTop,toastMessage));
+        context.startActivity(createIntent(context,memberId, clearTop,toastMessage, false));
     }
 
-    public static Intent createIntent(Context context, String memberId, boolean clearTop, String toastMessage) {
+    public static Intent createIntent(Context context, String memberId, boolean clearTop, String toastMessage, boolean newTask) {
         Intent intent = new Intent(context, ProfileActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         if (clearTop) {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        }
+        if (newTask) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
         intent.putExtra(EXTRA_MEMBERID,memberId);
         intent.putExtra(EXTRA_TOAST_MESSAGE,toastMessage);

@@ -118,7 +118,7 @@ class FetLifeWebViewFragment : Fragment() {
 
                 override fun shouldOverrideUrlLoading(webView: WebView?, request: WebResourceRequest?): Boolean {
                     request ?: return false
-                    val navigated = FetLifeApplication.getInstance().webAppNavigation.navigate(request, webView, activity)
+                    val navigated = FetLifeApplication.getInstance().webAppNavigation.navigate(request?.url, webView, activity, request)
                     return if (navigated) {
                         true
                     } else {

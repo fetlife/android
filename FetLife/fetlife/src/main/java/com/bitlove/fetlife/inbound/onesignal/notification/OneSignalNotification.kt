@@ -44,16 +44,7 @@ abstract class OneSignalNotification(val notificationType: String,
     open fun getNotificationText(oneSignalNotification: OneSignalNotification, notificationCount: Int, context: Context): String? = oneSignalNotification.message
     open fun getNotificationIntent(oneSignalNotification: OneSignalNotification, context: Context, order: Int): PendingIntent? = null
     open fun getWebViewIntent(fetLifeApplication: FetLifeApplication, oneSignalNotification: OneSignalNotification, order: Int): PendingIntent? {
-        return if (fetLifeApplication.webAppNavigation.openFromNotification(oneSignalNotification.launchUrl)) {
-            val baseIntent = FetLifeWebViewActivity.createIntent(fetLifeApplication, WebAppNavigation.WEBAPP_BASE_URL + "/inbox", true, R.id.navigation_bottom_inbox, false)
-            val contentIntent = FetLifeWebViewActivity.createIntent(fetLifeApplication, oneSignalNotification.launchUrl!!, false, null, false).apply {
-                putExtra(BaseActivity.EXTRA_NOTIFICATION_SOURCE_TYPE, oneSignalNotification.notificationType)
-                putExtra(BaseActivity.EXTRA_NOTIFICATION_MERGE_ID, oneSignalNotification.mergeId)
-            }
-            PendingIntent.getActivities(fetLifeApplication, order, arrayOf(baseIntent, contentIntent), PendingIntent.FLAG_CANCEL_CURRENT)
-        } else {
-            null
-        }
+        return fetLifeApplication.webAppNavigation.getOpenFromNotificationIntent(oneSignalNotification, order)
     }
 
     open fun getLegacySummaryIntent(context: Context): PendingIntent? = getNotificationIntent(this, context, notificationIdRange)
