@@ -5,6 +5,7 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 import androidx.lifecycle.MutableLiveData
 import com.bitlove.fetlife.github.dto.Release
+import com.bitlove.fetlife.util.VersionUtil
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,7 +23,8 @@ class GitHubRepository : KoinComponent {
             }
 
             override fun onResponse(call: Call<List<Release>>, response: Response<List<Release>>) {
-                result.value = if (response.isSuccessful) response.body() else null
+                val releaseList = response.body()?.sortedWith(VersionUtil.getReleaseComparator())
+                result.value = releaseList
             }
         })
         return result
