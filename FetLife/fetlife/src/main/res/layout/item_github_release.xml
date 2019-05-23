@@ -31,11 +31,21 @@
             android:text="@{release.tag}"
             android:textAppearance="@android:style/TextAppearance.Material.Title" />
 
-        <TextView
+        <ImageView
+            android:id="@+id/release_icon_download"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_toRightOf="@id/release_tag"
+            android:src="@drawable/ic_cloud_download_red_24dp"
+            android:onClick="@{(view) -> releaseHandler.onDownloadVersion(view, release)}"
+            android:visibility="@{release.isCurrentVersion() || release.releaseUrl == null ? View.GONE : View.VISIBLE}" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_toRightOf="@id/release_icon_download"
             android:text="@string/link_release_notes_download"
             android:textColor="@color/color_accent_special"
             android:onClick="@{(view) -> releaseHandler.onDownloadVersion(view, release)}"
