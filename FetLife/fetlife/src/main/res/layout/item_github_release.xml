@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="release"
+            type="com.bitlove.fetlife.github.dto.Release" />
+        <variable
+            name="releaseHandler"
+            type="com.bitlove.fetlife.github.logic.ReleaseHandler" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:paddingBottom="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
+
+        <TextView
+            android:id="@+id/release_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:textColor="@color/text_color_primary_dark"
+            android:text="@{release.tag}"
+            android:textAppearance="@android:style/TextAppearance.Material.Title" />
+
+        <ImageView
+            android:id="@+id/release_icon_download"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@id/release_tag"
+            android:src="@drawable/ic_cloud_download_light_green_24dp"
+            android:onClick="@{(view) -> releaseHandler.onDownloadVersion(view, release)}"
+            android:visibility="@{release.isCurrentVersion() || release.releaseUrl == null ? View.GONE : View.VISIBLE}" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/release_icon_download"
+            android:text="@string/link_release_notes_download"
+            android:textColor="@color/color_accent_special"
+            android:onClick="@{(view) -> releaseHandler.onDownloadVersion(view, release)}"
+            android:textAppearance="@android:style/TextAppearance.Material.Title"
+            android:visibility="@{release.isCurrentVersion() || release.releaseUrl == null || release.isBetaVersion() ? View.GONE : View.VISIBLE}" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/release_icon_download"
+            android:text="@string/link_release_notes_download_beta"
+            android:textColor="@color/color_accent_special"
+            android:onClick="@{(view) -> releaseHandler.onDownloadVersion(view, release)}"
+            android:textAppearance="@android:style/TextAppearance.Material.Title"
+            android:visibility="@{release.isCurrentVersion() || release.releaseUrl == null || !release.isBetaVersion()? View.GONE : View.VISIBLE}" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_toRightOf="@id/release_tag"
+            android:layout_alignBottom="@id/release_tag"
+            android:layout_alignTop="@id/release_tag"
+            android:gravity="center_vertical"
+            android:text="@string/text_release_notes_current_version"
+            android:textColor="@color/text_color_primary_dark"
+            android:textAppearance="@android:style/TextAppearance.Material.Body1"
+            android:visibility="@{release.isCurrentVersion() ? View.VISIBLE : View.GONE}" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/release_tag"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@{release.body}"
+            android:textColor="@color/text_color_primary_dark"
+            android:textAppearance="@android:style/TextAppearance.Material.Body1" />
+
+    </RelativeLayout>
+
+</layout>

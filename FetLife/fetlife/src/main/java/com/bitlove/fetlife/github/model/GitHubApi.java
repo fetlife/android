@@ -1,6 +1,6 @@
-package com.bitlove.fetlife.model.api;
+package com.bitlove.fetlife.github.model;
 
-import com.bitlove.fetlife.model.pojos.github.Release;
+import com.bitlove.fetlife.github.dto.Release;
 
 import java.util.List;
 

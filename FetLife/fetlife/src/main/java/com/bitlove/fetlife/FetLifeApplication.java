@@ -21,8 +21,8 @@ import com.bitlove.fetlife.inbound.customtabs.FetLifeCustomTabsServiceConnection
 import com.bitlove.fetlife.inbound.onesignal.NotificationParser;
 import com.bitlove.fetlife.inbound.onesignal.notification.OneSignalNotification;
 import com.bitlove.fetlife.model.api.FetLifeService;
-import com.bitlove.fetlife.model.api.GitHubService;
-import com.bitlove.fetlife.model.api.TLSSocketFactory;
+import com.bitlove.fetlife.github.model.GitHubService;
+import com.bitlove.fetlife.model.common.TLSSocketFactory;
 import com.bitlove.fetlife.model.db.FetLifeDatabase;
 import com.bitlove.fetlife.model.inmemory.InMemoryStorage;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
@@ -144,6 +144,8 @@ public class FetLifeApplication extends MultiDexApplication {
         //Setup default instance and callbacks
         instance = this;
 
+        KoinHelper.Companion.start(this);
+
         //Setup App version info
         try {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -194,7 +196,7 @@ public class FetLifeApplication extends MultiDexApplication {
         }
 
         try {
-            gitHubService = new GitHubService(this);
+            gitHubService = new GitHubService();
         } catch (Exception e) {
             gitHubService = null;
         }

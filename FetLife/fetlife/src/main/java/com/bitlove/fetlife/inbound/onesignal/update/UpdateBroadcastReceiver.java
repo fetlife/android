@@ -15,10 +15,6 @@ public class UpdateBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (context.checkCallingOrSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            ApkUtil.installApk(FetLifeApplication.getInstance(),intent.getStringExtra(EXTRA_URL));
-        } else {
-            UpdatePermissionActivity.startActivity(context,intent.getStringExtra(EXTRA_URL));
-        }
+        UpdatePermissionActivity.startActivity(context,intent.getStringExtra(EXTRA_URL));
     }
 }

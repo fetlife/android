@@ -16,10 +16,10 @@ import com.bitlove.fetlife.event.ServiceCallCancelRequestEvent;
 import com.bitlove.fetlife.event.ServiceCallFailedEvent;
 import com.bitlove.fetlife.event.ServiceCallFinishedEvent;
 import com.bitlove.fetlife.event.ServiceCallStartedEvent;
+import com.bitlove.fetlife.github.view.GitHubReleaseNotesActivity;
 import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.component.EventDisplayHandler;
 import com.bitlove.fetlife.view.screen.standalone.LoginActivity;
-import com.bitlove.fetlife.view.screen.standalone.ReleaseNotesActivity;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -82,7 +82,7 @@ public abstract class ResourceActivity extends BaseActivity {
             snackbar.getView().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ReleaseNotesActivity.startActivity(v.getContext());
+                    GitHubReleaseNotesActivity.Companion.startActivity(v.getContext());
                 }
             });
             TextView snackText = (TextView) snackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text);

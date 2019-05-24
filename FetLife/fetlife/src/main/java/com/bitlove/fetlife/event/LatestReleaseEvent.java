@@ -1,6 +1,6 @@
 package com.bitlove.fetlife.event;
 
-import com.bitlove.fetlife.model.pojos.github.Release;
+import com.bitlove.fetlife.github.dto.Release;
 
 public class LatestReleaseEvent {
 

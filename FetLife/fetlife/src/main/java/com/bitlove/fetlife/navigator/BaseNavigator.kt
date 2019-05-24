@@ -2,6 +2,7 @@ package com.bitlove.fetlife.navigator
 
 import android.view.MenuItem
 import com.bitlove.fetlife.R
+import com.bitlove.fetlife.github.view.GitHubReleaseNotesActivity
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService
 import com.bitlove.fetlife.view.screen.BaseActivity
 import com.bitlove.fetlife.view.screen.resource.ExploreActivity
@@ -9,7 +10,6 @@ import com.bitlove.fetlife.view.screen.resource.NotificationHistoryActivity
 import com.bitlove.fetlife.view.screen.resource.groups.GroupsActivity
 import com.bitlove.fetlife.view.screen.resource.members.MembersActivity
 import com.bitlove.fetlife.view.screen.standalone.LoginActivity
-import com.bitlove.fetlife.view.screen.standalone.ReleaseNotesActivity
 import com.bitlove.fetlife.view.screen.standalone.SettingsActivity
 import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity
 
@@ -31,7 +31,7 @@ open class BaseNavigator (val baseActivity: BaseActivity){
             R.id.nav_members -> MembersActivity.startActivity(baseActivity, false)
             R.id.nav_about -> FetLifeWebViewActivity.startActivity(baseActivity,"android",true,null, false, null)
 //            R.id.nav_friendrequests -> TurboLinksViewActivity.startActivity(baseActivity,"requests",baseActivity.getString(R.string.title_activity_friendrequests))
-            R.id.nav_relnotes -> ReleaseNotesActivity.startActivity(baseActivity)
+            R.id.nav_relnotes -> GitHubReleaseNotesActivity.startActivity(baseActivity)
 //            R.id.nav_notifications -> TurboLinksViewActivity.startActivity(baseActivity,"notifications",baseActivity.getString(R.string.title_activity_notifications))
             R.id.nav_app_notifications -> NotificationHistoryActivity.startActivity(baseActivity,false)
             R.id.nav_upload_pic -> {

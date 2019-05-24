@@ -1,7 +1,5 @@
 package com.bitlove.fetlife.model.service;
 
-import android.app.IntentService;
-import android.app.Notification;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +10,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDiskIOException;
 import android.database.sqlite.SQLiteReadOnlyDatabaseException;
 import android.net.Uri;
-import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.OpenableColumns;
 import android.util.Base64;
@@ -100,7 +97,7 @@ import com.bitlove.fetlife.model.pojos.fetlife.json.Rsvp;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Story;
 import com.bitlove.fetlife.model.pojos.fetlife.json.Token;
 import com.bitlove.fetlife.model.pojos.fetlife.json.VideoUploadResult;
-import com.bitlove.fetlife.model.pojos.github.Release;
+import com.bitlove.fetlife.github.dto.Release;
 import com.bitlove.fetlife.session.UserSessionManager;
 import com.bitlove.fetlife.util.BytesUtil;
 import com.bitlove.fetlife.util.DateUtil;
