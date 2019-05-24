@@ -104,4 +104,9 @@ public class Release implements BindableRecyclerAdapter.Diffable {
     public boolean isCurrentVersion() {
         return VersionUtil.isCurrentVersion(this);
     }
+
+    @JsonIgnore
+    public boolean isBetaVersion() {
+        return prerelease;
+    }
 }
