@@ -69,9 +69,9 @@ class GroupNotification(notificationType: String, notificationIdRange: Int, titl
             }
         }
 
-        if (!groupDiscussionInForeground) {
+        if (groupDiscussionInForeground) {
             FetLifeApiIntentService.startApiCall(fetLifeApplication, FetLifeApiIntentService.ACTION_APICALL_GROUP_MESSAGES, groupId, groupDiscussionId)
-            //otherwise it will be saved in display
+        } else {
             saveNotificationItem(notificationIdRange)
         }
 
