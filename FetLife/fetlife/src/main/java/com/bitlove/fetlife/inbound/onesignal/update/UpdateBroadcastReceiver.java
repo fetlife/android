@@ -15,6 +15,10 @@ public class UpdateBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        UpdatePermissionActivity.startActivity(context,intent.getStringExtra(EXTRA_URL));
+        String url = intent.getStringExtra(EXTRA_URL);
+        if (url == null) {
+            return;
+        }
+        UpdatePermissionActivity.startActivity(context,url);
     }
 }
