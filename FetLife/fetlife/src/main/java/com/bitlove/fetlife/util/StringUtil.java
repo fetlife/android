@@ -100,7 +100,7 @@ public class StringUtil {
                 public void onClick(View textView) {
                     if (System.currentTimeMillis() - lastClick > CLICK_OFFSET) {
                         mention.getMember().mergeSave();
-                        ProfileActivity.startActivity(FetLifeApplication.getInstance(),mention.getMember().getId());
+                        ProfileActivity.startActivity(textView.getContext(),mention.getMember().getId());
                     }
                     lastClick = System.currentTimeMillis();
                 }
