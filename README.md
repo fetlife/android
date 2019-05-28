@@ -33,7 +33,7 @@ Just download our latest stable [fetlife-3.0.1.apk](https://github.com/fetlife/a
 
 For more details please check out [FetLife Android App Installation Guide](https://github.com/fetlife/android/files/1127920/FetLifeAndroidAppInstallationGuide.pdf)
 
-If something went wrong and you still don’t have the App or you still have further questions left, don’t be worried just check out the [FetLife Android App FAQ and Troubleshooting Guide](https://github.com/fetlife/android/files/1127921/FetLifeAndroidAppFAQandTroubleshootingGuide.pdf) or get in contact with us via caretakers@fetlife.com or dreamlite@fetlife.com
+If something went wrong and you still don’t have the App or you still have further questions left, don’t be worried just check out the [FetLife Android App FAQ and Troubleshooting Guide](https://github.com/fetlife/android/files/1127921/FetLifeAndroidAppFAQandTroubleshootingGuide.pdf) or get in contact with us via caretakers@fetlife.com.
 
 ### Kinksters Helping Kinksters
 
