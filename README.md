@@ -46,7 +46,7 @@ To get the fastest response we suggest you to look first at [FetLife Android App
 
 If did not find a solution or you find a bug or you have a nice idea hot to improve please start by reading through the current list of [open issues](https://github.com/fetlife/fetlife-android/issues) and if you can't find anything about your bug or suggestion please [submit a new issue](https://github.com/fetlife/fetlife-android/issues/new).
 
-If you prefer not to register with GitHub, you can still send your remark or question either to our caretakers (caretakers@fetlife.com) or directly to our Android developer (dreamlite@fetlife.com).
+If you prefer not to register with GitHub, you can still send your remark or question either to our caretakers (caretakers@fetlife.com).
 
 ### Want to Contribute?
 
