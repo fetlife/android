@@ -420,10 +420,14 @@ public class EventMapFragment extends BaseFragment implements OnMapReadyCallback
     }
 
     private int getClusterColorForEvents(Collection<Event> items) {
-        String seletecedEventId = getActivity().getIntent().getStringExtra(EventsActivity.ARG_EVENT_ID);
+        Activity activity = getActivity();
+        if (activity == null) {
+            return ColorUtils.HSLToColor(new float[] {MARKER_COLOR_LONG_DUE,1f,0.5f});
+        }
+        String selected = activity.getIntent().getStringExtra(EventsActivity.ARG_EVENT_ID);
         float markerHue = MARKER_COLOR_LONG_DUE;
         for (Event event : items) {
-            if (seletecedEventId != null && seletecedEventId.equals(event.getId())) {
+            if (selected != null && selected.equals(event.getId())) {
                 markerHue = MARKER_COLOR_SELECTED;
                 break;
             }
@@ -564,7 +568,11 @@ public class EventMapFragment extends BaseFragment implements OnMapReadyCallback
 
     @Override
     public View getInfoContents(Marker marker) {
-        LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+        Context context = getActivity();
+        if (context == null) {
+            return null;
+        }
+        LayoutInflater layoutInflater = LayoutInflater.from(context);
         View layout = layoutInflater.inflate(R.layout.content_eventmap_infowindow,null);
         TextView eventCountInfo = (TextView) layout.findViewById(R.id.event_count_info);
         TextView eventName = (TextView) layout.findViewById(R.id.event_name);
