@@ -68,7 +68,7 @@ Note: To protect our users for any malicious modification of the App, FetLife ke
 For you as a contributor it means you will only be able to build a debug (signed) version of the App.
 Apps signed with debug keys are fully functional, but because of the signature clash they cannot be installed on top of and existing release version. To be able to run your debug version you have to remove your official FetLife App from your device first.
 
-Should you have any further questions about contributing to FetLife Android Open Source project feel free to [submit a new GitHib issue](https://github.com/fetlife/fetlife-android/issues/new) or get in contact with our Android Developer directly via dreamlite@fetlife.com.
+Should you have any further questions about contributing to FetLife Android Open Source project feel free to [submit a new GitHib issue](https://github.com/fetlife/fetlife-android/issues/new) or write to our caretakers via caretakers@fetlife.com.
 
 ### License
 
