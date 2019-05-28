@@ -299,7 +299,7 @@ class SlidingTabLayout @JvmOverloads constructor(context: Context, attrs: Attrib
         }
 
         override fun onPageSelected(position: Int) {
-            if (mScrollState == ViewPager.SCROLL_STATE_IDLE) {
+            if (mScrollState == ViewPager.SCROLL_STATE_IDLE || mScrollState == ViewPager.SCROLL_STATE_SETTLING) {
                 mTabStrip.onViewPagerPageChanged(position, 0f)
                 scrollToTab(position, 0)
             }
