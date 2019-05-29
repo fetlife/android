@@ -721,7 +721,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     @Override
     public void startActivityForResult(Intent intent, int requestCode, Bundle options) {
         super.startActivityForResult(intent, requestCode, options);
-        waitingForResult = true;
+        if (requestCode >= 0) {
+            waitingForResult = true;
+        }
     }
 
     public boolean isWaitingForResult() {
