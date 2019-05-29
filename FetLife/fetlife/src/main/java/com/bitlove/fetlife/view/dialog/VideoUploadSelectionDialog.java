@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bitlove.fetlife.R;
-import com.bitlove.fetlife.view.screen.resource.ResourceListActivity;
+import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.crashlytics.android.Crashlytics;
 import com.theartofdev.edmodo.cropper.CropImage;
 
@@ -208,8 +208,8 @@ public class VideoUploadSelectionDialog extends DialogFragment {
 
     @Override
     public void startActivityForResult(Intent intent, int requestCode) {
-        ResourceListActivity activity = getResourceActivity();
-        if (getResourceActivity() != null) {
+        BaseActivity activity = getBaseActivity();
+        if (activity != null) {
             activity.onWaitingForResult();
         }
         super.startActivityForResult(intent, requestCode);
@@ -219,10 +219,10 @@ public class VideoUploadSelectionDialog extends DialogFragment {
         return new VideoUploadSelectionDialog();
     }
 
-    private ResourceListActivity getResourceActivity() {
+    private BaseActivity getBaseActivity() {
         Activity activity = getActivity();
-        if (activity instanceof ResourceListActivity) {
-            return (ResourceListActivity) activity;
+        if (activity instanceof BaseActivity) {
+            return (BaseActivity) activity;
         } else {
             return null;
         }

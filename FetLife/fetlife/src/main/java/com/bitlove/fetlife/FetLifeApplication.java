@@ -28,6 +28,7 @@ import com.bitlove.fetlife.model.inmemory.InMemoryStorage;
 import com.bitlove.fetlife.model.service.FetLifeApiIntentService;
 import com.bitlove.fetlife.session.UserSessionManager;
 import com.bitlove.fetlife.util.FileUtil;
+import com.bitlove.fetlife.view.screen.BaseActivity;
 import com.bitlove.fetlife.view.screen.resource.ResourceListActivity;
 import com.bitlove.fetlife.view.screen.standalone.LoginActivity;
 import com.bitlove.fetlife.view.widget.ImageViewerWrapper;
@@ -80,7 +81,7 @@ public class FetLifeApplication extends MultiDexApplication {
      * Logout delay in case of additional task started that is outside of the App (like photo App for taking a photo)
      * We do not want to log out the user right away in this case
      */
-    private static final long WAITING_FOR_RESULT_LOGOUT_DELAY_MILLIS = 60 * 1000;
+    private static final long WAITING_FOR_RESULT_LOGOUT_DELAY_MILLIS = 3* 60* 1000;
 
     private static final String PREFIX_FILE_DB = "db_";
 
@@ -546,8 +547,8 @@ public class FetLifeApplication extends MultiDexApplication {
         }
 
         private boolean isWaitingForResult(Activity activity) {
-            if (activity instanceof ResourceListActivity) {
-                return ((ResourceListActivity)activity).isWaitingForResult();
+            if (activity instanceof BaseActivity) {
+                return ((BaseActivity)activity).isWaitingForResult();
             }
             return false;
         }
