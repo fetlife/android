@@ -1126,4 +1126,5 @@
     <string name="link_release_notes_download">Download Latest Version</string>
     <string name="link_release_notes_download_beta">Download Latest Beta Version</string>
     <string name="text_release_notes_current_version">(Current Version)</string>
+    <string name="no_app_to_handle_intent">No App available on your device to handle this Action</string>
 </resources>

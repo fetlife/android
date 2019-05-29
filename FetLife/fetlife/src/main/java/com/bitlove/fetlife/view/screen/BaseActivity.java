@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -720,9 +721,22 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Override
     public void startActivityForResult(Intent intent, int requestCode, Bundle options) {
-        super.startActivityForResult(intent, requestCode, options);
-        if (requestCode >= 0) {
-            waitingForResult = true;
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            super.startActivityForResult(intent, requestCode, options);
+            if (requestCode >= 0) {
+                waitingForResult = true;
+            }
+        } else {
+            showToast(getString(R.string.no_app_to_handle_intent));
+        }
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            super.startActivity(intent);
+        } else {
+            showToast(getString(R.string.no_app_to_handle_intent));
         }
     }
 
