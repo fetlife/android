@@ -19,6 +19,7 @@ import com.bitlove.fetlife.view.screen.BaseActivity
 import com.bitlove.fetlife.webapp.navigation.WebAppNavigation
 import com.bitlove.fetlife.webapp.screen.FetLifeWebViewActivity
 import org.json.JSONObject
+import java.util.concurrent.ArrayBlockingQueue
 
 //TODO anonym, delete intent, inner launches, move hardcoded urls
 abstract class OneSignalNotification(val notificationType: String,
@@ -67,7 +68,8 @@ abstract class OneSignalNotification(val notificationType: String,
         val groupingEnabled = fetLifeApplication.userSessionManager.activeUserPreferences.getBoolean(fetLifeApplication.getString(R.string.settings_key_notification_grouping_enabled), true)
 
         //Selecting storage
-        val liveNotifications = liveNotificationMap[notificationType] ?: ArrayList()
+        val liveNotifications = liveNotificationMap[notificationType]
+                ?: ArrayList(LIMIT_UNREAD_NOTIFICATION_COUNT)
         if (liveNotifications.isEmpty()) liveNotificationMap[notificationType] = liveNotifications
 
         //Create notification channel
@@ -128,6 +130,9 @@ abstract class OneSignalNotification(val notificationType: String,
         if (collapseId != null) {
             val collapseIndex = liveNotifications.withIndex().firstOrNull { it.value.collapseId == collapseId }?.index
             if (collapseIndex != null) NotificationUtil.cancelNotification(fetLifeApplication, notificationIdRange + collapseIndex + 1)
+        }
+        if (liveNotifications.size >= LIMIT_UNREAD_NOTIFICATION_COUNT) {
+            liveNotifications.drop(liveNotifications.size - LIMIT_UNREAD_NOTIFICATION_COUNT + 1)
         }
         liveNotifications.add(this)
     }
@@ -190,6 +195,7 @@ abstract class OneSignalNotification(val notificationType: String,
     }
 
     companion object {
+        const val LIMIT_UNREAD_NOTIFICATION_COUNT = 5
         const val NOTIFICATION_CHANNEL_DEFUALT = "NOTIFICATION_CHANNEL_DEFUALT"
 
         //Launch target string parts
