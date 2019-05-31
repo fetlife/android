@@ -96,7 +96,7 @@ abstract class OneSignalNotification(val notificationType: String,
                 .setSummaryText(summaryText)
 
         var i = notificationIdRange + 1
-        for (oneSignalNotificationEntry in liveNotifications.groupBy { it.mergeId }) {
+        for (oneSignalNotificationEntry in liveNotifications.reversed().groupBy { it.mergeId }) {
             val groupCount = oneSignalNotificationEntry.value.size
             val referenceNotification = oneSignalNotificationEntry.value.first()
             val title = getNotificationTitle(referenceNotification, groupCount, fetLifeApplication)
@@ -108,6 +108,9 @@ abstract class OneSignalNotification(val notificationType: String,
             val groupedNotification = getDefaultNotificationBuilder(channelId, groupId, fetLifeApplication, pendingIntent, title, text).build()
             notificationManager.notify(i++, groupedNotification)
             inboxStyle.addLine("$title $text")
+            if (i >+ notificationIdRange + 1 + LIMIT_UNREAD_NOTIFICATION_COUNT) {
+                break
+            }
         }
 
         val summaryNotification = getDefaultNotificationBuilder(channelId, notificationType, fetLifeApplication, null, summaryTitle, summaryText).apply {
@@ -130,9 +133,6 @@ abstract class OneSignalNotification(val notificationType: String,
         if (collapseId != null) {
             val collapseIndex = liveNotifications.withIndex().firstOrNull { it.value.collapseId == collapseId }?.index
             if (collapseIndex != null) NotificationUtil.cancelNotification(fetLifeApplication, notificationIdRange + collapseIndex + 1)
-        }
-        if (liveNotifications.size >= LIMIT_UNREAD_NOTIFICATION_COUNT) {
-            liveNotifications.drop(liveNotifications.size - LIMIT_UNREAD_NOTIFICATION_COUNT + 1)
         }
         liveNotifications.add(this)
     }
