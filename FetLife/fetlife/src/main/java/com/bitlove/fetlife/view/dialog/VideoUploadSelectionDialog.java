@@ -89,6 +89,9 @@ public class VideoUploadSelectionDialog extends DialogFragment {
         intent.setType("video/*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION
+                | Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
         startActivityForResult(Intent.createChooser(intent,
                 getResources().getString(R.string.title_intent_choose_media_upload)), REQUEST_CODE_GALLERY_VIDEO);
     }
