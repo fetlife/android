@@ -36,6 +36,7 @@ import com.google.android.material.navigation.NavigationView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 public class MenuActivityComponent extends ActivityComponent {
@@ -135,8 +136,8 @@ public class MenuActivityComponent extends ActivityComponent {
     @Override
     public Boolean onActivityBackPressed(BaseActivity baseActivity) {
         DrawerLayout drawer = (DrawerLayout) menuActivity.findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(Gravity.RIGHT)) {
-            drawer.closeDrawer(Gravity.RIGHT);
+        if (drawer.isDrawerOpen(GravityCompat.END)) {
+            drawer.closeDrawer(GravityCompat.END);
             return true;
         } else {
             return false;
@@ -147,8 +148,8 @@ public class MenuActivityComponent extends ActivityComponent {
     public Boolean onActivityKeyDown(BaseActivity baseActivity, int keyCode, KeyEvent e) {
         if (keyCode == KeyEvent.KEYCODE_MENU) {
             DrawerLayout drawer = (DrawerLayout) menuActivity.findViewById(R.id.drawer_layout);
-            if (!drawer.isDrawerOpen(Gravity.RIGHT)) {
-                drawer.openDrawer(Gravity.RIGHT);
+            if (!drawer.isDrawerOpen(GravityCompat.END)) {
+                drawer.openDrawer(GravityCompat.END);
                 return true;
             }
         }
@@ -293,7 +294,7 @@ public class MenuActivityComponent extends ActivityComponent {
         }
 
         menuActivity.setPendingNavigationIntent(pendingNavigationIntent);
-        drawer.closeDrawer(Gravity.RIGHT);
+        drawer.closeDrawer(GravityCompat.END);
 
 //        if (isNavigation(id) && ((MenuActivityCallBack)menuActivity).finishAtMenuNavigation()) {
 //            menuActivity.finish();

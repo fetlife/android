@@ -27,6 +27,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.text.SpannableString;
@@ -230,13 +231,13 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                             break;
                         case R.id.navigation_bottom_menu_drawer:
                             if (drawerLayout != null) {
-                                if (drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
+                                if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
                                     if (selectedMenuItem > 0) {
                                         bottomNavigation.setOnNavigationItemSelectedListener(null);
                                         bottomNavigation.setSelectedItemId(R.id.navigation_bottom_menu_drawer);
                                         bottomNavigation.setOnNavigationItemSelectedListener(this);
                                     }
-                                    drawerLayout.closeDrawer(Gravity.RIGHT);
+                                    drawerLayout.closeDrawer(GravityCompat.END);
                                     setUpFloatingActionButton(getFabLink());
                                 } else {
                                     bottomNavigation.setOnNavigationItemSelectedListener(null);
@@ -245,7 +246,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
                                     if (fab != null) {
                                         fab.hide();
                                     }
-                                    drawerLayout.openDrawer(Gravity.RIGHT);
+                                    drawerLayout.openDrawer(GravityCompat.END);
                                 }
                             }
                         return true;
