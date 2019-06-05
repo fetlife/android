@@ -1127,4 +1127,6 @@
     <string name="link_release_notes_download_beta">Download Latest Beta Version</string>
     <string name="text_release_notes_current_version">(Current Version)</string>
     <string name="no_app_to_handle_intent">No App available on your device to handle this Action</string>
+    <string name="error_login_failed">Login Failed</string>
+    <string name="error_login_2fa_enabled">Sorry, we currently don\'t support 2FA in our Android app. If you want to login to FetLife\'s Android app, you need to disable 2FA and then you can re-enable it right after.</string>
 </resources>

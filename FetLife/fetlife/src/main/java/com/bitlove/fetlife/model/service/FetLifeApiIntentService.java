@@ -110,8 +110,10 @@ import com.bitlove.fetlife.util.VersionUtil;
 import com.bitlove.fetlife.view.adapter.feed.FeedItemResourceHelper;
 import com.bitlove.fetlife.view.screen.resource.ExploreActivity;
 import com.crashlytics.android.Crashlytics;
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.gson.JsonParser;
 import com.raizlabs.android.dbflow.annotation.Collate;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.Delete;
@@ -144,6 +146,9 @@ import javax.crypto.spec.SecretKeySpec;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.JobIntentService;
+
+import org.json.JSONObject;
+
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -160,6 +165,9 @@ public class FetLifeApiIntentService extends JobIntentService {
     public FetLifeApiIntentService() {
         super();
     }
+
+    private static final String JSON_FIELD_ERROR = "error";
+    public static final String JSON_VALUE_ERROR_LOGIN_2FA_ENABLED = "2fa_enabled";
 
     //****
     //Action names for Api service calls
@@ -727,7 +735,15 @@ public class FetLifeApiIntentService extends JobIntentService {
             getFetLifeApplication().getUserSessionManager().onUserLogIn(user, getBoolFromParams(params, 2, true));
             return 1;
         } else {
-            return Integer.MIN_VALUE;
+            String errorCode = null;
+            try {
+                JSONObject serverRespond = new JSONObject(tokenResponse.errorBody().string());
+                errorCode = serverRespond.getString(JSON_FIELD_ERROR);
+            } catch (Throwable t) {
+                errorCode = null;
+            }
+            getFetLifeApplication().getEventBus().post(new LoginFailedEvent(true, errorCode));
+            return Integer.MAX_VALUE;
         }
     }
 
@@ -2792,7 +2808,7 @@ public class FetLifeApiIntentService extends JobIntentService {
     private void sendConnectionFailedNotification(String action, String... params) {
         switch (action) {
             case ACTION_APICALL_LOGON_USER:
-                getFetLifeApplication().getEventBus().post(new LoginFailedEvent(true));
+                getFetLifeApplication().getEventBus().post(new LoginFailedEvent(true, null));
                 break;
             default:
                 getFetLifeApplication().getEventBus().post(new ServiceCallFailedEvent(action, true, params));

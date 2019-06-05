@@ -226,7 +226,10 @@ public class LoginActivity extends Activity {
     public void onLogonFailed(LoginFailedEvent loginFailedEvent) {
         //TODO: handle different errors
         dismissProgress();
-        if (loginFailedEvent.isServerConnectionFailed()) {
+        String errorCode = loginFailedEvent.getServerErrorCode();
+        if (FetLifeApiIntentService.JSON_VALUE_ERROR_LOGIN_2FA_ENABLED.equalsIgnoreCase(errorCode)) {
+            MessageDialog.show(this,getResources().getString(R.string.error_login_failed),getResources().getString(R.string.error_login_2fa_enabled));
+        } else if (loginFailedEvent.isServerConnectionFailed()) {
             showToast(getResources().getString(R.string.error_connection_failed));
         } else {
             mPasswordView.setError(getString(R.string.error_incorrect_password));
