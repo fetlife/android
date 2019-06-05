@@ -404,6 +404,9 @@ public class ProfileActivity extends ResourceActivity implements AppBarLayout.On
 
     private void onMenuIconFriend() {
         final Member member = Member.loadMember(memberId);
+        if (member == null) {
+            return;
+        }
         final String currentRelation = member.getRelationWithMe() != null ? member.getRelationWithMe() : "";
         switch (currentRelation) {
             case Member.VALUE_FRIEND:
