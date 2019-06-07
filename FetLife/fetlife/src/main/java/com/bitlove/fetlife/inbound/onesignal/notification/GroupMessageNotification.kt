@@ -57,8 +57,8 @@ class GroupMessageNotification(notificationType: String, notificationIdRange: In
         }
         if (groupDiscussionInForeground) {
             FetLifeApiIntentService.startApiCall(fetLifeApplication, FetLifeApiIntentService.ACTION_APICALL_GROUP_MESSAGES, groupId, groupDiscussionId)
-        } else {
-            saveNotificationItem(notificationIdRange)
+//        } else {
+//            saveNotificationItem(notificationIdRange)
         }
 
         //TODO: display in app notification if the user is not on the same message screen

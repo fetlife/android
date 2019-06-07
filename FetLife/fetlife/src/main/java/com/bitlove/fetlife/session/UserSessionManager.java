@@ -138,7 +138,11 @@ public class UserSessionManager {
     //*** Session State Methods
 
     private void logInUser(String userId, Member userRecord) {
-        stopDb();
+        try {
+            stopDb();
+        } catch (Throwable t) {
+            Crashlytics.logException(t);
+        }
         loadUserPreferences(userId);
         loadUserDb(userId);
         setUserLoggedIn(true);

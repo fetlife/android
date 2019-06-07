@@ -158,7 +158,7 @@ public class EventDisplayHandler {
 
         Intent notificationIntent = new Intent(baseActivity, UpdateBroadcastReceiver.class);
         notificationIntent.putExtra(UpdateBroadcastReceiver.EXTRA_URL, url);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(baseActivity, 0, notificationIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(baseActivity, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationUtil.showMessageNotification(baseActivity.getFetLifeApplication(), NotificationUtil.RELEASE_NOTIFICATION_ID, header, message, pendingIntent);
 
         baseActivity.showToast(baseActivity.getString(release.isPrerelease() ? R.string.notification_toast_new_prerelease : R.string.notification_toast_new_release));
